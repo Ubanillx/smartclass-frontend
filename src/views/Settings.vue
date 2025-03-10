@@ -7,8 +7,8 @@
       @click-left="router.back()"
     />
 
-   <!-- 个人资料设置 -->
-   <van-cell-group inset class="setting-group">
+    <!-- 个人资料设置 -->
+    <van-cell-group inset class="setting-group">
       <van-cell title="个人资料" is-link @click="router.push('/settings/profile')">
         <template #label>
           <span class="setting-label">修改头像、用户名等基本信息</span>
@@ -57,9 +57,9 @@
     <!-- 其他设置 -->
     <van-cell-group inset class="setting-group">
       <van-cell title="清除缓存" is-link @click="clearCache" />
-      <van-cell title="关于我们" is-link @click="router.push('/about')" />
-      <van-cell title="用户协议" is-link @click="router.push('/terms')" />
-      <van-cell title="隐私政策" is-link @click="router.push('/privacy')" />
+      <van-cell title="关于我们" is-link @click="router.push('/settings/about')" />
+      <van-cell title="用户协议" is-link @click="router.push('/settings/terms')" />
+      <van-cell title="隐私政策" is-link @click="router.push('/settings/privacy')" />
     </van-cell-group>
 
     <!-- 学习目标选择器 -->
@@ -75,13 +75,13 @@
 
     <!-- 提醒时间选择器 -->
     <van-popup v-model:show="showReminderPicker" position="bottom">
-      <van-datetime-picker
-        type="time"
-        title="设置提醒时间"
-        :min-hour="6"
-        :max-hour="22"
+      <van-picker
+        :columns="timeColumns"
         @confirm="onReminderConfirm"
         @cancel="showReminderPicker = false"
+        show-toolbar
+        title="设置提醒时间"
+        :default-index="defaultTimeIndex"
       />
     </van-popup>
 
@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 
@@ -125,24 +125,53 @@ const showReminderPicker = ref(false);
 const showDifficultyPicker = ref(false);
 
 // 选项数据
-const goalOptions = [15, 30, 45, 60, 90, 120].map(min => `${min}分钟/天`);
-const difficultyOptions = ['初级', '中等', '高级'];
+const goalOptions = [15, 30, 45, 60, 90, 120].map(min => ({
+  text: `${min}分钟/天`,
+  value: min
+}));
+const difficultyOptions = ['初级', '中等', '高级'].map(difficulty => ({
+  text: difficulty,
+  value: difficulty
+}));
+
+// 时间选择器列数据
+const timeColumns = [
+  {
+    values: Array.from({ length: 17 }, (_, i) => 6 + i).map(hour => hour.toString().padStart(2, '0')),
+    className: 'column1'
+  },
+  {
+    values: Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')),
+    className: 'column2'
+  }
+];
+
+// 当前选择的时间
+const selectedHour = ref('09');
+const selectedMinute = ref('00');
+
+// 默认时间索引
+const defaultTimeIndex = computed(() => [
+  timeColumns[0].values.indexOf(selectedHour.value),
+  timeColumns[1].values.indexOf(selectedMinute.value)
+]);
 
 // 处理选择器确认
 const onGoalConfirm = (value) => {
-  learningSettings.value.dailyGoal = parseInt(value);
+  learningSettings.value.dailyGoal = parseInt(value.selectedValues[0]);
   showGoalPicker.value = false;
   showToast('设置已保存');
 };
 
 const onReminderConfirm = (value) => {
-  learningSettings.value.reminderTime = value;
+  const formattedTime = `${value.selectedValues[0]}:${value.selectedValues[1]}`;
+  learningSettings.value.reminderTime = formattedTime;
   showReminderPicker.value = false;
   showToast('设置已保存');
 };
 
 const onDifficultyConfirm = (value) => {
-  learningSettings.value.difficulty = value;
+  learningSettings.value.difficulty = value.selectedValues[0];
   showDifficultyPicker.value = false;
   showToast('设置已保存');
 };
@@ -176,4 +205,4 @@ const clearCache = async () => {
 :deep(.van-switch) {
   margin-left: 8px;
 }
-</style> 
+</style>
