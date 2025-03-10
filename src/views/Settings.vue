@@ -7,8 +7,8 @@
       @click-left="router.back()"
     />
 
-    <!-- 个人资料设置 -->
-    <van-cell-group inset class="setting-group">
+   <!-- 个人资料设置 -->
+   <van-cell-group inset class="setting-group">
       <van-cell title="个人资料" is-link @click="router.push('/settings/profile')">
         <template #label>
           <span class="setting-label">修改头像、用户名等基本信息</span>

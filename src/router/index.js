@@ -61,7 +61,15 @@ const routes = [
     component: () => import('../views/Settings.vue'),
     meta: {
       requiresAuth: true
-    }
+    },
+  },{
+    
+      path: '/settings/profile',
+      name: 'SettingsProfile',
+      component: () => import('../views/settings/SettingsProfile.vue'),
+      meta: {
+        requiresAuth: true
+      },
   },
   {
     path: '/chat',
