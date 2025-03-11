@@ -11,17 +11,29 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useUserStore } from './stores/userStore';
 
 const route = useRoute();
+const userStore = useUserStore();
 const active = ref(0);
 
 // 计算是否显示底部导航栏
 const showTabbar = computed(() => {
   const noTabbarRoutes = ['/login', '/register', '/forgot-password'];
   return !noTabbarRoutes.includes(route.path);
+});
+
+// 在应用启动时获取当前登录用户信息
+onMounted(async () => {
+  if (userStore.isLoggedIn) {
+    try {
+      await userStore.fetchCurrentUser();
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+    }
+  }
 });
 </script>
 

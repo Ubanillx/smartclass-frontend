@@ -63,8 +63,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
+import { useUserStore } from '../stores/userStore';
 
 const router = useRouter();
+const userStore = useUserStore();
 const username = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -72,41 +74,33 @@ const loading = ref(false);
 const onSubmit = async (values) => {
   loading.value = true;
   try {
-    // 这里替换为实际的登录 API 调用
-    await mockLogin(values);
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userInfo', JSON.stringify({
-      username: values.username,
-      // 其他用户信息
-    }));
-    showToast({
-      type: 'success',
-      message: '登录成功',
-      onClose: () => {
-        router.push('/');
-      },
-    });
+    // 使用userStore进行登录
+    const result = await userStore.login(values.username, values.password);
+    
+    if (result.success) {
+      showToast({
+        type: 'success',
+        message: '登录成功',
+        onClose: () => {
+          // 获取重定向URL
+          const redirectUrl = router.currentRoute.value.query.redirect || '/';
+          router.push(redirectUrl.toString());
+        },
+      });
+    } else {
+      showToast({
+        type: 'fail',
+        message: result.message || '登录失败',
+      });
+    }
   } catch (error) {
     showToast({
       type: 'fail',
-      message: error.message || '登录失败',
+      message: error.message || '登录失败，请检查网络连接',
     });
   } finally {
     loading.value = false;
   }
-};
-
-// Mock 登录函数
-const mockLogin = (values) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (values.username === 'admin' && values.password === '123456') {
-        resolve();
-      } else {
-        reject(new Error('用户名或密码错误'));
-      }
-    }, 1000);
-  });
 };
 </script>
 
