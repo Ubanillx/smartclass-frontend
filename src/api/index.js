@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://10.1.124.166:12345/api', // 使用环境变量
+  baseURL: 'http://10.0.124.181:12345/api', // 使用环境变量
   headers: {
     'Content-Type': 'application/json',
   },

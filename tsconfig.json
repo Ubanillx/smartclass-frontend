@@ -18,7 +18,16 @@
     /* type checking */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+
+
+    "compilerOptions": {
+    "module": "ESNext", // or "NodeNext"
+    "moduleResolution": "Bundler", // or "NodeNext"
+    "compilerOptions": {
+    "noUncheckedIndexedAccess": true
+      }
+    }
   },
   "include": ["src"]
 }
