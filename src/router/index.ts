@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import Home from '../views/Home.vue'
 import Listening from '../views/Listening.vue'
 import Courses from '../views/Courses.vue'
@@ -6,7 +6,13 @@ import Profile from '../views/Profile.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 
-const routes = [
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth: boolean;
+  }
+}
+
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
@@ -61,39 +67,39 @@ const routes = [
     component: () => import('../views/Settings.vue'),
     meta: {
       requiresAuth: true
-    },
-  },{
-    
+    }
+  },
+  {
     path: '/settings/profile',
     name: 'SettingsProfile',
     component: () => import('../views/settings/SettingsProfile.vue'),
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/settings/about',
     name: 'SettingsAbout',
     component: () => import('../views/settings/SettingsAbout.vue'),
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/settings/terms',
     name: 'SettingsTerms',
     component: () => import('../views/settings/SettingsTerms.vue'),
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/settings/privacy',
     name: 'SettingsPrivacy',
     component: () => import('../views/settings/SettingsPrivacy.vue'),
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/chat',
@@ -111,7 +117,11 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach((
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
 
   if (to.meta.requiresAuth && !isLoggedIn) {

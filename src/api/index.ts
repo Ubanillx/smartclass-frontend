@@ -1,8 +1,7 @@
-// src/api/index.js
-import axios from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-const apiClient = axios.create({
-  baseURL: 'http://10.0.124.181:12345/api', // 使用环境变量
+const apiClient: AxiosInstance = axios.create({
+  baseURL: 'http://10.0.124.181:12345/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,26 +9,25 @@ const apiClient = axios.create({
 
 // 请求拦截器
 apiClient.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token'); // 假设你使用 JWT 进行身份验证
+  (config: InternalAxiosRequestConfig) => {
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  error => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
 // 响应拦截器
 apiClient.interceptors.response.use(
-  response => {
+  (response: AxiosResponse) => {
     return response;
   },
-  error => {
-    if (error.response && error.response.status === 401) {
-      // 处理未授权的情况，例如重定向到登录页
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
@@ -37,4 +35,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export default apiClient; 
