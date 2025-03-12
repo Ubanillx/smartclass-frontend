@@ -21,17 +21,20 @@
   </div>
 </template>
 
-<script setup>
-import { ref, defineEmits } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 
-const emit = defineEmits(['logout']);
+const emit = defineEmits<{
+  (e: 'logout'): void;
+}>();
+
 const showDialog = ref(false);
 
-const showConfirm = () => {
+const showConfirm = (): void => {
   showDialog.value = true;
 };
 
-const onLogout = () => {
+const onLogout = (): void => {
   emit('logout');
 };
 </script>

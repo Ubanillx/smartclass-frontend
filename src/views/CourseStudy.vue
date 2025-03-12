@@ -1,10 +1,7 @@
 <template>
   <div class="course-study-page">
     <!-- 返回按钮 -->
-    <div class="back-button">
-      <van-icon name="arrow-left" size="20" @click="router.back()" />
-      <span class="page-title">课程学习</span>
-    </div>
+    <back-button title="课程学习" />
     
     <course-study
       :course="course"
@@ -18,6 +15,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { CourseStudy } from '../components/Course';
+import { BackButton } from '../components/common';
 
 interface CourseHighlight {
   icon: string;
@@ -77,19 +75,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  background-color: #fff;
-}
-
-.back-button .page-title {
-  font-size: 16px;
-  font-weight: 500;
-  margin-left: 8px;
 }
 
 :deep(.course-study) {

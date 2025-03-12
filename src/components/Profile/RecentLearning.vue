@@ -15,15 +15,17 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps } from 'vue';
+<script setup lang="ts">
+interface LearningItem {
+  id: number;
+  name: string;
+  icon: string;
+  progress: number;
+}
 
-const props = defineProps({
-  learningItems: {
-    type: Array,
-    required: true
-  }
-});
+defineProps<{
+  learningItems: LearningItem[];
+}>();
 </script>
 
 <style scoped>

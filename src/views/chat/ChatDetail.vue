@@ -1,10 +1,7 @@
 <template>
   <div class="chat-detail">
     <!-- 返回按钮 -->
-    <div class="back-button">
-      <van-icon name="arrow-left" size="20" @click="router.back()" />
-      <span class="assistant-name">{{ assistant.name }}</span>
-    </div>
+    <back-button :title="assistant.name" />
 
     <!-- 消息列表区域 -->
     <message-list
@@ -56,6 +53,7 @@ import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
 import { MessageList, ChatInput } from '../../components/Dialogue';
+import { BackButton } from '../../components/common';
 
 interface UserInfo {
   id: number;
@@ -192,19 +190,6 @@ const startVoiceRecord = (): void => {
   flex-direction: column;
   height: 100vh;
   background-color: #f7f8fa;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-}
-
-.back-button .assistant-name {
-  font-size: var(--font-size-md, 16px);
-  font-weight: 700;
-  margin-left: 8px;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .emoji-picker {

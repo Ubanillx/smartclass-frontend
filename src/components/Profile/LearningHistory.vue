@@ -21,19 +21,25 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps, defineEmits } from 'vue';
+<script setup lang="ts">
+interface HistoryItem {
+  id: number;
+  date: string;
+  time: string;
+  icon: string;
+  title: string;
+  description: string;
+}
 
-const props = defineProps({
-  historyItems: {
-    type: Array,
-    required: true
-  }
-});
+defineProps<{
+  historyItems: HistoryItem[];
+}>();
 
-const emit = defineEmits(['view-all']);
+const emit = defineEmits<{
+  (e: 'view-all'): void;
+}>();
 
-const onViewAll = () => {
+const onViewAll = (): void => {
   emit('view-all');
 };
 </script>

@@ -18,19 +18,22 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps, defineEmits } from 'vue';
+<script setup lang="ts">
+interface Badge {
+  id: number;
+  name: string;
+  icon: string;
+}
 
-const props = defineProps({
-  badges: {
-    type: Array,
-    required: true
-  }
-});
+defineProps<{
+  badges: Badge[];
+}>();
 
-const emit = defineEmits(['view-all']);
+const emit = defineEmits<{
+  (e: 'view-all'): void;
+}>();
 
-const onViewAll = () => {
+const onViewAll = (): void => {
   emit('view-all');
 };
 </script>
