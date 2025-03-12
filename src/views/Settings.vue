@@ -1,11 +1,10 @@
 <template>
   <div class="settings">
-    <!-- 顶部导航栏 -->
-    <van-nav-bar
-      title="设置"
-      left-arrow
-      @click-left="router.back()"
-    />
+    <!-- 返回按钮 -->
+    <div class="back-button" @click="router.back()">
+      <van-icon name="arrow-left" size="18" />
+      <span class="page-title">设置</span>
+    </div>
 
     <!-- 个人资料设置 -->
     <van-cell-group inset class="setting-group">
@@ -31,6 +30,11 @@
       <van-cell title="难度偏好" is-link @click="showDifficultyPicker = true">
         <template #value>
           <span>{{ learningSettings.difficulty }}</span>
+        </template>
+      </van-cell>
+      <van-cell title="字体大小" is-link @click="showFontSizePicker = true">
+        <template #value>
+          <span>{{ getFontSizeLabel(settingsStore.fontSize) }}</span>
         </template>
       </van-cell>
     </van-cell-group>
@@ -95,6 +99,17 @@
         title="设置难度偏好"
       />
     </van-popup>
+
+    <!-- 字体大小选择器 -->
+    <van-popup v-model:show="showFontSizePicker" position="bottom">
+      <van-picker
+        :columns="fontSizeOptions"
+        @confirm="onFontSizeConfirm"
+        @cancel="showFontSizePicker = false"
+        show-toolbar
+        title="设置字体大小"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -102,8 +117,10 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
+import { useSettingsStore } from '../stores/settingsStore';
 
 const router = useRouter();
+const settingsStore = useSettingsStore();
 
 // 学习设置
 const learningSettings = ref({
@@ -123,6 +140,7 @@ const notificationSettings = ref({
 const showGoalPicker = ref(false);
 const showReminderPicker = ref(false);
 const showDifficultyPicker = ref(false);
+const showFontSizePicker = ref(false);
 
 // 选项数据
 const goalOptions = [15, 30, 45, 60, 90, 120].map(min => ({
@@ -133,6 +151,19 @@ const difficultyOptions = ['初级', '中等', '高级'].map(difficulty => ({
   text: difficulty,
   value: difficulty
 }));
+
+// 字体大小选项
+const fontSizeOptions = [
+  { text: '小', value: 'small' },
+  { text: '中', value: 'medium' },
+  { text: '大', value: 'large' }
+];
+
+// 获取字体大小显示标签
+const getFontSizeLabel = (size) => {
+  const option = fontSizeOptions.find(opt => opt.value === size);
+  return option ? option.text : '中';
+};
 
 // 时间选择器列数据
 const timeColumns = [
@@ -176,6 +207,12 @@ const onDifficultyConfirm = (value) => {
   showToast('设置已保存');
 };
 
+const onFontSizeConfirm = (value) => {
+  settingsStore.setFontSize(value.selectedValues[0]);
+  showFontSizePicker.value = false;
+  showToast('字体大小已更新');
+};
+
 // 清除缓存
 const clearCache = async () => {
   showToast('缓存已清除');
@@ -204,5 +241,16 @@ const clearCache = async () => {
 
 :deep(.van-switch) {
   margin-left: 8px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.page-title {
+  font-size: 18px;
+  margin-left: 10px;
 }
 </style>

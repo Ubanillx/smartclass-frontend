@@ -1,10 +1,9 @@
 <template>
   <div class="privacy-container">
-    <van-nav-bar
-      title="隐私政策"
-      left-arrow
-      @click-left="goBack"
-    />
+    <div class="back-button" @click="goBack">
+      <van-icon name="arrow-left" size="18" />
+      <span class="page-title">隐私政策</span>
+    </div>
 
     <div class="privacy-content">
       <h2>SmartClass 隐私政策</h2>
@@ -75,6 +74,19 @@ const goBack = () => {
 <style scoped>
 .privacy-container {
   padding: 16px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-size: 18px;
+  margin-left: 10px;
+  font-weight: 500;
 }
 
 .privacy-content {

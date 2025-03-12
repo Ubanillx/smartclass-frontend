@@ -1,10 +1,9 @@
 <template>
     <div class="about-container">
-      <van-nav-bar
-        title="关于我们"
-        left-arrow
-        @click-left="goBack"
-      />
+      <div class="back-button" @click="goBack">
+        <van-icon name="arrow-left" size="18" />
+        <span class="page-title">关于我们</span>
+      </div>
   
       <div class="about-content">
         <h2>欢迎使用 SmartClass</h2>
@@ -52,6 +51,19 @@
   <style scoped>
   .about-container {
     padding: 16px;
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+  }
+  
+  .page-title {
+    font-size: 18px;
+    margin-left: 10px;
+    font-weight: 500;
   }
   
   .about-content {

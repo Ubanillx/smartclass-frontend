@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import Home from '../views/Home.vue'
-import Listening from '../views/Listening.vue'
 import Courses from '../views/Courses.vue'
 import Profile from '../views/Profile.vue'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
+import Login from '../views/user/Login.vue'
+import Register from '../views/user/Register.vue'
+import { ChatHistory, ChatDetail } from '../views/Chat'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -30,9 +30,9 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/listening',
-    name: 'Listening',
-    component: Listening,
+    path: '/chat-history',
+    name: 'ChatHistory',
+    component: ChatHistory,
     meta: {
       requiresAuth: true
     }
@@ -102,9 +102,17 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/chat',
+    path: '/chat-detail',
     name: 'ChatDetail',
-    component: () => import('../views/ChatDetail.vue'),
+    component: ChatDetail,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/course-study/:id',
+    name: 'CourseStudy',
+    component: () => import('../views/CourseStudy.vue'),
     meta: {
       requiresAuth: true
     }

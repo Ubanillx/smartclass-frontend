@@ -3,7 +3,7 @@
     <router-view />
     <van-tabbar v-model="active" v-if="showTabbar">
       <van-tabbar-item icon="home-o" to="/">主页</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" to="/listening">对话</van-tabbar-item>
+      <van-tabbar-item icon="chat-o" to="/chat-history">对话</van-tabbar-item>
       <van-tabbar-item icon="orders-o" to="/courses">课程</van-tabbar-item>
       <van-tabbar-item icon="user-o" to="/profile">我的</van-tabbar-item>
     </van-tabbar>
@@ -14,9 +14,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from './stores/userStore';
+import { useSettingsStore } from './stores/settingsStore';
 
 const route = useRoute();
 const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const active = ref(0);
 
 // 计算是否显示底部导航栏
@@ -39,10 +41,12 @@ onMounted(async () => {
 
 <style>
 /* 全局样式 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
     Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -80,17 +84,141 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-/* 统一的标题样式 */
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #323233;
-  margin: 16px 0 12px;
+/* 底部导航栏样式 */
+.van-tabbar-item__text {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+  font-size: 14px;
 }
 
-/* 统一的次要文本样式 */
-.text-secondary {
-  font-size: 14px;
-  color: #969799;
+/* 组件标题样式 */
+.van-cell__title {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 卡片标题样式 */
+.van-cell-group__title {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 标签页标题样式 */
+.van-tab {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 按钮文字样式 */
+.van-button__text {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 更多链接样式 */
+.more-link {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 卡片内标题样式 */
+h2, h3, h4 {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 公告标题样式 */
+.van-cell__title span {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 全局字体大小控制 */
+.font-small {
+  --font-size-base: 12px;
+  --font-size-sm: 10px;
+  --font-size-md: 12px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+}
+
+.font-medium {
+  --font-size-base: 14px;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+}
+
+.font-large {
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+}
+
+/* 应用字体大小变量 */
+body {
+  font-size: var(--font-size-base);
+}
+
+.van-cell__title {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-cell__value {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-field__label {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-field__control {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-button {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-tab {
+  font-size: var(--font-size-md) !important;
+}
+
+.van-tabbar-item__text {
+  font-size: var(--font-size-sm) !important;
+}
+
+h2 {
+  font-size: var(--font-size-xl) !important;
+}
+
+h3 {
+  font-size: var(--font-size-lg) !important;
+}
+
+h4 {
+  font-size: var(--font-size-md) !important;
+}
+
+p {
+  font-size: var(--font-size-base) !important;
+}
+</style>
+
+<!-- 全局样式，确保所有组件标题都能正确加粗 -->
+<style>
+.van-cell__title,
+.van-cell__title span,
+.van-tab__text,
+.van-tabbar-item__text,
+.van-nav-bar__title,
+.van-button__text,
+.more-link,
+.van-cell-group__title {
+  font-weight: 700 !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
 }
 </style>

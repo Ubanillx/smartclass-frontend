@@ -1,10 +1,9 @@
 <template>
   <div class="agreement-container">
-    <van-nav-bar
-      title="用户协议"
-      left-arrow
-      @click-left="goBack"
-    />
+    <div class="back-button" @click="goBack">
+      <van-icon name="arrow-left" size="18" />
+      <span class="page-title">用户协议</span>
+    </div>
 
     <div class="agreement-content">
       <h2>SmartClass 用户协议</h2>
@@ -98,5 +97,16 @@ ul {
 
 ul li {
   margin-bottom: 8px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.page-title {
+  font-size: 18px;
+  margin-left: 10px;
 }
 </style>

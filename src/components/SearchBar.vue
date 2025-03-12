@@ -12,33 +12,33 @@
       <template #left-icon>
         <van-icon name="search" size="18" color="#1989fa"/>
       </template>
+      <template #right-icon>
+        <slot name="right-icon"></slot>
+      </template>
     </van-search>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue';
 
-const props = defineProps({
-  placeholder: {
-    type: String,
-    default: '搜索'
-  },
-  modelValue: {
-    type: String,
-    default: ''
-  }
-});
+const props = defineProps<{
+  placeholder?: string;
+  modelValue?: string;
+}>();
 
-const emit = defineEmits(['update:modelValue', 'search']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+  (e: 'search', text: string): void;
+}>();
 
-const searchValue = ref(props.modelValue);
+const searchValue = ref(props.modelValue || '');
 
 watch(searchValue, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-const onSearch = () => {
+const onSearch = (): void => {
   emit('search', searchValue.value);
 };
 </script>
@@ -60,6 +60,10 @@ const onSearch = () => {
 }
 
 :deep(.van-field__left-icon) {
+  margin-right: 6px;
+}
+
+:deep(.van-field__right-icon) {
   margin-right: 6px;
 }
 </style> 

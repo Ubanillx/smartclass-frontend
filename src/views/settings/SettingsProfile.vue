@@ -1,11 +1,10 @@
 <!-- src/views/settings/SettingsProfile.vue -->
 <template>
     <div class="profile-settings">
-      <van-nav-bar
-        title="个人资料设置"
-        left-arrow
-        @click-left="goBack"
-      />
+      <div class="back-button" @click="goBack">
+        <van-icon name="arrow-left" size="18" />
+        <span class="page-title">个人资料设置</span>
+      </div>
       <van-cell-group inset>
         <van-cell title="头像">
           <template #right-icon>
@@ -174,5 +173,16 @@
   
   .button-container {
     margin-top: 20px;
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .page-title {
+    font-size: 18px;
+    margin-left: 10px;
   }
   </style>
