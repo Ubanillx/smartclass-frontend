@@ -41,15 +41,17 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps } from 'vue';
+<script setup lang="ts">
+interface StudyStats {
+  daysLearned: number;
+  streakDays: number;
+  stars: number;
+  badges: number;
+}
 
-const props = defineProps({
-  stats: {
-    type: Object,
-    required: true
-  }
-});
+defineProps<{
+  stats: StudyStats;
+}>();
 </script>
 
 <style scoped>

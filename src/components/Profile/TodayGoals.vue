@@ -23,19 +23,17 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps } from 'vue';
+<script setup lang="ts">
+interface Goal {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
-const props = defineProps({
-  progress: {
-    type: Number,
-    required: true
-  },
-  goals: {
-    type: Array,
-    required: true
-  }
-});
+defineProps<{
+  progress: number;
+  goals: Goal[];
+}>();
 </script>
 
 <style scoped>

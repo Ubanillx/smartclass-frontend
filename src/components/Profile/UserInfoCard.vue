@@ -31,24 +31,29 @@
   </van-cell-group>
 </template>
 
-<script setup>
-import { defineProps, defineEmits } from 'vue';
+<script setup lang="ts">
+interface UserInfo {
+  avatar: string;
+  nickname: string;
+  phone: string;
+  level: number;
+  nextLevelExp: number;
+}
 
-const props = defineProps({
-  userInfo: {
-    type: Object,
-    required: true
-  }
-});
+defineProps<{
+  userInfo: UserInfo;
+}>();
 
-const emit = defineEmits(['settings']);
+const emit = defineEmits<{
+  (e: 'settings'): void;
+}>();
 
-const goToSettings = () => {
+const goToSettings = (): void => {
   emit('settings');
 };
 
 // 格式化手机号，中间4位显示为*
-const formatPhone = (phone) => {
+const formatPhone = (phone: string): string => {
   if (!phone) return '未设置';
   return phone.toString().replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3');
 };

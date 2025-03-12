@@ -1,10 +1,7 @@
 <template>
   <div class="settings">
     <!-- 返回按钮 -->
-    <div class="back-button" @click="router.back()">
-      <van-icon name="arrow-left" size="18" />
-      <span class="page-title">设置</span>
-    </div>
+    <back-button title="设置" />
 
     <!-- 个人资料设置 -->
     <van-cell-group inset class="setting-group">
@@ -113,11 +110,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { useSettingsStore } from '../stores/settingsStore';
+import { BackButton } from '../components/common';
 
 const router = useRouter();
 const settingsStore = useSettingsStore();
@@ -160,7 +158,7 @@ const fontSizeOptions = [
 ];
 
 // 获取字体大小显示标签
-const getFontSizeLabel = (size) => {
+const getFontSizeLabel = (size: string): string => {
   const option = fontSizeOptions.find(opt => opt.value === size);
   return option ? option.text : '中';
 };
@@ -182,39 +180,48 @@ const selectedHour = ref('09');
 const selectedMinute = ref('00');
 
 // 默认时间索引
-const defaultTimeIndex = computed(() => [
-  timeColumns[0].values.indexOf(selectedHour.value),
-  timeColumns[1].values.indexOf(selectedMinute.value)
-]);
+const defaultTimeIndex = computed(() => {
+  const hourIndex = timeColumns[0]?.values?.indexOf(selectedHour.value) ?? 0;
+  const minuteIndex = timeColumns[1]?.values?.indexOf(selectedMinute.value) ?? 0;
+  return [hourIndex, minuteIndex];
+});
+
+interface PickerOption {
+  selectedOptions: Array<{text: string, value: any}>;
+  selectedValues: string[];
+  selectedIndexes: number[];
+}
 
 // 处理选择器确认
-const onGoalConfirm = (value) => {
-  learningSettings.value.dailyGoal = parseInt(value.selectedValues[0]);
+const onGoalConfirm = (value: PickerOption): void => {
+  learningSettings.value.dailyGoal = parseInt(value.selectedValues[0] as string);
   showGoalPicker.value = false;
   showToast('设置已保存');
 };
 
-const onReminderConfirm = (value) => {
-  const formattedTime = `${value.selectedValues[0]}:${value.selectedValues[1]}`;
+const onReminderConfirm = (value: PickerOption): void => {
+  const hour = value.selectedValues[0] as string;
+  const minute = value.selectedValues[1] as string;
+  const formattedTime = `${hour}:${minute}`;
   learningSettings.value.reminderTime = formattedTime;
   showReminderPicker.value = false;
   showToast('设置已保存');
 };
 
-const onDifficultyConfirm = (value) => {
-  learningSettings.value.difficulty = value.selectedValues[0];
+const onDifficultyConfirm = (value: PickerOption): void => {
+  learningSettings.value.difficulty = value.selectedValues[0] as string;
   showDifficultyPicker.value = false;
   showToast('设置已保存');
 };
 
-const onFontSizeConfirm = (value) => {
-  settingsStore.setFontSize(value.selectedValues[0]);
+const onFontSizeConfirm = (value: PickerOption): void => {
+  settingsStore.setFontSize(value.selectedValues[0] as string);
   showFontSizePicker.value = false;
   showToast('字体大小已更新');
 };
 
 // 清除缓存
-const clearCache = async () => {
+const clearCache = async (): Promise<void> => {
   showToast('缓存已清除');
 };
 </script>
@@ -241,16 +248,5 @@ const clearCache = async () => {
 
 :deep(.van-switch) {
   margin-left: 8px;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-}
-
-.page-title {
-  font-size: 18px;
-  margin-left: 10px;
 }
 </style>
