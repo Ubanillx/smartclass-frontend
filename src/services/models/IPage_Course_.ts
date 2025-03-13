@@ -2,12 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Course } from './Course';
+import type { Course } from './Course.ts';
 export type IPage_Course_ = {
-    current?: number;
-    pages?: number;
-    records?: Array<Course>;
-    size?: number;
-    total?: number;
+  current?: number;
+  pages?: number;
+  records?: Array<Course>;
+  size?: number;
+  total?: number;
 };
-

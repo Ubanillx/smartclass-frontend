@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { IPage_Achievement_ } from './IPage_Achievement_';
+import type { IPage_Achievement_ } from './IPage_Achievement_.ts';
 export type BaseResponse_IPage_Achievement_ = {
-    code?: number;
-    data?: IPage_Achievement_;
-    message?: string;
+  code?: number;
+  data?: IPage_Achievement_;
+  message?: string;
 };
-

@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AchievementDisplay } from './AchievementDisplay';
+import type { AchievementDisplay } from './AchievementDisplay.ts';
 export type BaseResponse_List_AchievementDisplay_ = {
-    code?: number;
-    data?: Array<AchievementDisplay>;
-    message?: string;
+  code?: number;
+  data?: Array<AchievementDisplay>;
+  message?: string;
 };
-

@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserAchievement } from './UserAchievement';
+import type { UserAchievement } from './UserAchievement.ts';
 export type BaseResponse_UserAchievement_ = {
-    code?: number;
-    data?: UserAchievement;
-    message?: string;
+  code?: number;
+  data?: UserAchievement;
+  message?: string;
 };
-

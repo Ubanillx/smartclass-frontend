@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserDailyGoal } from './UserDailyGoal';
+import type { UserDailyGoal } from './UserDailyGoal.ts';
 export type BaseResponse_UserDailyGoal_ = {
-    code?: number;
-    data?: UserDailyGoal;
-    message?: string;
+  code?: number;
+  data?: UserDailyGoal;
+  message?: string;
 };
-

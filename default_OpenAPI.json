@@ -217,8 +217,8 @@
             "description": "aiAvatarAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AiAvatarAddRequest",
-              "originalRef": "AiAvatarAddRequest"
+              "originalRef": "AiAvatarAddRequest",
+              "$ref": "#/definitions/AiAvatarAddRequest"
             }
           }
         ],
@@ -226,8 +226,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -247,8 +247,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -300,8 +300,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -318,8 +318,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -356,8 +356,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -365,8 +365,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -386,8 +386,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -431,8 +431,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AiAvatarVO»",
-              "originalRef": "BaseResponse«AiAvatarVO»"
+              "originalRef": "BaseResponse«AiAvatarVO»",
+              "$ref": "#/definitions/BaseResponse«AiAvatarVO»"
             }
           },
           "401": {
@@ -449,8 +449,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AiAvatarVO»",
-              "originalRef": "BaseResponse«AiAvatarVO»"
+              "originalRef": "BaseResponse«AiAvatarVO»",
+              "$ref": "#/definitions/BaseResponse«AiAvatarVO»"
             }
           },
           "401": {
@@ -487,8 +487,8 @@
             "description": "aiAvatarQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AiAvatarQueryRequest",
-              "originalRef": "AiAvatarQueryRequest"
+              "originalRef": "AiAvatarQueryRequest",
+              "$ref": "#/definitions/AiAvatarQueryRequest"
             }
           }
         ],
@@ -496,8 +496,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»"
             }
           },
           "201": {
@@ -517,8 +517,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»"
             }
           },
           "201": {
@@ -563,8 +563,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -581,8 +581,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -619,8 +619,8 @@
             "description": "aiAvatarUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AiAvatarUpdateRequest",
-              "originalRef": "AiAvatarUpdateRequest"
+              "originalRef": "AiAvatarUpdateRequest",
+              "$ref": "#/definitions/AiAvatarUpdateRequest"
             }
           }
         ],
@@ -628,8 +628,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -649,8 +649,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -704,8 +704,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -725,8 +725,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -795,8 +795,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarChatVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarChatVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarChatVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarChatVO»»"
             }
           },
           "401": {
@@ -813,8 +813,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarChatVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarChatVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarChatVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarChatVO»»"
             }
           },
           "401": {
@@ -851,8 +851,8 @@
             "description": "chatRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AiAvatarChatRequest",
-              "originalRef": "AiAvatarChatRequest"
+              "originalRef": "AiAvatarChatRequest",
+              "$ref": "#/definitions/AiAvatarChatRequest"
             }
           }
         ],
@@ -860,8 +860,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AiAvatarChatVO»",
-              "originalRef": "BaseResponse«AiAvatarChatVO»"
+              "originalRef": "BaseResponse«AiAvatarChatVO»",
+              "$ref": "#/definitions/BaseResponse«AiAvatarChatVO»"
             }
           },
           "201": {
@@ -881,8 +881,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AiAvatarChatVO»",
-              "originalRef": "BaseResponse«AiAvatarChatVO»"
+              "originalRef": "BaseResponse«AiAvatarChatVO»",
+              "$ref": "#/definitions/BaseResponse«AiAvatarChatVO»"
             }
           },
           "201": {
@@ -926,8 +926,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«string»»",
-              "originalRef": "BaseResponse«List«string»»"
+              "originalRef": "BaseResponse«List«string»»",
+              "$ref": "#/definitions/BaseResponse«List«string»»"
             }
           },
           "401": {
@@ -944,8 +944,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«string»»",
-              "originalRef": "BaseResponse«List«string»»"
+              "originalRef": "BaseResponse«List«string»»",
+              "$ref": "#/definitions/BaseResponse«List«string»»"
             }
           },
           "401": {
@@ -976,8 +976,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Announcement»»",
-              "originalRef": "BaseResponse«List«Announcement»»"
+              "originalRef": "BaseResponse«List«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«List«Announcement»»"
             }
           },
           "401": {
@@ -994,8 +994,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Announcement»»",
-              "originalRef": "BaseResponse«List«Announcement»»"
+              "originalRef": "BaseResponse«List«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«List«Announcement»»"
             }
           },
           "401": {
@@ -1032,8 +1032,8 @@
             "description": "announcementAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AnnouncementAddRequest",
-              "originalRef": "AnnouncementAddRequest"
+              "originalRef": "AnnouncementAddRequest",
+              "$ref": "#/definitions/AnnouncementAddRequest"
             }
           }
         ],
@@ -1041,8 +1041,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1062,8 +1062,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1103,8 +1103,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -1112,8 +1112,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1133,8 +1133,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1178,8 +1178,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Announcement»",
-              "originalRef": "BaseResponse«Announcement»"
+              "originalRef": "BaseResponse«Announcement»",
+              "$ref": "#/definitions/BaseResponse«Announcement»"
             }
           },
           "401": {
@@ -1196,8 +1196,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Announcement»",
-              "originalRef": "BaseResponse«Announcement»"
+              "originalRef": "BaseResponse«Announcement»",
+              "$ref": "#/definitions/BaseResponse«Announcement»"
             }
           },
           "401": {
@@ -1228,8 +1228,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Announcement»»",
-              "originalRef": "BaseResponse«List«Announcement»»"
+              "originalRef": "BaseResponse«List«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«List«Announcement»»"
             }
           },
           "401": {
@@ -1246,8 +1246,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Announcement»»",
-              "originalRef": "BaseResponse«List«Announcement»»"
+              "originalRef": "BaseResponse«List«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«List«Announcement»»"
             }
           },
           "401": {
@@ -1284,8 +1284,8 @@
             "description": "announcementQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AnnouncementQueryRequest",
-              "originalRef": "AnnouncementQueryRequest"
+              "originalRef": "AnnouncementQueryRequest",
+              "$ref": "#/definitions/AnnouncementQueryRequest"
             }
           }
         ],
@@ -1293,8 +1293,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«Announcement»»",
-              "originalRef": "BaseResponse«Page«Announcement»»"
+              "originalRef": "BaseResponse«Page«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«Page«Announcement»»"
             }
           },
           "201": {
@@ -1314,8 +1314,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«Announcement»»",
-              "originalRef": "BaseResponse«Page«Announcement»»"
+              "originalRef": "BaseResponse«Page«Announcement»»",
+              "$ref": "#/definitions/BaseResponse«Page«Announcement»»"
             }
           },
           "201": {
@@ -1355,8 +1355,8 @@
             "description": "announcementUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AnnouncementUpdateRequest",
-              "originalRef": "AnnouncementUpdateRequest"
+              "originalRef": "AnnouncementUpdateRequest",
+              "$ref": "#/definitions/AnnouncementUpdateRequest"
             }
           }
         ],
@@ -1364,8 +1364,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1385,8 +1385,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1429,8 +1429,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Achievement»»",
-              "originalRef": "BaseResponse«List«Achievement»»"
+              "originalRef": "BaseResponse«List«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«List«Achievement»»"
             }
           },
           "401": {
@@ -1447,8 +1447,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Achievement»»",
-              "originalRef": "BaseResponse«List«Achievement»»"
+              "originalRef": "BaseResponse«List«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«List«Achievement»»"
             }
           },
           "401": {
@@ -1485,8 +1485,8 @@
             "description": "achievement",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Achievement",
-              "originalRef": "Achievement"
+              "originalRef": "Achievement",
+              "$ref": "#/definitions/Achievement"
             }
           }
         ],
@@ -1494,8 +1494,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1515,8 +1515,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1563,8 +1563,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1584,8 +1584,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1625,8 +1625,8 @@
             "description": "display",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AchievementDisplay",
-              "originalRef": "AchievementDisplay"
+              "originalRef": "AchievementDisplay",
+              "$ref": "#/definitions/AchievementDisplay"
             }
           }
         ],
@@ -1634,8 +1634,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1655,8 +1655,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -1703,8 +1703,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1724,8 +1724,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1769,8 +1769,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AchievementDisplay»»",
-              "originalRef": "BaseResponse«List«AchievementDisplay»»"
+              "originalRef": "BaseResponse«List«AchievementDisplay»»",
+              "$ref": "#/definitions/BaseResponse«List«AchievementDisplay»»"
             }
           },
           "401": {
@@ -1787,8 +1787,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AchievementDisplay»»",
-              "originalRef": "BaseResponse«List«AchievementDisplay»»"
+              "originalRef": "BaseResponse«List«AchievementDisplay»»",
+              "$ref": "#/definitions/BaseResponse«List«AchievementDisplay»»"
             }
           },
           "401": {
@@ -1836,8 +1836,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AchievementDisplay»",
-              "originalRef": "BaseResponse«AchievementDisplay»"
+              "originalRef": "BaseResponse«AchievementDisplay»",
+              "$ref": "#/definitions/BaseResponse«AchievementDisplay»"
             }
           },
           "401": {
@@ -1854,8 +1854,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«AchievementDisplay»",
-              "originalRef": "BaseResponse«AchievementDisplay»"
+              "originalRef": "BaseResponse«AchievementDisplay»",
+              "$ref": "#/definitions/BaseResponse«AchievementDisplay»"
             }
           },
           "401": {
@@ -1892,8 +1892,8 @@
             "description": "display",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AchievementDisplay",
-              "originalRef": "AchievementDisplay"
+              "originalRef": "AchievementDisplay",
+              "$ref": "#/definitions/AchievementDisplay"
             }
           }
         ],
@@ -1901,8 +1901,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1922,8 +1922,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -1967,8 +1967,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Achievement»",
-              "originalRef": "BaseResponse«Achievement»"
+              "originalRef": "BaseResponse«Achievement»",
+              "$ref": "#/definitions/BaseResponse«Achievement»"
             }
           },
           "401": {
@@ -1985,8 +1985,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Achievement»",
-              "originalRef": "BaseResponse«Achievement»"
+              "originalRef": "BaseResponse«Achievement»",
+              "$ref": "#/definitions/BaseResponse«Achievement»"
             }
           },
           "401": {
@@ -2027,8 +2027,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Achievement»»",
-              "originalRef": "BaseResponse«List«Achievement»»"
+              "originalRef": "BaseResponse«List«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«List«Achievement»»"
             }
           },
           "401": {
@@ -2045,8 +2045,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«Achievement»»",
-              "originalRef": "BaseResponse«List«Achievement»»"
+              "originalRef": "BaseResponse«List«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«List«Achievement»»"
             }
           },
           "401": {
@@ -2234,8 +2234,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«Achievement»»",
-              "originalRef": "BaseResponse«IPage«Achievement»»"
+              "originalRef": "BaseResponse«IPage«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«IPage«Achievement»»"
             }
           },
           "401": {
@@ -2252,8 +2252,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«Achievement»»",
-              "originalRef": "BaseResponse«IPage«Achievement»»"
+              "originalRef": "BaseResponse«IPage«Achievement»»",
+              "$ref": "#/definitions/BaseResponse«IPage«Achievement»»"
             }
           },
           "401": {
@@ -2290,8 +2290,8 @@
             "description": "achievement",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Achievement",
-              "originalRef": "Achievement"
+              "originalRef": "Achievement",
+              "$ref": "#/definitions/Achievement"
             }
           }
         ],
@@ -2299,8 +2299,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2320,8 +2320,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2365,8 +2365,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2383,8 +2383,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2436,8 +2436,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserAchievement»",
-              "originalRef": "BaseResponse«UserAchievement»"
+              "originalRef": "BaseResponse«UserAchievement»",
+              "$ref": "#/definitions/BaseResponse«UserAchievement»"
             }
           },
           "201": {
@@ -2457,8 +2457,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserAchievement»",
-              "originalRef": "BaseResponse«UserAchievement»"
+              "originalRef": "BaseResponse«UserAchievement»",
+              "$ref": "#/definitions/BaseResponse«UserAchievement»"
             }
           },
           "201": {
@@ -2513,8 +2513,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2534,8 +2534,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2579,8 +2579,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2597,8 +2597,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2639,8 +2639,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2657,8 +2657,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»",
-              "originalRef": "BaseResponse«List«UserAchievement»»"
+              "originalRef": "BaseResponse«List«UserAchievement»»",
+              "$ref": "#/definitions/BaseResponse«List«UserAchievement»»"
             }
           },
           "401": {
@@ -2718,8 +2718,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2739,8 +2739,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -2780,8 +2780,8 @@
             "description": "course",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Course",
-              "originalRef": "Course"
+              "originalRef": "Course",
+              "$ref": "#/definitions/Course"
             }
           }
         ],
@@ -2922,8 +2922,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Course",
-              "originalRef": "Course"
+              "originalRef": "Course",
+              "$ref": "#/definitions/Course"
             }
           },
           "401": {
@@ -2940,8 +2940,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Course",
-              "originalRef": "Course"
+              "originalRef": "Course",
+              "$ref": "#/definitions/Course"
             }
           },
           "401": {
@@ -3163,8 +3163,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/IPage«Course»",
-              "originalRef": "IPage«Course»"
+              "originalRef": "IPage«Course»",
+              "$ref": "#/definitions/IPage«Course»"
             }
           },
           "401": {
@@ -3181,8 +3181,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/IPage«Course»",
-              "originalRef": "IPage«Course»"
+              "originalRef": "IPage«Course»",
+              "$ref": "#/definitions/IPage«Course»"
             }
           },
           "401": {
@@ -3219,8 +3219,8 @@
             "description": "course",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Course",
-              "originalRef": "Course"
+              "originalRef": "Course",
+              "$ref": "#/definitions/Course"
             }
           }
         ],
@@ -3367,8 +3367,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserDailyGoal»",
-              "originalRef": "BaseResponse«UserDailyGoal»"
+              "originalRef": "BaseResponse«UserDailyGoal»",
+              "$ref": "#/definitions/BaseResponse«UserDailyGoal»"
             }
           },
           "401": {
@@ -3385,8 +3385,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserDailyGoal»",
-              "originalRef": "BaseResponse«UserDailyGoal»"
+              "originalRef": "BaseResponse«UserDailyGoal»",
+              "$ref": "#/definitions/BaseResponse«UserDailyGoal»"
             }
           },
           "401": {
@@ -3427,8 +3427,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "401": {
@@ -3445,8 +3445,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "401": {
@@ -3498,8 +3498,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserDailyGoal»",
-              "originalRef": "BaseResponse«UserDailyGoal»"
+              "originalRef": "BaseResponse«UserDailyGoal»",
+              "$ref": "#/definitions/BaseResponse«UserDailyGoal»"
             }
           },
           "201": {
@@ -3519,8 +3519,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserDailyGoal»",
-              "originalRef": "BaseResponse«UserDailyGoal»"
+              "originalRef": "BaseResponse«UserDailyGoal»",
+              "$ref": "#/definitions/BaseResponse«UserDailyGoal»"
             }
           },
           "201": {
@@ -3564,8 +3564,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "401": {
@@ -3582,8 +3582,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "401": {
@@ -3635,8 +3635,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -3656,8 +3656,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -3720,8 +3720,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -3741,8 +3741,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -3813,8 +3813,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -3834,8 +3834,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -3887,8 +3887,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»",
-              "originalRef": "BaseResponse«List«UserLearningRecord»»"
+              "originalRef": "BaseResponse«List«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»"
             }
           },
           "401": {
@@ -3905,8 +3905,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»",
-              "originalRef": "BaseResponse«List«UserLearningRecord»»"
+              "originalRef": "BaseResponse«List«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»"
             }
           },
           "401": {
@@ -3965,8 +3965,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»",
-              "originalRef": "BaseResponse«IPage«UserLearningRecord»»"
+              "originalRef": "BaseResponse«IPage«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»"
             }
           },
           "401": {
@@ -3983,8 +3983,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»",
-              "originalRef": "BaseResponse«IPage«UserLearningRecord»»"
+              "originalRef": "BaseResponse«IPage«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»"
             }
           },
           "401": {
@@ -4033,8 +4033,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»",
-              "originalRef": "BaseResponse«List«UserLearningRecord»»"
+              "originalRef": "BaseResponse«List«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»"
             }
           },
           "401": {
@@ -4051,8 +4051,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»",
-              "originalRef": "BaseResponse«List«UserLearningRecord»»"
+              "originalRef": "BaseResponse«List«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«List«UserLearningRecord»»"
             }
           },
           "401": {
@@ -4118,8 +4118,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»",
-              "originalRef": "BaseResponse«IPage«UserLearningRecord»»"
+              "originalRef": "BaseResponse«IPage«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»"
             }
           },
           "401": {
@@ -4136,8 +4136,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»",
-              "originalRef": "BaseResponse«IPage«UserLearningRecord»»"
+              "originalRef": "BaseResponse«IPage«UserLearningRecord»»",
+              "$ref": "#/definitions/BaseResponse«IPage«UserLearningRecord»»"
             }
           },
           "401": {
@@ -4197,8 +4197,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -4218,8 +4218,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningRecord»",
-              "originalRef": "BaseResponse«UserLearningRecord»"
+              "originalRef": "BaseResponse«UserLearningRecord»",
+              "$ref": "#/definitions/BaseResponse«UserLearningRecord»"
             }
           },
           "201": {
@@ -4263,8 +4263,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningStats»",
-              "originalRef": "BaseResponse«UserLearningStats»"
+              "originalRef": "BaseResponse«UserLearningStats»",
+              "$ref": "#/definitions/BaseResponse«UserLearningStats»"
             }
           },
           "401": {
@@ -4281,8 +4281,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserLearningStats»",
-              "originalRef": "BaseResponse«UserLearningStats»"
+              "originalRef": "BaseResponse«UserLearningStats»",
+              "$ref": "#/definitions/BaseResponse«UserLearningStats»"
             }
           },
           "401": {
@@ -4334,8 +4334,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4355,8 +4355,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4411,8 +4411,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4432,8 +4432,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4477,8 +4477,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "401": {
@@ -4495,8 +4495,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "401": {
@@ -4567,8 +4567,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4588,8 +4588,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4629,8 +4629,8 @@
             "description": "dailyArticleAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyArticleAddRequest",
-              "originalRef": "DailyArticleAddRequest"
+              "originalRef": "DailyArticleAddRequest",
+              "$ref": "#/definitions/DailyArticleAddRequest"
             }
           }
         ],
@@ -4638,8 +4638,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -4659,8 +4659,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -4712,8 +4712,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4730,8 +4730,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4772,8 +4772,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4790,8 +4790,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4828,8 +4828,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -4837,8 +4837,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4858,8 +4858,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -4912,8 +4912,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4930,8 +4930,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -4972,8 +4972,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«DailyArticleVO»",
-              "originalRef": "BaseResponse«DailyArticleVO»"
+              "originalRef": "BaseResponse«DailyArticleVO»",
+              "$ref": "#/definitions/BaseResponse«DailyArticleVO»"
             }
           },
           "401": {
@@ -4990,8 +4990,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«DailyArticleVO»",
-              "originalRef": "BaseResponse«DailyArticleVO»"
+              "originalRef": "BaseResponse«DailyArticleVO»",
+              "$ref": "#/definitions/BaseResponse«DailyArticleVO»"
             }
           },
           "401": {
@@ -5035,8 +5035,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5056,8 +5056,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5097,8 +5097,8 @@
             "description": "dailyArticleQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyArticleQueryRequest",
-              "originalRef": "DailyArticleQueryRequest"
+              "originalRef": "DailyArticleQueryRequest",
+              "$ref": "#/definitions/DailyArticleQueryRequest"
             }
           }
         ],
@@ -5106,8 +5106,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«DailyArticleVO»»",
-              "originalRef": "BaseResponse«Page«DailyArticleVO»»"
+              "originalRef": "BaseResponse«Page«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«DailyArticleVO»»"
             }
           },
           "201": {
@@ -5127,8 +5127,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«DailyArticleVO»»",
-              "originalRef": "BaseResponse«Page«DailyArticleVO»»"
+              "originalRef": "BaseResponse«Page«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«DailyArticleVO»»"
             }
           },
           "201": {
@@ -5162,8 +5162,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -5180,8 +5180,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»",
-              "originalRef": "BaseResponse«List«DailyArticleVO»»"
+              "originalRef": "BaseResponse«List«DailyArticleVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyArticleVO»»"
             }
           },
           "401": {
@@ -5218,8 +5218,8 @@
             "description": "dailyArticleUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyArticleUpdateRequest",
-              "originalRef": "DailyArticleUpdateRequest"
+              "originalRef": "DailyArticleUpdateRequest",
+              "$ref": "#/definitions/DailyArticleUpdateRequest"
             }
           }
         ],
@@ -5227,8 +5227,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5248,8 +5248,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5289,8 +5289,8 @@
             "description": "dailyWordAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyWordAddRequest",
-              "originalRef": "DailyWordAddRequest"
+              "originalRef": "DailyWordAddRequest",
+              "$ref": "#/definitions/DailyWordAddRequest"
             }
           }
         ],
@@ -5298,8 +5298,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -5319,8 +5319,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -5372,8 +5372,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5390,8 +5390,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5432,8 +5432,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5450,8 +5450,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5488,8 +5488,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -5497,8 +5497,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5518,8 +5518,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5572,8 +5572,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5590,8 +5590,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5632,8 +5632,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«DailyWordVO»",
-              "originalRef": "BaseResponse«DailyWordVO»"
+              "originalRef": "BaseResponse«DailyWordVO»",
+              "$ref": "#/definitions/BaseResponse«DailyWordVO»"
             }
           },
           "401": {
@@ -5650,8 +5650,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«DailyWordVO»",
-              "originalRef": "BaseResponse«DailyWordVO»"
+              "originalRef": "BaseResponse«DailyWordVO»",
+              "$ref": "#/definitions/BaseResponse«DailyWordVO»"
             }
           },
           "401": {
@@ -5688,8 +5688,8 @@
             "description": "dailyWordQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyWordQueryRequest",
-              "originalRef": "DailyWordQueryRequest"
+              "originalRef": "DailyWordQueryRequest",
+              "$ref": "#/definitions/DailyWordQueryRequest"
             }
           }
         ],
@@ -5697,8 +5697,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«DailyWordVO»»",
-              "originalRef": "BaseResponse«Page«DailyWordVO»»"
+              "originalRef": "BaseResponse«Page«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«DailyWordVO»»"
             }
           },
           "201": {
@@ -5718,8 +5718,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«DailyWordVO»»",
-              "originalRef": "BaseResponse«Page«DailyWordVO»»"
+              "originalRef": "BaseResponse«Page«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«DailyWordVO»»"
             }
           },
           "201": {
@@ -5753,8 +5753,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5771,8 +5771,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»",
-              "originalRef": "BaseResponse«List«DailyWordVO»»"
+              "originalRef": "BaseResponse«List«DailyWordVO»»",
+              "$ref": "#/definitions/BaseResponse«List«DailyWordVO»»"
             }
           },
           "401": {
@@ -5809,8 +5809,8 @@
             "description": "dailyWordUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DailyWordUpdateRequest",
-              "originalRef": "DailyWordUpdateRequest"
+              "originalRef": "DailyWordUpdateRequest",
+              "$ref": "#/definitions/DailyWordUpdateRequest"
             }
           }
         ],
@@ -5818,8 +5818,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5839,8 +5839,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -5910,8 +5910,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -5931,8 +5931,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -5972,8 +5972,8 @@
             "description": "uploadFileRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UploadFileRequest",
-              "originalRef": "UploadFileRequest"
+              "originalRef": "UploadFileRequest",
+              "$ref": "#/definitions/UploadFileRequest"
             }
           }
         ],
@@ -5981,8 +5981,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6002,8 +6002,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6052,8 +6052,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6073,8 +6073,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6120,8 +6120,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6141,8 +6141,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«string»",
-              "originalRef": "BaseResponse«string»"
+              "originalRef": "BaseResponse«string»",
+              "$ref": "#/definitions/BaseResponse«string»"
             }
           },
           "201": {
@@ -6182,8 +6182,8 @@
             "description": "postAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostAddRequest",
-              "originalRef": "PostAddRequest"
+              "originalRef": "PostAddRequest",
+              "$ref": "#/definitions/PostAddRequest"
             }
           }
         ],
@@ -6191,8 +6191,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -6212,8 +6212,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -6253,8 +6253,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -6262,8 +6262,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6283,8 +6283,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6324,8 +6324,8 @@
             "description": "postEditRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostEditRequest",
-              "originalRef": "PostEditRequest"
+              "originalRef": "PostEditRequest",
+              "$ref": "#/definitions/PostEditRequest"
             }
           }
         ],
@@ -6333,8 +6333,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6354,8 +6354,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6399,8 +6399,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«PostVO»",
-              "originalRef": "BaseResponse«PostVO»"
+              "originalRef": "BaseResponse«PostVO»",
+              "$ref": "#/definitions/BaseResponse«PostVO»"
             }
           },
           "401": {
@@ -6417,8 +6417,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«PostVO»",
-              "originalRef": "BaseResponse«PostVO»"
+              "originalRef": "BaseResponse«PostVO»",
+              "$ref": "#/definitions/BaseResponse«PostVO»"
             }
           },
           "401": {
@@ -6455,8 +6455,8 @@
             "description": "postQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostQueryRequest",
-              "originalRef": "PostQueryRequest"
+              "originalRef": "PostQueryRequest",
+              "$ref": "#/definitions/PostQueryRequest"
             }
           }
         ],
@@ -6464,8 +6464,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«Post»»",
-              "originalRef": "BaseResponse«Page«Post»»"
+              "originalRef": "BaseResponse«Page«Post»»",
+              "$ref": "#/definitions/BaseResponse«Page«Post»»"
             }
           },
           "201": {
@@ -6485,8 +6485,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«Post»»",
-              "originalRef": "BaseResponse«Page«Post»»"
+              "originalRef": "BaseResponse«Page«Post»»",
+              "$ref": "#/definitions/BaseResponse«Page«Post»»"
             }
           },
           "201": {
@@ -6526,8 +6526,8 @@
             "description": "postQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostQueryRequest",
-              "originalRef": "PostQueryRequest"
+              "originalRef": "PostQueryRequest",
+              "$ref": "#/definitions/PostQueryRequest"
             }
           }
         ],
@@ -6535,8 +6535,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6556,8 +6556,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6597,8 +6597,8 @@
             "description": "postQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostQueryRequest",
-              "originalRef": "PostQueryRequest"
+              "originalRef": "PostQueryRequest",
+              "$ref": "#/definitions/PostQueryRequest"
             }
           }
         ],
@@ -6606,8 +6606,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6627,8 +6627,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6668,8 +6668,8 @@
             "description": "postQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostQueryRequest",
-              "originalRef": "PostQueryRequest"
+              "originalRef": "PostQueryRequest",
+              "$ref": "#/definitions/PostQueryRequest"
             }
           }
         ],
@@ -6677,8 +6677,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6698,8 +6698,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6739,8 +6739,8 @@
             "description": "postUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostUpdateRequest",
-              "originalRef": "PostUpdateRequest"
+              "originalRef": "PostUpdateRequest",
+              "$ref": "#/definitions/PostUpdateRequest"
             }
           }
         ],
@@ -6748,8 +6748,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6769,8 +6769,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -6810,8 +6810,8 @@
             "description": "postFavourAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostFavourAddRequest",
-              "originalRef": "PostFavourAddRequest"
+              "originalRef": "PostFavourAddRequest",
+              "$ref": "#/definitions/PostFavourAddRequest"
             }
           }
         ],
@@ -6819,8 +6819,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "201": {
@@ -6840,8 +6840,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "201": {
@@ -6881,8 +6881,8 @@
             "description": "postFavourQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostFavourQueryRequest",
-              "originalRef": "PostFavourQueryRequest"
+              "originalRef": "PostFavourQueryRequest",
+              "$ref": "#/definitions/PostFavourQueryRequest"
             }
           }
         ],
@@ -6890,8 +6890,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6911,8 +6911,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6952,8 +6952,8 @@
             "description": "postQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostQueryRequest",
-              "originalRef": "PostQueryRequest"
+              "originalRef": "PostQueryRequest",
+              "$ref": "#/definitions/PostQueryRequest"
             }
           }
         ],
@@ -6961,8 +6961,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -6982,8 +6982,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«PostVO»»",
-              "originalRef": "BaseResponse«Page«PostVO»»"
+              "originalRef": "BaseResponse«Page«PostVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«PostVO»»"
             }
           },
           "201": {
@@ -7023,8 +7023,8 @@
             "description": "postThumbAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostThumbAddRequest",
-              "originalRef": "PostThumbAddRequest"
+              "originalRef": "PostThumbAddRequest",
+              "$ref": "#/definitions/PostThumbAddRequest"
             }
           }
         ],
@@ -7032,8 +7032,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "201": {
@@ -7053,8 +7053,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«int»",
-              "originalRef": "BaseResponse«int»"
+              "originalRef": "BaseResponse«int»",
+              "$ref": "#/definitions/BaseResponse«int»"
             }
           },
           "201": {
@@ -7142,8 +7142,8 @@
             "description": "userAddRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserAddRequest",
-              "originalRef": "UserAddRequest"
+              "originalRef": "UserAddRequest",
+              "$ref": "#/definitions/UserAddRequest"
             }
           }
         ],
@@ -7151,8 +7151,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -7172,8 +7172,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -7220,8 +7220,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7241,8 +7241,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7296,8 +7296,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»"
             }
           },
           "401": {
@@ -7314,8 +7314,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»",
-              "originalRef": "BaseResponse«Page«AiAvatarVO»»"
+              "originalRef": "BaseResponse«Page«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«AiAvatarVO»»"
             }
           },
           "401": {
@@ -7352,8 +7352,8 @@
             "description": "userAiAvatarRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserAiAvatarRequest",
-              "originalRef": "UserAiAvatarRequest"
+              "originalRef": "UserAiAvatarRequest",
+              "$ref": "#/definitions/UserAiAvatarRequest"
             }
           }
         ],
@@ -7361,8 +7361,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7382,8 +7382,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7428,8 +7428,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -7446,8 +7446,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»",
-              "originalRef": "BaseResponse«List«AiAvatarVO»»"
+              "originalRef": "BaseResponse«List«AiAvatarVO»»",
+              "$ref": "#/definitions/BaseResponse«List«AiAvatarVO»»"
             }
           },
           "401": {
@@ -7484,8 +7484,8 @@
             "description": "userAiAvatarRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserAiAvatarRequest",
-              "originalRef": "UserAiAvatarRequest"
+              "originalRef": "UserAiAvatarRequest",
+              "$ref": "#/definitions/UserAiAvatarRequest"
             }
           }
         ],
@@ -7493,8 +7493,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7514,8 +7514,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7562,8 +7562,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7583,8 +7583,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7624,8 +7624,8 @@
             "description": "deleteRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeleteRequest",
-              "originalRef": "DeleteRequest"
+              "originalRef": "DeleteRequest",
+              "$ref": "#/definitions/DeleteRequest"
             }
           }
         ],
@@ -7633,8 +7633,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7654,8 +7654,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -7699,8 +7699,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«User»",
-              "originalRef": "BaseResponse«User»"
+              "originalRef": "BaseResponse«User»",
+              "$ref": "#/definitions/BaseResponse«User»"
             }
           },
           "401": {
@@ -7717,8 +7717,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«User»",
-              "originalRef": "BaseResponse«User»"
+              "originalRef": "BaseResponse«User»",
+              "$ref": "#/definitions/BaseResponse«User»"
             }
           },
           "401": {
@@ -7749,8 +7749,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "401": {
@@ -7767,8 +7767,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "401": {
@@ -7809,8 +7809,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserVO»",
-              "originalRef": "BaseResponse«UserVO»"
+              "originalRef": "BaseResponse«UserVO»",
+              "$ref": "#/definitions/BaseResponse«UserVO»"
             }
           },
           "401": {
@@ -7827,8 +7827,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«UserVO»",
-              "originalRef": "BaseResponse«UserVO»"
+              "originalRef": "BaseResponse«UserVO»",
+              "$ref": "#/definitions/BaseResponse«UserVO»"
             }
           },
           "401": {
@@ -7865,8 +7865,8 @@
             "description": "userQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserQueryRequest",
-              "originalRef": "UserQueryRequest"
+              "originalRef": "UserQueryRequest",
+              "$ref": "#/definitions/UserQueryRequest"
             }
           }
         ],
@@ -7874,8 +7874,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«User»»",
-              "originalRef": "BaseResponse«Page«User»»"
+              "originalRef": "BaseResponse«Page«User»»",
+              "$ref": "#/definitions/BaseResponse«Page«User»»"
             }
           },
           "201": {
@@ -7895,8 +7895,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«User»»",
-              "originalRef": "BaseResponse«Page«User»»"
+              "originalRef": "BaseResponse«Page«User»»",
+              "$ref": "#/definitions/BaseResponse«Page«User»»"
             }
           },
           "201": {
@@ -7936,8 +7936,8 @@
             "description": "userQueryRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserQueryRequest",
-              "originalRef": "UserQueryRequest"
+              "originalRef": "UserQueryRequest",
+              "$ref": "#/definitions/UserQueryRequest"
             }
           }
         ],
@@ -7945,8 +7945,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«UserVO»»",
-              "originalRef": "BaseResponse«Page«UserVO»»"
+              "originalRef": "BaseResponse«Page«UserVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«UserVO»»"
             }
           },
           "201": {
@@ -7966,8 +7966,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«Page«UserVO»»",
-              "originalRef": "BaseResponse«Page«UserVO»»"
+              "originalRef": "BaseResponse«Page«UserVO»»",
+              "$ref": "#/definitions/BaseResponse«Page«UserVO»»"
             }
           },
           "201": {
@@ -8007,8 +8007,8 @@
             "description": "userLoginRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserLoginRequest",
-              "originalRef": "UserLoginRequest"
+              "originalRef": "UserLoginRequest",
+              "$ref": "#/definitions/UserLoginRequest"
             }
           }
         ],
@@ -8016,8 +8016,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "201": {
@@ -8037,8 +8037,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "201": {
@@ -8078,8 +8078,8 @@
             "description": "userLoginByPhoneRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserLoginByPhoneRequest",
-              "originalRef": "UserLoginByPhoneRequest"
+              "originalRef": "UserLoginByPhoneRequest",
+              "$ref": "#/definitions/UserLoginByPhoneRequest"
             }
           }
         ],
@@ -8087,8 +8087,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "201": {
@@ -8108,8 +8108,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "201": {
@@ -8152,8 +8152,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "401": {
@@ -8170,8 +8170,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«LoginUserVO»",
-              "originalRef": "BaseResponse«LoginUserVO»"
+              "originalRef": "BaseResponse«LoginUserVO»",
+              "$ref": "#/definitions/BaseResponse«LoginUserVO»"
             }
           },
           "401": {
@@ -8205,8 +8205,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8226,8 +8226,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8267,8 +8267,8 @@
             "description": "userRegisterRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserRegisterRequest",
-              "originalRef": "UserRegisterRequest"
+              "originalRef": "UserRegisterRequest",
+              "$ref": "#/definitions/UserRegisterRequest"
             }
           }
         ],
@@ -8276,8 +8276,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -8297,8 +8297,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -8338,8 +8338,8 @@
             "description": "userPhoneRegisterRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserPhoneRegisterRequest",
-              "originalRef": "UserPhoneRegisterRequest"
+              "originalRef": "UserPhoneRegisterRequest",
+              "$ref": "#/definitions/UserPhoneRegisterRequest"
             }
           }
         ],
@@ -8347,8 +8347,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -8368,8 +8368,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«long»",
-              "originalRef": "BaseResponse«long»"
+              "originalRef": "BaseResponse«long»",
+              "$ref": "#/definitions/BaseResponse«long»"
             }
           },
           "201": {
@@ -8409,8 +8409,8 @@
             "description": "userUpdateRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserUpdateRequest",
-              "originalRef": "UserUpdateRequest"
+              "originalRef": "UserUpdateRequest",
+              "$ref": "#/definitions/UserUpdateRequest"
             }
           }
         ],
@@ -8418,8 +8418,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8439,8 +8439,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8480,8 +8480,8 @@
             "description": "userUpdateMyRequest",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserUpdateMyRequest",
-              "originalRef": "UserUpdateMyRequest"
+              "originalRef": "UserUpdateMyRequest",
+              "$ref": "#/definitions/UserUpdateMyRequest"
             }
           }
         ],
@@ -8489,8 +8489,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8510,8 +8510,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/BaseResponse«boolean»",
-              "originalRef": "BaseResponse«boolean»"
+              "originalRef": "BaseResponse«boolean»",
+              "$ref": "#/definitions/BaseResponse«boolean»"
             }
           },
           "201": {
@@ -8537,99 +8537,78 @@
       "type": "object",
       "properties": {
         "achievementCondition": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "adminId": {
           "type": "integer",
-          "format": "int64",
-          "refType": null
+          "format": "int64"
         },
         "badgeUrl": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "bannerUrl": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "category": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "conditionType": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "conditionValue": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "createTime": {
           "type": "string",
-          "format": "date-time",
-          "refType": null
+          "format": "date-time"
         },
         "description": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "iconUrl": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "id": {
           "type": "integer",
-          "format": "int64",
-          "refType": null
+          "format": "int64"
         },
         "isDelete": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "isHidden": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "isSecret": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "level": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "name": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "points": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "rewardType": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "rewardValue": {
-          "type": "string",
-          "refType": null
+          "type": "string"
         },
         "sort": {
           "type": "integer",
-          "format": "int32",
-          "refType": null
+          "format": "int32"
         },
         "updateTime": {
           "type": "string",
-          "format": "date-time",
-          "refType": null
+          "format": "date-time"
         }
       },
       "title": "Achievement"
@@ -9158,8 +9137,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/AchievementDisplay",
-          "originalRef": "AchievementDisplay"
+          "originalRef": "AchievementDisplay",
+          "$ref": "#/definitions/AchievementDisplay"
         },
         "message": {
           "type": "string"
@@ -9175,8 +9154,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Achievement",
-          "originalRef": "Achievement"
+          "originalRef": "Achievement",
+          "$ref": "#/definitions/Achievement"
         },
         "message": {
           "type": "string"
@@ -9192,8 +9171,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/AiAvatarChatVO",
-          "originalRef": "AiAvatarChatVO"
+          "originalRef": "AiAvatarChatVO",
+          "$ref": "#/definitions/AiAvatarChatVO"
         },
         "message": {
           "type": "string"
@@ -9209,8 +9188,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/AiAvatarVO",
-          "originalRef": "AiAvatarVO"
+          "originalRef": "AiAvatarVO",
+          "$ref": "#/definitions/AiAvatarVO"
         },
         "message": {
           "type": "string"
@@ -9226,8 +9205,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Announcement",
-          "originalRef": "Announcement"
+          "originalRef": "Announcement",
+          "$ref": "#/definitions/Announcement"
         },
         "message": {
           "type": "string"
@@ -9243,8 +9222,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/DailyArticleVO",
-          "originalRef": "DailyArticleVO"
+          "originalRef": "DailyArticleVO",
+          "$ref": "#/definitions/DailyArticleVO"
         },
         "message": {
           "type": "string"
@@ -9260,8 +9239,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/DailyWordVO",
-          "originalRef": "DailyWordVO"
+          "originalRef": "DailyWordVO",
+          "$ref": "#/definitions/DailyWordVO"
         },
         "message": {
           "type": "string"
@@ -9277,8 +9256,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/IPage«Achievement»",
-          "originalRef": "IPage«Achievement»"
+          "originalRef": "IPage«Achievement»",
+          "$ref": "#/definitions/IPage«Achievement»"
         },
         "message": {
           "type": "string"
@@ -9294,8 +9273,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/IPage«UserLearningRecord»",
-          "originalRef": "IPage«UserLearningRecord»"
+          "originalRef": "IPage«UserLearningRecord»",
+          "$ref": "#/definitions/IPage«UserLearningRecord»"
         },
         "message": {
           "type": "string"
@@ -9313,8 +9292,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AchievementDisplay",
-            "originalRef": "AchievementDisplay"
+            "originalRef": "AchievementDisplay",
+            "$ref": "#/definitions/AchievementDisplay"
           }
         },
         "message": {
@@ -9333,8 +9312,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Achievement",
-            "originalRef": "Achievement"
+            "originalRef": "Achievement",
+            "$ref": "#/definitions/Achievement"
           }
         },
         "message": {
@@ -9353,8 +9332,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AiAvatarVO",
-            "originalRef": "AiAvatarVO"
+            "originalRef": "AiAvatarVO",
+            "$ref": "#/definitions/AiAvatarVO"
           }
         },
         "message": {
@@ -9373,8 +9352,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Announcement",
-            "originalRef": "Announcement"
+            "originalRef": "Announcement",
+            "$ref": "#/definitions/Announcement"
           }
         },
         "message": {
@@ -9393,8 +9372,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DailyArticleVO",
-            "originalRef": "DailyArticleVO"
+            "originalRef": "DailyArticleVO",
+            "$ref": "#/definitions/DailyArticleVO"
           }
         },
         "message": {
@@ -9413,8 +9392,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DailyWordVO",
-            "originalRef": "DailyWordVO"
+            "originalRef": "DailyWordVO",
+            "$ref": "#/definitions/DailyWordVO"
           }
         },
         "message": {
@@ -9433,8 +9412,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/UserAchievement",
-            "originalRef": "UserAchievement"
+            "originalRef": "UserAchievement",
+            "$ref": "#/definitions/UserAchievement"
           }
         },
         "message": {
@@ -9453,8 +9432,8 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/UserLearningRecord",
-            "originalRef": "UserLearningRecord"
+            "originalRef": "UserLearningRecord",
+            "$ref": "#/definitions/UserLearningRecord"
           }
         },
         "message": {
@@ -9490,8 +9469,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/LoginUserVO",
-          "originalRef": "LoginUserVO"
+          "originalRef": "LoginUserVO",
+          "$ref": "#/definitions/LoginUserVO"
         },
         "message": {
           "type": "string"
@@ -9507,8 +9486,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«AiAvatarChatVO»",
-          "originalRef": "Page«AiAvatarChatVO»"
+          "originalRef": "Page«AiAvatarChatVO»",
+          "$ref": "#/definitions/Page«AiAvatarChatVO»"
         },
         "message": {
           "type": "string"
@@ -9524,8 +9503,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«AiAvatarVO»",
-          "originalRef": "Page«AiAvatarVO»"
+          "originalRef": "Page«AiAvatarVO»",
+          "$ref": "#/definitions/Page«AiAvatarVO»"
         },
         "message": {
           "type": "string"
@@ -9541,8 +9520,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«Announcement»",
-          "originalRef": "Page«Announcement»"
+          "originalRef": "Page«Announcement»",
+          "$ref": "#/definitions/Page«Announcement»"
         },
         "message": {
           "type": "string"
@@ -9558,8 +9537,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«DailyArticleVO»",
-          "originalRef": "Page«DailyArticleVO»"
+          "originalRef": "Page«DailyArticleVO»",
+          "$ref": "#/definitions/Page«DailyArticleVO»"
         },
         "message": {
           "type": "string"
@@ -9575,8 +9554,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«DailyWordVO»",
-          "originalRef": "Page«DailyWordVO»"
+          "originalRef": "Page«DailyWordVO»",
+          "$ref": "#/definitions/Page«DailyWordVO»"
         },
         "message": {
           "type": "string"
@@ -9592,8 +9571,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«PostVO»",
-          "originalRef": "Page«PostVO»"
+          "originalRef": "Page«PostVO»",
+          "$ref": "#/definitions/Page«PostVO»"
         },
         "message": {
           "type": "string"
@@ -9609,8 +9588,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«Post»",
-          "originalRef": "Page«Post»"
+          "originalRef": "Page«Post»",
+          "$ref": "#/definitions/Page«Post»"
         },
         "message": {
           "type": "string"
@@ -9626,8 +9605,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«UserVO»",
-          "originalRef": "Page«UserVO»"
+          "originalRef": "Page«UserVO»",
+          "$ref": "#/definitions/Page«UserVO»"
         },
         "message": {
           "type": "string"
@@ -9643,8 +9622,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/Page«User»",
-          "originalRef": "Page«User»"
+          "originalRef": "Page«User»",
+          "$ref": "#/definitions/Page«User»"
         },
         "message": {
           "type": "string"
@@ -9660,8 +9639,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/PostVO",
-          "originalRef": "PostVO"
+          "originalRef": "PostVO",
+          "$ref": "#/definitions/PostVO"
         },
         "message": {
           "type": "string"
@@ -9677,8 +9656,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/UserAchievement",
-          "originalRef": "UserAchievement"
+          "originalRef": "UserAchievement",
+          "$ref": "#/definitions/UserAchievement"
         },
         "message": {
           "type": "string"
@@ -9694,8 +9673,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/UserDailyGoal",
-          "originalRef": "UserDailyGoal"
+          "originalRef": "UserDailyGoal",
+          "$ref": "#/definitions/UserDailyGoal"
         },
         "message": {
           "type": "string"
@@ -9711,8 +9690,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/UserLearningRecord",
-          "originalRef": "UserLearningRecord"
+          "originalRef": "UserLearningRecord",
+          "$ref": "#/definitions/UserLearningRecord"
         },
         "message": {
           "type": "string"
@@ -9728,8 +9707,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/UserLearningStats",
-          "originalRef": "UserLearningStats"
+          "originalRef": "UserLearningStats",
+          "$ref": "#/definitions/UserLearningStats"
         },
         "message": {
           "type": "string"
@@ -9745,8 +9724,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/UserVO",
-          "originalRef": "UserVO"
+          "originalRef": "UserVO",
+          "$ref": "#/definitions/UserVO"
         },
         "message": {
           "type": "string"
@@ -9762,8 +9741,8 @@
           "format": "int32"
         },
         "data": {
-          "$ref": "#/definitions/User",
-          "originalRef": "User"
+          "originalRef": "User",
+          "$ref": "#/definitions/User"
         },
         "message": {
           "type": "string"
@@ -10357,8 +10336,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Achievement",
-            "originalRef": "Achievement"
+            "originalRef": "Achievement",
+            "$ref": "#/definitions/Achievement"
           }
         },
         "size": {
@@ -10386,8 +10365,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Course",
-            "originalRef": "Course"
+            "originalRef": "Course",
+            "$ref": "#/definitions/Course"
           }
         },
         "size": {
@@ -10415,8 +10394,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/UserLearningRecord",
-            "originalRef": "UserLearningRecord"
+            "originalRef": "UserLearningRecord",
+            "$ref": "#/definitions/UserLearningRecord"
           }
         },
         "size": {
@@ -10471,10 +10450,12 @@
       "type": "object",
       "properties": {
         "asc": {
-          "type": "boolean"
+          "type": "boolean",
+          "refType": null
         },
         "column": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         }
       },
       "title": "OrderItem"
@@ -10499,8 +10480,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10510,8 +10491,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AiAvatarChatVO",
-            "originalRef": "AiAvatarChatVO"
+            "originalRef": "AiAvatarChatVO",
+            "$ref": "#/definitions/AiAvatarChatVO"
           }
         },
         "searchCount": {
@@ -10548,8 +10529,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10559,8 +10540,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AiAvatarVO",
-            "originalRef": "AiAvatarVO"
+            "originalRef": "AiAvatarVO",
+            "$ref": "#/definitions/AiAvatarVO"
           }
         },
         "searchCount": {
@@ -10597,8 +10578,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10608,8 +10589,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Announcement",
-            "originalRef": "Announcement"
+            "originalRef": "Announcement",
+            "$ref": "#/definitions/Announcement"
           }
         },
         "searchCount": {
@@ -10646,8 +10627,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10657,8 +10638,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DailyArticleVO",
-            "originalRef": "DailyArticleVO"
+            "originalRef": "DailyArticleVO",
+            "$ref": "#/definitions/DailyArticleVO"
           }
         },
         "searchCount": {
@@ -10695,8 +10676,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10706,8 +10687,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DailyWordVO",
-            "originalRef": "DailyWordVO"
+            "originalRef": "DailyWordVO",
+            "$ref": "#/definitions/DailyWordVO"
           }
         },
         "searchCount": {
@@ -10744,8 +10725,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10755,8 +10736,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PostVO",
-            "originalRef": "PostVO"
+            "originalRef": "PostVO",
+            "$ref": "#/definitions/PostVO"
           }
         },
         "searchCount": {
@@ -10793,8 +10774,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10804,8 +10785,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Post",
-            "originalRef": "Post"
+            "originalRef": "Post",
+            "$ref": "#/definitions/Post"
           }
         },
         "searchCount": {
@@ -10842,8 +10823,8 @@
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
           }
         },
         "pages": {
@@ -10853,8 +10834,8 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/UserVO",
-            "originalRef": "UserVO"
+            "originalRef": "UserVO",
+            "$ref": "#/definitions/UserVO"
           }
         },
         "searchCount": {
@@ -10875,47 +10856,57 @@
       "type": "object",
       "properties": {
         "countId": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "current": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         },
         "maxLimit": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         },
         "optimizeCountSql": {
-          "type": "boolean"
+          "type": "boolean",
+          "refType": null
         },
         "orders": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrderItem",
-            "originalRef": "OrderItem"
-          }
+            "originalRef": "OrderItem",
+            "$ref": "#/definitions/OrderItem"
+          },
+          "refType": "OrderItem"
         },
         "pages": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         },
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/User",
-            "originalRef": "User"
-          }
+            "originalRef": "User",
+            "$ref": "#/definitions/User"
+          },
+          "refType": "User"
         },
         "searchCount": {
-          "type": "boolean"
+          "type": "boolean",
+          "refType": null
         },
         "size": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         },
         "total": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         }
       },
       "title": "Page«User»"
@@ -11025,8 +11016,8 @@
           "format": "int32"
         },
         "postQueryRequest": {
-          "$ref": "#/definitions/PostQueryRequest",
-          "originalRef": "PostQueryRequest"
+          "originalRef": "PostQueryRequest",
+          "$ref": "#/definitions/PostQueryRequest"
         },
         "sortField": {
           "type": "string"
@@ -11172,8 +11163,8 @@
           "format": "date-time"
         },
         "user": {
-          "$ref": "#/definitions/UserVO",
-          "originalRef": "UserVO"
+          "originalRef": "UserVO",
+          "$ref": "#/definitions/UserVO"
         },
         "userId": {
           "type": "integer",
@@ -11203,52 +11194,87 @@
     "User": {
       "type": "object",
       "properties": {
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "refType": null
+        },
+        "city": {
+          "type": "string",
+          "refType": null
+        },
         "createTime": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "refType": null
+        },
+        "district": {
+          "type": "string",
+          "refType": null
         },
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "refType": null
         },
         "isDelete": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "refType": null
         },
         "mpOpenId": {
-          "type": "string"
+          "type": "string",
+          "refType": null
+        },
+        "province": {
+          "type": "string",
+          "refType": null
         },
         "unionId": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "updateTime": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "refType": null
         },
         "userAccount": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userAvatar": {
-          "type": "string"
+          "type": "string",
+          "refType": null
+        },
+        "userEmail": {
+          "type": "string",
+          "refType": null
         },
         "userGender": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "refType": null
         },
         "userName": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userPassword": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userPhone": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userProfile": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userRole": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         }
       },
       "title": "User"
@@ -11530,10 +11556,12 @@
       "type": "object",
       "properties": {
         "userAccount": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userPassword": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         }
       },
       "title": "UserLoginRequest"
@@ -11556,38 +11584,62 @@
     "UserQueryRequest": {
       "type": "object",
       "properties": {
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "refType": null
+        },
         "current": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "refType": null
         },
         "id": {
           "type": "integer",
-          "format": "int64"
-        },
-        "mpOpenId": {
-          "type": "string"
+          "format": "int64",
+          "refType": null
         },
         "pageSize": {
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "refType": null
         },
         "sortField": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "sortOrder": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
-        "unionId": {
-          "type": "string"
+        "userEmail": {
+          "type": "string",
+          "refType": null
+        },
+        "userGender": {
+          "type": "integer",
+          "format": "int32",
+          "refType": null
         },
         "userName": {
-          "type": "string"
+          "type": "string",
+          "refType": null
+        },
+        "userPhone": {
+          "type": "string",
+          "refType": null
         },
         "userProfile": {
-          "type": "string"
+          "type": "string",
+          "refType": null
         },
         "userRole": {
-          "type": "string"
+          "type": "string",
+          "refType": null
+        },
+        "wechatId": {
+          "type": "string",
+          "refType": null
         }
       },
       "title": "UserQueryRequest"
@@ -11610,15 +11662,145 @@
     "UserUpdateMyRequest": {
       "type": "object",
       "properties": {
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "city": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "userAvatar": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        },
+        "userGender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "userPassword": {
+          "type": "string"
+        },
+        "userPhone": {
+          "type": "string"
+        },
+        "userProfile": {
+          "type": "string"
+        },
+        "userRole": {
+          "type": "string"
+        },
+        "wechatId": {
+          "type": "string"
+        }
+      },
+      "title": "UserUpdateMyRequest"
+    },
+    "UserUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "city": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "province": {
+          "type": "string"
+        },
+        "userAvatar": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        },
+        "userGender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "userPassword": {
+          "type": "string"
+        },
+        "userPhone": {
+          "type": "string"
+        },
+        "userProfile": {
+          "type": "string"
+        },
+        "userRole": {
+          "type": "string"
+        },
+        "wechatId": {
+          "type": "string"
+        }
+      },
+      "title": "UserUpdateRequest"
+    },
+    "UserVO": {
+      "type": "object",
+      "properties": {
+        "birthday": {
+          "type": "string",
+          "format": "date-time",
+          "refType": null
+        },
+        "city": {
+          "type": "string",
+          "refType": null
+        },
+        "createTime": {
+          "type": "string",
+          "format": "date-time",
+          "refType": null
+        },
+        "district": {
+          "type": "string",
+          "refType": null
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "refType": null
+        },
+        "province": {
+          "type": "string",
+          "refType": null
+        },
         "userAvatar": {
           "type": "string",
           "refType": null
         },
-        "userName": {
+        "userEmail": {
           "type": "string",
           "refType": null
         },
-        "userPassword": {
+        "userGender": {
+          "type": "integer",
+          "format": "int32",
+          "refType": null
+        },
+        "userName": {
           "type": "string",
           "refType": null
         },
@@ -11633,59 +11815,10 @@
         "userRole": {
           "type": "string",
           "refType": null
-        }
-      },
-      "title": "UserUpdateMyRequest"
-    },
-    "UserUpdateRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "refType": null
         },
-        "userAvatar": {
+        "wechatId": {
           "type": "string",
           "refType": null
-        },
-        "userName": {
-          "type": "string",
-          "refType": null
-        },
-        "userProfile": {
-          "type": "string",
-          "refType": null
-        },
-        "userRole": {
-          "type": "string",
-          "refType": null
-        }
-      },
-      "title": "UserUpdateRequest"
-    },
-    "UserVO": {
-      "type": "object",
-      "properties": {
-        "createTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "userAvatar": {
-          "type": "string"
-        },
-        "userName": {
-          "type": "string"
-        },
-        "userProfile": {
-          "type": "string"
-        },
-        "userRole": {
-          "type": "string"
         }
       },
       "title": "UserVO"

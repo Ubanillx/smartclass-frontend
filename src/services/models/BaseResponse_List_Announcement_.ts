@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Announcement } from './Announcement';
+import type { Announcement } from './Announcement.ts';
 export type BaseResponse_List_Announcement_ = {
-    code?: number;
-    data?: Array<Announcement>;
-    message?: string;
+  code?: number;
+  data?: Array<Announcement>;
+  message?: string;
 };
-

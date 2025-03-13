@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_AiAvatarChatVO_ } from './Page_AiAvatarChatVO_';
+import type { Page_AiAvatarChatVO_ } from './Page_AiAvatarChatVO_.ts';
 export type BaseResponse_Page_AiAvatarChatVO_ = {
-    code?: number;
-    data?: Page_AiAvatarChatVO_;
-    message?: string;
+  code?: number;
+  data?: Page_AiAvatarChatVO_;
+  message?: string;
 };
-
