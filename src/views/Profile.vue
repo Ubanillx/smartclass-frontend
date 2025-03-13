@@ -304,6 +304,11 @@ onMounted(() => {
   padding-bottom: 66px;
 }
 
+/* 在二级页面中不需要为底部导航栏预留空间 */
+:deep(.has-tabbar) {
+  padding-bottom: 60px;
+}
+
 .loading-wrapper {
   display: flex;
   flex-direction: column;
