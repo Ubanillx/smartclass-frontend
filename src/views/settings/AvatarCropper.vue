@@ -6,12 +6,21 @@
     <div class="cropper-wrapper">
       <Cropper
         v-if="cropperVisible"
-        :imagePath="imagePath"
-        fileType="blob"
-        :cropSize="200"
-        :fixedBox="true"
-        @save="onCropperSave"
-        @cancel="onCancel"
+        :src="imagePath"
+        :stencil-props="{
+          aspectRatio: 1,
+          minAspectRatio: 1,
+          maxAspectRatio: 1
+        }"
+        :stencil-component="CircleStencil"
+        :resize-image="{
+          touch: true,
+          wheel: {
+            ratio: 0.1
+          }
+        }"
+        :transitions="true"
+        @change="onChange"
         ref="cropperRef"
       />
     </div>
@@ -27,8 +36,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
 import { BackButton } from '../../components/common';
-import Cropper from 'vue3-cropper';
-import 'vue3-cropper/lib/vue3-cropper.css';
+import { Cropper, CircleStencil } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 import { FileControllerService } from '../../services';
 
 const router = useRouter();
@@ -38,6 +47,12 @@ const imagePath = ref('');
 const cropperVisible = ref(false);
 const cropperRef = ref<any>(null);
 const uploading = ref(false);
+const cropperResult = ref<any>(null);
+
+// 取消裁剪的回调
+const onCancel = (): void => {
+  router.back();
+};
 
 // 初始化裁剪组件
 onMounted(() => {
@@ -54,83 +69,105 @@ onMounted(() => {
   }
 });
 
-// 保存裁剪结果 - 直接触发裁剪组件内部的保存事件
-const onSave = (): void => {
+// 裁剪变化时的回调
+const onChange = (result: any): void => {
+  cropperResult.value = result;
+  console.log('裁剪变化:', result);
+};
+
+// 保存裁剪结果
+const onSave = async (): Promise<void> => {
   if (uploading.value) return;
   
   try {
-    // 查找裁剪组件内部的保存按钮并点击它
-    const saveButton = document.querySelector('.cropper-save-btn');
-    if (saveButton) {
-      (saveButton as HTMLElement).click();
-    } else {
-      // 如果找不到保存按钮，尝试直接获取裁剪数据
-      if (cropperRef.value && typeof cropperRef.value.getCropData === 'function') {
-        cropperRef.value.getCropData((data: string | Blob) => {
-          onCropperSave(data);
-        });
+    if (!cropperRef.value || !cropperResult.value) {
+      showToast('裁剪组件未初始化，请重试');
+      return;
+    }
+    
+    uploading.value = true;
+    showLoadingToast({
+      message: '上传中...',
+      forbidClick: true,
+    });
+    
+    // 获取裁剪后的canvas
+    const { canvas } = cropperResult.value;
+    
+    try {
+      // 将canvas转换为base64
+      const base64Data = canvas.toDataURL('image/jpeg', 0.9);
+      console.log('裁剪结果base64前缀:', base64Data.substring(0, 30) + '...');
+      
+      // 确保base64数据格式正确 - 只保留base64编码部分，去掉前缀
+      let base64Content = '';
+      if (base64Data.indexOf('base64,') >= 0) {
+        base64Content = base64Data.split('base64,')[1];
       } else {
-        showToast('裁剪失败，请重试');
+        base64Content = base64Data;
       }
+      
+      console.log('处理后的base64长度:', base64Content.length);
+      
+      // 测试base64数据是否有效
+      try {
+        const testBlob = await fetch(`data:image/jpeg;base64,${base64Content}`).then(res => res.blob());
+        console.log('测试base64转换为Blob成功，大小:', testBlob.size, 'bytes');
+      } catch (e) {
+        console.error('测试base64转换失败:', e);
+      }
+      
+      // 构建上传请求
+      const uploadRequest = {
+        base64Data: base64Content,
+        biz: 'avatar',
+        filename: `avatar_${Date.now()}.jpg`,
+        description: '用户头像'
+      };
+      
+      // 上传图片到服务器
+      console.log('开始上传base64图片...');
+      const response = await FileControllerService.uploadBase64ImageUsingPost(uploadRequest);
+      console.log('上传响应:', response);
+      
+      // 检查是否未登录
+      if (response.code === 40100) {
+        showToast('登录已过期，请重新登录');
+        // 可以在这里添加重定向到登录页面的逻辑
+        setTimeout(() => {
+          router.replace('/login');
+        }, 1500);
+        return;
+      }
+      
+      if (response.code === 0 && response.data) {
+        // 上传成功，获取图片URL
+        const imageUrl = response.data;
+        console.log('上传成功，URL:', imageUrl);
+        
+        // 将图片URL传回个人资料页面
+        router.replace({
+          path: '/settings/profile',
+          query: {
+            avatarUrl: imageUrl
+          }
+        });
+        
+        showSuccessToast('头像上传成功');
+      } else {
+        throw new Error(response.message || '上传失败');
+      }
+    } catch (error) {
+      console.error('上传头像失败:', error);
+      showToast('上传头像失败，请重试');
+    } finally {
+      uploading.value = false;
     }
   } catch (error) {
     console.error('裁剪失败:', error);
     showToast('裁剪失败，请重试');
-  }
-};
-
-// 裁剪完成后的回调
-const onCropperSave = async (res: string | Blob): Promise<void> => {
-  uploading.value = true;
-  
-  try {
-    let imageFile: Blob;
-    
-    if (res instanceof Blob) {
-      imageFile = res;
-    } else {
-      // 如果是base64字符串，转换为Blob
-      const base64Data = res.split(',')[1] || '';
-      const byteCharacters = atob(base64Data);
-      const byteArrays = [];
-      
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteArrays.push(byteCharacters.charCodeAt(i));
-      }
-      
-      const byteArray = new Uint8Array(byteArrays);
-      imageFile = new Blob([byteArray], { type: 'image/jpeg' });
-    }
-    
-    // 上传图片到服务器
-    const response = await FileControllerService.uploadImageUsingPost(imageFile);
-    
-    if (response.code === 0 && response.data) {
-      // 上传成功，获取图片URL
-      const imageUrl = response.data;
-      
-      // 将图片URL传回个人资料页面
-      router.replace({
-        path: '/settings/profile',
-        query: {
-          avatarUrl: imageUrl
-        }
-      });
-      
-      showSuccessToast('头像上传成功');
-    } else {
-      throw new Error(response.message || '上传失败');
-    }
-  } catch (error) {
-    console.error('上传头像失败:', error);
-    showToast('上传头像失败，请重试');
     uploading.value = false;
   }
-};
-
-// 取消裁剪
-const onCancel = (): void => {
-  router.back();
 };
 </script>
 
@@ -160,20 +197,12 @@ const onCancel = (): void => {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
-:deep(.vue3-cropper) {
+:deep(.vue-advanced-cropper) {
   height: 100% !important;
   width: 100% !important;
-  position: absolute !important;
-  top: 0;
-  left: 0;
 }
 
-:deep(.cropper-box) {
-  border-radius: 50%;
-}
-
-/* 隐藏裁剪组件内部的工具栏 */
-:deep(.cropper-toolbar) {
-  display: none !important;
+:deep(.vue-circle-stencil) {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
 }
 </style> 
