@@ -1,33 +1,37 @@
 <template>
   <div class="input-area">
+    <!-- 输入框 -->
     <van-field
       v-model="inputValue"
       placeholder="输入消息..."
       :border="false"
       type="textarea"
-      autosize
+      :autosize="{ minHeight: 60, maxHeight: 100 }"
+      :rows="3"
       :disabled="disabled"
       @keypress.enter.prevent="handleEnterPress"
-    >
-      <template #button>
-        <van-button 
-          size="small" 
-          type="primary" 
-          :loading="disabled"
-          :disabled="!inputValue.trim()"
-          @click="sendMessage"
-        >
-          发送
-        </van-button>
-      </template>
-      <template #right-icon>
-        <div class="action-icons">
-          <van-icon name="smile-o" size="20" @click="$emit('emoji')" />
-          <van-icon name="photograph" size="20" @click="$emit('image')" />
-          <van-icon name="records" size="20" @click="$emit('voice')" />
-        </div>
-      </template>
-    </van-field>
+      class="grey-input"
+    />
+    
+    <!-- 功能按钮工具栏 -->
+    <div class="toolbar">
+      <div class="action-icons">
+        <van-icon name="expand-o" size="20" @click="$emit('fullscreen')" />
+        <van-icon name="smile-o" size="20" @click="$emit('emoji')" />
+        <van-icon name="photograph" size="20" @click="$emit('image')" />
+        <van-icon name="records" size="20" @click="$emit('voice')" />
+      </div>
+      <van-button 
+        size="mini" 
+        type="primary" 
+        :loading="disabled"
+        :disabled="!inputValue.trim()"
+        @click="sendMessage"
+        class="send-button"
+      >
+        发送
+      </van-button>
+    </div>
   </div>
 </template>
 
@@ -47,6 +51,7 @@ const emit = defineEmits<{
   (e: 'emoji'): void;
   (e: 'image'): void;
   (e: 'voice'): void;
+  (e: 'fullscreen'): void;
 }>();
 
 const inputValue = ref(props.modelValue);
@@ -83,22 +88,52 @@ const sendMessage = (): void => {
 
 <style scoped>
 .input-area {
-  padding: 8px 16px;
+  padding: 12px 16px;
   background-color: #fff;
   border-top: 1px solid #ebedf0;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-left: 4px;
+}
+
 .action-icons {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   color: #969799;
 }
 
-:deep(.van-field__button) {
-  margin-left: 8px;
+.send-button {
+  border-radius: 4px;
+  padding: 0 14px;
+  height: 32px;
+  font-size: 14px;
 }
 
-:deep(.van-field__right-icon) {
-  margin-right: 8px;
+:deep(.van-field__control) {
+  min-height: 60px !important;
+  max-height: 100px !important;
+  overflow-y: auto;
+  padding: 8px 0;
+  line-height: 1.5;
+}
+
+/* 添加灰色输入框样式 */
+.grey-input {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+:deep(.grey-input .van-field__control) {
+  background-color: #f5f5f5;
+}
+
+:deep(.van-icon) {
+  cursor: pointer;
 }
 </style> 
