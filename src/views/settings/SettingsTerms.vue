@@ -8,7 +8,8 @@
       <van-cell title="1. 协议的接受" :border="false">
         <template #label>
           <p>
-            欢迎使用 SmartClass！在使用我们的服务之前，请仔细阅读本用户协议。通过访问或使用我们的服务，您表示同意接受并遵守本协议的所有条款和条件。
+            欢迎使用
+            SmartClass！在使用我们的服务之前，请仔细阅读本用户协议。通过访问或使用我们的服务，您表示同意接受并遵守本协议的所有条款和条件。
           </p>
         </template>
       </van-cell>
@@ -32,7 +33,8 @@
       <van-cell title="4. 知识产权" :border="false">
         <template #label>
           <p>
-            SmartClass 及其关联公司拥有本服务中所有内容的知识产权，包括但不限于文字、图片、音频、视频等。未经我们书面许可，您不得复制、分发、修改或以其他方式使用这些内容。
+            SmartClass
+            及其关联公司拥有本服务中所有内容的知识产权，包括但不限于文字、图片、音频、视频等。未经我们书面许可，您不得复制、分发、修改或以其他方式使用这些内容。
           </p>
         </template>
       </van-cell>
@@ -76,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { BackButton } from '../../components/common';
+import { BackButton } from '../../components/Common';
 </script>
 
 <style scoped>

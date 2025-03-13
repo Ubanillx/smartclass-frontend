@@ -86,12 +86,25 @@ const formatPhone = (phone: string): string => {
 .level-info {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+:deep(.van-tag) {
+  font-size: 10px;
+  padding: 0 4px;
+  height: 18px;
+  line-height: 18px;
 }
 
 .exp-text {
   margin-left: 8px;
-  font-size: 12px;
+  font-size: 10px;
   color: #969799;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .settings-icon {

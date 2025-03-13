@@ -16,7 +16,7 @@
       <div class="message-content">
         <div 
           v-if="message.type === 'ai'" 
-          v-html="formatMessage(message.content)" 
+          v-html="customFormatMessage ? customFormatMessage(message.content) : defaultFormatMessage(message.content)" 
           class="markdown-body"
         ></div>
         <div v-else>{{ message.content }}</div>
@@ -45,13 +45,14 @@ const props = defineProps<{
   assistantAvatar: string;
   userAvatar: string;
   loading?: boolean;
+  customFormatMessage?: (content: string) => string;
 }>();
 
 const messageList = ref<HTMLElement | null>(null);
 
-// 格式化消息内容（可以处理markdown等格式）
-const formatMessage = (content: string): string => {
-  // 这里可以添加markdown解析等逻辑
+// 默认的格式化消息内容方法
+const defaultFormatMessage = (content: string): string => {
+  // 默认不做任何处理，直接返回原始内容
   return content;
 };
 
@@ -89,6 +90,7 @@ onUpdated(scrollToBottom);
 .message-item {
   display: flex;
   margin-bottom: 16px;
+  align-items: flex-start;
 }
 
 .message-item.user {
@@ -108,14 +110,45 @@ onUpdated(scrollToBottom);
 }
 
 .message-item.ai .message-content {
-  background-color: #f7f8fa;
+  background-color: #ffffff;
   color: #323233;
+  position: relative;
+  margin-left: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.message-item.ai .message-content::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-right: 12px solid #ffffff;
+  border-bottom: 8px solid transparent;
+  z-index: 1;
 }
 
 .message-item.user .message-content {
   background-color: #1989fa;
   color: #fff;
   text-align: right;
+  position: relative;
+  margin-right: 4px;
+}
+
+.message-item.user .message-content::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-left: 12px solid #1989fa;
+  border-bottom: 8px solid transparent;
+  z-index: 1;
 }
 
 .message-time {

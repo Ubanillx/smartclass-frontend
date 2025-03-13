@@ -29,7 +29,9 @@
 
       <van-cell title="3. 信息的共享" :border="false">
         <template #label>
-          <p>我们不会向第三方出售或出租您的个人信息。我们可能会在以下情况下共享您的信息：</p>
+          <p>
+            我们不会向第三方出售或出租您的个人信息。我们可能会在以下情况下共享您的信息：
+          </p>
           <ul>
             <li>获得您的同意。</li>
             <li>遵守法律义务。</li>
@@ -74,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { BackButton } from '../../components/common';
+import { BackButton } from '../../components/Common';
 </script>
 
 <style scoped>

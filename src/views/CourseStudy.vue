@@ -2,11 +2,8 @@
   <div class="course-study-page">
     <!-- 返回按钮 -->
     <back-button title="课程学习" />
-    
-    <course-study
-      :course="course"
-      :course-id="courseId"
-    />
+
+    <course-study :course="course" :course-id="courseId" />
   </div>
 </template>
 
@@ -15,7 +12,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { CourseStudy } from '../components/Course';
-import { BackButton } from '../components/common';
+import { BackButton } from '../components/Common';
 
 interface CourseHighlight {
   icon: string;
@@ -59,12 +56,13 @@ onMounted(() => {
       level: '初级',
       duration: 30,
       studentsCount: 1234,
-      description: '本课程通过有趣的动画和游戏互动，帮助同学们掌握日常英语口语。课程内容包括基础发音、常用对话、情景会话等，通过生动有趣的教学方式，让学习变得轻松愉快。',
+      description:
+        '本课程通过有趣的动画和游戏互动，帮助同学们掌握日常英语口语。课程内容包括基础发音、常用对话、情景会话等，通过生动有趣的教学方式，让学习变得轻松愉快。',
       highlights: [
         { icon: 'smile-o', color: '#ff976a', text: '趣味教学' },
         { icon: 'music-o', color: '#07c160', text: '互动练习' },
-        { icon: 'star-o', color: '#ffcd32', text: '奖励机制' }
-      ]
+        { icon: 'star-o', color: '#ffcd32', text: '奖励机制' },
+      ],
     };
   }, 500);
 });
@@ -81,4 +79,4 @@ onMounted(() => {
   flex: 1;
   overflow: hidden;
 }
-</style> 
+</style>

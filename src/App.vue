@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from './stores/userStore';
 import { useSettingsStore } from './stores/settingsStore';
@@ -23,9 +23,40 @@ const active = ref(0);
 
 // 计算是否显示底部导航栏
 const showTabbar = computed(() => {
-  const noTabbarRoutes = ['/login', '/register', '/forgot-password'];
-  return !noTabbarRoutes.includes(route.path);
+  // 一级页面（显示底部导航栏）
+  const mainRoutes = ['/', '/chat-history', '/courses', '/profile'];
+  
+  // 判断当前路由是否为一级页面
+  return mainRoutes.includes(route.path);
 });
+
+// 监听路由变化，设置底部导航栏激活项和页面样式
+watch(() => route.path, (newPath) => {
+  // 设置底部导航栏激活项
+  if (newPath === '/') {
+    active.value = 0;
+  } else if (newPath === '/chat-history') {
+    active.value = 1;
+  } else if (newPath === '/courses') {
+    active.value = 2;
+  } else if (newPath === '/profile') {
+    active.value = 3;
+  }
+  
+  // 设置页面样式
+  const mainRoutes = ['/', '/chat-history', '/courses', '/profile'];
+  const isMainRoute = mainRoutes.includes(newPath);
+  
+  // 移除所有相关类
+  document.body.classList.remove('has-tabbar', 'no-tabbar');
+  
+  // 添加相应的类
+  if (isMainRoute) {
+    document.body.classList.add('has-tabbar');
+  } else {
+    document.body.classList.add('no-tabbar');
+  }
+}, { immediate: true });
 
 // 在应用启动时获取当前登录用户信息
 onMounted(async () => {
@@ -56,6 +87,11 @@ body {
 /* 有底部标签栏的页面 */
 .has-tabbar {
   padding-bottom: 60px !important;
+}
+
+/* 没有底部标签栏的页面 */
+.no-tabbar {
+  padding-bottom: 0 !important;
 }
 
 .app {

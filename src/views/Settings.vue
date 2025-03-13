@@ -5,7 +5,11 @@
 
     <!-- 个人资料设置 -->
     <van-cell-group inset class="setting-group">
-      <van-cell title="个人资料" is-link @click="router.push('/settings/profile')">
+      <van-cell
+        title="个人资料"
+        is-link
+        @click="router.push('/settings/profile')"
+      >
         <template #label>
           <span class="setting-label">修改头像、用户名等基本信息</span>
         </template>
@@ -58,9 +62,21 @@
     <!-- 其他设置 -->
     <van-cell-group inset class="setting-group">
       <van-cell title="清除缓存" is-link @click="clearCache" />
-      <van-cell title="关于我们" is-link @click="router.push('/settings/about')" />
-      <van-cell title="用户协议" is-link @click="router.push('/settings/terms')" />
-      <van-cell title="隐私政策" is-link @click="router.push('/settings/privacy')" />
+      <van-cell
+        title="关于我们"
+        is-link
+        @click="router.push('/settings/about')"
+      />
+      <van-cell
+        title="用户协议"
+        is-link
+        @click="router.push('/settings/terms')"
+      />
+      <van-cell
+        title="隐私政策"
+        is-link
+        @click="router.push('/settings/privacy')"
+      />
     </van-cell-group>
 
     <!-- 学习目标选择器 -->
@@ -115,7 +131,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { useSettingsStore } from '../stores/settingsStore';
-import { BackButton } from '../components/common';
+import { BackButton } from '../components/Common';
 
 const router = useRouter();
 const settingsStore = useSettingsStore();
@@ -124,14 +140,14 @@ const settingsStore = useSettingsStore();
 const learningSettings = ref({
   dailyGoal: 30,
   reminderTime: '09:00',
-  difficulty: '中等'
+  difficulty: '中等',
 });
 
 // 通知设置
 const notificationSettings = ref({
   push: true,
   dailyWord: true,
-  progress: true
+  progress: true,
 });
 
 // 选择器控制
@@ -141,38 +157,40 @@ const showDifficultyPicker = ref(false);
 const showFontSizePicker = ref(false);
 
 // 选项数据
-const goalOptions = [15, 30, 45, 60, 90, 120].map(min => ({
+const goalOptions = [15, 30, 45, 60, 90, 120].map((min) => ({
   text: `${min}分钟/天`,
-  value: min
+  value: min,
 }));
-const difficultyOptions = ['初级', '中等', '高级'].map(difficulty => ({
+const difficultyOptions = ['初级', '中等', '高级'].map((difficulty) => ({
   text: difficulty,
-  value: difficulty
+  value: difficulty,
 }));
 
 // 字体大小选项
 const fontSizeOptions = [
   { text: '小', value: 'small' },
   { text: '中', value: 'medium' },
-  { text: '大', value: 'large' }
+  { text: '大', value: 'large' },
 ];
 
 // 获取字体大小显示标签
 const getFontSizeLabel = (size: string): string => {
-  const option = fontSizeOptions.find(opt => opt.value === size);
+  const option = fontSizeOptions.find((opt) => opt.value === size);
   return option ? option.text : '中';
 };
 
 // 时间选择器列数据
 const timeColumns = [
   {
-    values: Array.from({ length: 17 }, (_, i) => 6 + i).map(hour => hour.toString().padStart(2, '0')),
-    className: 'column1'
+    values: Array.from({ length: 17 }, (_, i) => 6 + i).map((hour) =>
+      hour.toString().padStart(2, '0'),
+    ),
+    className: 'column1',
   },
   {
     values: Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')),
-    className: 'column2'
-  }
+    className: 'column2',
+  },
 ];
 
 // 当前选择的时间
@@ -182,19 +200,22 @@ const selectedMinute = ref('00');
 // 默认时间索引
 const defaultTimeIndex = computed(() => {
   const hourIndex = timeColumns[0]?.values?.indexOf(selectedHour.value) ?? 0;
-  const minuteIndex = timeColumns[1]?.values?.indexOf(selectedMinute.value) ?? 0;
+  const minuteIndex =
+    timeColumns[1]?.values?.indexOf(selectedMinute.value) ?? 0;
   return [hourIndex, minuteIndex];
 });
 
 interface PickerOption {
-  selectedOptions: Array<{text: string, value: any}>;
+  selectedOptions: Array<{ text: string; value: any }>;
   selectedValues: string[];
   selectedIndexes: number[];
 }
 
 // 处理选择器确认
 const onGoalConfirm = (value: PickerOption): void => {
-  learningSettings.value.dailyGoal = parseInt(value.selectedValues[0] as string);
+  learningSettings.value.dailyGoal = parseInt(
+    value.selectedValues[0] as string,
+  );
   showGoalPicker.value = false;
   showToast('设置已保存');
 };
