@@ -1,44 +1,46 @@
 <template>
   <div class="home has-tabbar">
-    <!-- 搜索栏 -->
-    <search-bar
-      v-model="searchText"
-      placeholder="搜索你想要的"
-      @search="onSearch"
-    />
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <!-- 搜索栏 -->
+      <search-bar
+        v-model="searchText"
+        placeholder="搜索你想要的"
+        @search="onSearch"
+      />
 
-    <!-- 公告卡片 -->
-    <notice-card :notices="notices" />
+      <!-- 公告卡片 -->
+      <notice-card :notices="notices" />
 
-    <!-- AI助手列表 -->
-    <ai-assistant-list 
-      :assistants="aiAssistants" 
-      @chat="startChat" 
-      @more="router.push('/chat?tab=intelligence')" 
-    />
+      <!-- AI助手列表 -->
+      <ai-assistant-list 
+        :assistants="aiAssistants" 
+        @chat="startChat" 
+        @more="router.push('/chat?tab=intelligence')" 
+      />
 
-    <!-- 热门课程模块 -->
-    <component
-      :is="PopularCoursesRaw"
-      :courses="popularCourses"
-      @select="viewCourseDetail"
-      @more="router.push('/popular-courses')"
-    />
+      <!-- 热门课程模块 -->
+      <component
+        :is="PopularCoursesRaw"
+        :courses="popularCourses"
+        @select="viewCourseDetail"
+        @more="router.push('/popular-courses')"
+      />
 
-    <!-- 每日单词模块 -->
-    <daily-word-card 
-      :word="dailyWord" 
-      :categories="wordCategories"
-      @update:word="dailyWord = $event"
-      @more="router.push('/vocabulary')"
-      @category-click="router.push($event.path)"
-    />
+      <!-- 每日单词模块 -->
+      <daily-word-card 
+        :word="dailyWord" 
+        :categories="wordCategories"
+        @update:word="dailyWord = $event"
+        @more="router.push('/vocabulary')"
+        @category-click="router.push($event.path)"
+      />
 
-    <!-- 精美文章模块 -->
-    <article-list 
-      :articles="articles" 
-      @more="router.push('/articles')" 
-    />
+      <!-- 精美文章模块 -->
+      <article-list 
+        :articles="articles" 
+        @more="router.push('/articles')" 
+      />
+    </van-pull-refresh>
 
     <!-- 浮动加号按钮 -->
     <div class="float-button">
@@ -61,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import SearchBar from '../components/SearchBar.vue';
@@ -79,6 +81,7 @@ const PopularCoursesRaw = markRaw(PopularCourses);
 const router = useRouter();
 const searchText = ref('');
 const showActionSheet = ref(false);
+const refreshing = ref(false);
 
 // Mock 公告数据
 const notices = ref([
@@ -286,6 +289,22 @@ const onActionSelect = (action) => {
       break;
   }
 };
+
+// 下拉刷新
+const onRefresh = () => {
+  console.log('下拉刷新，重新获取首页数据');
+  
+  // 模拟网络请求延迟
+  setTimeout(() => {
+    refreshing.value = false;
+    showToast('刷新成功');
+  }, 1000);
+};
+
+// 页面加载时获取数据
+onMounted(() => {
+  console.log('Home页面加载，开始获取数据');
+});
 </script>
 
 <style scoped>
@@ -316,5 +335,17 @@ const onActionSelect = (action) => {
   background: #1989fa;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error-container {
+  padding: 40px 0;
+}
+
+:deep(.van-pull-refresh) {
+  min-height: calc(100vh - 32px);
+}
+
+:deep(.van-pull-refresh__track) {
+  padding-bottom: 16px;
 }
 </style> 

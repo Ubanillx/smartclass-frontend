@@ -1,11 +1,51 @@
 <template>
   <div class="app">
-    <router-view />
-    <van-tabbar v-model="active" v-if="showTabbar">
-      <van-tabbar-item icon="home-o" to="/">主页</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" to="/chat">对话</van-tabbar-item>
-      <van-tabbar-item icon="orders-o" to="/courses">课程</van-tabbar-item>
-      <van-tabbar-item icon="user-o" to="/profile">我的</van-tabbar-item>
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+    <van-tabbar v-model="active" v-if="showTabbar" route>
+      <van-tabbar-item to="/">
+        <template #icon="props">
+          <div class="tabbar-icon-container">
+            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+              <use xlink:href="#icon-zhuye"></use>
+            </svg>
+          </div>
+        </template>
+        <span :class="{ 'active-text': active === 0 }">主页</span>
+      </van-tabbar-item>
+      <van-tabbar-item to="/chat">
+        <template #icon="props">
+          <div class="tabbar-icon-container">
+            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+              <use xlink:href="#icon-duihua"></use>
+            </svg>
+          </div>
+        </template>
+        <span :class="{ 'active-text': active === 1 }">对话</span>
+      </van-tabbar-item>
+      <van-tabbar-item to="/courses">
+        <template #icon="props">
+          <div class="tabbar-icon-container">
+            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+              <use xlink:href="#icon-kecheng"></use>
+            </svg>
+          </div>
+        </template>
+        <span :class="{ 'active-text': active === 2 }">课程</span>
+      </van-tabbar-item>
+      <van-tabbar-item to="/profile">
+        <template #icon="props">
+          <div class="tabbar-icon-container">
+            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+              <use xlink:href="#icon-wode"></use>
+            </svg>
+          </div>
+        </template>
+        <span :class="{ 'active-text': active === 3 }">我的</span>
+      </van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -125,6 +165,66 @@ body {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
   font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+/* 底部导航栏动画效果 */
+.tabbar-icon-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+}
+
+.active-icon {
+  transform: scale(1.2);
+  color: var(--van-tabbar-item-active-color, #1989fa);
+}
+
+.active-text {
+  transform: scale(1.05);
+  color: var(--van-tabbar-item-active-color, #1989fa);
+}
+
+.van-icon {
+  transition: all 0.3s ease;
+}
+
+/* iconfont图标样式 */
+.iconfont {
+  font-size: 22px;
+  transition: all 0.3s ease;
+  color: #646566;
+}
+
+.iconfont.active-icon {
+  color: var(--van-tabbar-item-active-color, #1989fa);
+}
+
+/* svg图标样式 */
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+  color: #646566;
+  fill: currentColor;
+}
+
+.icon.active-icon {
+  transform: scale(1.2);
+  color: var(--van-tabbar-item-active-color, #1989fa);
+}
+
+/* 页面切换动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 /* 组件标题样式 */
