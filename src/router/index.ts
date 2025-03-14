@@ -170,6 +170,14 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
   },
+  {
+    path: '/popular-courses',
+    name: 'PopularCourses',
+    component: () => import('../views/PopularCourses.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = createRouter({

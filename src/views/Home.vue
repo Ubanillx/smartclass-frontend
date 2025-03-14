@@ -22,7 +22,7 @@
       :is="PopularCoursesRaw"
       :courses="popularCourses"
       @select="viewCourseDetail"
-      @more="router.push('/courses')"
+      @more="router.push('/popular-courses')"
     />
 
     <!-- 每日单词模块 -->
@@ -265,8 +265,7 @@ const startChat = (assistant) => {
 // 查看课程详情
 const viewCourseDetail = (course) => {
   router.push({
-    path: '/course',
-    query: { id: course.id }
+    path: `/course-study/${course.id}`
   });
 };
 
