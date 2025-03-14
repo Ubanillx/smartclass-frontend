@@ -56,20 +56,56 @@ defineProps<{
 
 <style scoped>
 .study-stats {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .stat-number {
   display: block;
-  font-size: 18px;
+  font-size: var(--font-size-xl);
   font-weight: bold;
   color: #323233;
+  margin-top: 4px;
 }
 
 .stat-label {
   display: block;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #969799;
-  margin-top: 4px;
+  margin-top: 2px;
+}
+
+:deep(.van-grid-item__content) {
+  padding: 10px 8px;
+  background-color: #ffffff;
+}
+
+:deep(.van-grid-item__icon) {
+  font-size: var(--font-size-xl);
+}
+
+:deep(.van-icon) {
+  background-color: rgba(25, 137, 250, 0.1);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+:deep(.van-icon-clock) {
+  background-color: rgba(25, 137, 250, 0.1);
+}
+
+:deep(.van-icon-fire) {
+  background-color: rgba(255, 151, 106, 0.1);
+}
+
+:deep(.van-icon-star) {
+  background-color: rgba(255, 205, 50, 0.1);
+}
+
+:deep(.van-icon-medal-o) {
+  background-color: rgba(114, 50, 221, 0.1);
 }
 </style> 

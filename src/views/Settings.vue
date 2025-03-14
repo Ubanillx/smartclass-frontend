@@ -10,9 +10,6 @@
         is-link
         @click="router.push('/settings/profile')"
       >
-        <template #label>
-          <span class="setting-label">修改头像、用户名等基本信息</span>
-        </template>
       </van-cell>
     </van-cell-group>
 

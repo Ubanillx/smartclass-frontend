@@ -9,7 +9,9 @@
       <div v-for="item in historyItems" :key="item.id" class="history-item">
         <div class="history-date">{{ item.date }}</div>
         <div class="history-content">
-          <van-icon :name="item.icon" class="history-icon" />
+          <div class="icon-wrapper">
+            <van-icon :name="item.icon" class="history-icon" />
+          </div>
           <div class="history-info">
             <div class="history-title">{{ item.title }}</div>
             <div class="history-desc">{{ item.description }}</div>
@@ -46,21 +48,29 @@ const onViewAll = (): void => {
 
 <style scoped>
 .learning-history {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .more-link {
   color: #1989fa;
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background-color: rgba(25, 137, 250, 0.1);
 }
 
 .history-list {
-  padding: 0 16px;
+  padding: 0 16px 10px;
 }
 
 .history-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #ebedf0;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .history-item:last-child {
@@ -68,20 +78,31 @@ const onViewAll = (): void => {
 }
 
 .history-date {
-  font-size: var(--font-size-sm, 12px);
+  font-size: var(--font-size-sm);
   color: #969799;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-family: 'Noto Sans SC', sans-serif;
+  font-weight: 500;
 }
 
 .history-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(25, 137, 250, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .history-icon {
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   color: #1989fa;
 }
 
@@ -90,28 +111,36 @@ const onViewAll = (): void => {
 }
 
 .history-title {
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-md);
   color: #323233;
   margin-bottom: 4px;
-  font-weight: 700;
+  font-weight: 600;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .history-desc {
-  font-size: var(--font-size-sm, 12px);
-  color: #969799;
+  font-size: var(--font-size-sm);
+  color: #646566;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .history-time {
-  font-size: var(--font-size-sm, 12px);
+  font-size: var(--font-size-sm);
   color: #969799;
   font-family: 'Noto Sans SC', sans-serif;
+  background-color: #f7f8fa;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 :deep(.van-cell__title) {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
+  font-size: var(--font-size-md) !important;
+  color: #323233;
+}
+
+:deep(.van-cell) {
+  padding: 10px 16px;
 }
 </style> 

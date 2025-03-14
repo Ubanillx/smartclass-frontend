@@ -5,14 +5,16 @@
       <template #image>
         <van-icon name="warning-o" size="48" color="#ee0a24" />
       </template>
-      <van-button round type="danger" size="small" @click="retryFetch">重新加载</van-button>
+      <van-button round type="danger" size="small" @click="retryFetch"
+        >重新加载</van-button
+      >
     </van-empty>
-    
+
     <van-pull-refresh v-else v-model="refreshing" @refresh="onRefresh">
       <!-- 用户基本信息卡片 -->
-      <component 
-        :is="UserInfoCardRaw" 
-        :user-info="userInfo" 
+      <component
+        :is="UserInfoCardRaw"
+        :user-info="userInfo"
         @settings="router.push('/settings')"
       />
 
@@ -20,16 +22,18 @@
       <component :is="StudyStatsGridRaw" :stats="userStats" />
 
       <!-- 今日学习目标 -->
-      <component 
-        :is="TodayGoalsRaw" 
-        :progress="todayProgress" 
-        :goals="todayGoals" 
+      <component
+        :is="TodayGoalsRaw"
+        :progress="todayProgress"
+        :goals="todayGoals"
+        @add-goal="addGoal"
+        @toggle-goal="toggleGoalStatus"
       />
 
       <!-- 我的成就墙 -->
-      <component 
-        :is="AchievementWallRaw" 
-        :badges="recentBadges" 
+      <component
+        :is="AchievementWallRaw"
+        :badges="recentBadges"
         @view-all="router.push('/achievements')"
       />
 
@@ -37,16 +41,16 @@
       <component :is="RecentLearningRaw" :learning-items="recentLearning" />
 
       <!-- 学习历史记录 -->
-      <component 
-        :is="LearningHistoryRaw" 
-        :history-items="learningHistory" 
+      <component
+        :is="LearningHistoryRaw"
+        :history-items="learningHistory"
         @view-all="router.push('/history')"
       />
 
       <!-- 退出登录按钮 -->
       <component :is="LogoutButtonRaw" @logout="handleLogout" />
     </van-pull-refresh>
-    
+
     <!-- 加载中提示 -->
     <van-overlay :show="loading" z-index="9999">
       <div class="loading-wrapper">
@@ -61,14 +65,14 @@
 import { ref, markRaw, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast, showSuccessToast } from 'vant';
-import { 
-  UserInfoCard, 
-  StudyStatsGrid, 
-  TodayGoals, 
-  AchievementWall, 
-  RecentLearning, 
-  LearningHistory, 
-  LogoutButton 
+import {
+  UserInfoCard,
+  StudyStatsGrid,
+  TodayGoals,
+  AchievementWall,
+  RecentLearning,
+  LearningHistory,
+  LogoutButton,
 } from '../components/Profile';
 import { useUserStore } from '../stores/userStore';
 import { UserControllerService } from '../services/services/UserControllerService';
@@ -95,7 +99,7 @@ const userInfo = ref({
   phone: '',
   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
   level: 1,
-  nextLevelExp: 100
+  nextLevelExp: 100,
 });
 
 // 学习统计数据
@@ -103,7 +107,7 @@ const userStats = ref({
   daysLearned: 0,
   streakDays: 0,
   stars: 0,
-  badges: 0
+  badges: 0,
 });
 
 // 今日目标
@@ -111,7 +115,7 @@ const todayProgress = ref(0);
 const todayGoals = ref([
   markRaw({ id: 1, text: '完成每日单词打卡', completed: false }),
   markRaw({ id: 2, text: '听力练习15分钟', completed: false }),
-  markRaw({ id: 3, text: '完成一节口语课程', completed: false })
+  markRaw({ id: 3, text: '完成一节口语课程', completed: false }),
 ]);
 
 // 最近获得的徽章
@@ -119,23 +123,23 @@ const recentBadges = ref([
   markRaw({
     id: 1,
     name: '单词达人',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/medal.png'
+    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/medal.png',
   }),
   markRaw({
     id: 2,
     name: '坚持不懈',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/fire.png'
+    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/fire.png',
   }),
   markRaw({
     id: 3,
     name: '听力小子',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/music.png'
+    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/music.png',
   }),
   markRaw({
     id: 4,
     name: '初级达成',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/star.png'
-  })
+    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/star.png',
+  }),
 ]);
 
 // 最近学习记录
@@ -144,20 +148,20 @@ const recentLearning = ref([
     id: 1,
     name: '基础发音课程',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/book.png',
-    progress: 80
+    progress: 80,
   }),
   markRaw({
     id: 2,
     name: '日常对话练习',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/chat.png',
-    progress: 45
+    progress: 45,
   }),
   markRaw({
     id: 3,
     name: '趣味单词记忆',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/smile.png',
-    progress: 60
-  })
+    progress: 60,
+  }),
 ]);
 
 // 学习历史记录数据
@@ -168,7 +172,7 @@ const learningHistory = ref([
     title: '完成单词测试',
     description: '正确率 85%',
     time: '14:30',
-    icon: 'records'
+    icon: 'records',
   }),
   markRaw({
     id: 2,
@@ -176,7 +180,7 @@ const learningHistory = ref([
     title: '观看视频课程',
     description: '《英语口语进阶》第3课',
     time: '16:45',
-    icon: 'play-circle-o'
+    icon: 'play-circle-o',
   }),
   markRaw({
     id: 3,
@@ -184,8 +188,8 @@ const learningHistory = ref([
     title: '完成听力练习',
     description: '得分 90分',
     time: '10:20',
-    icon: 'music-o'
-  })
+    icon: 'music-o',
+  }),
 ]);
 
 // 获取用户数据
@@ -193,51 +197,55 @@ const fetchUserData = async (showLoading = true) => {
   if (showLoading) {
     loading.value = true;
   }
-  
+
   loadError.value = false;
-  
+
   try {
     // 1. 获取当前登录用户基本信息
     await userStore.fetchCurrentUser();
-    
+
     if (userStore.userInfo) {
       console.log('获取到的用户基本信息:', userStore.userInfo);
-      
+
       // 2. 获取用户详细信息
       if (userStore.userInfo.id) {
-        const response = await UserControllerService.getUserVoByIdUsingGet(userStore.userInfo.id);
-        
+        const response = await UserControllerService.getUserVoByIdUsingGet(
+          userStore.userInfo.id,
+        );
+
         if (response.code === 0 && response.data) {
           const userData = response.data;
           console.log('获取到的用户详细信息:', userData);
-          
+
           // 更新用户基本信息
           userInfo.value = {
             username: userData.userName || '',
             nickname: userData.userName || '',
             phone: userData.userPhone || '',
-            avatar: userData.userAvatar || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+            avatar:
+              userData.userAvatar ||
+              'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
             level: 3, // 这里可以根据实际情况从后端获取或计算
-            nextLevelExp: 100 // 这里可以根据实际情况从后端获取或计算
+            nextLevelExp: 100, // 这里可以根据实际情况从后端获取或计算
           };
-          
+
           // 这里可以添加获取其他数据的逻辑，如学习统计、成就等
           // 目前使用模拟数据，实际应用中应该从后端API获取
-          
+
           // 模拟获取学习统计数据
           userStats.value = {
             daysLearned: 15,
             streakDays: 7,
             stars: 128,
-            badges: 8
+            badges: 8,
           };
-          
+
           // 模拟获取今日目标数据
           todayProgress.value = 60;
           todayGoals.value = [
             { id: 1, text: '完成每日单词打卡', completed: true },
             { id: 2, text: '听力练习15分钟', completed: true },
-            { id: 3, text: '完成一节口语课程', completed: false }
+            { id: 3, text: '完成一节口语课程', completed: false },
           ];
         } else {
           showToast(response.message || '获取用户详细信息失败');
@@ -275,6 +283,55 @@ const onRefresh = () => {
   fetchUserData(false);
 };
 
+// 添加新的学习目标
+const addGoal = (goalText) => {
+  // 生成新的ID (简单实现，实际应用中可能需要更复杂的ID生成逻辑)
+  const newId = todayGoals.value.length > 0 
+    ? Math.max(...todayGoals.value.map(goal => goal.id)) + 1 
+    : 1;
+  
+  // 添加新目标
+  todayGoals.value.push(markRaw({
+    id: newId,
+    text: goalText,
+    completed: false
+  }));
+  
+  // 更新进度
+  updateProgress();
+  
+  // 实际应用中，这里应该调用API将新目标保存到后端
+  showToast('已添加新的学习目标');
+};
+
+// 切换目标完成状态
+const toggleGoalStatus = (goalId) => {
+  const goalIndex = todayGoals.value.findIndex(goal => goal.id === goalId);
+  if (goalIndex !== -1) {
+    // 切换状态
+    todayGoals.value[goalIndex].completed = !todayGoals.value[goalIndex].completed;
+    
+    // 更新进度
+    updateProgress();
+    
+    // 实际应用中，这里应该调用API将状态变更保存到后端
+    if (todayGoals.value[goalIndex].completed) {
+      showToast('恭喜完成学习目标！');
+    }
+  }
+};
+
+// 更新进度
+const updateProgress = () => {
+  if (todayGoals.value.length === 0) {
+    todayProgress.value = 0;
+    return;
+  }
+  
+  const completedCount = todayGoals.value.filter(goal => goal.completed).length;
+  todayProgress.value = Math.round((completedCount / todayGoals.value.length) * 100);
+};
+
 // 退出登录
 const handleLogout = async () => {
   try {
@@ -283,7 +340,7 @@ const handleLogout = async () => {
       message: '已退出登录',
       onClose: () => {
         router.push('/login');
-      }
+      },
     });
   } catch (error) {
     console.error('退出登录失败:', error);
@@ -295,6 +352,9 @@ const handleLogout = async () => {
 onMounted(() => {
   console.log('Profile页面加载，开始获取用户数据');
   fetchUserData();
+  
+  // 初始化进度
+  updateProgress();
 });
 </script>
 
@@ -302,6 +362,8 @@ onMounted(() => {
 .profile {
   padding: 16px;
   padding-bottom: 66px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
 }
 
 /* 在二级页面中不需要为底部导航栏预留空间 */
@@ -326,4 +388,12 @@ onMounted(() => {
 .error-container {
   padding: 40px 0;
 }
-</style> 
+
+:deep(.van-pull-refresh) {
+  min-height: calc(100vh - 32px);
+}
+
+:deep(.van-pull-refresh__track) {
+  padding-bottom: 16px;
+}
+</style>

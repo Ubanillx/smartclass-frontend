@@ -3,11 +3,18 @@
     <van-cell title="最近学习" />
     <div class="learning-list">
       <div v-for="item in learningItems" :key="item.id" class="learning-item">
-        <van-image :src="item.icon" width="2rem" height="2rem" />
+        <div class="image-container">
+          <van-image :src="item.icon" width="2.5rem" height="2.5rem" />
+        </div>
         <div class="learning-info">
           <div class="learning-name">{{ item.name }}</div>
           <div class="learning-progress">
-            <van-progress :percentage="item.progress" size="small" />
+            <van-progress 
+              :percentage="item.progress" 
+              size="small" 
+              :stroke-width="6"
+              :pivot-text="`${item.progress}%`"
+            />
           </div>
         </div>
       </div>
@@ -30,23 +37,37 @@ defineProps<{
 
 <style scoped>
 .recent-learning {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .learning-list {
-  padding: 8px 16px;
+  padding: 4px 16px 10px;
 }
 
 .learning-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #ebedf0;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.3s ease;
 }
 
 .learning-item:last-child {
   border-bottom: none;
+}
+
+.image-container {
+  background-color: #f7f8fa;
+  border-radius: 10px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .learning-info {
@@ -54,10 +75,10 @@ defineProps<{
 }
 
 .learning-name {
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-md);
   color: #323233;
-  margin-bottom: 8px;
-  font-weight: 700;
+  margin-bottom: 6px;
+  font-weight: 600;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
@@ -66,8 +87,20 @@ defineProps<{
 }
 
 :deep(.van-cell__title) {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
+  font-size: var(--font-size-md) !important;
+  color: #323233;
+}
+
+:deep(.van-cell) {
+  padding: 10px 16px;
+}
+
+:deep(.van-progress__pivot) {
+  background-color: #1989fa;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
 }
 </style> 

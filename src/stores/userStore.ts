@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
   // 状态
   const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
   const userInfo = ref<LoginUserVO | null>(null);
-  
+
   // 初始化用户信息
   try {
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -41,9 +41,9 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await UserControllerService.userLoginUsingPost({
         userAccount,
-        userPassword
+        userPassword,
       });
-      
+
       if (response.code === 0 && response.data) {
         userInfo.value = response.data;
         isLoggedIn.value = true;
@@ -51,10 +51,13 @@ export const useUserStore = defineStore('user', () => {
         localStorage.setItem('isLoggedIn', 'true');
         return { success: true, data: response.data };
       }
-      
+
       return { success: false, message: response.message || '登录失败' };
     } catch (error: any) {
-      return { success: false, message: error.message || '登录失败，请检查网络连接' };
+      return {
+        success: false,
+        message: error.message || '登录失败，请检查网络连接',
+      };
     }
   };
 
@@ -78,6 +81,6 @@ export const useUserStore = defineStore('user', () => {
     userInfo,
     login,
     logout,
-    fetchCurrentUser
+    fetchCurrentUser,
   };
-}); 
+});

@@ -70,8 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
 import SearchBar from '../components/SearchBar.vue';
 import { CourseCategories, CourseList, CourseDetail } from '../components/Course';
@@ -106,6 +106,7 @@ interface Category {
 }
 
 const router = useRouter();
+const route = useRoute();
 const searchText = ref('');
 const showDetailPopup = ref(false);
 const selectedCourse = ref<Course | null>(null);
@@ -139,6 +140,19 @@ const toggleDropdown = () => {
 const selectGrade = (value: number) => {
   gradeValue.value = value;
   showDropdown.value = false;
+  
+  // 更新 URL 参数
+  const query: Record<string, string> = { ...route.query as Record<string, string> };
+  if (value === 0) {
+    delete query.grade;
+  } else {
+    query.grade = value.toString();
+  }
+  
+  router.replace({
+    path: route.path,
+    query
+  });
 };
 
 // 点击外部关闭下拉菜单
@@ -275,8 +289,71 @@ const filteredCourses = computed(() => {
   return courses;
 });
 
+// 在组件挂载时检查 URL 参数
+onMounted(() => {
+  const categoryParam = route.query.category as string;
+  let needUpdateUrl = false;
+  
+  if (categoryParam) {
+    const categoryId = parseInt(categoryParam);
+    if (!isNaN(categoryId) && categories.value.some(c => c.id === categoryId)) {
+      activeCategory.value = categoryId;
+    } else {
+      // 如果参数无效，设置为默认值
+      activeCategory.value = 0;
+      needUpdateUrl = true;
+    }
+  } else {
+    // 如果没有 category 参数，设置为默认值并标记需要更新 URL
+    activeCategory.value = 0;
+    needUpdateUrl = true;
+  }
+  
+  const gradeParam = route.query.grade as string;
+  if (gradeParam) {
+    const gradeId = parseInt(gradeParam);
+    if (!isNaN(gradeId) && gradeOptions.some(g => g.value === gradeId)) {
+      gradeValue.value = gradeId;
+    } else {
+      // 如果参数无效，设置为默认值
+      gradeValue.value = 0;
+      needUpdateUrl = true;
+    }
+  }
+  
+  // 如果需要更新 URL，添加默认参数
+  if (needUpdateUrl) {
+    const query: Record<string, string> = { ...route.query as Record<string, string> };
+    query.category = activeCategory.value.toString();
+    
+    // 如果年级是默认值，删除年级参数
+    if (gradeValue.value === 0) {
+      delete query.grade;
+    } else {
+      query.grade = gradeValue.value.toString();
+    }
+    
+    router.replace({
+      path: route.path,
+      query
+    });
+  }
+});
+
 const selectCategory = (category: Category) => {
   activeCategory.value = category.id;
+  
+  // 更新 URL 参数
+  const query: Record<string, string> = { ...route.query as Record<string, string>, category: category.id.toString() };
+  // 如果是推荐分类，删除年级参数
+  if (category.id === 0) {
+    delete query.grade;
+  }
+  
+  router.replace({
+    path: route.path,
+    query
+  });
 };
 
 const getActiveCategoryName = () => {

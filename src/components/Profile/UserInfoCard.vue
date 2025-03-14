@@ -61,25 +61,27 @@ const formatPhone = (phone: string): string => {
 
 <style scoped>
 .user-card {
-  margin-bottom: 16px;
-  padding: 16px;
-  background-color: #f7f8fa;
-  border-radius: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .user-info {
-  padding-left: 16px;
+  padding-left: 12px;
 }
 
 .user-info h3 {
-  margin: 0 0 8px;
-  font-size: 18px;
-  font-weight: 500;
+  margin: 0 0 6px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: #323233;
 }
 
 .phone {
-  margin: 0 0 8px;
-  font-size: 14px;
+  margin: 0 0 6px;
+  font-size: var(--font-size-base);
   color: #646566;
 }
 
@@ -92,15 +94,17 @@ const formatPhone = (phone: string): string => {
 }
 
 :deep(.van-tag) {
-  font-size: 10px;
-  padding: 0 4px;
+  font-size: var(--font-size-sm);
+  padding: 0 6px;
   height: 18px;
   line-height: 18px;
+  font-weight: 500;
+  border-radius: 4px;
 }
 
 .exp-text {
-  margin-left: 8px;
-  font-size: 10px;
+  margin-left: 6px;
+  font-size: var(--font-size-sm);
   color: #969799;
   white-space: nowrap;
   overflow: hidden;
@@ -108,16 +112,26 @@ const formatPhone = (phone: string): string => {
 }
 
 .settings-icon {
-  margin-top: 8px;
-  color: #969799;
+  margin-top: 4px;
+  color: #323233;
+  padding: 4px;
+  border-radius: 50%;
+  background-color: #f7f8fa;
 }
 
 :deep(.van-cell-group__inset) {
   margin: 0;
-  background-color: #f7f8fa;
+  background-color: transparent;
+  border: none;
 }
 
 :deep(.van-cell-group__inset) .van-cell::after {
   border-bottom: none;
+}
+
+:deep(.van-image__img) {
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style> 

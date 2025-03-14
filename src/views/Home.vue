@@ -14,7 +14,7 @@
     <ai-assistant-list 
       :assistants="aiAssistants" 
       @chat="startChat" 
-      @more="router.push('/assistants')" 
+      @more="router.push('/chat?tab=intelligence')" 
     />
 
     <!-- 热门课程模块 -->
@@ -257,7 +257,7 @@ const onSearch = (text) => {
 // 开始对话
 const startChat = (assistant) => {
   router.push({
-    path: '/chat',
+    path: '/chat-detail',
     query: { assistantId: assistant.id }
   });
 };
@@ -280,7 +280,7 @@ const onActionSelect = (action) => {
       router.push('/notes/add');
       break;
     case '发起对话':
-      router.push('/chat');
+      router.push('/chat?tab=history');
       break;
     case '分享内容':
       showToast('分享功能开发中');

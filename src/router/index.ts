@@ -10,8 +10,9 @@ import Courses from '../views/Courses.vue';
 import Profile from '../views/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
-import { ChatHistory, ChatDetail } from '../views/chat';
+import { ChatHistory, ChatDetail, IntelligenceCenter, ChatContainer } from '../views/chat';
 import AvatarCropper from '../views/settings/AvatarCropper.vue';
+import NoticeList from '../views/NoticeList.vue';
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -37,9 +38,9 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: '/chat-history',
-    name: 'ChatHistory',
-    component: ChatHistory,
+    path: '/chat',
+    name: 'Chat',
+    component: ChatContainer,
     meta: {
       requiresAuth: true,
     },
@@ -129,6 +130,42 @@ const routes: Array<RouteRecordRaw> = [
     path: '/course-study/:id',
     name: 'CourseStudy',
     component: () => import('../views/CourseStudy.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/notices',
+    name: 'NoticeList',
+    component: NoticeList,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/chat-history',
+    redirect: '/chat',
+  },
+  {
+    path: '/vocabulary',
+    name: 'VocabularyList',
+    component: () => import('../views/vocabulary/VocabularyList.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/vocabulary/collected',
+    name: 'CollectedWords',
+    component: () => import('../views/vocabulary/CollectedWords.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/articles',
+    name: 'ArticlesList',
+    component: () => import('../views/articles/ArticlesList.vue'),
     meta: {
       requiresAuth: true,
     },

@@ -3,7 +3,7 @@
     <router-view />
     <van-tabbar v-model="active" v-if="showTabbar">
       <van-tabbar-item icon="home-o" to="/">主页</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" to="/chat-history">对话</van-tabbar-item>
+      <van-tabbar-item icon="chat-o" to="/chat">对话</van-tabbar-item>
       <van-tabbar-item icon="orders-o" to="/courses">课程</van-tabbar-item>
       <van-tabbar-item icon="user-o" to="/profile">我的</van-tabbar-item>
     </van-tabbar>
@@ -24,7 +24,7 @@ const active = ref(0);
 // 计算是否显示底部导航栏
 const showTabbar = computed(() => {
   // 一级页面（显示底部导航栏）
-  const mainRoutes = ['/', '/chat-history', '/courses', '/profile'];
+  const mainRoutes = ['/', '/chat', '/courses', '/profile'];
   
   // 判断当前路由是否为一级页面
   return mainRoutes.includes(route.path);
@@ -35,7 +35,7 @@ watch(() => route.path, (newPath) => {
   // 设置底部导航栏激活项
   if (newPath === '/') {
     active.value = 0;
-  } else if (newPath === '/chat-history') {
+  } else if (newPath === '/chat') {
     active.value = 1;
   } else if (newPath === '/courses') {
     active.value = 2;
@@ -44,7 +44,7 @@ watch(() => route.path, (newPath) => {
   }
   
   // 设置页面样式
-  const mainRoutes = ['/', '/chat-history', '/courses', '/profile'];
+  const mainRoutes = ['/', '/chat', '/courses', '/profile'];
   const isMainRoute = mainRoutes.includes(newPath);
   
   // 移除所有相关类

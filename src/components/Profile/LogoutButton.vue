@@ -12,6 +12,8 @@
       v-model:show="showDialog"
       title="退出登录"
       show-cancel-button
+      confirm-button-color="#ee0a24"
+      cancel-button-color="#646566"
       @confirm="onLogout"
     >
       <div class="logout-dialog-content">
@@ -41,20 +43,38 @@ const onLogout = (): void => {
 
 <style scoped>
 .logout-section {
-  margin: 20px 16px;
+  margin: 16px 16px;
 }
 
 .logout-btn {
-  height: 44px;
-  font-size: 16px;
+  height: 40px;
+  font-size: var(--font-size-md);
+  font-weight: 500;
   color: #ee0a24;
   background: white;
-  border: none;
+  border: 1px solid rgba(238, 10, 36, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(238, 10, 36, 0.08);
+  transition: all 0.3s ease;
+}
+
+.logout-btn:active {
+  background-color: rgba(238, 10, 36, 0.05);
 }
 
 .logout-dialog-content {
-  padding: 0 20px 20px;
+  padding: 8px 16px 16px;
   text-align: center;
-  color: #646566;
+  color: #323233;
+  font-size: var(--font-size-md);
+}
+
+:deep(.van-dialog__header) {
+  font-weight: 600;
+  padding-top: 16px;
+}
+
+:deep(.van-button--default) {
+  border-radius: 4px;
 }
 </style> 

@@ -8,11 +8,21 @@
       @search="onSearch"
     />
 
-    <!-- AI助手分类 -->
-    <assistant-type-selector 
-      :types="assistantTypes" 
-      v-model="activeType"
-    />
+    <!-- 导航栏 -->
+    <div class="nav-tabs">
+      <div 
+        :class="['nav-tab', { active: $route.path === '/chat/history' }]"
+        @click="router.push('/chat/history')"
+      >
+        历史对话
+      </div>
+      <div 
+        :class="['nav-tab', { active: $route.path === '/chat/intelligence-center' }]"
+        @click="router.push('/chat/intelligence-center')"
+      >
+        智慧体中心
+      </div>
+    </div>
 
     <!-- 对话记录列表 -->
     <chat-list 
@@ -35,9 +45,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import SearchBar from '../../components/SearchBar.vue';
-import { AssistantTypeSelector, ChatList } from '../../components/Dialogue';
+import { ChatList } from '../../components/Dialogue';
 
 interface ChatItem {
   id: number;
@@ -52,16 +62,8 @@ interface ChatItem {
 }
 
 const router = useRouter();
+const route = useRoute();
 const searchText = ref('');
-const activeType = ref(0);
-
-// AI助手分类
-const assistantTypes = [
-  { id: 0, name: '全部' },
-  { id: 1, name: '语法' },
-  { id: 2, name: '口语' },
-  { id: 3, name: '写作' }
-];
 
 // Mock 对话历史数据
 const chatHistory = ref<ChatItem[]>([
@@ -100,14 +102,9 @@ const chatHistory = ref<ChatItem[]>([
   }
 ]);
 
-// 根据搜索文本和选中的类型过滤对话历史
+// 根据搜索文本过滤对话历史
 const filteredChatHistory = computed(() => {
   let result = chatHistory.value;
-  
-  // 按类型过滤
-  if (activeType.value !== 0) {
-    result = result.filter(chat => chat.type === activeType.value);
-  }
   
   // 按搜索文本过滤
   if (searchText.value) {
@@ -140,7 +137,40 @@ const onSearch = (text: string) => {
 }
 
 .search-bar {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.nav-tabs {
+  display: flex;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ebedf0;
+}
+
+.nav-tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  font-size: var(--font-size-md, 16px);
+  font-weight: 700;
+  color: #646566;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-tab.active {
+  color: #1989fa;
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background-color: #1989fa;
+  border-radius: 3px;
 }
 
 .new-chat-btn {

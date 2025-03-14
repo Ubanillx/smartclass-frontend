@@ -9,7 +9,7 @@
           </svg>
         </template>
         <template #right-icon>
-          <span class="more-link" @click="showNoticePopup">更多</span>
+          <span class="more-link" @click="goToNoticeList">更多</span>
         </template>
       </van-cell>
       <div class="notice-preview">
@@ -28,33 +28,6 @@
         </template>
       </div>
     </van-cell-group>
-
-    <!-- 公告列表弹出层 -->
-    <van-popup
-      v-model:show="showPopup"
-      round
-      position="bottom"
-      :style="{ height: '60%' }"
-    >
-      <div class="notice-popup">
-        <div class="notice-popup-header">
-          <span class="title">全部公告</span>
-          <van-icon name="cross" @click="showPopup = false" />
-        </div>
-        <div class="notice-list">
-          <van-cell-group inset>
-            <van-cell
-              v-for="notice in notices"
-              :key="notice.id"
-              :title="notice.title"
-              :label="notice.date"
-              is-link
-              @click="showNoticeDetail(notice)"
-            />
-          </van-cell-group>
-        </div>
-      </div>
-    </van-popup>
 
     <!-- 公告详情弹出层 -->
     <van-popup
@@ -80,6 +53,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 interface Notice {
   id: number;
@@ -93,19 +67,18 @@ const props = defineProps<{
   notices: Notice[];
 }>();
 
-const showPopup = ref(false);
+const router = useRouter();
 const showDetail = ref(false);
 const selectedNotice = ref<Notice | null>(null);
 
-// 显示公告列表
-const showNoticePopup = (): void => {
-  showPopup.value = true;
+// 跳转到公告列表页面
+const goToNoticeList = (): void => {
+  router.push('/notices');
 };
 
 // 显示公告详情
 const showNoticeDetail = (notice: Notice): void => {
   selectedNotice.value = notice;
-  showPopup.value = false;
   showDetail.value = true;
 };
 </script>
@@ -158,10 +131,6 @@ const showNoticeDetail = (notice: Notice): void => {
   font-weight: 700;
 }
 
-.notice-popup {
-  padding: 16px;
-}
-
 .notice-detail {
   padding: 16px;
 }
@@ -201,22 +170,6 @@ const showNoticeDetail = (notice: Notice): void => {
   line-height: 1.5;
   color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
-}
-
-.notice-list {
-  margin-top: 16px;
-}
-
-/* 强制覆盖组件标题样式 */
-:deep(.van-cell__title) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md) !important;
-}
-
-:deep(.van-cell__label) {
-  font-size: var(--font-size-sm) !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
 }
 
 .svg-icon {
