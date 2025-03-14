@@ -140,7 +140,7 @@ const onSearch = (text: string) => {
 }
 
 .search-bar {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .new-chat-btn {

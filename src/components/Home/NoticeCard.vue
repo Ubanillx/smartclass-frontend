@@ -2,7 +2,12 @@
   <div>
     <!-- 公告卡片 -->
     <van-cell-group inset class="notice-card">
-      <van-cell title="最新公告" icon="volume-o">
+      <van-cell title="最新公告">
+        <template #icon>
+          <svg class="icon svg-icon notice-icon" aria-hidden="true">
+            <use xlink:href="#icon-gongshigonggao"></use>
+          </svg>
+        </template>
         <template #right-icon>
           <span class="more-link" @click="showNoticePopup">更多</span>
         </template>
@@ -118,43 +123,39 @@ const showNoticeDetail = (notice: Notice): void => {
 
 .notice-preview h4 {
   margin: 0 0 8px 0;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   color: #323233;
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-brief {
   margin: 0 0 12px 0;
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-sm);
   color: #646566;
   line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--font-size-sm, 12px);
+  font-size: var(--font-size-sm);
   color: #969799;
 }
 
 .notice-date {
-  font-size: var(--font-size-sm, 12px);
+  font-size: var(--font-size-sm);
   color: #969799;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .more-link {
   color: #1989fa;
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-md);
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-popup {
@@ -174,9 +175,8 @@ const showNoticeDetail = (notice: Notice): void => {
 }
 
 .notice-popup-header .title {
-  font-size: var(--font-size-md, 16px);
+  font-size: var(--font-size-md);
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-content {
@@ -185,17 +185,15 @@ const showNoticeDetail = (notice: Notice): void => {
 
 .notice-content h3 {
   margin: 0 0 8px 0;
-  font-size: var(--font-size-lg, 18px);
+  font-size: var(--font-size-lg);
   color: #323233;
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-date {
   margin: 0 0 16px 0;
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-sm);
   color: #969799;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .notice-text {
@@ -213,11 +211,36 @@ const showNoticeDetail = (notice: Notice): void => {
 :deep(.van-cell__title) {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
+  font-size: var(--font-size-md) !important;
 }
 
 :deep(.van-cell__label) {
-  font-size: var(--font-size-sm, 12px) !important;
+  font-size: var(--font-size-sm) !important;
   font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.notice-icon {
+  font-size: var(--font-size-lg);
+  margin-right: 4px;
+  color: #1989fa;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.notice-content p {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: #323233;
+  /* 全局样式已定义font-family */
 }
 </style> 

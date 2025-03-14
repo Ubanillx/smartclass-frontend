@@ -109,83 +109,83 @@ const userStats = ref({
 // 今日目标
 const todayProgress = ref(0);
 const todayGoals = ref([
-  { id: 1, text: '完成每日单词打卡', completed: false },
-  { id: 2, text: '听力练习15分钟', completed: false },
-  { id: 3, text: '完成一节口语课程', completed: false }
+  markRaw({ id: 1, text: '完成每日单词打卡', completed: false }),
+  markRaw({ id: 2, text: '听力练习15分钟', completed: false }),
+  markRaw({ id: 3, text: '完成一节口语课程', completed: false })
 ]);
 
 // 最近获得的徽章
 const recentBadges = ref([
-  {
+  markRaw({
     id: 1,
     name: '单词达人',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/medal.png'
-  },
-  {
+  }),
+  markRaw({
     id: 2,
     name: '坚持不懈',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/fire.png'
-  },
-  {
+  }),
+  markRaw({
     id: 3,
     name: '听力小子',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/music.png'
-  },
-  {
+  }),
+  markRaw({
     id: 4,
     name: '初级达成',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/star.png'
-  }
+  })
 ]);
 
 // 最近学习记录
 const recentLearning = ref([
-  {
+  markRaw({
     id: 1,
     name: '基础发音课程',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/book.png',
     progress: 80
-  },
-  {
+  }),
+  markRaw({
     id: 2,
     name: '日常对话练习',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/chat.png',
     progress: 45
-  },
-  {
+  }),
+  markRaw({
     id: 3,
     name: '趣味单词记忆',
     icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/smile.png',
     progress: 60
-  }
+  })
 ]);
 
 // 学习历史记录数据
 const learningHistory = ref([
-  {
+  markRaw({
     id: 1,
     date: '今天',
     title: '完成单词测试',
     description: '正确率 85%',
     time: '14:30',
     icon: 'records'
-  },
-  {
+  }),
+  markRaw({
     id: 2,
     date: '昨天',
     title: '观看视频课程',
     description: '《英语口语进阶》第3课',
     time: '16:45',
     icon: 'play-circle-o'
-  },
-  {
+  }),
+  markRaw({
     id: 3,
     date: '昨天',
     title: '完成听力练习',
     description: '得分 90分',
     time: '10:20',
     icon: 'music-o'
-  }
+  })
 ]);
 
 // 获取用户数据
