@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3864645",
+      "name": "主页",
+      "font_class": "zhuye",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "12240037",
+      "name": "我的",
+      "font_class": "wode",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    },
+    {
+      "icon_id": "13856689",
+      "name": "对话",
+      "font_class": "duihua",
+      "unicode": "e6ba",
+      "unicode_decimal": 59066
+    },
+    {
+      "icon_id": "24111670",
+      "name": "课程",
+      "font_class": "kecheng",
+      "unicode": "fb3e",
+      "unicode_decimal": 64318
+    },
+    {
       "icon_id": "39152126",
       "name": "044_视频课程",
       "font_class": "a-044_shipinkecheng",
