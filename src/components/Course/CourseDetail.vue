@@ -12,12 +12,14 @@
         <van-icon name="cross" @click="emit('close')" />
       </div>
       <div class="detail-content" v-if="course">
-        <van-image 
-          :src="course.cover" 
-          fit="cover" 
-          width="100%"
-          radius="8"
-        />
+        <div class="image-container">
+          <van-image 
+            :src="course.cover" 
+            fit="cover" 
+            width="100%"
+            radius="8"
+          />
+        </div>
         <h2>{{ course.title }}</h2>
         <div class="detail-meta">
           <span v-if="course.grade" class="grade">{{ course.grade }}</span>
@@ -82,27 +84,48 @@ const emit = defineEmits<{
 
 <style scoped>
 .course-detail {
-  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.popup-header .title {
-  font-size: var(--font-size-md, 16px);
+.title {
+  font-size: var(--font-size-lg, 16px);
   font-weight: 700;
+  color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
+.detail-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.image-container {
+  padding: 0 12px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.image-container :deep(.van-image) {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .detail-content h2 {
-  margin: 16px 0 8px;
-  font-size: var(--font-size-xl, 20px);
-  color: #323233;
+  margin: 0 0 8px;
+  font-size: 18px;
   font-weight: 700;
+  color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
 }
 

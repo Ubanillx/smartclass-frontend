@@ -25,18 +25,37 @@
       @more="router.push('/courses/all')"
     />
 
+    <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
+    <div v-if="activeCategory !== 0" class="grade-selector-container">
+      <div class="custom-dropdown">
+        <div class="dropdown-trigger" @click="toggleDropdown">
+          <span>{{ currentGradeText }}</span>
+          <span class="dropdown-arrow"></span>
+        </div>
+        <div v-if="showDropdown" class="dropdown-content">
+          <div 
+            v-for="option in gradeOptions" 
+            :key="option.value" 
+            class="dropdown-option"
+            :class="{ 'dropdown-option-active': gradeValue === option.value }"
+            @click="selectGrade(option.value)"
+          >
+            {{ option.text }}
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 学科课程列表 -->
     <course-list
-      v-else
+      v-if="activeCategory !== 0"
       :title="getActiveCategoryName()"
       :courses="filteredCourses"
       class-name="subject-courses"
       @select="showCourseDetail"
     >
       <template #right-icon>
-        <van-dropdown-menu>
-          <van-dropdown-item v-model="gradeValue" :options="gradeOptions" />
-        </van-dropdown-menu>
+        <!-- 移除此处的年级选择器 -->
       </template>
     </course-list>
 
@@ -92,17 +111,48 @@ const showDetailPopup = ref(false);
 const selectedCourse = ref<Course | null>(null);
 const activeCategory = ref(0);
 const gradeValue = ref(0);
+const showDropdown = ref(false);
 
 // 年级选项
 const gradeOptions = [
-  { text: '全部年级', value: 0 },
-  { text: '一年级', value: 1 },
-  { text: '二年级', value: 2 },
-  { text: '三年级', value: 3 },
-  { text: '四年级', value: 4 },
-  { text: '五年级', value: 5 },
-  { text: '六年级', value: 6 }
+  { text: '全部年级', value: 0, icon: '' },
+  { text: '一年级', value: 1, icon: '' },
+  { text: '二年级', value: 2, icon: '' },
+  { text: '三年级', value: 3, icon: '' },
+  { text: '四年级', value: 4, icon: '' },
+  { text: '五年级', value: 5, icon: '' },
+  { text: '六年级', value: 6, icon: '' }
 ];
+
+// 获取当前选中的年级文本
+const currentGradeText = computed(() => {
+  const option = gradeOptions.find(opt => opt.value === gradeValue.value);
+  return option ? option.text : '全部年级';
+});
+
+// 切换下拉菜单显示状态
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+// 选择年级
+const selectGrade = (value: number) => {
+  gradeValue.value = value;
+  showDropdown.value = false;
+};
+
+// 点击外部关闭下拉菜单
+const closeDropdownOnClickOutside = (event: MouseEvent) => {
+  const dropdown = document.querySelector('.custom-dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node) && showDropdown.value) {
+    showDropdown.value = false;
+  }
+};
+
+// 添加全局点击事件监听器
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', closeDropdownOnClickOutside);
+}
 
 // 课程分类
 const categories = ref<Category[]>([
@@ -115,26 +165,56 @@ const categories = ref<Category[]>([
   {
     id: 1,
     name: '语文',
-    icon: 'edit',
+    icon: 'yuwen',
     path: '/courses/chinese'
   },
   {
     id: 2,
     name: '数学',
-    icon: 'points',
+    icon: 'shuxue',
     path: '/courses/math'
   },
   {
     id: 3,
     name: '英语',
-    icon: 'smile',
+    icon: 'yingyu1',
     path: '/courses/english'
   },
   {
     id: 4,
-    name: '科学',
-    icon: 'bulb-o',
-    path: '/courses/science'
+    name: '物理',
+    icon: 'wuli',
+    path: '/courses/physics'
+  },
+  {
+    id: 5,
+    name: '化学',
+    icon: 'huaxue',
+    path: '/courses/chemistry'
+  },
+  {
+    id: 6,
+    name: '政治',
+    icon: 'zhengzhi',
+    path: '/courses/politics'
+  },
+  {
+    id: 7,
+    name: '历史',
+    icon: 'lishi',
+    path: '/courses/history'
+  },
+  {
+    id: 8,
+    name: '生物',
+    icon: 'shengwu',
+    path: '/courses/biology'
+  },
+  {
+    id: 9,
+    name: '地理',
+    icon: 'dili-',
+    path: '/courses/geography'
   }
 ]);
 
@@ -231,40 +311,112 @@ const onSearch = (text: string) => {
 }
 
 .search-bar {
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 }
 
-:deep(.van-dropdown-menu) {
-  height: 28px;
-}
-
-:deep(.van-dropdown-menu__bar) {
-  background: transparent;
-}
-
-:deep(.van-dropdown-menu__item) {
+.grade-selector-container {
+  margin: 0 0 16px;
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: none;
+  display: flex;
   justify-content: flex-end;
+  align-items: center;
+  position: relative;
 }
 
-:deep(.van-dropdown-item__option-text) {
-  font-size: var(--font-size-base, 14px);
+/* 自定义下拉菜单样式 */
+.custom-dropdown {
+  width: 100px;
+  position: relative;
+}
+
+.dropdown-trigger {
+  height: 28px;
+  border: 1px solid #ebedf0;
+  border-radius: 6px;
+  padding: 0 8px;
+  background-color: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
   font-family: 'Noto Sans SC', sans-serif;
+  color: #323233;
 }
 
-:deep(.van-dropdown-menu__title) {
-  font-size: var(--font-size-base, 14px);
-  font-weight: 700;
+.dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 4px 0 4px;
+  border-color: #969799 transparent transparent transparent;
+  margin-left: 4px;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ebedf0;
+  border-radius: 6px;
+  margin-top: 6px;
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dropdown-option {
+  padding: 12px 0;
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
   font-family: 'Noto Sans SC', sans-serif;
+  color: #323233;
+  cursor: pointer;
 }
 
-:deep(.van-cell__title) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
+.dropdown-option:last-child {
+  border-bottom: none;
 }
+
+.dropdown-option:hover {
+  background-color: #f7f8fa;
+}
+
+.dropdown-option-active {
+  color: #1989fa;
+  background-color: #fff;
+  position: relative;
+}
+
+/* 删除自定义勾选图标 */
+/* .dropdown-option-active::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231989fa'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") no-repeat;
+  background-size: contain;
+} */
 
 .recommended,
 .subject-courses {
   margin-bottom: 16px;
+}
+
+/* 确保没有任何元素有阴影 */
+:deep(.van-popup) {
+  box-shadow: none !important;
+  background-color: #fff;
+  border: 1px solid #ebedf0;
 }
 </style> 

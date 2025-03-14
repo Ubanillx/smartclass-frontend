@@ -7,7 +7,9 @@
         :class="['category-item', { active: activeCategory === category.id }]"
         @click="emit('select', category)"
       >
-        <van-icon :name="category.icon" class="category-icon" />
+        <svg class="icon svg-icon category-icon" aria-hidden="true">
+          <use :xlink:href="'#icon-' + getIconName(category.icon)"></use>
+        </svg>
         <span>{{ category.name }}</span>
       </div>
     </div>
@@ -33,12 +35,23 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'select', category: Category): void;
 }>();
+
+const getIconName = (iconName: string) => {
+  const iconMap: Record<string, string> = {
+    'star': 'tuijian'
+  };
+  
+  return iconMap[iconName] || iconName;
+};
 </script>
 
 <style scoped>
 .course-categories-container {
   position: relative;
   margin-bottom: 16px;
+  margin-top: -8px;
+  padding: 8px 0;
+  border-radius: 8px;
 }
 
 .course-categories {
@@ -46,7 +59,7 @@ const emit = defineEmits<{
   padding: 0 16px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-right: 40px; /* 为右侧提示图标留出空间 */
+  padding-right: 40px;
 }
 
 .course-categories::-webkit-scrollbar {
@@ -76,6 +89,15 @@ const emit = defineEmits<{
 
 .category-item.active .category-icon {
   color: #fff;
+  fill: #fff;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 
 .category-icon {

@@ -5,7 +5,6 @@
   >
     <div class="course-cover">
       <van-image :src="course.cover" fit="cover" radius="8"/>
-      <span class="course-tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
     </div>
     <div class="course-info">
       <h3 class="course-title">{{ course.title }}</h3>
@@ -15,6 +14,7 @@
         <span class="difficulty" :class="course.level">{{ course.level }}</span>
         <span>{{ course.duration }}分钟</span>
         <span v-if="course.studentsCount">{{ course.studentsCount }}人在学</span>
+        <span class="course-tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
       </div>
     </div>
   </div>
@@ -63,28 +63,22 @@ const emit = defineEmits<{
   width: 100%;
   height: 160px;
   overflow: hidden;
+  padding: 0 12px;
+  box-sizing: border-box;
 }
 
 .course-cover :deep(.van-image) {
   width: 100%;
   height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
 }
 
 .course-cover :deep(.van-image__img) {
   object-fit: cover;
   width: 100%;
   height: 100%;
-}
-
-.course-tag {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  padding: 2px 8px;
-  font-size: var(--font-size-sm, 12px);
-  color: #fff;
-  border-radius: 4px;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .course-info {
@@ -143,5 +137,14 @@ const emit = defineEmits<{
 
 .grade {
   color: #323233;
+}
+
+.course-tag {
+  padding: 2px 8px;
+  font-size: var(--font-size-sm, 12px);
+  color: #fff;
+  border-radius: 4px;
+  font-family: 'Noto Sans SC', sans-serif;
+  margin-left: auto;
 }
 </style> 
