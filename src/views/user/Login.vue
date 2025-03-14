@@ -1,20 +1,17 @@
 <template>
   <div class="login">
-    <!-- 顶部返回按钮 -->
-    <div class="back-button" @click="router.back()">
-      <van-icon name="arrow-left" size="18" />
-      <span class="page-title">登录</span>
-    </div>
+    <!-- 替换为全局返回按钮 -->
+    <back-button title="登录" />
 
     <div class="login-header">
       <van-image
         class="logo"
         width="80"
         height="80"
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/logo.png"
+        src="/logo.svg"
       />
-      <h2>欢迎回来</h2>
-      <p class="subtitle">登录后开启您的学习之旅</p>
+      <h2>欢迎来到智云星课</h2>
+      <p class="subtitle">登录后即刻开启您的学习之旅</p>
     </div>
 
     <van-form @submit="onSubmit" class="login-form">
@@ -63,6 +60,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { useUserStore } from '../../stores/userStore';
+import { BackButton } from '../../components/Common';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -109,19 +107,6 @@ const onSubmit = async (values) => {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-}
-
-.page-title {
-  font-size: 18px;
-  margin-left: 10px;
-  font-weight: 500;
-  color: #323233;
 }
 
 .login-header {

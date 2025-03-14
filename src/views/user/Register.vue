@@ -1,16 +1,13 @@
 <template>
   <div class="register">
-    <div class="back-button" @click="handleBack">
-      <van-icon name="arrow-left" size="18" />
-      <span class="page-title">注册账号</span>
-    </div>
-    
+    <back-button title="注册账号" :custom-path="route.query.redirect ? undefined : '/'" />
+
     <div class="register-header">
       <van-image
         class="logo"
         width="80"
         height="80"
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/logo.png"
+        src="/logo.svg"
       />
       <h2>创建账号</h2>
       <p class="subtitle">注册后开启您的学习之旅</p>
@@ -21,7 +18,7 @@
       <van-tab name="account" title="用户名注册" />
       <van-tab name="phone" title="手机号注册" />
     </van-tabs>
-    
+
     <div class="register-form">
       <!-- 基本信息 -->
       <van-cell-group inset class="form-group">
@@ -70,13 +67,21 @@
       </van-cell-group>
 
       <div class="form-actions">
-        <van-button type="primary" block round @click="handleRegister" :loading="loading">
+        <van-button
+          type="primary"
+          block
+          round
+          @click="handleRegister"
+          :loading="loading"
+        >
           注册
         </van-button>
       </div>
 
       <div class="login-link">
-        已有账号？<span class="link-text" @click="router.push('/login')">立即登录</span>
+        已有账号？<span class="link-text" @click="router.push('/login')"
+          >立即登录</span
+        >
       </div>
     </div>
   </div>
@@ -87,6 +92,7 @@ import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
 import { UserControllerService } from '../../services/services/UserControllerService';
+import { BackButton } from '../../components/Common';
 
 const router = useRouter();
 const route = useRoute();
@@ -99,17 +105,8 @@ const formData = ref({
   userPhone: '',
   nickname: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 });
-
-// 处理返回按钮点击
-const handleBack = () => {
-  if (route.query.redirect) {
-    router.back();
-  } else {
-    router.push('/');
-  }
-};
 
 const validateForm = () => {
   // 表单验证
@@ -148,13 +145,13 @@ const handleRegister = async () => {
       response = await UserControllerService.userRegisterUsingPost({
         userAccount: formData.value.userAccount,
         userPassword: formData.value.password,
-        checkPassword: formData.value.confirmPassword
+        checkPassword: formData.value.confirmPassword,
       });
     } else {
       response = await UserControllerService.userPhoneRegisterUsingPost({
         userPhone: formData.value.userPhone,
         userPassword: formData.value.password,
-        checkPassword: formData.value.confirmPassword
+        checkPassword: formData.value.confirmPassword,
       });
     }
 
@@ -164,18 +161,18 @@ const handleRegister = async () => {
         message: '注册成功',
         onClose: () => {
           router.push('/login');
-        }
+        },
       });
     } else {
       showToast({
         type: 'fail',
-        message: response.message || '注册失败'
+        message: response.message || '注册失败',
       });
     }
   } catch (error) {
     showToast({
       type: 'fail',
-      message: error.message || '注册失败，请检查网络连接'
+      message: error.message || '注册失败，请检查网络连接',
     });
   } finally {
     loading.value = false;
@@ -190,19 +187,6 @@ const handleRegister = async () => {
   padding-bottom: 32px;
   display: flex;
   flex-direction: column;
-}
-
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-}
-
-.page-title {
-  font-size: 18px;
-  margin-left: 10px;
-  font-weight: 500;
-  color: #323233;
 }
 
 .register-header {
@@ -299,4 +283,4 @@ const handleRegister = async () => {
   color: #1989fa;
   font-weight: 500;
 }
-</style> 
+</style>
