@@ -5,18 +5,20 @@
         <span class="more-link" @click="onViewAll">查看全部</span>
       </template>
     </van-cell>
-    <van-grid :column-num="4" :border="false" class="badge-grid">
-      <van-grid-item v-for="badge in badges" :key="badge.id">
-        <template #icon>
-          <div class="badge-icon-wrapper">
-            <van-image :src="badge.icon" width="2.8rem" height="2.8rem" />
-          </div>
-        </template>
-        <template #text>
-          <span class="badge-name">{{ badge.name }}</span>
-        </template>
-      </van-grid-item>
-    </van-grid>
+    <div class="badge-scroll-container">
+      <van-grid :column-num="4" :border="false" class="badge-grid">
+        <van-grid-item v-for="badge in badges" :key="badge.id">
+          <template #icon>
+            <div class="badge-icon-wrapper" :class="badge.bgClass">
+              <van-icon :name="badge.icon" :color="badge.color" size="24" />
+            </div>
+          </template>
+          <template #text>
+            <span class="badge-name">{{ badge.name }}</span>
+          </template>
+        </van-grid-item>
+      </van-grid>
+    </div>
   </van-cell-group>
 </template>
 
@@ -25,6 +27,8 @@ interface Badge {
   id: number;
   name: string;
   icon: string;
+  color: string;
+  bgClass: string;
 }
 
 defineProps<{
@@ -49,18 +53,36 @@ const onViewAll = (): void => {
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
+.badge-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.badge-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 .badge-grid {
   padding: 4px 0 10px;
+  width: max-content;
+  min-width: 100%;
 }
 
 .badge-icon-wrapper {
-  background-color: #f7f8fa;
-  border-radius: 12px;
-  padding: 8px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 12px;
   margin-bottom: 2px;
+  transition: all 0.3s ease;
+}
+
+.badge-icon-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .badge-name {
@@ -93,5 +115,38 @@ const onViewAll = (): void => {
 
 :deep(.van-grid-item__content) {
   padding: 6px;
+}
+
+/* 成就背景颜色 */
+.bg-blue {
+  background-color: rgba(25, 137, 250, 0.1);
+}
+
+.bg-orange {
+  background-color: rgba(255, 151, 106, 0.1);
+}
+
+.bg-green {
+  background-color: rgba(7, 193, 96, 0.1);
+}
+
+.bg-purple {
+  background-color: rgba(114, 50, 221, 0.1);
+}
+
+.bg-red {
+  background-color: rgba(238, 10, 36, 0.1);
+}
+
+.bg-yellow {
+  background-color: rgba(255, 205, 50, 0.1);
+}
+
+.bg-cyan {
+  background-color: rgba(0, 206, 209, 0.1);
+}
+
+.bg-pink {
+  background-color: rgba(255, 105, 180, 0.1);
 }
 </style> 

@@ -1,63 +1,65 @@
 <template>
   <div class="courses has-tabbar">
-    <!-- 搜索栏 -->
-    <search-bar
-      v-model="searchText"
-      placeholder="搜索课程"
-      @search="onSearch"
-    />
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <!-- 搜索栏 -->
+      <search-bar
+        v-model="searchText"
+        placeholder="搜索课程"
+        @search="onSearch"
+      />
 
-    <!-- 课程分类 -->
-    <course-categories
-      :categories="categories"
-      :active-category="activeCategory"
-      @select="selectCategory"
-    />
+      <!-- 课程分类 -->
+      <course-categories
+        :categories="categories"
+        :active-category="activeCategory"
+        @select="selectCategory"
+      />
 
-    <!-- 推荐课程 -->
-    <course-list
-      v-if="activeCategory === 0"
-      title="热门推荐"
-      :courses="recommendedCourses"
-      show-more
-      class-name="recommended"
-      @select="showCourseDetail"
-      @more="router.push('/courses/all')"
-    />
+      <!-- 推荐课程 -->
+      <course-list
+        v-if="activeCategory === 0"
+        title="热门推荐"
+        :courses="recommendedCourses"
+        show-more
+        class-name="recommended"
+        @select="showCourseDetail"
+        @more="router.push('/courses/all')"
+      />
 
-    <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
-    <div v-if="activeCategory !== 0" class="grade-selector-container">
-      <div class="custom-dropdown">
-        <div class="dropdown-trigger" @click="toggleDropdown">
-          <span>{{ currentGradeText }}</span>
-          <span class="dropdown-arrow"></span>
-        </div>
-        <div v-if="showDropdown" class="dropdown-content">
-          <div 
-            v-for="option in gradeOptions" 
-            :key="option.value" 
-            class="dropdown-option"
-            :class="{ 'dropdown-option-active': gradeValue === option.value }"
-            @click="selectGrade(option.value)"
-          >
-            {{ option.text }}
+      <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
+      <div v-if="activeCategory !== 0" class="grade-selector-container">
+        <div class="custom-dropdown">
+          <div class="dropdown-trigger" @click="toggleDropdown">
+            <span>{{ currentGradeText }}</span>
+            <span class="dropdown-arrow"></span>
+          </div>
+          <div v-if="showDropdown" class="dropdown-content">
+            <div 
+              v-for="option in gradeOptions" 
+              :key="option.value" 
+              class="dropdown-option"
+              :class="{ 'dropdown-option-active': gradeValue === option.value }"
+              @click="selectGrade(option.value)"
+            >
+              {{ option.text }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 学科课程列表 -->
-    <course-list
-      v-if="activeCategory !== 0"
-      :title="getActiveCategoryName()"
-      :courses="filteredCourses"
-      class-name="subject-courses"
-      @select="showCourseDetail"
-    >
-      <template #right-icon>
-        <!-- 移除此处的年级选择器 -->
-      </template>
-    </course-list>
+      <!-- 学科课程列表 -->
+      <course-list
+        v-if="activeCategory !== 0"
+        :title="getActiveCategoryName()"
+        :courses="filteredCourses"
+        class-name="subject-courses"
+        @select="showCourseDetail"
+      >
+        <template #right-icon>
+          <!-- 移除此处的年级选择器 -->
+        </template>
+      </course-list>
+    </van-pull-refresh>
 
     <!-- 课程详情弹出层 -->
     <course-detail
@@ -113,6 +115,7 @@ const selectedCourse = ref<Course | null>(null);
 const activeCategory = ref(0);
 const gradeValue = ref(0);
 const showDropdown = ref(false);
+const refreshing = ref(false);
 
 // 年级选项
 const gradeOptions = [
@@ -289,54 +292,31 @@ const filteredCourses = computed(() => {
   return courses;
 });
 
+// 下拉刷新
+const onRefresh = () => {
+  console.log('下拉刷新，重新获取课程页面数据');
+  
+  // 模拟网络请求延迟
+  setTimeout(() => {
+    refreshing.value = false;
+    showToast('刷新成功');
+  }, 1000);
+};
+
 // 在组件挂载时检查 URL 参数
 onMounted(() => {
-  const categoryParam = route.query.category as string;
-  let needUpdateUrl = false;
+  console.log('Courses页面加载，开始获取数据');
   
-  if (categoryParam) {
-    const categoryId = parseInt(categoryParam);
-    if (!isNaN(categoryId) && categories.value.some(c => c.id === categoryId)) {
-      activeCategory.value = categoryId;
-    } else {
-      // 如果参数无效，设置为默认值
-      activeCategory.value = 0;
-      needUpdateUrl = true;
-    }
-  } else {
-    // 如果没有 category 参数，设置为默认值并标记需要更新 URL
-    activeCategory.value = 0;
-    needUpdateUrl = true;
+  // 从URL参数中获取分类和年级
+  const categoryId = parseInt(route.query.category as string) || 0;
+  const grade = parseInt(route.query.grade as string) || 0;
+  
+  if (categoryId !== 0 && categories.value.some(c => c.id === categoryId)) {
+    activeCategory.value = categoryId;
   }
   
-  const gradeParam = route.query.grade as string;
-  if (gradeParam) {
-    const gradeId = parseInt(gradeParam);
-    if (!isNaN(gradeId) && gradeOptions.some(g => g.value === gradeId)) {
-      gradeValue.value = gradeId;
-    } else {
-      // 如果参数无效，设置为默认值
-      gradeValue.value = 0;
-      needUpdateUrl = true;
-    }
-  }
-  
-  // 如果需要更新 URL，添加默认参数
-  if (needUpdateUrl) {
-    const query: Record<string, string> = { ...route.query as Record<string, string> };
-    query.category = activeCategory.value.toString();
-    
-    // 如果年级是默认值，删除年级参数
-    if (gradeValue.value === 0) {
-      delete query.grade;
-    } else {
-      query.grade = gradeValue.value.toString();
-    }
-    
-    router.replace({
-      path: route.path,
-      query
-    });
+  if (grade !== 0 && gradeOptions.some(g => g.value === grade)) {
+    gradeValue.value = grade;
   }
 });
 
@@ -495,5 +475,13 @@ const onSearch = (text: string) => {
   box-shadow: none !important;
   background-color: #fff;
   border: 1px solid #ebedf0;
+}
+
+:deep(.van-pull-refresh) {
+  min-height: calc(100vh - 32px);
+}
+
+:deep(.van-pull-refresh__track) {
+  padding-bottom: 16px;
 }
 </style> 

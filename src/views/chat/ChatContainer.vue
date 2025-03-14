@@ -1,46 +1,48 @@
 <template>
   <div class="chat-container has-tabbar">
-    <!-- 搜索栏 -->
-    <search-bar
-      v-model="searchText"
-      placeholder="搜索对话记录"
-      @search="onSearch"
-    />
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <!-- 搜索栏 -->
+      <search-bar
+        v-model="searchText"
+        placeholder="搜索对话记录"
+        @search="onSearch"
+      />
 
-    <!-- 导航栏 -->
-    <div class="nav-tabs">
-      <div 
-        :class="['nav-tab', { active: activeTab === 'history' }]"
-        @click="switchTab('history')"
-      >
-        历史对话
+      <!-- 导航栏 -->
+      <div class="nav-tabs">
+        <div 
+          :class="['nav-tab', { active: activeTab === 'history' }]"
+          @click="switchTab('history')"
+        >
+          历史对话
+        </div>
+        <div 
+          :class="['nav-tab', { active: activeTab === 'intelligence' }]"
+          @click="switchTab('intelligence')"
+        >
+          智慧体中心
+        </div>
       </div>
-      <div 
-        :class="['nav-tab', { active: activeTab === 'intelligence' }]"
-        @click="switchTab('intelligence')"
-      >
-        智慧体中心
-      </div>
-    </div>
 
-    <!-- 内容区域 -->
-    <div class="tab-content">
-      <!-- 历史对话内容 -->
-      <div v-show="activeTab === 'history'" class="tab-pane">
-        <chat-history-content 
-          :search-text="searchText"
-          @select="handleChatSelect"
-        />
+      <!-- 内容区域 -->
+      <div class="tab-content">
+        <!-- 历史对话内容 -->
+        <div v-show="activeTab === 'history'" class="tab-pane">
+          <chat-history-content 
+            :search-text="searchText"
+            @select="handleChatSelect"
+          />
+        </div>
+        
+        <!-- 智慧体中心内容 -->
+        <div v-show="activeTab === 'intelligence'" class="tab-pane">
+          <intelligence-center-content 
+            :search-text="searchText"
+            @select="handleAssistantSelect"
+          />
+        </div>
       </div>
-      
-      <!-- 智慧体中心内容 -->
-      <div v-show="activeTab === 'intelligence'" class="tab-pane">
-        <intelligence-center-content 
-          :search-text="searchText"
-          @select="handleAssistantSelect"
-        />
-      </div>
-    </div>
+    </van-pull-refresh>
 
     <!-- 新建对话按钮 -->
     <van-button 
@@ -59,6 +61,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { showToast } from 'vant';
 import SearchBar from '../../components/SearchBar.vue';
 import ChatHistoryContent from './components/ChatHistoryContent.vue';
 import IntelligenceCenterContent from './components/IntelligenceCenterContent.vue';
@@ -67,6 +70,18 @@ const router = useRouter();
 const route = useRoute();
 const searchText = ref('');
 const activeTab = ref('history'); // 默认显示历史对话
+const refreshing = ref(false);
+
+// 下拉刷新
+const onRefresh = () => {
+  console.log('下拉刷新，重新获取对话页面数据');
+  
+  // 模拟网络请求延迟
+  setTimeout(() => {
+    refreshing.value = false;
+    showToast('刷新成功');
+  }, 1000);
+};
 
 // 检查URL参数，决定默认显示哪个标签页
 onMounted(() => {
@@ -126,7 +141,7 @@ const onSearch = (text: string) => {
 
 .nav-tabs {
   display: flex;
-  margin-top: 0;
+  margin-top: 12px;
   margin-bottom: 8px;
   border-bottom: 1px solid #ebedf0;
 }
@@ -182,5 +197,13 @@ const onSearch = (text: string) => {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
   font-size: var(--font-size-md, 14px) !important;
+}
+
+:deep(.van-pull-refresh) {
+  min-height: calc(100vh - 32px);
+}
+
+:deep(.van-pull-refresh__track) {
+  padding-bottom: 16px;
 }
 </style> 

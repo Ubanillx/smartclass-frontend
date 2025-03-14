@@ -3,7 +3,9 @@
     <van-grid :column-num="4" :border="false">
       <van-grid-item>
         <template #icon>
-          <van-icon name="clock" color="#1989fa" size="24" />
+          <div class="stat-icon-wrapper clock-bg">
+            <van-icon name="clock" color="#1989fa" size="24" />
+          </div>
         </template>
         <template #text>
           <span class="stat-number">{{ stats.daysLearned }}</span>
@@ -12,7 +14,9 @@
       </van-grid-item>
       <van-grid-item>
         <template #icon>
-          <van-icon name="fire" color="#ff976a" size="24" />
+          <div class="stat-icon-wrapper fire-bg">
+            <van-icon name="fire" color="#ff976a" size="24" />
+          </div>
         </template>
         <template #text>
           <span class="stat-number">{{ stats.streakDays }}</span>
@@ -21,7 +25,9 @@
       </van-grid-item>
       <van-grid-item>
         <template #icon>
-          <van-icon name="star" color="#ffcd32" size="24" />
+          <div class="stat-icon-wrapper star-bg">
+            <van-icon name="star" color="#ffcd32" size="24" />
+          </div>
         </template>
         <template #text>
           <span class="stat-number">{{ stats.stars }}</span>
@@ -30,7 +36,9 @@
       </van-grid-item>
       <van-grid-item>
         <template #icon>
-          <van-icon name="medal-o" color="#7232dd" size="24" />
+          <div class="stat-icon-wrapper medal-bg">
+            <van-icon name="medal-o" color="#7232dd" size="24" />
+          </div>
         </template>
         <template #text>
           <span class="stat-number">{{ stats.badges }}</span>
@@ -63,6 +71,37 @@ defineProps<{
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.stat-icon-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.clock-bg {
+  background-color: rgba(25, 137, 250, 0.1);
+}
+
+.fire-bg {
+  background-color: rgba(255, 151, 106, 0.1);
+}
+
+.star-bg {
+  background-color: rgba(255, 205, 50, 0.1);
+}
+
+.medal-bg {
+  background-color: rgba(114, 50, 221, 0.1);
+}
+
 .stat-number {
   display: block;
   font-size: var(--font-size-xl);
@@ -79,33 +118,11 @@ defineProps<{
 }
 
 :deep(.van-grid-item__content) {
-  padding: 10px 8px;
+  padding: 16px 8px;
   background-color: #ffffff;
 }
 
 :deep(.van-grid-item__icon) {
   font-size: var(--font-size-xl);
-}
-
-:deep(.van-icon) {
-  background-color: rgba(25, 137, 250, 0.1);
-  padding: 6px;
-  border-radius: 50%;
-}
-
-:deep(.van-icon-clock) {
-  background-color: rgba(25, 137, 250, 0.1);
-}
-
-:deep(.van-icon-fire) {
-  background-color: rgba(255, 151, 106, 0.1);
-}
-
-:deep(.van-icon-star) {
-  background-color: rgba(255, 205, 50, 0.1);
-}
-
-:deep(.van-icon-medal-o) {
-  background-color: rgba(114, 50, 221, 0.1);
 }
 </style> 

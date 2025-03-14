@@ -3,8 +3,8 @@
     <van-cell title="最近学习" />
     <div class="learning-list">
       <div v-for="item in learningItems" :key="item.id" class="learning-item">
-        <div class="image-container">
-          <van-image :src="item.icon" width="2.5rem" height="2.5rem" />
+        <div class="image-container" :class="item.bgClass">
+          <van-icon :name="item.icon" :color="item.color" size="24" />
         </div>
         <div class="learning-info">
           <div class="learning-name">{{ item.name }}</div>
@@ -27,6 +27,8 @@ interface LearningItem {
   id: number;
   name: string;
   icon: string;
+  color: string;
+  bgClass: string;
   progress: number;
 }
 
@@ -62,12 +64,17 @@ defineProps<{
 }
 
 .image-container {
-  background-color: #f7f8fa;
+  width: 48px;
+  height: 48px;
   border-radius: 10px;
-  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.image-container:hover {
+  transform: scale(1.05);
 }
 
 .learning-info {
@@ -102,5 +109,30 @@ defineProps<{
   color: #ffffff;
   font-weight: 500;
   font-size: var(--font-size-sm);
+}
+
+/* 背景颜色类 */
+.bg-blue {
+  background-color: rgba(25, 137, 250, 0.1);
+}
+
+.bg-orange {
+  background-color: rgba(255, 151, 106, 0.1);
+}
+
+.bg-green {
+  background-color: rgba(7, 193, 96, 0.1);
+}
+
+.bg-purple {
+  background-color: rgba(114, 50, 221, 0.1);
+}
+
+.bg-red {
+  background-color: rgba(238, 10, 36, 0.1);
+}
+
+.bg-yellow {
+  background-color: rgba(255, 205, 50, 0.1);
 }
 </style> 

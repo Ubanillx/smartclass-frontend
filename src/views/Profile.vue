@@ -1,16 +1,6 @@
 <template>
-  <div class="profile has-tabbar">
-    <!-- 错误提示 -->
-    <van-empty v-if="loadError" description="加载失败" class="error-container">
-      <template #image>
-        <van-icon name="warning-o" size="48" color="#ee0a24" />
-      </template>
-      <van-button round type="danger" size="small" @click="retryFetch"
-        >重新加载</van-button
-      >
-    </van-empty>
-
-    <van-pull-refresh v-else v-model="refreshing" @refresh="onRefresh">
+  <div class="profile">
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <!-- 用户基本信息卡片 -->
       <component
         :is="UserInfoCardRaw"
@@ -50,14 +40,6 @@
       <!-- 退出登录按钮 -->
       <component :is="LogoutButtonRaw" @logout="handleLogout" />
     </van-pull-refresh>
-
-    <!-- 加载中提示 -->
-    <van-overlay :show="loading" z-index="9999">
-      <div class="loading-wrapper">
-        <van-loading type="spinner" color="#1989fa" size="36px" />
-        <p class="loading-text">加载中...</p>
-      </div>
-    </van-overlay>
   </div>
 </template>
 
@@ -88,16 +70,14 @@ const LogoutButtonRaw = markRaw(LogoutButton);
 
 const router = useRouter();
 const userStore = useUserStore();
-const loading = ref(false);
 const refreshing = ref(false);
-const loadError = ref(false);
 
 // 用户基本信息
 const userInfo = ref({
   username: '',
   nickname: '',
   phone: '',
-  avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+  avatar: 'https://img.zcool.cn/community/01a0d45d145963a8012187f447cfef.jpg@1280w_1l_2o_100sh.jpg',
   level: 1,
   nextLevelExp: 100,
 });
@@ -116,6 +96,8 @@ const todayGoals = ref([
   markRaw({ id: 1, text: '完成每日单词打卡', completed: false }),
   markRaw({ id: 2, text: '听力练习15分钟', completed: false }),
   markRaw({ id: 3, text: '完成一节口语课程', completed: false }),
+  markRaw({ id: 4, text: '阅读英语文章一篇', completed: false }),
+  markRaw({ id: 5, text: '复习昨日语法知识点', completed: false }),
 ]);
 
 // 最近获得的徽章
@@ -123,22 +105,58 @@ const recentBadges = ref([
   markRaw({
     id: 1,
     name: '单词达人',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/medal.png',
+    icon: 'award',
+    color: '#1989fa',
+    bgClass: 'bg-blue',
   }),
   markRaw({
     id: 2,
     name: '坚持不懈',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/fire.png',
+    icon: 'fire',
+    color: '#ff976a',
+    bgClass: 'bg-orange',
   }),
   markRaw({
     id: 3,
     name: '听力小子',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/music.png',
+    icon: 'music',
+    color: '#07c160',
+    bgClass: 'bg-green',
   }),
   markRaw({
     id: 4,
     name: '初级达成',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/star.png',
+    icon: 'star',
+    color: '#ffcd32',
+    bgClass: 'bg-yellow',
+  }),
+  markRaw({
+    id: 5,
+    name: '阅读能手',
+    icon: 'bookmark',
+    color: '#ee0a24',
+    bgClass: 'bg-red',
+  }),
+  markRaw({
+    id: 6,
+    name: '语法专家',
+    icon: 'edit',
+    color: '#7232dd',
+    bgClass: 'bg-purple',
+  }),
+  markRaw({
+    id: 7,
+    name: '口语达人',
+    icon: 'chat',
+    color: '#00ced1',
+    bgClass: 'bg-cyan',
+  }),
+  markRaw({
+    id: 8,
+    name: '写作高手',
+    icon: 'records',
+    color: '#ff69b4',
+    bgClass: 'bg-pink',
   }),
 ]);
 
@@ -147,19 +165,25 @@ const recentLearning = ref([
   markRaw({
     id: 1,
     name: '基础发音课程',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/book.png',
+    icon: 'volume-o',
+    color: '#1989fa',
+    bgClass: 'bg-blue',
     progress: 80,
   }),
   markRaw({
     id: 2,
     name: '日常对话练习',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/chat.png',
+    icon: 'chat-o',
+    color: '#ff976a',
+    bgClass: 'bg-orange',
     progress: 45,
   }),
   markRaw({
     id: 3,
     name: '趣味单词记忆',
-    icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/smile.png',
+    icon: 'label-o',
+    color: '#07c160',
+    bgClass: 'bg-green',
     progress: 60,
   }),
 ]);
@@ -194,11 +218,8 @@ const learningHistory = ref([
 
 // 获取用户数据
 const fetchUserData = async (showLoading = true) => {
-  if (showLoading) {
-    loading.value = true;
-  }
-
-  loadError.value = false;
+  console.log('开始获取用户数据');
+  refreshing.value = true;
 
   try {
     // 1. 获取当前登录用户基本信息
@@ -224,7 +245,7 @@ const fetchUserData = async (showLoading = true) => {
             phone: userData.userPhone || '',
             avatar:
               userData.userAvatar ||
-              'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+              'https://img.zcool.cn/community/01a0d45d145963a8012187f447cfef.jpg@1280w_1l_2o_100sh.jpg',
             level: 3, // 这里可以根据实际情况从后端获取或计算
             nextLevelExp: 100, // 这里可以根据实际情况从后端获取或计算
           };
@@ -246,10 +267,11 @@ const fetchUserData = async (showLoading = true) => {
             { id: 1, text: '完成每日单词打卡', completed: true },
             { id: 2, text: '听力练习15分钟', completed: true },
             { id: 3, text: '完成一节口语课程', completed: false },
+            { id: 4, text: '阅读英语文章一篇', completed: true },
+            { id: 5, text: '复习昨日语法知识点', completed: false },
           ];
         } else {
           showToast(response.message || '获取用户详细信息失败');
-          loadError.value = true;
         }
       }
     } else {
@@ -262,25 +284,19 @@ const fetchUserData = async (showLoading = true) => {
   } catch (error) {
     console.error('获取用户数据失败:', error);
     showToast('获取用户数据失败，请重试');
-    loadError.value = true;
   } finally {
-    if (showLoading) {
-      loading.value = false;
-    }
     refreshing.value = false;
   }
-};
-
-// 重试获取数据
-const retryFetch = () => {
-  console.log('重试获取用户数据');
-  fetchUserData();
 };
 
 // 下拉刷新
 const onRefresh = () => {
   console.log('下拉刷新，重新获取用户数据');
-  fetchUserData(false);
+  // 模拟网络请求延迟
+  setTimeout(() => {
+    showSuccessToast('刷新成功');
+    refreshing.value = false;
+  }, 1000);
 };
 
 // 添加新的学习目标
@@ -369,24 +385,6 @@ onMounted(() => {
 /* 在二级页面中不需要为底部导航栏预留空间 */
 :deep(.has-tabbar) {
   padding-bottom: 60px;
-}
-
-.loading-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.loading-text {
-  margin-top: 12px;
-  color: #fff;
-  font-size: 14px;
-}
-
-.error-container {
-  padding: 40px 0;
 }
 
 :deep(.van-pull-refresh) {

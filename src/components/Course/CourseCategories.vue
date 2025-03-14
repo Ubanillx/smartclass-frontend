@@ -49,7 +49,7 @@ const getIconName = (iconName: string) => {
 .course-categories-container {
   position: relative;
   margin-bottom: 16px;
-  margin-top: -8px;
+  margin-top: 12px;
   padding: 8px 0;
   border-radius: 8px;
 }
@@ -70,7 +70,7 @@ const getIconName = (iconName: string) => {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  padding: 8px 16px;
+  padding: 8px 8px;
   margin-right: 8px;
   font-size: var(--font-size-base, 14px);
   font-weight: 700;
