@@ -6,6 +6,7 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 // 引入iconfont图标
 import '../public/icons/iconfont.js';
+import '../public/icons/iconfont.css';
 
 const app = createApp(App);
 const pinia = createPinia();
