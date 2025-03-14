@@ -20,7 +20,7 @@
           <span class="assistant-name">{{ chat.assistantName }}</span>
           <span class="chat-time">{{ chat.lastTime }}</span>
         </div>
-        <div class="last-message">{{ chat.lastMessage }}</div>
+        <div v-if="chat.summary" class="chat-summary">{{ chat.summary }}</div>
         <div class="chat-tags">
           <span v-for="tag in chat.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
@@ -36,6 +36,7 @@ interface Chat {
   assistantName: string;
   avatar: string;
   lastMessage: string;
+  summary?: string;
   lastTime: string;
   online?: boolean;
   tags?: string[];
@@ -55,12 +56,13 @@ defineEmits<{
 
 <style scoped>
 .chat-list {
-  margin: 16px;
+  margin: 8px 16px 16px;
 }
 
 .chat-item {
   display: flex;
   padding: 16px;
+  margin-bottom: 8px;
   border-bottom: 1px solid #ebedf0;
   cursor: pointer;
 }
@@ -113,14 +115,15 @@ defineEmits<{
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-.last-message {
-  font-size: var(--font-size-base, 14px);
-  color: #646566;
+.chat-summary {
+  font-size: var(--font-size-sm, 12px);
+  color: #969799;
   margin-bottom: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: 'Noto Sans SC', sans-serif;
+  font-style: italic;
 }
 
 .chat-tags {

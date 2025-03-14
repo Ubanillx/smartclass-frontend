@@ -49,8 +49,12 @@ const onSearch = (): void => {
   top: 0;
   z-index: 999;
   background: #f7f8fa;
-  padding: 8px 16px;
-  margin: -16px -16px 16px -16px;
+  padding: 16px 16px;
+  margin: -18px -16px 0 -16px;
+}
+
+:deep(.van-search) {
+  padding: 4px 0;
 }
 
 :deep(.van-search__content) {

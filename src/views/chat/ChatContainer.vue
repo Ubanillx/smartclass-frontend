@@ -35,17 +35,21 @@
       
       <!-- 智慧体中心内容 -->
       <div v-show="activeTab === 'intelligence'" class="tab-pane">
-        <intelligence-center-content />
+        <intelligence-center-content 
+          :search-text="searchText"
+          @select="handleAssistantSelect"
+        />
       </div>
     </div>
 
     <!-- 新建对话按钮 -->
     <van-button 
+      v-show="activeTab === 'history'"
       class="new-chat-btn" 
       type="primary" 
       round 
       icon="plus"
-      @click="router.push('/assistants')"
+      @click="switchTab('intelligence')"
     >
       新建对话
     </van-button>
@@ -98,6 +102,11 @@ const handleChatSelect = (chatId: number, assistantId: number) => {
   router.push(`/chat-detail?assistantId=${assistantId}`);
 };
 
+// 处理智能助手选择
+const handleAssistantSelect = (assistantId: number) => {
+  router.push(`/chat-detail?assistantId=${assistantId}`);
+};
+
 // 搜索处理
 const onSearch = (text: string) => {
   console.log('搜索:', text);
@@ -112,19 +121,20 @@ const onSearch = (text: string) => {
 }
 
 .search-bar {
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .nav-tabs {
   display: flex;
-  margin-bottom: 16px;
+  margin-top: 0;
+  margin-bottom: 8px;
   border-bottom: 1px solid #ebedf0;
 }
 
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 12px 0;
+  padding: 8px 0;
   font-size: var(--font-size-md, 16px);
   font-weight: 700;
   color: #646566;
@@ -150,6 +160,7 @@ const onSearch = (text: string) => {
 
 .tab-content {
   position: relative;
+  margin-top: -4px;
 }
 
 .tab-pane {

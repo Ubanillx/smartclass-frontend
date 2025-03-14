@@ -18,6 +18,7 @@ interface ChatItem {
   assistantName: string;
   avatar: string;
   lastMessage: string;
+  summary?: string;
   lastTime: string;
   online?: boolean;
   tags?: string[];
@@ -39,7 +40,8 @@ const chatHistory = ref<ChatItem[]>([
     assistantId: 1,
     assistantName: '英语教师 Emma',
     avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    lastMessage: '你好！我是你的英语老师Emma，有什么我可以帮助你的吗？',
+    lastMessage: '',
+    summary: '讨论了英语学习计划和语法难点',
     lastTime: '10:30',
     online: true,
     tags: ['语法', '口语'],
@@ -50,7 +52,8 @@ const chatHistory = ref<ChatItem[]>([
     assistantId: 2,
     assistantName: '口语伙伴 Mike',
     avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    lastMessage: '嗨！准备好今天的口语练习了吗？',
+    lastMessage: '',
+    summary: '进行了日常对话场景练习，重点是购物情境',
     lastTime: '昨天',
     online: false,
     tags: ['口语', '日常对话'],
@@ -61,7 +64,8 @@ const chatHistory = ref<ChatItem[]>([
     assistantId: 3,
     assistantName: '写作助手 Sarah',
     avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    lastMessage: '我已经帮你修改了这篇文章，你可以查看一下修改建议。',
+    lastMessage: '',
+    summary: '修改了一篇申请信，重点改进了结构和表达方式',
     lastTime: '周一',
     online: true,
     tags: ['写作', '润色'],
@@ -78,7 +82,8 @@ const filteredChatHistory = computed(() => {
     const keyword = props.searchText.toLowerCase();
     result = result.filter(chat => 
       chat.assistantName.toLowerCase().includes(keyword) || 
-      chat.lastMessage.toLowerCase().includes(keyword)
+      chat.lastMessage.toLowerCase().includes(keyword) ||
+      (chat.summary && chat.summary.toLowerCase().includes(keyword))
     );
   }
   

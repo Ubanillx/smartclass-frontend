@@ -279,7 +279,7 @@ const onActionSelect = (action) => {
       router.push('/notes/add');
       break;
     case '发起对话':
-      router.push('/chat?tab=history');
+      router.push('/chat?tab=intelligence');
       break;
     case '分享内容':
       showToast('分享功能开发中');
