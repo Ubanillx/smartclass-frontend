@@ -4,6 +4,8 @@ import App from './App.vue';
 import router from './router';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+// 引入iconfont图标
+import '../public/icons/iconfont.js';
 
 const app = createApp(App);
 const pinia = createPinia();
