@@ -38,6 +38,9 @@ defineEmits<{
 .assistant-types-container {
   position: relative;
   margin-bottom: 16px;
+  margin-top: -8px;  /* 添加负边距，减少与搜索框的距离 */
+  padding: 8px 0;  /* 上下内边距 */
+  border-radius: 8px;  /* 圆角 */
 }
 
 .assistant-types {

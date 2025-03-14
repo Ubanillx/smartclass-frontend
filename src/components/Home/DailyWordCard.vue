@@ -3,8 +3,20 @@
     <!-- 每日单词模块 -->
     <van-cell-group inset class="word-module">
       <van-cell title="每日单词">
+        <template #icon>
+          <svg class="icon svg-icon word-icon" aria-hidden="true">
+            <use xlink:href="#icon-yingyu"></use>
+          </svg>
+        </template>
         <template #right-icon>
-          <span class="more-link" @click="$emit('more')">更多</span>
+          <div class="right-actions">
+            <van-icon 
+              name="bookmark-o" 
+              class="vocabulary-icon" 
+              @click.stop="$emit('category-click', vocabularyCategory)"
+            />
+            <span class="more-link" @click="$emit('more')">更多</span>
+          </div>
         </template>
       </van-cell>
       
@@ -22,17 +34,6 @@
         <div class="word-translation">{{ word.translation }}</div>
         <div class="word-example">{{ word.example }}</div>
       </div>
-
-      <!-- 单词分类 -->
-      <van-grid :column-num="4" :border="false">
-        <van-grid-item 
-          v-for="category in categories" 
-          :key="category.id"
-          :icon="category.icon"
-          :text="category.name"
-          @click="$emit('category-click', category)"
-        />
-      </van-grid>
     </van-cell-group>
 
     <!-- 单词详情弹出层 -->
@@ -71,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { showToast } from 'vant';
 
 interface WordMeaning {
@@ -111,6 +112,16 @@ const emit = defineEmits<{
 
 const showWordPopup = ref(false);
 
+// 获取生词本分类
+const vocabularyCategory = computed(() => {
+  return props.categories.find(category => category.path === '/vocabulary/collected') || {
+    id: 4,
+    name: '生词本',
+    icon: 'bookmark-o',
+    path: '/vocabulary/collected'
+  };
+});
+
 // 显示单词详情
 const showWordDetail = (): void => {
   showWordPopup.value = true;
@@ -141,9 +152,8 @@ const toggleCollect = (): void => {
 
 .more-link {
   color: #1989fa;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .daily-word {
@@ -159,14 +169,13 @@ const toggleCollect = (): void => {
 }
 
 .word-text {
-  font-size: 24px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
   color: #323233;
 }
 
 .collect-icon {
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   color: #969799;
 }
 
@@ -175,21 +184,20 @@ const toggleCollect = (): void => {
 }
 
 .word-phonetic {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #969799;
   margin-bottom: 8px;
 }
 
 .word-translation {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   color: #323233;
   margin-bottom: 8px;
   font-weight: 500;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .word-example {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #646566;
   font-style: italic;
 }
@@ -207,9 +215,8 @@ const toggleCollect = (): void => {
 }
 
 .popup-header .title {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .word-content {
@@ -228,17 +235,16 @@ const toggleCollect = (): void => {
 }
 
 .part-of-speech {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #969799;
   margin-bottom: 4px;
 }
 
 .definition {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   color: #323233;
   margin-bottom: 8px;
   font-weight: 500;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .example {
@@ -268,5 +274,35 @@ const toggleCollect = (): void => {
 :deep(.van-cell__title) {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.word-icon {
+  font-size: 20px;
+  margin-right: 4px;
+  color: #1989fa;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vocabulary-icon {
+  font-size: 20px;
+  color: #1989fa;
+  vertical-align: middle;
 }
 </style> 

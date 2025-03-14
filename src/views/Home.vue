@@ -17,6 +17,14 @@
       @more="router.push('/assistants')" 
     />
 
+    <!-- 热门课程模块 -->
+    <component
+      :is="PopularCoursesRaw"
+      :courses="popularCourses"
+      @select="viewCourseDetail"
+      @more="router.push('/courses')"
+    />
+
     <!-- 每日单词模块 -->
     <daily-word-card 
       :word="dailyWord" 
@@ -53,16 +61,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, markRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import SearchBar from '../components/SearchBar.vue';
 import { 
   NoticeCard, 
   AiAssistantList, 
+  PopularCourses,
   DailyWordCard, 
   ArticleList 
 } from '../components/Home';
+
+// 使用markRaw包装组件，防止被转换为响应式对象
+const PopularCoursesRaw = markRaw(PopularCourses);
 
 const router = useRouter();
 const searchText = ref('');
@@ -191,6 +203,43 @@ const aiAssistants = ref([
   }
 ]);
 
+// Mock 热门课程数据
+const popularCourses = ref([
+  markRaw({
+    id: 1,
+    title: '商务英语口语进阶',
+    brief: '掌握商务场景下的专业英语表达，提升职场竞争力',
+    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    tag: '热门',
+    tagColor: '#ee0a24',
+    level: '中级',
+    duration: 45,
+    studentsCount: 1280
+  }),
+  markRaw({
+    id: 2,
+    title: '雅思写作高分技巧',
+    brief: '针对雅思写作常见题型的分析与解答，助你轻松突破6.5分',
+    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    tag: '推荐',
+    tagColor: '#1989fa',
+    level: '高级',
+    duration: 60,
+    studentsCount: 968
+  }),
+  markRaw({
+    id: 3,
+    title: '日常英语口语100句',
+    brief: '覆盖生活中最常用的英语表达，让你轻松应对各种场景',
+    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    tag: '入门',
+    tagColor: '#07c160',
+    level: '初级',
+    duration: 30,
+    studentsCount: 2156
+  })
+]);
+
 // 快捷操作列表
 const actions = [
   { name: '添加生词', icon: 'edit', color: '#1989fa' },
@@ -210,6 +259,14 @@ const startChat = (assistant) => {
   router.push({
     path: '/chat',
     query: { assistantId: assistant.id }
+  });
+};
+
+// 查看课程详情
+const viewCourseDetail = (course) => {
+  router.push({
+    path: '/course',
+    query: { id: course.id }
   });
 };
 

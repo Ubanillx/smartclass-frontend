@@ -3,6 +3,11 @@
     <!-- 精美文章模块 -->
     <van-cell-group inset class="article-module">
       <van-cell title="每日美文">
+        <template #icon>
+          <svg class="icon svg-icon article-icon" aria-hidden="true">
+            <use xlink:href="#icon-wenzhang"></use>
+          </svg>
+        </template>
         <template #right-icon>
           <span class="more-link" @click="$emit('more')">更多</span>
         </template>
@@ -21,7 +26,7 @@
               fit="cover"
               radius="4"
             />
-            <span class="article-tag">{{ article.category }}</span>
+            <span class="article-tag" :style="getTagStyle(article.category)">{{ article.category }}</span>
           </div>
           <div class="article-info">
             <h3 class="article-title">{{ article.title }}</h3>
@@ -50,7 +55,7 @@
         <div class="article-content" v-if="selectedArticle">
           <h2>{{ selectedArticle.title }}</h2>
           <div class="article-info">
-            <span>{{ selectedArticle.category }}</span>
+            <span class="detail-tag" :style="getTagStyle(selectedArticle.category)">{{ selectedArticle.category }}</span>
             <span>{{ selectedArticle.readTime }}分钟</span>
             <span>{{ selectedArticle.difficulty }}</span>
           </div>
@@ -98,6 +103,30 @@ const showArticleDetail = (article: Article): void => {
   selectedArticle.value = article;
   showArticlePopup.value = true;
 };
+
+// 根据文章类别返回不同的样式
+const getTagStyle = (category: string): Record<string, string> => {
+  const styles: Record<string, string> = {};
+  
+  switch (category) {
+    case '励志':
+      styles.background = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%)';
+      break;
+    case '历史':
+      styles.background = 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)';
+      break;
+    case '科技':
+      styles.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+      break;
+    case '文化':
+      styles.background = 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)';
+      break;
+    default:
+      styles.background = 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)';
+  }
+  
+  return styles;
+};
 </script>
 
 <style scoped>
@@ -107,7 +136,8 @@ const showArticleDetail = (article: Article): void => {
 
 .more-link {
   color: #1989fa;
-  font-size: 14px;
+  font-size: var(--font-size-md);
+  font-weight: 700;
 }
 
 .article-list {
@@ -137,11 +167,14 @@ const showArticleDetail = (article: Article): void => {
   position: absolute;
   top: 4px;
   left: 4px;
-  padding: 2px 6px;
-  font-size: 12px;
+  padding: 3px 8px;
+  font-size: var(--font-size-sm);
   color: #fff;
-  background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
   border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
 }
 
 .article-info {
@@ -154,9 +187,10 @@ const showArticleDetail = (article: Article): void => {
 
 .article-title {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-md) !important;
   line-height: 1.4;
   color: #323233;
+  font-weight: 700 !important;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -166,7 +200,7 @@ const showArticleDetail = (article: Article): void => {
 
 .article-brief {
   margin: 4px 0;
-  font-size: 14px;
+  font-size: var(--font-size-sm) !important;
   color: #646566;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -178,7 +212,7 @@ const showArticleDetail = (article: Article): void => {
 .article-meta {
   display: flex;
   gap: 12px;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #969799;
 }
 
@@ -197,7 +231,7 @@ const showArticleDetail = (article: Article): void => {
 }
 
 .popup-header .title {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   font-weight: 500;
 }
 
@@ -209,7 +243,7 @@ const showArticleDetail = (article: Article): void => {
 
 .article-content h2 {
   margin: 0 0 12px;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   color: #323233;
 }
 
@@ -217,18 +251,78 @@ const showArticleDetail = (article: Article): void => {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #969799;
+  align-items: center;
+}
+
+.detail-tag {
+  padding: 3px 8px;
+  font-size: var(--font-size-sm);
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
 }
 
 .article-text {
   margin-top: 16px;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   line-height: 1.6;
   color: #323233;
 }
 
 .article-text p {
   margin: 12px 0;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.article-icon {
+  font-size: var(--font-size-lg);
+  margin-right: 4px;
+  color: #1989fa;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.article-module .article-item .article-title {
+  margin: 0;
+  font-size: var(--font-size-md) !important;
+  line-height: 1.4;
+  color: #323233;
+  font-weight: 700 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.article-module .article-item .article-brief {
+  margin: 4px 0;
+  font-size: var(--font-size-sm) !important;
+  color: #646566;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.article-module .article-item .article-meta {
+  display: flex;
+  gap: 12px;
+  font-size: var(--font-size-sm) !important;
+  color: #969799;
 }
 </style> 

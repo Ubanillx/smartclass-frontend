@@ -253,8 +253,53 @@ p {
 .van-nav-bar__title,
 .van-button__text,
 .more-link,
-.van-cell-group__title {
+.van-cell-group__title,
+.course-title,
+.article-title {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
+}
+
+/* 确保课程和文章组件的字体大小正确 */
+.course-title {
+  font-size: var(--font-size-md) !important;
+}
+
+.course-brief, .article-brief {
+  font-size: var(--font-size-sm) !important;
+}
+
+.course-meta, .article-meta {
+  font-size: var(--font-size-sm) !important;
+}
+
+/* 文章和课程标签样式 */
+.article-tag, .course-tag, .detail-tag {
+  font-weight: 500 !important;
+  letter-spacing: 0.5px;
+}
+
+/* 统一所有图标与文字的垂直对齐 */
+.van-cell__title {
+  display: flex !important;
+  align-items: center !important;
+  height: 24px !important;
+}
+
+.svg-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+/* 统一所有图标样式 */
+.course-icon, .ai-icon, .notice-icon, .word-icon, .article-icon {
+  font-size: var(--font-size-lg) !important;
+  margin-right: 4px !important;
+  vertical-align: middle !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 24px !important;
 }
 </style>

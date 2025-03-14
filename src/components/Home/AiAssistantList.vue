@@ -2,7 +2,12 @@
   <div>
     <!-- AI助手列表 -->
     <van-cell-group inset class="ai-assistant-module">
-      <van-cell title="AI智慧体">
+      <van-cell title="智慧体">
+        <template #icon>
+          <svg class="icon svg-icon ai-icon" aria-hidden="true">
+            <use xlink:href="#icon-rengongzhinengjiqiren"></use>
+          </svg>
+        </template>
         <template #right-icon>
           <span class="more-link" @click="$emit('more')">更多</span>
         </template>
@@ -60,7 +65,7 @@ defineEmits<{
 
 .more-link {
   color: #1989fa;
-  font-size: 14px;
+  font-size: var(--font-size-md);
 }
 
 .assistant-list {
@@ -85,27 +90,41 @@ defineEmits<{
 }
 
 .assistant-name {
-  font-size: var(--font-size-md, 16px);
+  font-size: var(--font-size-md);
   color: #323233;
   margin-bottom: 4px;
   font-weight: 700;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .assistant-desc {
-  font-size: var(--font-size-base, 14px);
+  font-size: var(--font-size-sm);
   color: #969799;
-  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .chat-icon {
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   color: #1989fa;
 }
 
 :deep(.van-cell__title) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
+  font-size: var(--font-size-md) !important;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.ai-icon {
+  font-size: var(--font-size-lg);
+  margin-right: 4px;
+  color: #1989fa;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  height: 24px;
 }
 </style> 
