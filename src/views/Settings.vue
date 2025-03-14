@@ -90,7 +90,7 @@
     <!-- 提醒时间选择器 -->
     <van-popup v-model:show="showReminderPicker" position="bottom">
       <van-picker
-        :columns="timeColumns"
+        :columns="timeColumns.map(time => ({ text: time, value: time }))"
         @confirm="onReminderConfirm"
         @cancel="showReminderPicker = false"
         show-toolbar
@@ -177,18 +177,13 @@ const getFontSizeLabel = (size: string): string => {
 };
 
 // 时间选择器列数据
-const timeColumns = [
-  {
-    values: Array.from({ length: 17 }, (_, i) => 6 + i).map((hour) =>
-      hour.toString().padStart(2, '0'),
-    ),
-    className: 'column1',
-  },
-  {
-    values: Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')),
-    className: 'column2',
-  },
-];
+const timeColumns = Array.from({ length: 17 }, (_, i) => {
+  const hour = (6 + i).toString().padStart(2, '0');
+  return Array.from({ length: 12 }, (_, j) => {
+    const minute = (j * 5).toString().padStart(2, '0');
+    return `${hour}:${minute}`;
+  });
+}).flat();
 
 // 当前选择的时间
 const selectedHour = ref('09');
@@ -196,10 +191,8 @@ const selectedMinute = ref('00');
 
 // 默认时间索引
 const defaultTimeIndex = computed(() => {
-  const hourIndex = timeColumns[0]?.values?.indexOf(selectedHour.value) ?? 0;
-  const minuteIndex =
-    timeColumns[1]?.values?.indexOf(selectedMinute.value) ?? 0;
-  return [hourIndex, minuteIndex];
+  const currentTime = `${selectedHour.value}:${selectedMinute.value}`;
+  return timeColumns.indexOf(currentTime) !== -1 ? timeColumns.indexOf(currentTime) : 0;
 });
 
 interface PickerOption {
@@ -218,10 +211,16 @@ const onGoalConfirm = (value: PickerOption): void => {
 };
 
 const onReminderConfirm = (value: PickerOption): void => {
-  const hour = value.selectedValues[0] as string;
-  const minute = value.selectedValues[1] as string;
-  const formattedTime = `${hour}:${minute}`;
+  const formattedTime = value.selectedValues[0] as string;
   learningSettings.value.reminderTime = formattedTime;
+  
+  // 更新选中的小时和分钟值
+  const [hour, minute] = formattedTime.split(':');
+  if (hour && minute) {
+    selectedHour.value = hour;
+    selectedMinute.value = minute;
+  }
+  
   showReminderPicker.value = false;
   showToast('设置已保存');
 };
