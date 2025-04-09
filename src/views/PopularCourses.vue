@@ -5,27 +5,24 @@
 
     <!-- 主要内容区域 -->
     <div class="content-container">
-      <!-- 搜索栏 -->
-      <search-bar
-        v-model="searchText"
-        placeholder="搜索热门课程"
-        @search="onSearch"
-      />
-
       <!-- 课程分类标签 -->
       <van-tabs v-model:active="activeCategory" sticky swipeable>
         <van-tab title="全部">
           <course-list
             title="推荐课程"
-            :courses="filteredCourses"
+            :courses="displayedCourses"
             class-name="recommended"
             @select="showCourseDetail"
           />
         </van-tab>
-        <van-tab v-for="category in categories" :key="category.id" :title="category.name">
+        <van-tab
+          v-for="category in categories"
+          :key="category.id"
+          :title="category.name"
+        >
           <course-list
             :title="category.name + '课程'"
-            :courses="filteredCourses"
+            :courses="displayedCourses"
             class-name="category-courses"
             @select="showCourseDetail"
           />
@@ -47,9 +44,15 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import SearchBar from '../components/SearchBar.vue';
 import { CourseList, CourseDetail } from '../components/Course';
 import { BackButton } from '../components/Common';
+import {
+  mockPopularCourses,
+  courseCategories,
+  getCoursesByCategory,
+  fetchMockPopularCourses,
+  fetchCourseCategories
+} from '../api/mock';
 
 // 定义类型
 interface CourseHighlight {
@@ -58,17 +61,24 @@ interface CourseHighlight {
   text: string;
 }
 
-interface Course {
+// 基本课程类型
+interface BaseCourse {
   id: number;
   title: string;
   brief: string;
   cover: string;
   tag: string;
   tagColor: string;
-  grade?: string;
   level: string;
   duration: number;
-  studentsCount?: number;
+  studentsCount: number;
+  subject?: string;
+  description?: string;
+  highlights?: CourseHighlight[];
+}
+
+// 扩展课程类型
+interface EnhancedCourse extends BaseCourse {
   description?: string;
   highlights?: CourseHighlight[];
 }
@@ -80,44 +90,28 @@ interface Category {
 }
 
 const router = useRouter();
-const searchText = ref('');
 const showDetailPopup = ref(false);
-const selectedCourse = ref<Course | null>(null);
+const selectedCourse = ref<EnhancedCourse | null>(null);
 const activeCategory = ref(0);
-const courses = ref<Course[]>([]);
+const allCourses = ref<EnhancedCourse[]>([]);
+const categories = ref<Category[]>([]);
 const loading = ref(true);
 
-// 课程分类
-const categories = ref<Category[]>([
-  { id: 1, name: '英语', icon: 'chat-o' },
-  { id: 2, name: '数学', icon: 'chart-trending-o' },
-  { id: 3, name: '科学', icon: 'cluster-o' },
-  { id: 4, name: '历史', icon: 'clock-o' },
-  { id: 5, name: '艺术', icon: 'music-o' }
-]);
-
 // 根据分类筛选课程
-const filteredCourses = computed(() => {
-  if (searchText.value) {
-    return courses.value.filter(course => 
-      course.title.toLowerCase().includes(searchText.value.toLowerCase()) ||
-      course.brief.toLowerCase().includes(searchText.value.toLowerCase())
-    );
-  }
-  
+const displayedCourses = computed(() => {
   if (activeCategory.value === 0) {
-    return courses.value;
+    return allCourses.value;
   } else {
     const category = categories.value[activeCategory.value - 1];
     if (category) {
-      return courses.value.filter(course => course.tag === category.name);
+      return allCourses.value.filter((course) => course.subject === category.name);
     }
-    return courses.value;
+    return allCourses.value;
   }
 });
 
 // 显示课程详情
-const showCourseDetail = (course: Course) => {
+const showCourseDetail = (course: EnhancedCourse) => {
   selectedCourse.value = course;
   showDetailPopup.value = true;
 };
@@ -130,135 +124,74 @@ const startLearning = () => {
   }
 };
 
-// 搜索处理
-const onSearch = (text: string) => {
-  searchText.value = text;
+// 为课程添加描述和亮点
+const enhanceCourse = (course: BaseCourse): EnhancedCourse => {
+  return {
+    ...course,
+    // 如果没有描述，则创建一个标准描述
+    description: course.description || `本课程是${course.subject || ''}学科的${course.level}课程，${course.brief}`,
+    // 如果没有亮点，则根据课程信息创建标准亮点
+    highlights: course.highlights || [
+      {
+        icon: course.level === '初级' ? 'smile-o' :
+              course.level === '中级' ? 'bulb-o' : 'certificate',
+        color: course.tagColor,
+        text: `${course.level}级别`
+      },
+      { icon: 'clock-o', color: '#1989fa', text: `${course.duration}分钟` },
+      { icon: 'friends-o', color: '#07c160', text: `${course.studentsCount}人学习` }
+    ]
+  };
 };
 
 // 加载课程数据
-const loadCourses = () => {
+const loadCourses = async () => {
   loading.value = true;
-  
-  // 模拟异步加载
-  setTimeout(() => {
-    courses.value = [
-      {
-        id: 1,
-        title: '趣味英语口语课堂',
-        brief: '通过游戏和动画学习日常英语对话',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '英语',
-        tagColor: '#1989fa',
-        grade: '三年级',
-        level: '初级',
-        duration: 30,
-        studentsCount: 1234,
-        description: '本课程通过有趣的动画和游戏互动，帮助同学们掌握日常英语口语。课程内容包括基础发音、常用对话、情景会话等，通过生动有趣的教学方式，让学习变得轻松愉快。',
-        highlights: [
-          { icon: 'smile-o', color: '#ff976a', text: '趣味教学' },
-          { icon: 'music-o', color: '#07c160', text: '互动练习' },
-          { icon: 'star-o', color: '#ffcd32', text: '奖励机制' }
-        ]
-      },
-      {
-        id: 2,
-        title: '数学思维训练营',
-        brief: '培养数学逻辑思维能力',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '数学',
-        tagColor: '#07c160',
-        grade: '四年级',
-        level: '中级',
-        duration: 45,
-        studentsCount: 856,
-        description: '通过趣味数学题和实际生活案例，培养同学们的数学思维能力。课程内容包括数学思维方法、解题技巧、数学游戏等，帮助学生建立良好的数学思维习惯。',
-        highlights: [
-          { icon: 'bulb-o', color: '#ffcd32', text: '思维训练' },
-          { icon: 'question-o', color: '#1989fa', text: '解题技巧' },
-          { icon: 'gem-o', color: '#ff976a', text: '能力提升' }
-        ]
-      },
-      {
-        id: 3,
-        title: '科学实验室探索',
-        brief: '动手做实验，探索科学奥秘',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '科学',
-        tagColor: '#7232dd',
-        grade: '五年级',
-        level: '初级',
-        duration: 40,
-        studentsCount: 567,
-        description: '通过有趣的科学实验，了解身边的科学现象。课程内容包括物理、化学、生物等多个领域的基础知识和实验操作，激发学生对科学的兴趣和探索精神。',
-        highlights: [
-          { icon: 'fire-o', color: '#ee0a24', text: '趣味实验' },
-          { icon: 'eye-o', color: '#1989fa', text: '科学观察' },
-          { icon: 'guide-o', color: '#07c160', text: '探索精神' }
-        ]
-      },
-      {
-        id: 4,
-        title: '中国历史文化探秘',
-        brief: '了解中华文明的灿烂历史',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '历史',
-        tagColor: '#ff976a',
-        grade: '六年级',
-        level: '中级',
-        duration: 50,
-        studentsCount: 423,
-        description: '带领学生探索中国悠久的历史文化，了解中华文明的发展历程。课程内容包括重要历史事件、历史人物、文化遗产等，培养学生的历史意识和文化自信。',
-        highlights: [
-          { icon: 'bookmark-o', color: '#ff976a', text: '历史故事' },
-          { icon: 'friends-o', color: '#1989fa', text: '人物解析' },
-          { icon: 'flag-o', color: '#ee0a24', text: '文化传承' }
-        ]
-      },
-      {
-        id: 5,
-        title: '创意美术工作坊',
-        brief: '释放想象力，培养艺术感知',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '艺术',
-        tagColor: '#ee0a24',
-        grade: '三年级',
-        level: '初级',
-        duration: 35,
-        studentsCount: 689,
-        description: '通过多种艺术形式，培养学生的创造力和审美能力。课程内容包括绘画、手工、设计等多种艺术表现形式，让学生在艺术创作中体验乐趣，提升艺术素养。',
-        highlights: [
-          { icon: 'brush-o', color: '#7232dd', text: '创意表达' },
-          { icon: 'photo-o', color: '#1989fa', text: '艺术欣赏' },
-          { icon: 'gift-o', color: '#ff976a', text: '手工制作' }
-        ]
-      },
-      {
-        id: 6,
-        title: '商务英语口语进阶',
-        brief: '掌握商务场景下的专业英语表达',
-        cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-        tag: '英语',
-        tagColor: '#1989fa',
-        grade: '高中',
-        level: '高级',
-        duration: 60,
-        studentsCount: 345,
-        description: '针对商务场景，提供专业的英语口语训练。课程内容包括商务会议、谈判、演讲等场景的英语表达，帮助学生掌握商务英语技能，提升职场竞争力。',
-        highlights: [
-          { icon: 'manager-o', color: '#1989fa', text: '商务场景' },
-          { icon: 'chat-o', color: '#07c160', text: '口语练习' },
-          { icon: 'certificate', color: '#ffcd32', text: '专业提升' }
-        ]
-      }
-    ];
+
+  try {
+    // 获取课程数据和分类数据
+    const [coursesData, categoriesData] = await Promise.all([
+      fetchMockPopularCourses(),
+      fetchCourseCategories()
+    ]);
     
+    // 增强课程数据
+    allCourses.value = coursesData.map(enhanceCourse);
+    
+    // 转换分类数据为组件需要的格式
+    categories.value = categoriesData.map(category => ({
+      id: category.id,
+      name: category.name,
+      icon: category.icon
+    }));
+    
+  } catch (error) {
+    console.error('加载课程数据失败:', error);
+    showToast('数据加载失败，请重试');
+  } finally {
     loading.value = false;
-  }, 1000);
+  }
+  
+  // 返回一个Promise以便后续链式操作
+  return Promise.resolve();
 };
 
 // 组件挂载时加载数据
 onMounted(() => {
-  loadCourses();
+  loadCourses().then(() => {
+    // 检查URL参数，如果有showDetail和courseId，则自动打开课程详情
+    const searchParams = new URLSearchParams(location.search);
+    const showDetail = searchParams.get('showDetail');
+    const courseId = searchParams.get('courseId');
+    
+    if (showDetail === 'true' && courseId) {
+      const courseIdNum = parseInt(courseId, 10);
+      const course = allCourses.value.find(c => c.id === courseIdNum);
+      if (course) {
+        showCourseDetail(course);
+      }
+    }
+  });
 });
 </script>
 
@@ -272,23 +205,24 @@ onMounted(() => {
 
 .content-container {
   flex: 1;
-  margin-top: 8px; /* 为返回按钮留出空间 */
+  margin-top: 46px; /* 为返回按钮留出空间 */
+  padding-bottom: 20px;
 }
 
-:deep(.van-tabs__wrap) {
-  position: sticky;
-  top: 46px;
-  z-index: 2;
-  background-color: #fff;
+:deep(.van-tabs) {
+  background: #fff;
 }
 
-:deep(.van-tabs__content) {
-  padding: 0 16px;
+:deep(.van-sticky--fixed) {
+  z-index: 999;
+}
+
+:deep(.van-tabs__line) {
+  background-color: #1989fa;
 }
 
 :deep(.van-tab) {
-  font-size: var(--font-size-md);
-  font-weight: 500;
+  font-size: 14px;
   color: #323233;
 }
 
@@ -297,12 +231,7 @@ onMounted(() => {
   color: #1989fa;
 }
 
-:deep(.van-tabs__line) {
-  background-color: #1989fa;
+:deep(.van-tab__pane) {
+  padding: 12px 0;
 }
-
-:deep(.recommended), :deep(.category-courses) {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-</style> 
+</style>
