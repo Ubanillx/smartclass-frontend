@@ -1,7 +1,7 @@
 <template>
   <div class="message-list" ref="messageList">
-    <div 
-      v-for="message in messages" 
+    <div
+      v-for="message in messages"
       :key="message.id"
       :class="['message-item', message.type]"
     >
@@ -14,17 +14,17 @@
         />
       </div>
       <div class="message-content">
-        <div 
-          v-if="message.type === 'ai'" 
-          v-html="customFormatMessage ? customFormatMessage(message.content) : defaultFormatMessage(message.content)" 
+        <div
+          v-if="message.type === 'ai'"
+          v-html="
+            customFormatMessage
+              ? customFormatMessage(message.content)
+              : defaultFormatMessage(message.content)
+          "
           class="markdown-body"
         ></div>
         <div v-else>{{ message.content }}</div>
-        <div class="message-time">{{ formatTime(message.timestamp) }}</div>
       </div>
-    </div>
-    <div v-if="loading" class="loading-indicator">
-      <van-loading type="spinner" size="24px" vertical>正在思考...</van-loading>
     </div>
   </div>
 </template>
@@ -44,7 +44,6 @@ const props = defineProps<{
   messages: Message[];
   assistantAvatar: string;
   userAvatar: string;
-  loading?: boolean;
   customFormatMessage?: (content: string) => string;
 }>();
 
@@ -56,12 +55,6 @@ const defaultFormatMessage = (content: string): string => {
   return content;
 };
 
-// 格式化时间
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp);
-  return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-};
-
 // 滚动到底部
 const scrollToBottom = (): void => {
   if (messageList.value) {
@@ -70,9 +63,12 @@ const scrollToBottom = (): void => {
 };
 
 // 监听消息变化，自动滚动到底部
-watch(() => props.messages.length, () => {
-  setTimeout(scrollToBottom, 100);
-});
+watch(
+  () => props.messages.length,
+  () => {
+    setTimeout(scrollToBottom, 100);
+  },
+);
 
 // 组件挂载和更新后滚动到底部
 onMounted(scrollToBottom);
@@ -83,13 +79,14 @@ onUpdated(scrollToBottom);
 .message-list {
   flex: 1;
   padding: 16px;
+  padding-bottom: 30px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .message-item {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   align-items: flex-start;
 }
 
@@ -98,15 +95,42 @@ onUpdated(scrollToBottom);
 }
 
 .avatar {
-  margin: 0 8px;
+  margin: 0 6px;
   flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
 }
 
 .message-content {
   max-width: 70%;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   position: relative;
+  min-height: 20px;
+  min-width: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: none;
+  outline: none;
+}
+
+.message-item.user .message-content {
+  background-color: #1989fa;
+  color: #fff;
+  text-align: left;
+  position: relative;
+  margin-right: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.message-item.user .message-content div {
+  width: 100%;
+  word-break: break-word;
+  border: none;
+  outline: none;
+  line-height: 1.4;
 }
 
 .message-item.ai .message-content {
@@ -115,66 +139,45 @@ onUpdated(scrollToBottom);
   position: relative;
   margin-left: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: none;
 }
 
 .message-item.ai .message-content::before {
-  content: "";
+  content: '';
   position: absolute;
-  top: 15px;
-  left: -10px;
+  top: 12px;
+  left: -8px;
   width: 0;
   height: 0;
-  border-top: 8px solid transparent;
-  border-right: 12px solid #ffffff;
-  border-bottom: 8px solid transparent;
+  border-top: 6px solid transparent;
+  border-right: 8px solid #ffffff;
+  border-bottom: 6px solid transparent;
   z-index: 1;
-}
-
-.message-item.user .message-content {
-  background-color: #1989fa;
-  color: #fff;
-  text-align: right;
-  position: relative;
-  margin-right: 4px;
 }
 
 .message-item.user .message-content::before {
-  content: "";
+  content: '';
   position: absolute;
-  top: 15px;
-  right: -10px;
+  top: 12px;
+  right: -8px;
   width: 0;
   height: 0;
-  border-top: 8px solid transparent;
-  border-left: 12px solid #1989fa;
-  border-bottom: 8px solid transparent;
+  border-top: 6px solid transparent;
+  border-left: 8px solid #1989fa;
+  border-bottom: 6px solid transparent;
   z-index: 1;
-}
-
-.message-time {
-  font-size: 12px;
-  color: #969799;
-  margin-top: 4px;
-}
-
-.message-item.user .message-time {
-  color: #e1f0ff;
-}
-
-.loading-indicator {
-  display: flex;
-  justify-content: center;
-  margin: 16px 0;
 }
 
 /* Markdown样式 */
 .markdown-body {
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
+  margin: 0;
+  word-break: break-word;
 }
 
 .markdown-body p {
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 .markdown-body code {
@@ -182,12 +185,23 @@ onUpdated(scrollToBottom);
   padding: 2px 4px;
   border-radius: 4px;
   font-family: monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
 }
 
 .markdown-body pre {
   background-color: rgba(0, 0, 0, 0.05);
-  padding: 8px;
+  padding: 6px;
   border-radius: 4px;
   overflow-x: auto;
+  margin: 6px 0;
 }
-</style> 
+
+.message-item.ai .message-content div:not(.markdown-body) {
+  width: 100%;
+  word-break: break-word;
+  border: none;
+  outline: none;
+  line-height: 1.4;
+}
+</style>
