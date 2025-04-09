@@ -6,13 +6,13 @@
       placeholder="输入消息..."
       :border="false"
       type="textarea"
-      :autosize="{ minHeight: 60, maxHeight: 100 }"
-      :rows="3"
+      :autosize="{ minHeight: 24, maxHeight: 100 }"
+      :rows="1"
       :disabled="disabled"
       @keypress.enter.prevent="handleEnterPress"
       class="grey-input"
     />
-    
+
     <!-- 功能按钮工具栏 -->
     <div class="toolbar">
       <div class="action-icons">
@@ -21,9 +21,9 @@
         <van-icon name="photograph" size="20" @click="$emit('image')" />
         <van-icon name="records" size="20" @click="$emit('voice')" />
       </div>
-      <van-button 
-        size="mini" 
-        type="primary" 
+      <van-button
+        size="mini"
+        type="primary"
         :loading="disabled"
         :disabled="!inputValue.trim()"
         @click="sendMessage"
@@ -57,9 +57,12 @@ const emit = defineEmits<{
 const inputValue = ref(props.modelValue);
 
 // 监听modelValue变化
-watch(() => props.modelValue, (newVal) => {
-  inputValue.value = newVal;
-});
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    inputValue.value = newVal;
+  },
+);
 
 // 监听inputValue变化
 watch(inputValue, (newVal) => {
@@ -72,7 +75,7 @@ const handleEnterPress = (e: KeyboardEvent): void => {
   if (e.shiftKey) {
     return;
   }
-  
+
   // 否则发送消息
   sendMessage();
 };
@@ -88,7 +91,10 @@ const sendMessage = (): void => {
 
 <style scoped>
 .input-area {
-  padding: 12px 16px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
   background-color: #fff;
   border-top: 1px solid #ebedf0;
 }
@@ -97,7 +103,7 @@ const sendMessage = (): void => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 6px;
   padding-left: 4px;
 }
 
@@ -115,10 +121,10 @@ const sendMessage = (): void => {
 }
 
 :deep(.van-field__control) {
-  min-height: 60px !important;
+  min-height: 24px !important;
   max-height: 100px !important;
   overflow-y: auto;
-  padding: 8px 0;
+  padding: 4px 0;
   line-height: 1.5;
 }
 
@@ -136,4 +142,4 @@ const sendMessage = (): void => {
 :deep(.van-icon) {
   cursor: pointer;
 }
-</style> 
+</style>
