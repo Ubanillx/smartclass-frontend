@@ -10,7 +10,12 @@ import Courses from '../views/Courses.vue';
 import Profile from '../views/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
-import { ChatHistory, ChatDetail, IntelligenceCenter, ChatContainer } from '../views/chat';
+import {
+  ChatHistory,
+  ChatDetail,
+  IntelligenceCenter,
+  ChatContainer,
+} from '../views/chat';
 import AvatarCropper from '../views/settings/AvatarCropper.vue';
 import NoticeList from '../views/NoticeList.vue';
 
@@ -38,6 +43,14 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: '/search',
+    name: 'SearchPage',
+    component: () => import('../views/SearchPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/chat',
     name: 'Chat',
     component: ChatContainer,
@@ -49,6 +62,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/courses',
     name: 'Courses',
     component: Courses,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/course-schedule',
+    name: 'CourseSchedule',
+    component: () => import('../views/CourseSchedule.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/task-plans',
+    name: 'TaskPlans',
+    component: () => import('../views/TaskPlans.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -115,12 +144,20 @@ const routes: Array<RouteRecordRaw> = [
     component: AvatarCropper,
     meta: {
       requiresAuth: true,
-      title: '裁剪头像'
-    }
+      title: '裁剪头像',
+    },
   },
   {
     path: '/chat-detail',
     name: 'ChatDetail',
+    component: ChatDetail,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/chat-detail/:assistantId',
+    name: 'ChatDetailWithAssistant',
     component: ChatDetail,
     meta: {
       requiresAuth: true,
@@ -174,6 +211,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/popular-courses',
     name: 'PopularCourses',
     component: () => import('../views/PopularCourses.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/achievements',
+    name: 'Achievements',
+    component: () => import('../views/achievements/AchievementsPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: () => import('../views/history/HistoryPage.vue'),
     meta: {
       requiresAuth: true,
     },
