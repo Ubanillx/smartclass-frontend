@@ -9,12 +9,7 @@
 
     <!-- 智慧体中心内容 -->
     <div class="center-content">
-      <van-empty description="智慧体中心功能即将上线">
-        <template #image>
-          <van-icon name="smile-o" size="80" color="#1989fa" />
-        </template>
-        <p class="coming-soon-text">敬请期待！</p>
-      </van-empty>
+      <intelligence-center-content @select="handleAssistantSelect" />
     </div>
   </div>
 </template>
@@ -23,6 +18,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SearchBar from '../../components/SearchBar.vue';
+import IntelligenceCenterContent from './components/IntelligenceCenterContent.vue';
 
 const router = useRouter();
 const searchText = ref('');
@@ -31,6 +27,13 @@ const searchText = ref('');
 const onSearch = (text: string) => {
   console.log('搜索:', text);
   // 实际应用中这里可能需要从服务器获取搜索结果
+};
+
+// 处理助手选择
+const handleAssistantSelect = (assistantId: number) => {
+  console.log('选择的智慧体ID:', assistantId);
+  // 跳转到聊天详情页面
+  router.push(`/chat-detail/${assistantId}`);
 };
 </script>
 
@@ -47,14 +50,6 @@ const onSearch = (text: string) => {
 .center-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 80px;
+  width: 100%;
 }
-
-.coming-soon-text {
-  font-size: var(--font-size-md, 16px);
-  color: #969799;
-  margin-top: 8px;
-}
-</style> 
+</style>
