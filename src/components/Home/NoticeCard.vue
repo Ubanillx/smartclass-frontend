@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 公告卡片 -->
-    <van-cell-group inset class="notice-card">
+    <van-cell-group class="notice-card">
       <van-cell title="最新公告">
         <template #icon>
           <svg class="icon svg-icon notice-icon" aria-hidden="true">
@@ -54,13 +54,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
-interface Notice {
-  id: number;
-  title: string;
-  date: string;
-  content: string;
-}
+import { Notice } from '../../api/mock';
 
 // 定义props
 const props = defineProps<{
@@ -87,6 +81,9 @@ const showNoticeDetail = (notice: Notice): void => {
 .notice-card {
   margin-bottom: 16px;
   background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .notice-preview {
@@ -196,4 +193,21 @@ const showNoticeDetail = (notice: Notice): void => {
   color: #323233;
   /* 全局样式已定义font-family */
 }
-</style> 
+
+:deep(.van-cell) {
+  position: relative;
+  padding: 12px 16px !important;
+  transition: all 0.3s ease;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+:deep(.van-cell:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.van-cell::after) {
+  display: none !important;
+}
+</style>
