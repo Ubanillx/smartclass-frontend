@@ -6,7 +6,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontSizeOptions = [
     { text: '小', value: 'small' },
     { text: '中', value: 'medium' },
-    { text: '大', value: 'large' }
+    { text: '大', value: 'large' },
   ];
 
   // 从本地存储加载字体大小设置，默认为中等
@@ -22,7 +22,11 @@ export const useSettingsStore = defineStore('settings', () => {
   // 更新根元素的字体大小类名
   const updateFontSizeClass = (size: string) => {
     // 移除所有字体大小类名
-    document.documentElement.classList.remove('font-small', 'font-medium', 'font-large');
+    document.documentElement.classList.remove(
+      'font-small',
+      'font-medium',
+      'font-large',
+    );
     // 添加当前字体大小类名
     document.documentElement.classList.add(`font-${size}`);
   };
@@ -40,6 +44,6 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     fontSize,
     fontSizeOptions,
-    setFontSize
+    setFontSize,
   };
-}); 
+});

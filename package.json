@@ -12,11 +12,15 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@vant/area-data": "^2.0.0",
     "axios": "^1.8.2",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "dompurify": "^3.2.4",
     "marked": "^15.0.7",
     "node-fetch": "^3.3.2",
+    "okhttp": "^1.1.0",
     "pinia": "^3.0.1",
     "vant": "^4.9.17",
     "vue": "^3.5.13",

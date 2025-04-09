@@ -5,10 +5,12 @@ export default defineConfig({
   plugins: [pluginVue()],
   source: {
     entry: {
-      index: './src/main.ts'
-    }
+      index: './src/main.ts',
+    },
   },
   html: {
-    mountId: 'app'
-  }
+    mountId: 'app',
+    title: '智云星课',
+    favicon: './public/logo.svg',
+  },
 });
