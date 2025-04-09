@@ -1,10 +1,9 @@
 <template>
-  <van-cell-group inset class="learning-history">
-    <van-cell title="学习历史记录">
-      <template #right-icon>
-        <span class="more-link" @click="onViewAll">查看全部</span>
-      </template>
-    </van-cell>
+  <div class="learning-history">
+    <div class="history-header">
+      <h3 class="section-title">学习历史记录</h3>
+      <span class="more-link" @click="onViewAll">查看全部</span>
+    </div>
     <div class="history-list">
       <div v-for="item in historyItems" :key="item.id" class="history-item">
         <div class="history-date">{{ item.date }}</div>
@@ -20,7 +19,7 @@
         </div>
       </div>
     </div>
-  </van-cell-group>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -53,11 +52,27 @@ const onViewAll = (): void => {
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  padding: 16px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: var(--font-size-md);
+  color: #323233;
+  margin: 0;
 }
 
 .more-link {
   color: #1989fa;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 500;
   padding: 3px 6px;
   border-radius: 4px;
@@ -65,7 +80,7 @@ const onViewAll = (): void => {
 }
 
 .history-list {
-  padding: 0 16px 10px;
+  padding: 0;
 }
 
 .history-item {
@@ -141,6 +156,17 @@ const onViewAll = (): void => {
 }
 
 :deep(.van-cell) {
-  padding: 10px 16px;
+  padding: 10px 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  margin: 0 !important;
 }
-</style> 
+
+:deep(.van-cell:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.van-cell::after) {
+  display: none !important;
+}
+</style>
