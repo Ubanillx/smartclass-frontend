@@ -1,35 +1,44 @@
 <template>
   <div class="course-study">
     <div class="video-container">
-      <video 
+      <video
         ref="videoRef"
         controls
         class="course-video"
         :poster="course?.cover"
       >
-        <source :src="videoUrl" type="video/mp4">
+        <source :src="videoUrl" type="video/mp4" />
         您的浏览器不支持视频播放
       </video>
     </div>
-    
+
     <div class="course-info">
       <h2 class="course-title">{{ course?.title }}</h2>
       <div class="course-meta">
         <span v-if="course?.grade" class="grade">{{ course.grade }}</span>
-        <span class="difficulty" :class="course?.level">{{ course?.level }}</span>
+        <span class="difficulty" :class="course?.level">{{
+          course?.level
+        }}</span>
         <span>{{ course?.duration }}分钟</span>
       </div>
-      
+
       <div class="course-tabs">
         <van-tabs v-model:active="activeTab" animated swipeable>
           <van-tab title="课程介绍">
             <div class="tab-content">
               <p class="course-description">{{ course?.description }}</p>
-              
-              <div class="course-highlights" v-if="course?.highlights && course.highlights.length > 0">
+
+              <div
+                class="course-highlights"
+                v-if="course?.highlights && course.highlights.length > 0"
+              >
                 <h3>课程特点</h3>
                 <div class="highlights-grid">
-                  <div class="highlight-item" v-for="(point, index) in course.highlights" :key="index">
+                  <div
+                    class="highlight-item"
+                    v-for="(point, index) in course.highlights"
+                    :key="index"
+                  >
                     <van-icon :name="point.icon" :color="point.color" />
                     <span>{{ point.text }}</span>
                   </div>
@@ -37,12 +46,12 @@
               </div>
             </div>
           </van-tab>
-          
+
           <van-tab title="课程目录">
             <div class="tab-content">
               <div class="chapter-list">
-                <div 
-                  v-for="(chapter, index) in chapters" 
+                <div
+                  v-for="(chapter, index) in chapters"
                   :key="index"
                   class="chapter-item"
                   :class="{ active: currentChapter === index }"
@@ -55,25 +64,29 @@
                       <p>{{ chapter.duration }}分钟</p>
                     </div>
                   </div>
-                  <van-icon :name="currentChapter === index ? 'play-circle-o' : 'play-circle'" />
+                  <van-icon
+                    :name="
+                      currentChapter === index ? 'play-circle-o' : 'play-circle'
+                    "
+                  />
                 </div>
               </div>
             </div>
           </van-tab>
-          
+
           <van-tab title="课后练习">
             <div class="tab-content">
               <div class="exercise-list">
-                <div 
-                  v-for="(exercise, index) in exercises" 
+                <div
+                  v-for="(exercise, index) in exercises"
                   :key="index"
                   class="exercise-item"
                 >
                   <h4>{{ exercise.title }}</h4>
                   <p>{{ exercise.description }}</p>
-                  <van-button 
-                    type="primary" 
-                    size="small" 
+                  <van-button
+                    type="primary"
+                    size="small"
                     round
                     @click="startExercise(exercise)"
                   >
@@ -93,6 +106,7 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
+import { Course as CourseType } from '../../api/mock';
 
 interface CourseHighlight {
   icon: string;
@@ -100,17 +114,9 @@ interface CourseHighlight {
   text: string;
 }
 
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
+// 扩展Course类型
+interface EnhancedCourse extends CourseType {
   grade?: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
   description?: string;
   highlights?: CourseHighlight[];
 }
@@ -129,7 +135,7 @@ interface Exercise {
 }
 
 const props = defineProps<{
-  course: Course | null;
+  course: EnhancedCourse | null;
   courseId?: number;
 }>();
 
@@ -143,23 +149,23 @@ const chapters = ref<Chapter[]>([
   {
     title: '课程介绍与学习方法',
     duration: 5,
-    videoUrl: 'https://example.com/video1.mp4'
+    videoUrl: 'https://example.com/video1.mp4',
   },
   {
     title: '基础知识讲解',
     duration: 10,
-    videoUrl: 'https://example.com/video2.mp4'
+    videoUrl: 'https://example.com/video2.mp4',
   },
   {
     title: '实例演示与分析',
     duration: 15,
-    videoUrl: 'https://example.com/video3.mp4'
+    videoUrl: 'https://example.com/video3.mp4',
   },
   {
     title: '综合练习与应用',
     duration: 10,
-    videoUrl: 'https://example.com/video4.mp4'
-  }
+    videoUrl: 'https://example.com/video4.mp4',
+  },
 ]);
 
 // 模拟练习数据
@@ -168,14 +174,14 @@ const exercises = ref<Exercise[]>([
     id: 1,
     title: '基础概念测试',
     description: '检验对课程基础概念的理解',
-    type: 'quiz'
+    type: 'quiz',
   },
   {
     id: 2,
     title: '实践应用练习',
     description: '通过实际案例应用所学知识',
-    type: 'practice'
-  }
+    type: 'practice',
+  },
 ]);
 
 // 当前视频URL
@@ -188,7 +194,7 @@ const switchChapter = (index: number) => {
   currentChapter.value = index;
   if (videoRef.value) {
     videoRef.value.load();
-    videoRef.value.play().catch(err => {
+    videoRef.value.play().catch((err) => {
       console.error('视频播放失败:', err);
     });
   }
@@ -372,4 +378,4 @@ const startExercise = (exercise: Exercise) => {
   font-size: 14px;
   color: #646566;
 }
-</style> 
+</style>
