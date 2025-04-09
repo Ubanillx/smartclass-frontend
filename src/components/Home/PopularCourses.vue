@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 热门课程模块 -->
-    <van-cell-group inset class="popular-courses-module">
+    <van-cell-group class="popular-courses-module">
       <van-cell title="热门课程">
         <template #icon>
           <svg class="icon svg-icon course-icon" aria-hidden="true">
@@ -12,25 +12,29 @@
           <span class="more-link" @click="$emit('more')">更多</span>
         </template>
       </van-cell>
-      
+
       <div class="course-list">
-        <div 
-          v-for="course in courses" 
-          :key="course.id" 
+        <div
+          v-for="course in courses"
+          :key="course.id"
           class="course-item"
           @click="$emit('select', course)"
         >
           <div class="course-cover">
-            <van-image :src="course.cover" fit="cover" radius="4"/>
-            <span class="course-tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
+            <van-image :src="course.cover" fit="cover" radius="4" />
           </div>
           <div class="course-info">
             <h3 class="course-title">{{ course.title }}</h3>
             <p class="course-brief">{{ course.brief }}</p>
             <div class="course-meta">
-              <span class="difficulty" :class="course.level">{{ course.level }}</span>
+              <span class="tag" :class="course.level">{{
+                course.level
+              }}</span>
+              <span class="tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
               <span>{{ course.duration }}分钟</span>
-              <span v-if="course.studentsCount">{{ course.studentsCount }}人在学</span>
+              <span v-if="course.studentsCount"
+                >{{ course.studentsCount }}人在学</span
+              >
             </div>
           </div>
         </div>
@@ -40,17 +44,8 @@
 </template>
 
 <script setup lang="ts">
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
-}
+// 引入Course接口
+import { Course } from '../../api/mock';
 
 // 定义props
 const props = defineProps<{
@@ -68,6 +63,9 @@ defineEmits<{
 .popular-courses-module {
   margin-bottom: 16px;
   background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .more-link {
@@ -106,18 +104,6 @@ defineEmits<{
   height: 100%;
 }
 
-.course-tag {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  padding: 2px 6px;
-  font-size: var(--font-size-sm) !important;
-  color: #fff;
-  border-radius: 4px;
-  font-weight: 500 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
 .course-info {
   flex: 1;
   display: flex;
@@ -126,21 +112,25 @@ defineEmits<{
   overflow: hidden;
 }
 
-.difficulty {
+.tag {
+  display: inline-block;
   padding: 2px 6px;
   border-radius: 4px;
   color: #fff;
+  font-size: var(--font-size-sm) !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.difficulty.初级 {
+.tag.初级 {
   background: #07c160;
 }
 
-.difficulty.中级 {
+.tag.中级 {
   background: #1989fa;
 }
 
-.difficulty.高级 {
+.tag.高级 {
   background: #ff976a;
 }
 
@@ -208,4 +198,21 @@ defineEmits<{
   align-items: center;
   line-height: 1.2;
 }
-</style> 
+
+:deep(.van-cell) {
+  position: relative;
+  padding: 12px 16px !important;
+  transition: all 0.3s ease;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+:deep(.van-cell:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.van-cell::after) {
+  display: none !important;
+}
+</style>
