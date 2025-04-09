@@ -7,13 +7,18 @@
           <span class="more-link" @click="showNoticePopup">更多</span>
         </template>
       </van-cell>
-      <div class="notice-preview" @click="showNoticeDetail(notices[0])">
-        <h4>{{ notices[0].title }}</h4>
-        <p class="notice-brief">{{ notices[0].content }}</p>
-        <div class="notice-footer">
-          <span class="notice-date">{{ notices[0].date }}</span>
-          <van-icon name="arrow" />
+      <div v-if="notices.length > 0" class="notice-preview">
+        <div @click="showNoticeDetail(notices[0])">
+          <h4>{{ notices[0].title }}</h4>
+          <p class="notice-brief">{{ notices[0].content }}</p>
+          <div class="notice-footer">
+            <span class="notice-date">{{ notices[0].date }}</span>
+            <van-icon name="arrow" />
+          </div>
         </div>
+      </div>
+      <div v-else class="notice-preview">
+        <h4>暂无公告</h4>
       </div>
     </van-cell-group>
 
@@ -66,20 +71,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { Notice } from '../api/mock';
 
 // 定义props
-const props = defineProps({
-  notices: {
-    type: Array,
-    required: true
-  }
-});
+const props = defineProps<{
+  notices: Notice[];
+}>();
 
 const showPopup = ref(false);
 const showDetail = ref(false);
-const selectedNotice = ref(null);
+const selectedNotice = ref<Notice | null>(null);
 
 // 显示公告列表
 const showNoticePopup = () => {
@@ -87,7 +90,7 @@ const showNoticePopup = () => {
 };
 
 // 显示公告详情
-const showNoticeDetail = (notice) => {
+const showNoticeDetail = (notice: Notice) => {
   selectedNotice.value = notice;
   showPopup.value = false;
   showDetail.value = true;
@@ -181,4 +184,4 @@ const showNoticeDetail = (notice) => {
 .notice-list {
   margin-top: 16px;
 }
-</style> 
+</style>
