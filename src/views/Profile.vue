@@ -77,7 +77,8 @@ const userInfo = ref({
   username: '',
   nickname: '',
   phone: '',
-  avatar: 'https://img.zcool.cn/community/01a0d45d145963a8012187f447cfef.jpg@1280w_1l_2o_100sh.jpg',
+  avatar:
+    'https://img.zcool.cn/community/01a0d45d145963a8012187f447cfef.jpg@1280w_1l_2o_100sh.jpg',
   level: 1,
   nextLevelExp: 100,
 });
@@ -302,34 +303,38 @@ const onRefresh = () => {
 // 添加新的学习目标
 const addGoal = (goalText) => {
   // 生成新的ID (简单实现，实际应用中可能需要更复杂的ID生成逻辑)
-  const newId = todayGoals.value.length > 0 
-    ? Math.max(...todayGoals.value.map(goal => goal.id)) + 1 
-    : 1;
-  
+  const newId =
+    todayGoals.value.length > 0
+      ? Math.max(...todayGoals.value.map((goal) => goal.id)) + 1
+      : 1;
+
   // 添加新目标
-  todayGoals.value.push(markRaw({
-    id: newId,
-    text: goalText,
-    completed: false
-  }));
-  
+  todayGoals.value.push(
+    markRaw({
+      id: newId,
+      text: goalText,
+      completed: false,
+    }),
+  );
+
   // 更新进度
   updateProgress();
-  
+
   // 实际应用中，这里应该调用API将新目标保存到后端
   showToast('已添加新的学习目标');
 };
 
 // 切换目标完成状态
 const toggleGoalStatus = (goalId) => {
-  const goalIndex = todayGoals.value.findIndex(goal => goal.id === goalId);
+  const goalIndex = todayGoals.value.findIndex((goal) => goal.id === goalId);
   if (goalIndex !== -1) {
     // 切换状态
-    todayGoals.value[goalIndex].completed = !todayGoals.value[goalIndex].completed;
-    
+    todayGoals.value[goalIndex].completed =
+      !todayGoals.value[goalIndex].completed;
+
     // 更新进度
     updateProgress();
-    
+
     // 实际应用中，这里应该调用API将状态变更保存到后端
     if (todayGoals.value[goalIndex].completed) {
       showToast('恭喜完成学习目标！');
@@ -343,9 +348,13 @@ const updateProgress = () => {
     todayProgress.value = 0;
     return;
   }
-  
-  const completedCount = todayGoals.value.filter(goal => goal.completed).length;
-  todayProgress.value = Math.round((completedCount / todayGoals.value.length) * 100);
+
+  const completedCount = todayGoals.value.filter(
+    (goal) => goal.completed,
+  ).length;
+  todayProgress.value = Math.round(
+    (completedCount / todayGoals.value.length) * 100,
+  );
 };
 
 // 退出登录
@@ -368,7 +377,7 @@ const handleLogout = async () => {
 onMounted(() => {
   console.log('Profile页面加载，开始获取用户数据');
   fetchUserData();
-  
+
   // 初始化进度
   updateProgress();
 });
@@ -376,9 +385,8 @@ onMounted(() => {
 
 <style scoped>
 .profile {
-  padding: 16px;
-  padding-bottom: 66px;
-  background-color: #f5f7fa;
+  padding: 16px 16px 66px;
+  background-color: #F2F7FD;
   min-height: 100vh;
 }
 
