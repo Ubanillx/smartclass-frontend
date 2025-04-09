@@ -1,8 +1,8 @@
 <template>
   <div class="assistant-types-container">
     <div class="assistant-types">
-      <div 
-        v-for="type in types" 
+      <div
+        v-for="type in types"
         :key="type.id"
         :class="['type-item', { active: modelValue === type.id }]"
         @click="$emit('update:modelValue', type.id)"
@@ -38,9 +38,9 @@ defineEmits<{
 .assistant-types-container {
   position: relative;
   margin-bottom: 16px;
-  margin-top: -8px;  /* 添加负边距，减少与搜索框的距离 */
-  padding: 8px 0;  /* 上下内边距 */
-  border-radius: 8px;  /* 圆角 */
+  margin-top: -8px; /* 添加负边距，减少与搜索框的距离 */
+  padding: 8px 0; /* 上下内边距 */
+  border-radius: 8px; /* 圆角 */
 }
 
 .assistant-types {
@@ -105,4 +105,4 @@ defineEmits<{
     transform: translateX(-2px);
   }
 }
-</style> 
+</style>
