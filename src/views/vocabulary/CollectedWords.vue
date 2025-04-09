@@ -32,11 +32,11 @@
           <van-icon name="arrow-down" />
         </div>
         <div class="search-box">
-          <van-search
+          <search-bar
             v-model="searchText"
             placeholder="搜索单词"
-            shape="round"
-            background="transparent"
+            @search="applySearch"
+            :disable-redirect="true"
           />
         </div>
       </div>
@@ -50,26 +50,29 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-if="filteredWords.length === 0 && !loading" class="empty-state">
+            <div
+              v-if="filteredWords.length === 0 && !loading"
+              class="empty-state"
+            >
               <van-empty description="暂无收藏单词" />
             </div>
-            <div 
-              class="word-card" 
-              v-for="word in filteredWords" 
-              :key="word.id" 
+            <div
+              class="word-card"
+              v-for="word in filteredWords"
+              :key="word.id"
               @click="showWordDetail(word)"
             >
               <div class="word-header">
                 <span class="word-text">{{ word.text }}</span>
                 <div class="word-actions">
-                  <van-icon 
-                    name="success" 
-                    class="mastered-icon" 
+                  <van-icon
+                    name="success"
+                    class="mastered-icon"
                     :class="{ active: word.mastered }"
                     @click.stop="toggleMastered(word)"
                   />
-                  <van-icon 
-                    name="delete-o" 
+                  <van-icon
+                    name="delete-o"
                     class="delete-icon"
                     @click.stop="confirmRemove(word)"
                   />
@@ -78,15 +81,16 @@
               <div class="word-phonetic">/{{ word.phonetic }}/</div>
               <div class="word-translation">{{ word.translation }}</div>
               <div class="word-tags">
-                <div class="difficulty-tag" :class="getDifficultyClass(word.difficulty)">
+                <div
+                  class="difficulty-tag"
+                  :class="getDifficultyClass(word.difficulty)"
+                >
                   {{ word.difficulty }}
                 </div>
                 <div class="date-tag">
                   {{ formatDate(word.collectedTime) }}收藏
                 </div>
-                <div v-if="word.mastered" class="mastered-tag">
-                  已掌握
-                </div>
+                <div v-if="word.mastered" class="mastered-tag">已掌握</div>
               </div>
             </div>
           </van-list>
@@ -110,14 +114,14 @@
           <div class="word-main">
             <span class="word-text">{{ currentWord.text }}</span>
             <div class="word-actions">
-              <van-icon 
-                name="success" 
-                class="mastered-icon" 
+              <van-icon
+                name="success"
+                class="mastered-icon"
                 :class="{ active: currentWord.mastered }"
                 @click="toggleMastered(currentWord)"
               />
-              <van-icon 
-                name="delete-o" 
+              <van-icon
+                name="delete-o"
                 class="delete-icon"
                 @click="confirmRemove(currentWord)"
               />
@@ -125,7 +129,11 @@
           </div>
           <div class="word-phonetic">/{{ currentWord.phonetic }}/</div>
           <div class="word-meanings">
-            <div class="meaning-item" v-for="(meaning, index) in currentWord.meanings" :key="index">
+            <div
+              class="meaning-item"
+              v-for="(meaning, index) in currentWord.meanings"
+              :key="index"
+            >
               <div class="part-of-speech">{{ meaning.partOfSpeech }}</div>
               <div class="definition">{{ meaning.definition }}</div>
               <div class="example">{{ meaning.example }}</div>
@@ -136,7 +144,9 @@
             <div class="stats-grid">
               <div class="stat-grid-item">
                 <div class="stat-label">收藏时间</div>
-                <div class="stat-value">{{ formatFullDate(currentWord.collectedTime) }}</div>
+                <div class="stat-value">
+                  {{ formatFullDate(currentWord.collectedTime) }}
+                </div>
               </div>
               <div class="stat-grid-item">
                 <div class="stat-label">查看次数</div>
@@ -144,7 +154,9 @@
               </div>
               <div class="stat-grid-item">
                 <div class="stat-label">最近查看</div>
-                <div class="stat-value">{{ formatDate(currentWord.lastViewTime) }}</div>
+                <div class="stat-value">
+                  {{ formatDate(currentWord.lastViewTime) }}
+                </div>
               </div>
               <div class="stat-grid-item">
                 <div class="stat-label">难度等级</div>
@@ -176,17 +188,29 @@
                   <van-radio name="" />
                 </template>
               </van-cell>
-              <van-cell title="初级" clickable @click="selectedDifficulty = '初级'">
+              <van-cell
+                title="初级"
+                clickable
+                @click="selectedDifficulty = '初级'"
+              >
                 <template #right-icon>
                   <van-radio name="初级" />
                 </template>
               </van-cell>
-              <van-cell title="中级" clickable @click="selectedDifficulty = '中级'">
+              <van-cell
+                title="中级"
+                clickable
+                @click="selectedDifficulty = '中级'"
+              >
                 <template #right-icon>
                   <van-radio name="中级" />
                 </template>
               </van-cell>
-              <van-cell title="高级" clickable @click="selectedDifficulty = '高级'">
+              <van-cell
+                title="高级"
+                clickable
+                @click="selectedDifficulty = '高级'"
+              >
                 <template #right-icon>
                   <van-radio name="高级" />
                 </template>
@@ -194,7 +218,12 @@
             </van-cell-group>
           </van-radio-group>
           <div class="filter-actions">
-            <van-button type="primary" block round @click="applyDifficultyFilter">
+            <van-button
+              type="primary"
+              block
+              round
+              @click="applyDifficultyFilter"
+            >
               确认
             </van-button>
           </div>
@@ -217,22 +246,38 @@
         <div class="filter-content">
           <van-radio-group v-model="sortOption">
             <van-cell-group>
-              <van-cell title="收藏时间（最新）" clickable @click="sortOption = 'time-desc'">
+              <van-cell
+                title="收藏时间（最新）"
+                clickable
+                @click="sortOption = 'time-desc'"
+              >
                 <template #right-icon>
                   <van-radio name="time-desc" />
                 </template>
               </van-cell>
-              <van-cell title="收藏时间（最早）" clickable @click="sortOption = 'time-asc'">
+              <van-cell
+                title="收藏时间（最早）"
+                clickable
+                @click="sortOption = 'time-asc'"
+              >
                 <template #right-icon>
                   <van-radio name="time-asc" />
                 </template>
               </van-cell>
-              <van-cell title="按字母顺序（A-Z）" clickable @click="sortOption = 'alpha-asc'">
+              <van-cell
+                title="按字母顺序（A-Z）"
+                clickable
+                @click="sortOption = 'alpha-asc'"
+              >
                 <template #right-icon>
                   <van-radio name="alpha-asc" />
                 </template>
               </van-cell>
-              <van-cell title="按字母顺序（Z-A）" clickable @click="sortOption = 'alpha-desc'">
+              <van-cell
+                title="按字母顺序（Z-A）"
+                clickable
+                @click="sortOption = 'alpha-desc'"
+              >
                 <template #right-icon>
                   <van-radio name="alpha-desc" />
                 </template>
@@ -252,7 +297,11 @@
     <van-dialog
       v-model:show="showDeleteConfirm"
       title="删除单词"
-      :message="wordToDelete ? `确定要从生词本中删除「${wordToDelete.text}」吗？` : '确定要删除这个单词吗？'"
+      :message="
+        wordToDelete
+          ? `确定要从生词本中删除「${wordToDelete.text}」吗？`
+          : '确定要删除这个单词吗？'
+      "
       show-cancel-button
       @confirm="removeWord"
     />
@@ -263,39 +312,19 @@
 import { ref, computed, onMounted } from 'vue';
 import { showToast, showSuccessToast } from 'vant';
 import { BackButton } from '../../components/Common';
+import SearchBar from '../../components/SearchBar.vue';
 import { useRouter } from 'vue-router';
+import { useCollectedWordsStore, CollectedWord } from '../../stores/collectedWordsStore';
 
 const router = useRouter();
-
-// 单词含义接口
-interface WordMeaning {
-  partOfSpeech: string;
-  definition: string;
-  example: string;
-}
-
-// 单词接口
-interface CollectedWord {
-  id: number;
-  text: string;
-  phonetic: string;
-  translation: string;
-  example: string;
-  meanings: WordMeaning[];
-  viewCount: number;
-  collectedTime: string;
-  lastViewTime: string;
-  difficulty: string;
-  mastered: boolean;
-}
+const collectedWordsStore = useCollectedWordsStore();
 
 // 状态变量
 const loading = ref(false);
-const finished = ref(false);
+const finished = ref(true); // 直接设为true，因为我们一次性从store获取所有数据
 const refreshing = ref(false);
 const showWordPopup = ref(false);
 const currentWord = ref<CollectedWord | null>(null);
-const collectedWords = ref<CollectedWord[]>([]);
 const searchText = ref('');
 const selectedDifficulty = ref('');
 const sortOption = ref('time-desc');
@@ -304,101 +333,54 @@ const showSortOptions = ref(false);
 const showDeleteConfirm = ref(false);
 const wordToDelete = ref<CollectedWord | null>(null);
 
-// 计算属性：已掌握单词数量
-const masteredCount = computed(() => {
-  return collectedWords.value.filter(word => word.mastered).length;
-});
-
-// 计算属性：待复习单词数量
-const reviewCount = computed(() => {
-  return collectedWords.value.length - masteredCount.value;
-});
+// 使用store的计算属性
+const masteredCount = computed(() => collectedWordsStore.masteredCount);
+const reviewCount = computed(() => collectedWordsStore.reviewCount);
 
 // 计算属性：筛选和排序后的单词列表
 const filteredWords = computed(() => {
-  // 先筛选
-  let result = collectedWords.value.filter(word => {
-    // 搜索文本筛选
-    const matchesSearch = searchText.value === '' || 
-      word.text.toLowerCase().includes(searchText.value.toLowerCase()) ||
-      word.translation.includes(searchText.value);
-    
-    // 难度筛选
-    const matchesDifficulty = selectedDifficulty.value === '' || 
-      word.difficulty === selectedDifficulty.value;
-    
-    return matchesSearch && matchesDifficulty;
-  });
-  
-  // 再排序
-  switch (sortOption.value) {
-    case 'time-desc':
-      result.sort((a, b) => new Date(b.collectedTime).getTime() - new Date(a.collectedTime).getTime());
-      break;
-    case 'time-asc':
-      result.sort((a, b) => new Date(a.collectedTime).getTime() - new Date(b.collectedTime).getTime());
-      break;
-    case 'alpha-asc':
-      result.sort((a, b) => a.text.localeCompare(b.text));
-      break;
-    case 'alpha-desc':
-      result.sort((a, b) => b.text.localeCompare(a.text));
-      break;
-  }
-  
-  return result;
+  return collectedWordsStore.getFilteredWords(
+    searchText.value,
+    selectedDifficulty.value,
+    sortOption.value
+  );
 });
 
-// 模拟加载数据
-const onLoad = () => {
-  // 模拟异步加载
-  setTimeout(() => {
-    // 加载收藏的单词
-    const newWords = generateMockCollectedWords(10);
-    collectedWords.value = [...collectedWords.value, ...newWords];
-    
-    // 加载状态结束
-    loading.value = false;
-    
-    // 判断是否已加载完所有数据
-    if (collectedWords.value.length >= 30) {
-      finished.value = true;
-    }
-  }, 1000);
-};
+// 获取所有收藏单词
+const collectedWords = computed(() => collectedWordsStore.getCollectedWords());
 
 // 下拉刷新
 const onRefresh = () => {
-  // 重置加载状态
-  finished.value = false;
-  
-  // 清空列表数据
-  collectedWords.value = [];
-  
-  // 重新加载数据
-  onLoad();
-  
-  // 结束刷新状态
-  refreshing.value = false;
+  // 模拟刷新操作
+  setTimeout(() => {
+    refreshing.value = false;
+    showToast('刷新成功');
+  }, 1000);
+};
+
+// 加载更多
+const onLoad = () => {
+  // 使用Store中的数据，无需分页加载
+  loading.value = false;
+  finished.value = true;
 };
 
 // 显示单词详情
 const showWordDetail = (word: CollectedWord) => {
   currentWord.value = word;
   showWordPopup.value = true;
-  
-  // 增加查看次数
-  word.viewCount += 1;
-  word.lastViewTime = new Date().toISOString();
+
+  // 通过store更新查看次数
+  collectedWordsStore.updateWordView(word.id);
 };
 
 // 切换单词掌握状态
 const toggleMastered = (word: CollectedWord) => {
-  word.mastered = !word.mastered;
-  
+  collectedWordsStore.toggleMastered(word.id);
+
   showToast({
     message: word.mastered ? '已标记为掌握' : '已取消掌握标记',
-    position: 'bottom'
+    position: 'bottom',
   });
 };
 
@@ -411,16 +393,13 @@ const confirmRemove = (word: CollectedWord) => {
 // 从生词本中移除单词
 const removeWord = () => {
   if (!wordToDelete.value) return;
-  
-  const index = collectedWords.value.findIndex(w => w.id === wordToDelete.value?.id);
-  if (index !== -1) {
-    collectedWords.value.splice(index, 1);
-    
+
+  if (collectedWordsStore.removeWord(wordToDelete.value.id)) {
     // 如果当前正在查看的是要删除的单词，关闭弹窗
     if (currentWord.value?.id === wordToDelete.value.id) {
       showWordPopup.value = false;
     }
-    
+
     showSuccessToast('已从生词本中移除');
   }
 };
@@ -433,6 +412,11 @@ const applyDifficultyFilter = () => {
 // 应用排序选项
 const applySortOption = () => {
   showSortOptions.value = false;
+};
+
+// 应用搜索
+const applySearch = (text: string) => {
+  searchText.value = text;
 };
 
 // 获取难度标签的样式类
@@ -452,12 +436,12 @@ const getDifficultyClass = (difficulty: string): string => {
 // 格式化日期（简短版本）
 const formatDate = (dateString: string) => {
   if (!dateString) return '未知';
-  
+
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 0) {
     return '今天';
   } else if (diffDays === 1) {
@@ -472,15 +456,17 @@ const formatDate = (dateString: string) => {
 // 格式化日期（完整版本）
 const formatFullDate = (dateString: string) => {
   if (!dateString) return '未知';
-  
+
   const date = new Date(dateString);
   return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 };
 
-// 生成模拟收藏单词数据
-const generateMockCollectedWords = (count: number): CollectedWord[] => {
-  const mockWords: CollectedWord[] = [
-    {
+// 组件挂载时初始化
+onMounted(() => {
+  // 如果没有收藏数据，则添加一些示例数据（仅用于演示）
+  if (collectedWords.value.length === 0) {
+    // 添加一些示例数据
+    const mockWord = {
       id: 1,
       text: 'ephemeral',
       phonetic: 'ɪˈfemərəl',
@@ -490,94 +476,16 @@ const generateMockCollectedWords = (count: number): CollectedWord[] => {
         {
           partOfSpeech: 'adj.',
           definition: '短暂的，瞬息的',
-          example: 'Social media fame can be ephemeral.'
-        }
+          example: 'Social media fame can be ephemeral.',
+        },
       ],
       viewCount: 28,
-      collectedTime: '2024-03-14T15:45:00Z',
-      lastViewTime: '2024-03-15T10:30:00Z',
+      lastViewTime: new Date().toISOString(),
       difficulty: '中级',
-      mastered: true
-    },
-    {
-      id: 2,
-      text: 'ubiquitous',
-      phonetic: 'juːˈbɪkwɪtəs',
-      translation: '无所不在的，普遍存在的',
-      example: 'Smartphones have become ubiquitous in modern society.',
-      meanings: [
-        {
-          partOfSpeech: 'adj.',
-          definition: '无所不在的，普遍存在的',
-          example: 'Coffee shops are ubiquitous in urban areas.'
-        }
-      ],
-      viewCount: 35,
-      collectedTime: '2024-03-13T09:20:00Z',
-      lastViewTime: '2024-03-14T16:45:00Z',
-      difficulty: '高级',
-      mastered: false
-    },
-    {
-      id: 3,
-      text: 'eloquent',
-      phonetic: 'ˈeləkwənt',
-      translation: '雄辩的，有说服力的',
-      example: 'She gave an eloquent speech at the conference.',
-      meanings: [
-        {
-          partOfSpeech: 'adj.',
-          definition: '雄辩的，有说服力的',
-          example: 'His eloquent defense of the policy won over many skeptics.'
-        }
-      ],
-      viewCount: 15,
-      collectedTime: '2024-03-12T14:30:00Z',
-      lastViewTime: '2024-03-13T08:15:00Z',
-      difficulty: '中级',
-      mastered: false
-    }
-  ];
-  
-  // 复制并修改模拟数据以生成更多单词
-  const result: CollectedWord[] = [];
-  for (let i = 0; i < count; i++) {
-    // 确保索引在有效范围内
-    const index = i % mockWords.length;
-    const baseWord = mockWords[index];
+    };
     
-    if (!baseWord) continue; // 额外的安全检查
-    
-    const newId = collectedWords.value.length + i + 1;
-    const daysAgo = Math.floor(Math.random() * 30); // 0-30天前收藏
-    const collectedDate = new Date();
-    collectedDate.setDate(collectedDate.getDate() - daysAgo);
-    
-    const viewsAfterCollection = Math.floor(Math.random() * 10); // 收藏后查看0-10次
-    const lastViewDate = new Date(collectedDate);
-    lastViewDate.setDate(lastViewDate.getDate() + Math.floor(Math.random() * daysAgo));
-    
-    result.push({
-      id: newId,
-      text: baseWord.text,
-      phonetic: baseWord.phonetic,
-      translation: baseWord.translation,
-      example: baseWord.example,
-      meanings: [...baseWord.meanings],
-      viewCount: Math.floor(Math.random() * 30) + viewsAfterCollection,
-      collectedTime: collectedDate.toISOString(),
-      lastViewTime: lastViewDate.toISOString(),
-      difficulty: baseWord.difficulty,
-      mastered: Math.random() > 0.7 // 30%概率已掌握
-    });
+    collectedWordsStore.collectWord(mockWord);
   }
-  
-  return result;
-};
-
-// 组件挂载时加载初始数据
-onMounted(() => {
-  onLoad();
 });
 </script>
 
@@ -591,7 +499,7 @@ onMounted(() => {
 
 .content-container {
   flex: 1;
-  padding: 12px 0 50px;
+  padding: 12px 12px 60px;
   margin-top: 8px; /* 为返回按钮留出空间 */
 }
 
@@ -600,7 +508,7 @@ onMounted(() => {
   justify-content: space-around;
   background-color: #fff;
   padding: 16px;
-  margin: 0 12px 12px;
+  margin-bottom: 12px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -627,6 +535,8 @@ onMounted(() => {
   padding: 8px 12px;
   background-color: #fff;
   margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .filter-item {
@@ -646,10 +556,21 @@ onMounted(() => {
 
 .search-box {
   flex: 1;
+  margin-left: 8px;
+}
+
+:deep(.search-bar) {
+  padding: 0;
+  margin: 0;
+  position: static;
+}
+
+:deep(.van-search) {
+  padding: 0;
 }
 
 .word-list {
-  padding: 0 12px;
+  padding: 0;
 }
 
 .word-card {
@@ -658,6 +579,12 @@ onMounted(() => {
   padding: 16px;
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.word-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .word-header {
@@ -852,4 +779,4 @@ onMounted(() => {
 .empty-state {
   padding: 32px 0;
 }
-</style> 
+</style>
