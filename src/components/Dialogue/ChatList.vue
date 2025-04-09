@@ -1,19 +1,14 @@
 <template>
   <van-cell-group inset class="chat-list">
-    <div 
-      v-for="chat in chats" 
-      :key="chat.id" 
+    <div
+      v-for="chat in chats"
+      :key="chat.id"
       class="chat-item"
       @click="$emit('select', chat)"
     >
       <div class="chat-avatar">
-        <van-image
-          :src="chat.avatar"
-          round
-          width="50"
-          height="50"
-        />
-        <div class="online-status" :class="{ online: chat.online }"></div>
+        <van-image :src="chat.avatar" round width="50" height="50" />
+        <div v-if="showStatus" class="online-status" :class="{ online: chat.online }"></div>
       </div>
       <div class="chat-info">
         <div class="chat-header">
@@ -21,7 +16,7 @@
           <span class="chat-time">{{ chat.lastTime }}</span>
         </div>
         <div v-if="chat.summary" class="chat-summary">{{ chat.summary }}</div>
-        <div class="chat-tags">
+        <div v-if="showStatus && chat.tags && chat.tags.length > 0" class="chat-tags">
           <span v-for="tag in chat.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
       </div>
@@ -32,6 +27,7 @@
 <script setup lang="ts">
 interface Chat {
   id: number;
+  sessionId?: string;
   assistantId: number;
   assistantName: string;
   avatar: string;
@@ -43,10 +39,13 @@ interface Chat {
   type: number;
 }
 
-// 定义props
-const props = defineProps<{
+// 定义props并设置默认值
+const props = withDefaults(defineProps<{
   chats: Chat[];
-}>();
+  showStatus?: boolean;
+}>(), {
+  showStatus: true
+});
 
 // 定义事件
 defineEmits<{
@@ -56,15 +55,25 @@ defineEmits<{
 
 <style scoped>
 .chat-list {
-  margin: 8px 16px 16px;
+  margin: 8px 0 16px;
+  background-color: transparent;
 }
 
 .chat-item {
   display: flex;
   padding: 16px;
   margin-bottom: 8px;
-  border-bottom: 1px solid #ebedf0;
+  border-bottom: 1px solid rgba(235, 237, 240, 0.5);
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.chat-item:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .chat-item:last-child {
@@ -135,10 +144,15 @@ defineEmits<{
 .tag {
   font-size: var(--font-size-sm, 10px);
   color: #1989fa;
-  background-color: #ecf5ff;
+  background-color: rgba(236, 245, 255, 0.8);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Noto Sans SC', sans-serif;
+}
+
+:deep(.van-cell-group) {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 :deep(.van-cell-group__title) {
@@ -146,4 +160,4 @@ defineEmits<{
   font-family: 'Noto Sans SC', sans-serif !important;
   font-size: var(--font-size-md, 16px) !important;
 }
-</style> 
+</style>
