@@ -1,10 +1,6 @@
 <template>
   <div class="logout-section">
-    <van-button 
-      block 
-      class="logout-btn" 
-      @click="showConfirm"
-    >
+    <van-button block class="logout-btn" @click="showConfirm">
       退出登录
     </van-button>
 
@@ -16,9 +12,7 @@
       cancel-button-color="#646566"
       @confirm="onLogout"
     >
-      <div class="logout-dialog-content">
-        确定要退出登录吗？
-      </div>
+      <div class="logout-dialog-content">确定要退出登录吗？</div>
     </van-dialog>
   </div>
 </template>
@@ -77,4 +71,4 @@ const onLogout = (): void => {
 :deep(.van-button--default) {
   border-radius: 4px;
 }
-</style> 
+</style>
