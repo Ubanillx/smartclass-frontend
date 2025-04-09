@@ -12,23 +12,23 @@
       <notice-card :notices="notices" />
 
       <!-- AI助手列表 -->
-      <ai-assistant-list 
-        :assistants="aiAssistants" 
-        @chat="startChat" 
-        @more="router.push('/chat?tab=intelligence')" 
+      <ai-assistant-list
+        :assistants="aiAssistants"
+        @chat="startChat"
+        @more="router.push('/chat?tab=intelligence')"
       />
 
       <!-- 热门课程模块 -->
       <component
         :is="PopularCoursesRaw"
-        :courses="popularCourses"
+        :courses="filteredPopularCourses"
         @select="viewCourseDetail"
         @more="router.push('/popular-courses')"
       />
 
       <!-- 每日单词模块 -->
-      <daily-word-card 
-        :word="dailyWord" 
+      <daily-word-card
+        :word="dailyWord"
         :categories="wordCategories"
         @update:word="dailyWord = $event"
         @more="router.push('/vocabulary')"
@@ -36,19 +36,12 @@
       />
 
       <!-- 精美文章模块 -->
-      <article-list 
-        :articles="articles" 
-        @more="router.push('/articles')" 
-      />
+      <article-list :articles="articles" @more="router.push('/articles')" />
     </van-pull-refresh>
 
     <!-- 浮动加号按钮 -->
     <div class="float-button">
-      <van-icon 
-        name="plus" 
-        size="24" 
-        @click="showActionSheet = true" 
-      />
+      <van-icon name="plus" size="24" @click="showActionSheet = true" />
     </div>
 
     <!-- 快捷操作面板 -->
@@ -63,17 +56,27 @@
 </template>
 
 <script setup>
-import { ref, markRaw, onMounted } from 'vue';
+import { ref, markRaw, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import SearchBar from '../components/SearchBar.vue';
-import { 
-  NoticeCard, 
-  AiAssistantList, 
+import {
+  NoticeCard,
+  AiAssistantList,
   PopularCourses,
-  DailyWordCard, 
-  ArticleList 
+  DailyWordCard,
+  ArticleList,
 } from '../components/Home';
+import { 
+  mockNotices, 
+  mockPopularCourses, 
+  vocabularyCategories,
+  dailyWords,
+  getRandomArticles,
+  getRandomWord,
+} from '../api/mock';
+import { useCollectedWordsStore } from '../stores/collectedWordsStore';
+import { AiAvatarControllerService } from '../services/services/AiAvatarControllerService.ts';
 
 // 使用markRaw包装组件，防止被转换为响应式对象
 const PopularCoursesRaw = markRaw(PopularCourses);
@@ -82,166 +85,119 @@ const router = useRouter();
 const searchText = ref('');
 const showActionSheet = ref(false);
 const refreshing = ref(false);
+const collectedWordsStore = useCollectedWordsStore();
 
-// Mock 公告数据
-const notices = ref([
-  {
-    id: 1,
-    title: '新功能上线：AI 口语助手',
-    date: '2024-03-15',
-    content: '我们很高兴地宣布，全新的 AI 口语助手功能现已上线！这个功能将帮助您提升口语水平，提供实时发音纠正和对话练习。欢迎体验并提供反馈。'
-  },
-  {
-    id: 2,
-    title: '系统维护通知',
-    date: '2024-03-14',
-    content: '为了给您提供更好的服务，系统将于本周日凌晨 2:00-4:00 进行例行维护，期间可能影响部分功能的使用。给您带来的不便敬请谅解。'
-  },
-  {
-    id: 3,
-    title: '课程更新预告',
-    date: '2024-03-13',
-    content: '下周将更新商务英语系列课程，包含电子邮件写作、商务谈判等实用主题。敬请期待！'
-  }
-]);
+// 设置公告数据
+const notices = ref(mockNotices);
 
-// Mock 每日单词数据
-const dailyWord = ref({
-  text: 'serendipity',
-  phonetic: 'ˌserənˈdɪpəti',
-  translation: '意外发现美好事物的能力',
-  example: 'Finding this cafe was pure serendipity.',
-  isCollected: false,
-  meanings: [
-    {
-      partOfSpeech: 'n.',
-      definition: '意外发现美好事物的能力',
-      example: 'The discovery of penicillin was a perfect example of serendipity.'
-    }
-  ]
+// 设置热门课程数据
+const popularCourses = ref(mockPopularCourses.map(course => markRaw(course)));
+
+// 筛选热门课程（选取每个学科中最热门的课程）
+const filteredPopularCourses = computed(() => {
+  // 获取不同的学科
+  const subjects = [...new Set(popularCourses.value.map(course => course.subject))];
+  
+  // 从每个学科中选择一个课程（按studentsCount排序）
+  const topCourses = subjects
+    .map(subject => {
+      const subjectCourses = popularCourses.value
+        .filter(course => course.subject === subject)
+        .sort((a, b) => b.studentsCount - a.studentsCount);
+      
+      return subjectCourses[0]; // 返回该学科中最热门的课程
+    })
+    .filter(Boolean)
+    .slice(0, 3); // 最多展示3个
+  
+  return topCourses;
 });
 
-// Mock 单词分类数据
-const wordCategories = ref([
-  {
-    id: 1,
-    name: '商务',
-    icon: 'shop-o',
-    path: '/vocabulary/business'
-  },
-  {
-    id: 2,
-    name: '日常',
-    icon: 'clock-o',
-    path: '/vocabulary/daily'
-  },
-  {
-    id: 3,
-    name: '考试',
-    icon: 'records',
-    path: '/vocabulary/exam'
-  },
-  {
-    id: 4,
-    name: '生词本',
-    icon: 'bookmark-o',
-    path: '/vocabulary/collected'
-  }
-]);
+// 设置每日单词数据（随机获取）
+const dailyWord = ref(getRandomWord());
 
-// Mock 文章数据
-const articles = ref([
-  {
-    id: 1,
-    title: 'The Power of Positive Thinking',
-    brief: 'How optimism can change your life and lead to success...',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    category: '励志',
-    readTime: 5,
-    difficulty: '初级',
-    content: `<p>Positive thinking is more than just a catchphrase. It changes the way we behave. And I firmly believe that when I am positive, it not only makes me better, but it also makes those around me better.</p>
-              <p>I think that's something that we all have within us...</p>`
-  },
-  {
-    id: 2,
-    title: 'A Journey Through Time',
-    brief: 'Exploring the history of human civilization...',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    category: '历史',
-    readTime: 8,
-    difficulty: '中级',
-    content: '文章内容...'
-  },
-  {
-    id: 3,
-    title: 'The Future of Technology',
-    brief: 'What innovations will shape our tomorrow...',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    category: '科技',
-    readTime: 6,
-    difficulty: '高级',
-    content: '文章内容...'
-  }
-]);
+// 检查单词是否已收藏
+const checkCollectedStatus = () => {
+  // 使用store的方法检查单词是否已收藏
+  const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
+  dailyWord.value.isCollected = isCollected;
+};
 
-// Mock AI助手数据
-const aiAssistants = ref([
-  {
-    id: 1,
-    name: '英语教师 Emma',
-    description: '专业英语教学，语法讲解，口语指导',
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
-  },
-  {
-    id: 2,
-    name: '口语伙伴 Mike',
-    description: '日常英语对话，地道表达，场景练习',
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
-  },
-  {
-    id: 3,
-    name: '写作助手 Sarah',
-    description: '作文指导，文章润色，写作技巧',
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
-  }
-]);
+// 设置美文数据（随机获取4篇）
+const articles = ref(getRandomArticles(4));
 
-// Mock 热门课程数据
-const popularCourses = ref([
-  markRaw({
-    id: 1,
-    title: '商务英语口语进阶',
-    brief: '掌握商务场景下的专业英语表达，提升职场竞争力',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    tag: '热门',
-    tagColor: '#ee0a24',
-    level: '中级',
-    duration: 45,
-    studentsCount: 1280
-  }),
-  markRaw({
-    id: 2,
-    title: '雅思写作高分技巧',
-    brief: '针对雅思写作常见题型的分析与解答，助你轻松突破6.5分',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    tag: '推荐',
-    tagColor: '#1989fa',
-    level: '高级',
-    duration: 60,
-    studentsCount: 968
-  }),
-  markRaw({
-    id: 3,
-    title: '日常英语口语100句',
-    brief: '覆盖生活中最常用的英语表达，让你轻松应对各种场景',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    tag: '入门',
-    tagColor: '#07c160',
-    level: '初级',
-    duration: 30,
-    studentsCount: 2156
-  })
-]);
+// 获取单词分类数据（使用mock.ts中的数据）
+const wordCategories = ref(vocabularyCategories);
+
+// 添加生词本分类（如果不存在）
+const ensureCollectedCategory = () => {
+  const collectedCategory = wordCategories.value.find(
+    (category) => category.path === '/vocabulary/collected'
+  );
+  
+  if (!collectedCategory) {
+    wordCategories.value.push({
+      id: wordCategories.value.length,
+      name: '生词本',
+      icon: 'bookmark-o',
+      path: '/vocabulary/collected',
+    });
+  }
+};
+
+// AI助手数据
+const aiAssistants = ref([]);
+
+// 从后端获取智慧体数据
+const fetchAiAssistants = async () => {
+  try {
+    const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
+    
+    if (response.code === 0 && response.data) {
+      console.log('获取到的智慧体列表:', response.data);
+      
+      // 将后端数据转换为前端需要的格式
+      aiAssistants.value = response.data.map(avatar => ({
+        id: avatar.id || 0,
+        name: avatar.name || '未命名智慧体',
+        description: avatar.description || '',
+        avatar: avatar.avatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      }));
+    } else {
+      console.error('获取智慧体列表失败:', response);
+      // 使用默认数据作为备用
+      setDefaultAiAssistants();
+    }
+  } catch (error) {
+    console.error('加载智慧体信息失败:', error);
+    // 使用默认数据作为备用
+    setDefaultAiAssistants();
+  }
+};
+
+// 设置默认的智慧体数据（当API请求失败时使用）
+const setDefaultAiAssistants = () => {
+  aiAssistants.value = [
+    {
+      id: 1,
+      name: '英语教师 Emma',
+      description: '专业英语教学，语法讲解，口语指导',
+      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    },
+    {
+      id: 2,
+      name: '口语伙伴 Mike',
+      description: '日常英语对话，地道表达，场景练习',
+      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    },
+    {
+      id: 3,
+      name: '写作助手 Sarah',
+      description: '作文指导，文章润色，写作技巧',
+      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    },
+  ];
+};
 
 // 快捷操作列表
 const actions = [
@@ -261,14 +217,15 @@ const onSearch = (text) => {
 const startChat = (assistant) => {
   router.push({
     path: '/chat-detail',
-    query: { assistantId: assistant.id }
+    query: { assistantId: assistant.id },
   });
 };
 
 // 查看课程详情
 const viewCourseDetail = (course) => {
   router.push({
-    path: `/course-study/${course.id}`
+    path: '/popular-courses',
+    query: { showDetail: 'true', courseId: course.id }
   });
 };
 
@@ -293,6 +250,18 @@ const onActionSelect = (action) => {
 // 下拉刷新
 const onRefresh = () => {
   console.log('下拉刷新，重新获取首页数据');
+
+  // 重新获取随机美文
+  articles.value = getRandomArticles(4);
+  
+  // 重新获取随机单词
+  dailyWord.value = getRandomWord();
+  
+  // 检查单词收藏状态
+  checkCollectedStatus();
+  
+  // 重新获取智慧体数据
+  fetchAiAssistants();
   
   // 模拟网络请求延迟
   setTimeout(() => {
@@ -304,6 +273,21 @@ const onRefresh = () => {
 // 页面加载时获取数据
 onMounted(() => {
   console.log('Home页面加载，开始获取数据');
+  
+  // 确保有生词本分类
+  ensureCollectedCategory();
+  
+  // 获取随机单词
+  dailyWord.value = getRandomWord();
+  
+  // 检查单词收藏状态
+  checkCollectedStatus();
+  
+  // 获取随机美文
+  articles.value = getRandomArticles(4);
+  
+  // 获取智慧体数据
+  fetchAiAssistants();
 });
 </script>
 
@@ -311,10 +295,13 @@ onMounted(() => {
 .home {
   padding: 16px;
   padding-bottom: 66px;
+  background-color: #F2F7FD;
 }
 
 .search-bar {
   margin-bottom: 16px;
+  position: relative;
+  z-index: 10;
 }
 
 .article-list {
@@ -348,4 +335,14 @@ onMounted(() => {
 :deep(.van-pull-refresh__track) {
   padding-bottom: 16px;
 }
-</style> 
+
+/* 为圆角组件添加过渡动画效果 */
+:deep(.van-cell-group) {
+  transition: all 0.3s ease;
+}
+
+:deep(.van-cell-group:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(100, 101, 102, 0.12);
+}
+</style>
