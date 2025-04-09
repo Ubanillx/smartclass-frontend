@@ -1,15 +1,16 @@
 import CourseCategories from './CourseCategories.vue';
-import CourseItem from './CourseItem.vue';
 import CourseList from './CourseList.vue';
+import CourseItem from './CourseItem.vue';
 import CourseDetail from './CourseDetail.vue';
 import CourseStudy from './CourseStudy.vue';
 
 export {
   CourseCategories,
-  CourseItem,
   CourseList,
+  CourseItem,
   CourseDetail,
-  CourseStudy
+  CourseStudy,
+  CourseSchedule
 };
 
 export default {
@@ -17,5 +18,6 @@ export default {
   CourseItem,
   CourseList,
   CourseDetail,
-  CourseStudy
-}; 
+  CourseStudy,
+  CourseSchedule
+};

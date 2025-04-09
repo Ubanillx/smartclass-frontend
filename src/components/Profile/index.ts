@@ -13,5 +13,5 @@ export {
   AchievementWall,
   RecentLearning,
   LearningHistory,
-  LogoutButton
-}; 
+  LogoutButton,
+};

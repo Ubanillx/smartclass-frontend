@@ -9,5 +9,5 @@ export {
   AiAssistantList,
   PopularCourses,
   DailyWordCard,
-  ArticleList
-}; 
+  ArticleList,
+};
