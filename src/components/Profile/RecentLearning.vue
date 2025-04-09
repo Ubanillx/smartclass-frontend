@@ -1,6 +1,8 @@
 <template>
-  <van-cell-group inset class="recent-learning">
-    <van-cell title="最近学习" />
+  <div class="recent-learning">
+    <div class="learning-header">
+      <h3 class="section-title">最近学习</h3>
+    </div>
     <div class="learning-list">
       <div v-for="item in learningItems" :key="item.id" class="learning-item">
         <div class="image-container" :class="item.bgClass">
@@ -9,9 +11,9 @@
         <div class="learning-info">
           <div class="learning-name">{{ item.name }}</div>
           <div class="learning-progress">
-            <van-progress 
-              :percentage="item.progress" 
-              size="small" 
+            <van-progress
+              :percentage="item.progress"
+              size="small"
               :stroke-width="6"
               :pivot-text="`${item.progress}%`"
             />
@@ -19,7 +21,7 @@
         </div>
       </div>
     </div>
-  </van-cell-group>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,10 +46,26 @@ defineProps<{
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  padding: 16px;
+}
+
+.learning-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: var(--font-size-md);
+  color: #323233;
+  margin: 0;
 }
 
 .learning-list {
-  padding: 4px 16px 10px;
+  padding: 0;
 }
 
 .learning-item {
@@ -101,7 +119,18 @@ defineProps<{
 }
 
 :deep(.van-cell) {
-  padding: 10px 16px;
+  padding: 10px 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+:deep(.van-cell:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.van-cell::after) {
+  display: none !important;
 }
 
 :deep(.van-progress__pivot) {
@@ -135,4 +164,4 @@ defineProps<{
 .bg-yellow {
   background-color: rgba(255, 205, 50, 0.1);
 }
-</style> 
+</style>
