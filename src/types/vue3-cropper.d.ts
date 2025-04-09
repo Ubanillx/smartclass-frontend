@@ -1,6 +1,6 @@
 declare module 'vue3-cropper' {
   import { DefineComponent } from 'vue';
-  
+
   interface CropperProps {
     imagePath: string;
     fileType?: 'base64' | 'blob';
@@ -13,12 +13,21 @@ declare module 'vue3-cropper' {
     maxImgSize?: number | null;
     showToolbar?: boolean;
   }
-  
+
   interface CropperEvents {
     save: (result: string | Blob) => void;
     cancel: () => void;
   }
-  
-  const Cropper: DefineComponent<CropperProps, {}, any, {}, {}, {}, {}, CropperEvents>;
+
+  const Cropper: DefineComponent<
+    CropperProps,
+    {},
+    any,
+    {},
+    {},
+    {},
+    {},
+    CropperEvents
+  >;
   export default Cropper;
-} 
+}

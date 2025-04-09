@@ -11,7 +11,6 @@ export type UserLearningStats = {
     learningDays?: number;
     level?: number;
     nextLevelExp?: number;
-    nickname?: string;
     totalBadges?: number;
     totalCheckIn?: number;
     totalPoints?: number;

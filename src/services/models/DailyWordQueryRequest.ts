@@ -3,13 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DailyWordQueryRequest = {
+    adminId?: number;
     category?: string;
+    createTime?: string;
     current?: number;
     difficulty?: number;
     id?: number;
     pageSize?: number;
-    publishDate?: string;
-    searchText?: string;
+    publishDateEnd?: string;
+    publishDateStart?: string;
     sortField?: string;
     sortOrder?: string;
     translation?: string;

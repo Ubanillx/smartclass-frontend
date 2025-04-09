@@ -9,6 +9,7 @@ export type DailyArticleUpdateRequest = {
     coverImage?: string;
     difficulty?: number;
     id?: number;
+    likeCount?: number;
     publishDate?: string;
     readTime?: number;
     source?: string;
@@ -16,5 +17,6 @@ export type DailyArticleUpdateRequest = {
     summary?: string;
     tags?: string;
     title?: string;
+    viewCount?: number;
 };
 

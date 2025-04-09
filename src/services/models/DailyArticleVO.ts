@@ -9,19 +9,15 @@ export type DailyArticleVO = {
     coverImage?: string;
     createTime?: string;
     difficulty?: number;
-    hasLiked?: boolean;
-    hasRead?: boolean;
     id?: number;
     likeCount?: number;
     publishDate?: string;
     readTime?: number;
-    readingProgress?: number;
     source?: string;
     sourceUrl?: string;
     summary?: string;
     tags?: string;
     title?: string;
-    updateTime?: string;
     viewCount?: number;
 };
 

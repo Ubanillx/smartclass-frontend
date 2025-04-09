@@ -3,19 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserVO = {
-    birthday?: string;
-    city?: string;
     createTime?: string;
-    district?: string;
     id?: number;
-    province?: string;
     userAvatar?: string;
-    userEmail?: string;
-    userGender?: number;
     userName?: string;
     userPhone?: string;
     userProfile?: string;
     userRole?: string;
-    wechatId?: string;
 };
 

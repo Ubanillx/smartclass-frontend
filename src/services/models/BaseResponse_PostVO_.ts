@@ -4,7 +4,8 @@
 /* eslint-disable */
 import type { PostVO } from './PostVO.ts';
 export type BaseResponse_PostVO_ = {
-  code?: number;
-  data?: PostVO;
-  message?: string;
+    code?: number;
+    data?: PostVO;
+    message?: string;
 };
+

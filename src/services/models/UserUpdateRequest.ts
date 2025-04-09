@@ -8,6 +8,7 @@ export type UserUpdateRequest = {
     district?: string;
     id?: number;
     province?: string;
+    role?: number;
     userAvatar?: string;
     userEmail?: string;
     userGender?: number;

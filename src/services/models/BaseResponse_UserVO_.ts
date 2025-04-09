@@ -4,7 +4,8 @@
 /* eslint-disable */
 import type { UserVO } from './UserVO.ts';
 export type BaseResponse_UserVO_ = {
-  code?: number;
-  data?: UserVO;
-  message?: string;
+    code?: number;
+    data?: UserVO;
+    message?: string;
 };
+

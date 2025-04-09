@@ -8,6 +8,9 @@ import 'vant/lib/index.css';
 import '../public/icons/iconfont.js';
 import '../public/icons/iconfont.css';
 
+// 设置网页标题
+document.title = '智云星课';
+
 const app = createApp(App);
 const pinia = createPinia();
 

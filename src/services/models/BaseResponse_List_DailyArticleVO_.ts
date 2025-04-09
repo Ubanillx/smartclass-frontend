@@ -4,7 +4,8 @@
 /* eslint-disable */
 import type { DailyArticleVO } from './DailyArticleVO.ts';
 export type BaseResponse_List_DailyArticleVO_ = {
-  code?: number;
-  data?: Array<DailyArticleVO>;
-  message?: string;
+    code?: number;
+    data?: Array<DailyArticleVO>;
+    message?: string;
 };
+

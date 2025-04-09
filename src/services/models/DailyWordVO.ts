@@ -9,14 +9,11 @@ export type DailyWordVO = {
     difficulty?: number;
     example?: string;
     exampleTranslation?: string;
-    hasLearned?: boolean;
     id?: number;
-    learningProgress?: number;
     notes?: string;
     pronunciation?: string;
     publishDate?: string;
     translation?: string;
-    updateTime?: string;
     word?: string;
 };
 
