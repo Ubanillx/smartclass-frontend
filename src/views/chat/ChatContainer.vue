@@ -1,55 +1,63 @@
 <template>
   <div class="chat-container has-tabbar">
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <!-- 搜索栏 -->
-      <search-bar
-        v-model="searchText"
-        placeholder="搜索对话记录"
-        @search="onSearch"
-      />
-
+    <!-- 固定头部区域 -->
+    <div class="fixed-header">
+      <!-- 页面标题区域 -->
+      <div class="header">
+        <div class="page-title">
+          <van-icon name="chat-o" class="title-icon" />
+          <span>对话</span>
+        </div>
+        <div class="header-actions">
+          <van-icon name="search" class="action-icon" @click="handleSearch" />
+        </div>
+      </div>
+      
       <!-- 导航栏 -->
       <div class="nav-tabs">
-        <div 
+        <div
           :class="['nav-tab', { active: activeTab === 'history' }]"
           @click="switchTab('history')"
         >
           历史对话
         </div>
-        <div 
+        <div
           :class="['nav-tab', { active: activeTab === 'intelligence' }]"
           @click="switchTab('intelligence')"
         >
           智慧体中心
         </div>
       </div>
+    </div>
 
-      <!-- 内容区域 -->
-      <div class="tab-content">
-        <!-- 历史对话内容 -->
-        <div v-show="activeTab === 'history'" class="tab-pane">
-          <chat-history-content 
-            :search-text="searchText"
-            @select="handleChatSelect"
-          />
+    <!-- 可滚动内容区域 -->
+    <div class="scrollable-content">
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <!-- 内容区域 -->
+        <div class="tab-content">
+          <!-- 历史对话内容 -->
+          <div v-show="activeTab === 'history'" class="tab-pane">
+            <chat-history-content
+              @select="handleChatSelect"
+            />
+          </div>
+
+          <!-- 智慧体中心内容 -->
+          <div v-show="activeTab === 'intelligence'" class="tab-pane">
+            <intelligence-center-content
+              @select="handleAssistantSelect"
+            />
+          </div>
         </div>
-        
-        <!-- 智慧体中心内容 -->
-        <div v-show="activeTab === 'intelligence'" class="tab-pane">
-          <intelligence-center-content 
-            :search-text="searchText"
-            @select="handleAssistantSelect"
-          />
-        </div>
-      </div>
-    </van-pull-refresh>
+      </van-pull-refresh>
+    </div>
 
     <!-- 新建对话按钮 -->
-    <van-button 
+    <van-button
       v-show="activeTab === 'history'"
-      class="new-chat-btn" 
-      type="primary" 
-      round 
+      class="new-chat-btn"
+      type="primary"
+      round
       icon="plus"
       @click="switchTab('intelligence')"
     >
@@ -62,20 +70,28 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
-import SearchBar from '../../components/SearchBar.vue';
 import ChatHistoryContent from './components/ChatHistoryContent.vue';
 import IntelligenceCenterContent from './components/IntelligenceCenterContent.vue';
 
 const router = useRouter();
 const route = useRoute();
-const searchText = ref('');
 const activeTab = ref('history'); // 默认显示历史对话
 const refreshing = ref(false);
+
+// 搜索功能
+const handleSearch = () => {
+  router.push('/search');
+};
+
+// 更多功能
+const handleMore = () => {
+  showToast('更多功能开发中');
+};
 
 // 下拉刷新
 const onRefresh = () => {
   console.log('下拉刷新，重新获取对话页面数据');
-  
+
   // 模拟网络请求延迟
   setTimeout(() => {
     refreshing.value = false;
@@ -91,9 +107,9 @@ onMounted(() => {
   } else {
     // 如果URL没有有效的tab参数，设置为默认标签并更新URL
     activeTab.value = 'history';
-    router.replace({ 
-      path: route.path, 
-      query: { ...route.query, tab: 'history' } 
+    router.replace({
+      path: route.path,
+      query: { ...route.query, tab: 'history' },
     });
   }
 });
@@ -101,109 +117,146 @@ onMounted(() => {
 // 切换标签页
 const switchTab = (tab: string) => {
   activeTab.value = tab;
-  
+
   // 更新URL参数，但不触发页面刷新
   const query = { ...route.query };
   query.tab = tab; // 设置tab参数为当前标签页
-  
-  router.replace({ 
-    path: route.path, 
-    query 
+
+  router.replace({
+    path: route.path,
+    query,
   });
 };
 
 // 处理对话选择
-const handleChatSelect = (chatId: number, assistantId: number) => {
-  router.push(`/chat-detail?assistantId=${assistantId}`);
+const handleChatSelect = (messageId: string, assistantId: number) => {
+  console.log('选择历史对话:', messageId, '助手ID:', assistantId);
+  router.push({
+    path: `/chat-detail/${assistantId}`,
+    query: { sessionId: messageId }
+  });
 };
 
 // 处理智能助手选择
 const handleAssistantSelect = (assistantId: number) => {
-  router.push(`/chat-detail?assistantId=${assistantId}`);
-};
-
-// 搜索处理
-const onSearch = (text: string) => {
-  console.log('搜索:', text);
-  // 实际应用中这里可能需要从服务器获取搜索结果
+  console.log('选择智能助手:', assistantId);
+  router.push(`/chat-detail/${assistantId}`);
 };
 </script>
 
 <style scoped>
 .chat-container {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
   padding-bottom: 66px;
+  background-color: #F2F7FD;
+  min-height: 100vh;
+  position: relative;
 }
 
-.search-bar {
-  margin-bottom: 0;
+.fixed-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #F2F7FD;
+  padding: 16px 16px 0;
+}
+
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 12px 12px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #323233;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.title-icon {
+  margin-right: 6px;
+  color: #1989fa;
+  font-size: 22px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.action-icon {
+  font-size: 24px;
+  color: #323233;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.85;
+}
+
+.action-icon:active {
+  opacity: 0.6;
+  transform: scale(0.95);
 }
 
 .nav-tabs {
   display: flex;
-  margin-top: 12px;
-  margin-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 16px;
   border-bottom: 1px solid #ebedf0;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
 }
 
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 8px 0;
+  padding: 14px 0;
   font-size: var(--font-size-md, 16px);
   font-weight: 700;
   color: #646566;
   position: relative;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .nav-tab.active {
   color: #1989fa;
+  background-color: transparent;
 }
 
 .nav-tab.active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
+  width: 40%;
   height: 3px;
   background-color: #1989fa;
-  border-radius: 3px;
-}
-
-.tab-content {
-  position: relative;
-  margin-top: -4px;
-}
-
-.tab-pane {
-  width: 100%;
+  border-radius: 3px 3px 0 0;
 }
 
 .new-chat-btn {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: auto;
-  padding: 0 20px;
-  height: 40px;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  right: 16px;
+  bottom: 70px;
+  z-index: 999;
 }
-
-:deep(.van-button__text) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 14px) !important;
-}
-
-:deep(.van-pull-refresh) {
-  min-height: calc(100vh - 32px);
-}
-
-:deep(.van-pull-refresh__track) {
-  padding-bottom: 16px;
-}
-</style> 
+</style>
