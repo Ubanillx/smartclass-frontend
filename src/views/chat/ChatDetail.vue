@@ -3,20 +3,13 @@
     <!-- 返回按钮 -->
     <back-button :title="assistant.name" class="back-button" />
 
-    <!-- 测试按钮 - 仅用于开发测试 -->
-    <div class="test-button-container">
-      <van-button type="primary" size="small" @click="sendMarkdownTest"
-        >测试Markdown</van-button
-      >
-    </div>
-
     <!-- 消息列表区域 -->
     <div class="message-container">
       <message-list
         :messages="messages"
         :assistant-avatar="assistant.avatar"
-        :user-avatar="userInfo.avatar"
-        :loading="loading"
+        :user-avatar="userInfo?.avatar || ''"
+        :loading="isAITyping"
         :custom-format-message="formatMessage"
       />
     </div>
@@ -25,7 +18,7 @@
     <div class="input-container">
       <chat-input
         v-model="inputMessage"
-        :disabled="loading"
+        :disabled="isAITyping"
         @send="sendMessage"
         @emoji="showEmojiPicker = true"
         @image="uploadImage"
@@ -105,14 +98,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { MessageList, ChatInput } from '../../components/Dialogue';
 import { BackButton } from '../../components/Common';
 import { useUserStore } from '../../stores/userStore';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import { AiAvatarControllerService, AiAvatarChatControllerService } from '../../services';
+import { OpenAPI } from '../../services/core/OpenAPI';
+import type { AiAvatarBriefVO } from '../../services/models/AiAvatarBriefVO';
+import type { ChatMessageAddRequest } from '../../services/models/ChatMessageAddRequest';
+import type { StopStreamingRequest } from '../../services/models/StopStreamingRequest';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 interface UserInfo {
   id: number;
@@ -125,6 +124,7 @@ interface Assistant {
   name: string;
   avatar: string;
   description: string;
+  status?: number;
 }
 
 interface Message {
@@ -137,7 +137,6 @@ interface Message {
 const router = useRouter();
 const route = useRoute();
 const inputMessage = ref('');
-const loading = ref(false);
 const showEmojiPicker = ref(false);
 const showFullscreenInput = ref(false);
 const userStore = useUserStore();
@@ -149,9 +148,8 @@ marked.setOptions({
 });
 
 // 表情列表
-const emojiList = [
+const emojiList = ref([
   '😀',
-  '😃',
   '😄',
   '😁',
   '😆',
@@ -167,21 +165,22 @@ const emojiList = [
   '😍',
   '🥰',
   '😘',
-  '😗',
-  '😙',
-  '😚',
   '😋',
-  '😛',
   '😝',
-  '😜',
-  '🤪',
+  '🤔',
+  '🤫',
+  '🤐',
   '🤨',
-  '🧐',
-  '🤓',
-  '😎',
-  '🤩',
-  '🥳',
-];
+  '😐',
+  '😑',
+  '😶',
+  '😏',
+  '😒',
+  '🙄',
+  '😬',
+  '🤥',
+  '😔',
+]);
 
 // 用户信息
 const userInfo = ref<UserInfo>({
@@ -192,47 +191,45 @@ const userInfo = ref<UserInfo>({
 
 // 助手信息
 const assistant = ref<Assistant>({
-  id: Number(route.query.assistantId) || 1,
-  name: '英语教师 Emma',
+  id: Number(route.params.assistantId) || 1,
+  name: 'AI助手',
   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  description: '专业英语教学，语法讲解，口语指导',
+  description: '智能AI助手，可回答各类问题',
 });
 
 // 消息列表
-const messages = ref<Message[]>([
-  {
-    id: 1,
-    type: 'ai',
-    content: '你好！我是你的英语老师Emma。今天我们要学习什么呢？',
-    timestamp: Date.now() - 3600000,
-  },
-  {
-    id: 2,
-    type: 'user',
-    content: '你好！我想学习一些日常英语对话。',
-    timestamp: Date.now() - 3500000,
-  },
-  {
-    id: 3,
-    type: 'ai',
-    content:
-      '太好了！日常对话是提高英语实用能力的好方法。我们可以从简单的问候开始，然后逐渐学习更复杂的对话场景。你有特别想学习的场景吗？比如餐厅点餐、购物或者旅游？',
-    timestamp: Date.now() - 3400000,
-  },
-]);
+const messages = ref<Message[]>([]);
 
-// 初始化用户信息
-onMounted(async () => {
-  // 如果用户信息不存在，尝试获取
-  if (!userStore.userInfo) {
-    await userStore.fetchCurrentUser();
-  }
+// 添加AI消息正在输入的状态
+const isAITyping = ref<boolean>(false);
+const currentAIMessageId = ref<number | null>(null);
 
-  // 更新用户头像
-  if (userStore.userInfo && userStore.userInfo.userAvatar) {
-    userInfo.value.avatar = userStore.userInfo.userAvatar;
+// 会话ID
+const sessionId = ref<string | undefined>(undefined);
+
+// 保存当前的EventSource，以便在需要时关闭
+let currentEventSource: EventSource | null = null;
+
+// 保存当前的stream控制器，以便在需要时中断
+let currentStreamController: AbortController | null = null;
+
+// 更新AI消息内容的辅助函数
+const updateAiMessage = (messageId: number, content: string) => {
+  const messageIndex = messages.value.findIndex(
+    (msg) => msg && msg.id === messageId,
+  );
+  if (messageIndex !== -1 && messages.value[messageIndex]) {
+    messages.value[messageIndex].content = content;
+    
+    // 自动滚动到底部
+    const messagesContainer = document.querySelector('.message-list');
+    if (messagesContainer instanceof HTMLElement) {
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 0);
+    }
   }
-});
+};
 
 // 发送全屏输入框消息
 const sendFullscreenMessage = () => {
@@ -242,192 +239,531 @@ const sendFullscreenMessage = () => {
   }
 };
 
-// 发送测试Markdown消息
-const sendMarkdownTest = () => {
-  // 添加用户消息
-  const userMessage: Message = {
-    id: messages.value.length + 1,
-    type: 'user',
-    content: '请给我一个复杂的Markdown格式示例',
-    timestamp: Date.now(),
-  };
-  messages.value.push(userMessage);
+// 加载历史消息
+const loadChatHistory = async () => {
+  if (!sessionId.value) return;
+  
+  try {
+    const response = await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
+      assistant.value.id,
+      1,
+      50
+    );
+    
+    if (response.code === 0 && response.data) {
+      console.log('获取历史消息成功:', response.data);
+      
+      // 不再替换现有消息，始终保持欢迎消息
+    } else {
+      console.error('获取历史消息失败:', response);
+    }
+  } catch (error) {
+    console.error('获取历史消息失败:', error);
+  }
+};
 
-  // 模拟AI回复
-  loading.value = true;
+// 初始化对话
+const initializeChat = async () => {
+  try {
+    // 创建新会话
+    const aiAvatarId = Number(route.params.assistantId) || 1;
+    const response = await AiAvatarChatControllerService.createSessionUsingPost(aiAvatarId);
+    
+    if (response.code === 0 && response.data) {
+      sessionId.value = response.data;
+      console.log('创建会话成功，会话ID:', sessionId.value);
+      
+      // 不再加载历史消息，确保欢迎消息始终显示
+    } else {
+      showToast('创建会话失败');
+      console.error('创建会话失败:', response);
+    }
+  } catch (error) {
+    showToast('创建会话失败');
+    console.error('创建会话失败:', error);
+  }
+};
 
-  setTimeout(() => {
-    // 复杂的Markdown格式回答示例
-    let aiResponse = `# 英语学习指南：日常对话与实用表达 🌟
+// 获取AI分身信息
+const loadAiAvatarInfo = async () => {
+  try {
+    const aiAvatarId = Number(route.params.assistantId) || 1;
+    const response = await AiAvatarControllerService.getAiAvatarByIdUsingGet(aiAvatarId);
+    
+    if (response.code === 0 && response.data) {
+      console.log('获取AI分身信息成功:', response.data);
+      
+      // 更新AI助手信息
+      assistant.value = {
+        id: response.data.id || aiAvatarId,
+        name: response.data.name || 'AI助手',
+        avatar: response.data.avatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        description: response.data.description || '智能AI助手，可回答各类问题',
+        status: response.data.status,
+      };
+      
+      // 如果已经有欢迎消息，更新它
+      if (messages.value.length > 0 && messages.value[0]?.type === 'ai') {
+        messages.value[0].content = `你好！我是${assistant.value.name}。${assistant.value.description}`;
+      }
+    } else {
+      console.error('获取AI分身信息失败:', response);
+    }
+  } catch (error) {
+    console.error('获取AI分身信息失败:', error);
+  }
+};
 
-## 1. 基础问候语 👋
+// 初始化用户信息
+onMounted(async () => {
+  console.log('ChatDetail 组件挂载');
+  console.log('路由参数:', route.params);
+  
+  // 如果用户信息不存在，尝试获取
+  if (!userStore.userInfo) {
+    await userStore.fetchCurrentUser();
+  }
 
-在英语交流中，恰当的问候是建立良好第一印象的关键。以下是一些常用的问候语：
+  // 更新用户头像
+  if (userStore.userInfo && userStore.userInfo.userAvatar) {
+    userInfo.value.avatar = userStore.userInfo.userAvatar;
+  }
+  
+  // 获取路由中的会话ID参数
+  const routeSessionId = route.query.sessionId as string;
+  
+  // 加载AI分身信息
+  await loadAiAvatarInfo();
 
-* **正式场合**：
-  * Good morning/afternoon/evening, pleased to meet you.
-  * How do you do? (非常正式，通常只在初次见面时使用)
-* **日常场合**：
-  * Hi there! How's it going?
-  * Hey! What's up?
-  * Hello! How are you today?
-
-> 💡 **小贴士**：问候语的选择应根据场合和关系亲密度来决定。与陌生人或长辈交流时，选择更正式的问候方式。
-
-## 2. 常见日常对话场景 🗣️
-
-### 2.1 咖啡店点餐
-
-\`\`\`dialogue
-顾客: Hi, could I get a medium latte, please?
-店员: Sure. Would you like that hot or iced?
-顾客: Hot, please. And could I add a shot of vanilla?
-店员: No problem. Anything else for you today?
-顾客: That's it, thanks.
-店员: That'll be $4.50. Cash or card?
-顾客: Card, please.
-\`\`\`
-
-### 2.2 问路对话
-
-当你需要问路时，可以使用以下表达：
-
-1. Excuse me, could you tell me how to get to the museum?
-2. I'm looking for the nearest subway station. Is it far from here?
-3. Is there a good restaurant around here?
-
-回应方式：
-* It's about 10 minutes' walk in that direction.
-* Take the second right, then go straight ahead.
-* You can't miss it, it's the big building on the left.
-
-## 3. 实用词汇表 📚
-
-| 英文表达 | 中文含义 | 使用场景 | 例句 |
-|---------|---------|---------|------|
-| Excuse me | 打扰一下 | 引起注意/道歉 | Excuse me, is this seat taken? |
-| I'm afraid | 恐怕/遗憾 | 表达歉意/拒绝 | I'm afraid I can't make it tomorrow. |
-| Actually | 实际上 | 纠正/澄清 | Actually, the meeting is at 3 PM, not 2 PM. |
-| I was wondering | 我在想 | 礼貌请求 | I was wondering if you could help me with this. |
-| That makes sense | 有道理 | 表示理解 | Oh, that makes sense. I understand now. |
-
-## 4. 语法要点：现在进行时 ⏳
-
-现在进行时用于表达**正在进行**的动作。
-
-### 构成方式：
-\`\`\`
-主语 + am/is/are + 动词ing形式
-\`\`\`
-
-### 示例：
-* I **am studying** English now.
-* She **is working** on a new project.
-* They **are having** dinner at the restaurant.
-
-### 否定形式：
-* I **am not** (I'm not) studying English now.
-* She **is not** (isn't) working on a new project.
-* They **are not** (aren't) having dinner at the restaurant.
-
-## 5. 发音技巧：连读 🔊
-
-英语中的连读是提高口语流利度的关键技巧之一。
-
-例如：
-* "What are you doing?" 通常发音为 "Wha**t_a**re you doing?"
-* "Turn it off" 通常发音为 "Tur**n_i**t off"
-
-<details>
-<summary>**点击展开更多连读规则**</summary>
-
-1. 辅音+元音：两个词之间，前一个词以辅音结尾，后一个词以元音开头
-   * get_up, take_it, read_a book
-
-2. 相同辅音连读：两个相同的辅音相遇时，只发一次音
-   * stop_pushing (发音类似于 "sto pushing")
-</details>
-
-## 6. 学习资源推荐 📱
-
-以下是一些优质的英语学习资源：
-
-* **应用程序**：
-  - [Duolingo](https://www.duolingo.com) - 游戏化学习体验
-  - [HelloTalk](https://www.hellotalk.com) - 语言交换平台
-
-* **YouTube频道**：
-  - [English with Lucy](https://www.youtube.com/c/EnglishwithLucy)
-  - [Rachel's English](https://www.youtube.com/c/rachelsenglish)
-
-* **播客**：
-  - 6 Minute English (BBC)
-  - All Ears English
-
-## 7. 每日练习计划 📝
-
-为了有效提高英语水平，建议遵循以下学习计划：
-
-| 时间 | 活动 | 目标 |
-|------|------|------|
-| 早晨 | 词汇学习 | 学习10个新单词 |
-| 午餐时 | 听力练习 | 听一集英语播客 |
-| 晚上 | 口语练习 | 大声朗读或与伙伴对话 |
-
----
-
-希望这些资料对你的英语学习有所帮助！如果有任何问题，随时向我提问。
-
-![英语学习](https://example.com/english-learning.jpg)
-
-> *"Language is the road map of a culture. It tells you where its people come from and where they are going."* — Rita Mae Brown`;
-
-    const aiMessage: Message = {
-      id: messages.value.length + 1,
+  if (routeSessionId) {
+    // 如果URL中有sessionId参数，说明是从历史对话列表进入
+    console.log('从历史对话列表进入，会话ID:', routeSessionId);
+    sessionId.value = routeSessionId;
+    
+    // 获取历史消息
+    try {
+      const response = await AiAvatarChatControllerService.getChatHistoryUsingGet(sessionId.value);
+      
+      if (response.code === 0 && response.data) {
+        console.log('获取历史消息成功:', response.data);
+        
+        // 转换消息格式并显示历史消息
+        messages.value = response.data.map((msg: any) => ({
+          id: msg.id || Date.now(),
+          type: msg.messageType === 'user' ? 'user' : 'ai',
+          content: msg.content || '',
+          timestamp: msg.createTime ? new Date(msg.createTime).getTime() : Date.now(),
+        }));
+      } else {
+        console.error('获取历史消息失败:', response);
+        // 显示欢迎消息作为后备
+        const welcomeMessage: Message = {
+          id: Date.now(),
+          type: 'ai',
+          content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
+          timestamp: Date.now(),
+        };
+        messages.value = [welcomeMessage];
+      }
+    } catch (error) {
+      console.error('获取历史消息失败:', error);
+      // 显示欢迎消息作为后备
+      const welcomeMessage: Message = {
+        id: Date.now(),
+        type: 'ai',
+        content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
+        timestamp: Date.now(),
+      };
+      messages.value = [welcomeMessage];
+    }
+  } else {
+    // 如果没有sessionId参数，说明是新建对话
+    console.log('新建对话');
+    
+    // 立即显示欢迎消息，不等待任何网络请求
+    const welcomeMessage: Message = {
+      id: Date.now(),
       type: 'ai',
-      content: aiResponse,
+      content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
       timestamp: Date.now(),
     };
-    messages.value.push(aiMessage);
-    loading.value = false;
-  }, 1000);
+    messages.value = [welcomeMessage];
+    
+    // 创建新会话
+    initializeChat();
+  }
+});
+
+// 停止流式响应
+const stopStreamingResponse = async () => {
+  // 中断当前的SSE连接
+  if (currentStreamController) {
+    currentStreamController.abort();
+    currentStreamController = null;
+  }
+  
+  // 关闭现有的EventSource连接
+  if (currentEventSource) {
+    currentEventSource.close();
+    currentEventSource = null;
+  }
+  
+  if (sessionId.value) {
+    try {
+      // 调用API停止流式响应
+      const stopRequest: StopStreamingRequest = {
+        aiAvatarId: assistant.value.id
+      };
+      await AiAvatarChatControllerService.stopStreamingResponseUsingPost(stopRequest);
+    } catch (error) {
+      console.error('停止流式响应失败:', error);
+    } finally {
+      isAITyping.value = false;
+      currentAIMessageId.value = null;
+    }
+  } else {
+    isAITyping.value = false;
+    currentAIMessageId.value = null;
+  }
 };
 
 // 发送消息
 const sendMessage = async (text: string) => {
-  if (!text.trim()) return;
+  if (!text.trim() || isAITyping.value) return;
+
+  // 如果有正在进行的请求，先停止
+  if (currentEventSource || currentStreamController) {
+    await stopStreamingResponse();
+  }
 
   // 添加用户消息
   const userMessage: Message = {
-    id: messages.value.length + 1,
+    id: Date.now(),
     type: 'user',
     content: text,
     timestamp: Date.now(),
   };
   messages.value.push(userMessage);
 
-  // 模拟AI回复
-  loading.value = true;
-  try {
-    // 这里可以添加实际的API调用
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  // 清空输入框
+  inputMessage.value = '';
+  
+  // 设置AI正在输入状态
+  isAITyping.value = true;
+  
+  // 创建AI消息占位
+  const aiMessageId = Date.now() + 1;
+  currentAIMessageId.value = aiMessageId;
+  const aiMessage: Message = {
+    id: aiMessageId,
+    type: 'ai',
+    content: '',
+    timestamp: Date.now(),
+  };
+  messages.value.push(aiMessage);
 
-    // 简单的回复，可以根据需要修改为Markdown格式
-    const aiMessage: Message = {
-      id: messages.value.length + 1,
-      type: 'ai',
-      content: `这是对"${text}"的回复。你可以点击上方的"测试Markdown"按钮来查看复杂的Markdown格式示例。`,
-      timestamp: Date.now(),
+  try {
+    // 创建会话（如果尚未创建）
+    if (!sessionId.value) {
+      const sessionResponse = await AiAvatarChatControllerService.createSessionUsingPost(assistant.value.id);
+      if (sessionResponse.code === 0 && sessionResponse.data) {
+        sessionId.value = sessionResponse.data;
+        console.log('创建新会话ID:', sessionId.value);
+      } else {
+        throw new Error('创建会话失败');
+      }
+    }
+    
+    // 准备消息请求
+    const messageRequest: ChatMessageAddRequest = {
+      aiAvatarId: assistant.value.id,
+      content: text,
+      sessionId: sessionId.value || '',
+      messageType: 'user',
     };
-    messages.value.push(aiMessage);
+
+    console.log('发送消息请求:', messageRequest);
+    
+    // 创建控制器
+    const controller = new AbortController();
+    currentStreamController = controller;
+    
+    // 保存消息内容变量
+    let content = '';
+    
+    // 获取API基础URL
+    const apiUrl = `${OpenAPI.BASE}/api/chat/message/stream`;
+    
+    console.log('开始流式请求');
+    
+    // 使用fetchEventSource发起POST请求获取SSE流
+    await fetchEventSource(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(messageRequest),
+      signal: controller.signal,
+      credentials: 'include', // 包含cookies，确保会话认证信息被发送
+      
+      // 处理连接打开事件
+      async onopen(response) {
+        console.log('SSE流式连接已打开, 状态:', response.status);
+        
+        // 判断是否连接成功
+        if (response.ok && response.headers.get('content-type')?.includes('text/event-stream')) {
+          console.log('SSE流式连接已建立成功');
+          // 打印头信息，辅助调试
+          response.headers.forEach((value, name) => {
+            console.log(`响应头 ${name}: ${value}`);
+          });
+          return; // 连接成功
+        } else if (response.status === 401 || response.status === 403) {
+          // 未授权或禁止访问（未登录）
+          console.error('用户未登录或登录已过期:', response.status);
+          showToast('登录已过期，请重新登录');
+          
+          // 清除本地登录状态
+          userStore.logout();
+          
+          // 重定向到登录页面，可以保存当前路径用于登录后返回
+          router.push({
+            path: '/login',
+            query: { redirect: router.currentRoute.value.fullPath }
+          });
+          
+          throw new Error(`未登录: ${response.status}`);
+        } else if (response.status === 404) {
+          // 会话不存在，需要重新创建会话
+          console.error('会话不存在，将重新创建会话:', response.status);
+          
+          // 将sessionId设为undefined，使下次发送消息时创建新会话
+          sessionId.value = undefined;
+          
+          throw new Error('会话不存在，请重新发送消息');
+        } else {
+          // 其他错误
+          console.error('SSE连接失败:', response.status);
+          throw new Error(`SSE连接失败: ${response.status}`);
+        }
+      },
+      
+      // 处理消息事件
+      onmessage(event) {
+        try {
+          // 检查数据是否为空
+          if (!event.data || event.data.trim() === '') {
+            console.log('收到空SSE消息，跳过处理');
+            return;
+          }
+          
+          // 记录原始消息内容
+          console.log('SSE原始消息:', event.data.substring(0, 100) + (event.data.length > 100 ? '...' : ''));
+          
+          // 解析消息数据
+          const data = JSON.parse(event.data);
+          console.log('收到SSE消息:', data);
+          
+          // 根据消息格式提取内容
+          if (data) {
+            // 检查是否包含会话ID信息，如果有则更新会话ID
+            if (data.event === 'message_end' && data.conversation_id) {
+              console.log('检测到会话结束事件，包含会话ID:', data.conversation_id);
+              console.log('message_end完整内容:', JSON.stringify(data));
+              if (data.conversation_id !== sessionId.value) {
+                console.log('更新会话ID:', sessionId.value, '->', data.conversation_id);
+                sessionId.value = data.conversation_id;
+              }
+              return; // message_end 事件不包含内容，直接返回
+            }
+
+            // 跳过系统消息类型，如"SSE连接已建立"等提示信息
+            if (data.message === "SSE连接已建立" || data.content === "SSE连接已建立" || 
+                data.data === "会话已创建" || data.message === "会话已创建" || 
+                data.content === "会话已创建" || data.message === "流式响应已完成" || 
+                data.content === "流式响应已完成" || data.data === "流式响应已完成" ||
+                /流式响应已完成/.test(JSON.stringify(data)) || /SSE连接已建立/.test(JSON.stringify(data)) ||
+                /会话已创建/.test(JSON.stringify(data))) {
+              console.log('跳过系统消息:', data);
+              return;
+            }
+
+            // 检查消息体是否包含内容 - 这里需要详细记录每种消息格式，帮助调试
+            console.log('消息类型:', data.event);
+            
+            // 检查message事件的各种可能格式
+            if (data.event === 'message') {
+              // 打印完整的消息对象，用于调试
+              console.log('消息完整内容:', JSON.stringify(data));
+              
+              if (data.answer) {
+                // Dify格式：{event: 'message', answer: 'content'}
+                console.log('检测到answer字段内容:', data.answer);
+                content += data.answer;
+              } else if (data.data) {
+                // 标准格式：{event: 'message', data: 'content'}
+                console.log('检测到data字段内容:', data.data);
+                content += data.data;
+              } else if (data.text) {
+                // 可能的格式：{event: 'message', text: 'content'}
+                console.log('检测到text字段内容:', data.text);
+                content += data.text;
+              } else if (data.body) {
+                // 可能的格式：{event: 'message', body: 'content'} or {event: 'message', body: {text: 'content'}}
+                if (typeof data.body === 'string') {
+                  console.log('检测到body字段(string)内容:', data.body);
+                  content += data.body;
+                } else if (data.body && data.body.text) {
+                  console.log('检测到body.text字段内容:', data.body.text);
+                  content += data.body.text;
+                } else if (data.body && data.body.content) {
+                  console.log('检测到body.content字段内容:', data.body.content);
+                  content += data.body.content;
+                }
+              } else {
+                // 尝试查找消息对象中的文本内容字段
+                const possibleTextFields = ['text', 'content', 'message', 'value', 'chunk'];
+                let foundText = false;
+                
+                for (const field of possibleTextFields) {
+                  if (data[field] && typeof data[field] === 'string') {
+                    console.log(`检测到${field}字段内容:`, data[field]);
+                    content += data[field];
+                    foundText = true;
+                    break;
+                  }
+                }
+                
+                if (!foundText) {
+                  console.log('message事件但未找到内容字段，可用字段:', Object.keys(data));
+                }
+              }
+            } else if (data.answer) {
+              // 简化的Dify格式：{answer: 'content'}
+              console.log('检测到直接的answer字段:', data.answer);
+              content += data.answer;
+            } else if (data.choices && data.choices[0]?.delta?.content) {
+              // 类ChatGPT格式：{choices: [{delta: {content: 'content'}}]}
+              content += data.choices[0].delta.content;
+            } else if (data.content) {
+              // 简单格式：{content: 'content'}
+              content += data.content;
+            } else if (typeof data === 'string') {
+              // 纯文本格式
+              content += data;
+            } else {
+              // 尝试查找对象中的任何可能的文本内容
+              const possibleTextFields = ['text', 'content', 'message', 'value', 'chunk', 'data'];
+              let foundText = false;
+              
+              for (const field of possibleTextFields) {
+                if (data[field] && typeof data[field] === 'string') {
+                  console.log(`检测到${field}字段内容:`, data[field]);
+                  content += data[field];
+                  foundText = true;
+                  break;
+                }
+              }
+              
+              if (!foundText) {
+                console.log('未识别的消息格式，可用字段:', Object.keys(data));
+              }
+            }
+            
+            // 更新AI消息内容
+            if (content) {
+              updateAiMessage(aiMessageId, content);
+            }
+          }
+        } catch (error) {
+          console.error('解析SSE消息失败:', error, '原始数据:', event.data);
+          
+          // 尝试以纯文本方式处理消息
+          try {
+            if (event.data) {
+              // 如果不是JSON，直接作为纯文本添加
+              content += event.data;
+              updateAiMessage(aiMessageId, content);
+            }
+          } catch (textError) {
+            console.error('以纯文本方式处理消息也失败:', textError);
+          }
+        }
+      },
+      
+      // 处理错误事件
+      onerror(error) {
+        console.error('SSE流式响应错误:', error);
+        // 在消息中显示错误
+        updateAiMessage(aiMessageId, content + "\n\n[连接出现错误，请重试]");
+      },
+      
+      // 处理连接关闭事件
+      onclose() {
+        console.log('SSE流式响应已关闭');
+        currentStreamController = null;
+        isAITyping.value = false;
+        currentAIMessageId.value = null;
+        
+        // 检查响应中是否有新的会话ID
+        console.log('关闭连接时的会话ID:', sessionId.value);
+      }
+    });
+    
+    // 在控制台记录，但不显示给用户
+    console.log('流式响应成功完成');
   } catch (error) {
-    showToast('发送失败，请重试');
     console.error('发送消息失败:', error);
-  } finally {
-    loading.value = false;
-    inputMessage.value = ''; // 清空输入框
+    // 在消息中显示错误
+    updateAiMessage(aiMessageId, "抱歉，发送消息失败，请稍后重试。");
+    
+    // 如果是会话不存在的错误，尝试重新创建会话并重新发送消息
+    if (error instanceof Error && error.message && error.message.includes('会话不存在')) {
+      console.log('检测到会话不存在错误，尝试重新创建会话并重新发送');
+      try {
+        // 创建新会话
+        const sessionResponse = await AiAvatarChatControllerService.createSessionUsingPost(assistant.value.id);
+        if (sessionResponse.code === 0 && sessionResponse.data) {
+          sessionId.value = sessionResponse.data;
+          console.log('创建新会话ID:', sessionId.value);
+          
+          // 更新AI消息提示正在重试
+          updateAiMessage(aiMessageId, "正在重新连接...");
+          
+          // 重新调用sendMessage（去掉第一个已存在的用户消息）
+          messages.value.pop(); // 移除AI消息
+          currentAIMessageId.value = null;
+          isAITyping.value = false;
+          
+          // 等待一小段时间后重试
+          setTimeout(() => {
+            sendMessage(text);
+          }, 1000);
+          
+          return;
+        }
+      } catch (retryError) {
+        console.error('重新创建会话失败:', retryError);
+        updateAiMessage(aiMessageId, "抱歉，重新连接失败，请刷新页面重试。");
+      }
+    }
+    
+    isAITyping.value = false;
+    currentAIMessageId.value = null;
   }
 };
+
+// 组件销毁前停止所有请求
+onBeforeUnmount(() => {
+  if (currentEventSource) {
+    currentEventSource.close();
+    currentEventSource = null;
+  }
+  
+  if (sessionId.value) {
+    stopStreamingResponse();
+  }
+});
 
 // 格式化时间
 const formatTime = (timestamp: number): string => {
@@ -479,17 +815,11 @@ const startVoiceRecord = (): void => {
   flex-shrink: 0;
 }
 
-.test-button-container {
-  padding: 8px 16px;
-  display: flex;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .message-container {
   flex: 1;
   overflow: hidden;
   position: relative;
+  padding-bottom: 0;
 }
 
 .input-container {
@@ -507,7 +837,7 @@ const startVoiceRecord = (): void => {
 :deep(.message-list) {
   height: 100%;
   overflow-y: auto;
-  padding-bottom: 16px;
+  padding-bottom: 30px;
 }
 
 /* 全屏输入框样式 */
@@ -614,12 +944,14 @@ const startVoiceRecord = (): void => {
 :deep(.message-item.ai .message-content) {
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 4px;
 }
 
 /* 增强Markdown样式 */
 :deep(.markdown-body) {
   font-size: 14px;
   line-height: 1.6;
+  margin: 0;
 }
 
 :deep(.markdown-body h1),
@@ -647,7 +979,7 @@ const startVoiceRecord = (): void => {
 }
 
 :deep(.markdown-body p) {
-  margin: 8px 0;
+  margin: 8px;
 }
 
 :deep(.markdown-body ul),
