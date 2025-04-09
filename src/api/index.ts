@@ -1,7 +1,12 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+} from 'axios';
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: 'http://10.0.124.181:12345/api',
+  baseURL: 'http://10.16.62.100:12345/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +23,7 @@ apiClient.interceptors.request.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 响应拦截器
@@ -32,7 +37,7 @@ apiClient.interceptors.response.use(
       window.location.href = '/login';
     }
     return Promise.reject(error);
-  }
+  },
 );
 
-export default apiClient; 
+export default apiClient;
