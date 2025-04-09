@@ -1,6 +1,5 @@
 <template>
   <div class="chat-history has-tabbar">
-
     <!-- 搜索栏 -->
     <search-bar
       v-model="searchText"
@@ -10,14 +9,17 @@
 
     <!-- 导航栏 -->
     <div class="nav-tabs">
-      <div 
+      <div
         :class="['nav-tab', { active: $route.path === '/chat/history' }]"
         @click="router.push('/chat/history')"
       >
         历史对话
       </div>
-      <div 
-        :class="['nav-tab', { active: $route.path === '/chat/intelligence-center' }]"
+      <div
+        :class="[
+          'nav-tab',
+          { active: $route.path === '/chat/intelligence-center' },
+        ]"
         @click="router.push('/chat/intelligence-center')"
       >
         智慧体中心
@@ -25,16 +27,13 @@
     </div>
 
     <!-- 对话记录列表 -->
-    <chat-list 
-      :chats="filteredChatHistory"
-      @select="handleChatSelect"
-    />
+    <chat-list :chats="filteredChatHistory" @select="handleChatSelect" />
 
     <!-- 新建对话按钮 -->
-    <van-button 
-      class="new-chat-btn" 
-      type="primary" 
-      round 
+    <van-button
+      class="new-chat-btn"
+      type="primary"
+      round
       icon="plus"
       @click="router.push('/assistants')"
     >
@@ -76,7 +75,7 @@ const chatHistory = ref<ChatItem[]>([
     lastTime: '10:30',
     online: true,
     tags: ['语法', '口语'],
-    type: 1
+    type: 1,
   },
   {
     id: 2,
@@ -87,7 +86,7 @@ const chatHistory = ref<ChatItem[]>([
     lastTime: '昨天',
     online: false,
     tags: ['口语', '日常对话'],
-    type: 2
+    type: 2,
   },
   {
     id: 3,
@@ -98,23 +97,24 @@ const chatHistory = ref<ChatItem[]>([
     lastTime: '周一',
     online: true,
     tags: ['写作', '润色'],
-    type: 3
-  }
+    type: 3,
+  },
 ]);
 
 // 根据搜索文本过滤对话历史
 const filteredChatHistory = computed(() => {
   let result = chatHistory.value;
-  
+
   // 按搜索文本过滤
   if (searchText.value) {
     const keyword = searchText.value.toLowerCase();
-    result = result.filter(chat => 
-      chat.assistantName.toLowerCase().includes(keyword) || 
-      chat.lastMessage.toLowerCase().includes(keyword)
+    result = result.filter(
+      (chat) =>
+        chat.assistantName.toLowerCase().includes(keyword) ||
+        chat.lastMessage.toLowerCase().includes(keyword),
     );
   }
-  
+
   return result;
 });
 
@@ -193,4 +193,4 @@ const onSearch = (text: string) => {
   font-family: 'Noto Sans SC', sans-serif !important;
   font-size: var(--font-size-md, 14px) !important;
 }
-</style> 
+</style>
