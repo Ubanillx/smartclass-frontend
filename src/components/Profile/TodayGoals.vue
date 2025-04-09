@@ -1,30 +1,32 @@
 <template>
-  <van-cell-group inset class="today-goals">
-    <van-cell title="今日学习目标">
-      <template #right-icon>
-        <van-icon name="plus" class="add-goal-icon" @click="showAddGoalPopup" />
-      </template>
-      <template #label>
-        <van-progress 
-          :percentage="progress" 
-          :show-pivot="false"
-          color="#1989fa"
-          :stroke-width="8"
-        />
-      </template>
-    </van-cell>
+  <div class="today-goals">
+    <div class="goals-header">
+      <h3 class="section-title">今日学习目标</h3>
+      <van-icon name="plus" class="add-goal-icon" @click="showAddGoalPopup" />
+    </div>
+    <div class="progress-container">
+      <van-progress
+        :percentage="progress"
+        :show-pivot="false"
+        color="#1989fa"
+        :stroke-width="8"
+      />
+    </div>
     <div class="goal-items">
-      <div 
-        class="goal-item" 
-        :class="{ completed: goal.completed }" 
-        v-for="goal in goals" 
+      <div
+        class="goal-item"
+        :class="{ completed: goal.completed }"
+        v-for="goal in goals"
         :key="goal.id"
       >
-        <van-icon :name="goal.completed ? 'checked' : 'circle'" @click="toggleGoalStatus(goal)" />
+        <van-icon
+          :name="goal.completed ? 'checked' : 'circle'"
+          @click="toggleGoalStatus(goal)"
+        />
         <span>{{ goal.text }}</span>
       </div>
     </div>
-  </van-cell-group>
+  </div>
 
   <!-- 添加目标弹出层 -->
   <van-popup
@@ -45,10 +47,10 @@
         show-word-limit
       />
       <div class="popup-buttons">
-        <van-button 
-          block 
-          type="primary" 
-          class="add-button" 
+        <van-button
+          block
+          type="primary"
+          class="add-button"
           :disabled="!newGoalText.trim()"
           @click="addNewGoal"
         >
@@ -110,10 +112,30 @@ const toggleGoalStatus = (goal: Goal) => {
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  padding: 16px;
+}
+
+.goals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: var(--font-size-md);
+  color: #323233;
+  margin: 0;
+}
+
+.progress-container {
+  margin-bottom: 12px;
 }
 
 .goal-items {
-  padding: 0 16px 10px;
+  padding: 0;
 }
 
 .goal-item {
@@ -168,7 +190,18 @@ const toggleGoalStatus = (goal: Goal) => {
 }
 
 :deep(.van-cell) {
-  padding: 10px 16px;
+  padding: 10px 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+:deep(.van-cell:hover) {
+  background-color: transparent !important;
+}
+
+:deep(.van-cell::after) {
+  display: none !important;
 }
 
 /* 弹出层样式 */
@@ -209,4 +242,4 @@ const toggleGoalStatus = (goal: Goal) => {
   height: 40px;
   border-radius: 8px;
 }
-</style> 
+</style>
