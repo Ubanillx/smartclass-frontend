@@ -1,10 +1,7 @@
 <template>
-  <div 
-    class="course-item"
-    @click="emit('click', course)"
-  >
+  <div class="course-item" @click="emit('click', course)">
     <div class="course-cover">
-      <van-image :src="course.cover" fit="cover" radius="8"/>
+      <van-image :src="course.cover" fit="cover" radius="8" />
     </div>
     <div class="course-info">
       <h3 class="course-title">{{ course.title }}</h3>
@@ -13,25 +10,23 @@
         <span v-if="course.grade" class="grade">{{ course.grade }}</span>
         <span class="difficulty" :class="course.level">{{ course.level }}</span>
         <span>{{ course.duration }}分钟</span>
-        <span v-if="course.studentsCount">{{ course.studentsCount }}人在学</span>
-        <span class="course-tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
+        <span v-if="course.studentsCount"
+          >{{ course.studentsCount }}人在学</span
+        >
+        <span class="course-tag" :style="{ background: course.tagColor }">{{
+          course.tag
+        }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
+import { Course as CourseType } from '../../api/mock';
+
+// 扩展Course类型
+interface EnhancedCourse extends CourseType {
   grade?: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
   description?: string;
   highlights?: Array<{
     icon: string;
@@ -41,21 +36,27 @@ interface Course {
 }
 
 defineProps<{
-  course: Course;
+  course: EnhancedCourse;
 }>();
 
 const emit = defineEmits<{
-  (e: 'click', course: Course): void;
+  (e: 'click', course: EnhancedCourse): void;
 }>();
 </script>
 
 <style scoped>
 .course-item {
   margin-bottom: 16px;
-  background: #fff;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.course-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .course-cover {
@@ -63,7 +64,7 @@ const emit = defineEmits<{
   width: 100%;
   height: 160px;
   overflow: hidden;
-  padding: 0 12px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -72,7 +73,7 @@ const emit = defineEmits<{
   height: 100%;
   border-radius: 8px;
   overflow: hidden;
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .course-cover :deep(.van-image__img) {
@@ -95,7 +96,7 @@ const emit = defineEmits<{
 }
 
 .course-brief {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   font-size: var(--font-size-base, 14px);
   color: #646566;
   line-height: 1.4;
@@ -110,7 +111,8 @@ const emit = defineEmits<{
 
 .course-meta {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   font-size: var(--font-size-sm, 12px);
   color: #969799;
   align-items: center;
@@ -118,9 +120,10 @@ const emit = defineEmits<{
 }
 
 .difficulty {
-  padding: 2px 6px;
+  padding: 2px 8px;
   border-radius: 4px;
   color: #fff;
+  font-weight: 500;
 }
 
 .difficulty.初级 {
@@ -137,14 +140,18 @@ const emit = defineEmits<{
 
 .grade {
   color: #323233;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
 .course-tag {
-  padding: 2px 8px;
+  padding: 2px 10px;
   font-size: var(--font-size-sm, 12px);
   color: #fff;
   border-radius: 4px;
   font-family: 'Noto Sans SC', sans-serif;
   margin-left: auto;
+  font-weight: 500;
 }
-</style> 
+</style>
