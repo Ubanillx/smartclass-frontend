@@ -4,12 +4,7 @@
     <back-button title="登录" />
 
     <div class="login-header">
-      <van-image
-        class="logo"
-        width="80"
-        height="80"
-        src="/logo.svg"
-      />
+      <van-image class="logo" width="80" height="80" src="/logo.svg" />
       <h2>欢迎来到智云星课</h2>
       <p class="subtitle">登录后即刻开启您的学习之旅</p>
     </div>
@@ -48,8 +43,12 @@
       </div>
 
       <div class="additional-links">
-        <span class="link-text" @click="router.push('/forgot-password')">忘记密码？</span>
-        <span class="link-text" @click="router.push('/register')">注册新账号</span>
+        <span class="link-text" @click="router.push('/forgot-password')"
+          >忘记密码？</span
+        >
+        <span class="link-text" @click="router.push('/register')"
+          >注册新账号</span
+        >
       </div>
     </van-form>
   </div>
@@ -73,7 +72,7 @@ const onSubmit = async (values) => {
   try {
     // 使用userStore进行登录
     const result = await userStore.login(values.username, values.password);
-    
+
     if (result.success) {
       showToast({
         type: 'success',
@@ -167,4 +166,4 @@ const onSubmit = async (values) => {
 :deep(.van-nav-bar .van-icon) {
   color: #323233;
 }
-</style> 
+</style>
