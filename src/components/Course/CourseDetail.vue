@@ -13,12 +13,7 @@
       </div>
       <div class="detail-content" v-if="course">
         <div class="image-container">
-          <van-image 
-            :src="course.cover" 
-            fit="cover" 
-            width="100%"
-            radius="8"
-          />
+          <van-image :src="course.cover" fit="cover" width="100%" radius="8" />
         </div>
         <h2>{{ course.title }}</h2>
         <div class="detail-meta">
@@ -28,19 +23,21 @@
           </span>
           <span>{{ course.duration }}分钟</span>
         </div>
-        <div class="course-highlights" v-if="course.highlights && course.highlights.length > 0">
-          <div class="highlight-item" v-for="(point, index) in course.highlights" :key="index">
+        <div
+          class="course-highlights"
+          v-if="course.highlights && course.highlights.length > 0"
+        >
+          <div
+            class="highlight-item"
+            v-for="(point, index) in course.highlights"
+            :key="index"
+          >
             <van-icon :name="point.icon" :color="point.color" />
             <span>{{ point.text }}</span>
           </div>
         </div>
         <p class="course-description">{{ course.description }}</p>
-        <van-button 
-          type="primary" 
-          block 
-          round
-          @click="emit('start')"
-        >
+        <van-button type="primary" block round @click="emit('start')">
           开始学习
         </van-button>
       </div>
@@ -49,30 +46,24 @@
 </template>
 
 <script setup lang="ts">
+import { Course } from '../../api/mock';
+
 interface CourseHighlight {
   icon: string;
   color: string;
   text: string;
 }
 
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
+// 扩展Course类型
+interface EnhancedCourse extends Course {
   grade?: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
   description?: string;
   highlights?: CourseHighlight[];
 }
 
 defineProps<{
   modelValue: boolean;
-  course: Course | null;
+  course: EnhancedCourse | null;
 }>();
 
 const emit = defineEmits<{
@@ -188,4 +179,4 @@ const emit = defineEmits<{
   font-family: 'Noto Sans SC', sans-serif !important;
   font-size: var(--font-size-md, 16px) !important;
 }
-</style> 
+</style>
