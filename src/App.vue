@@ -9,7 +9,11 @@
       <van-tabbar-item to="/">
         <template #icon="props">
           <div class="tabbar-icon-container">
-            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+            <svg
+              class="icon"
+              :class="{ 'active-icon': props.active }"
+              aria-hidden="true"
+            >
               <use xlink:href="#icon-zhuye"></use>
             </svg>
           </div>
@@ -19,7 +23,11 @@
       <van-tabbar-item to="/chat">
         <template #icon="props">
           <div class="tabbar-icon-container">
-            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+            <svg
+              class="icon"
+              :class="{ 'active-icon': props.active }"
+              aria-hidden="true"
+            >
               <use xlink:href="#icon-duihua"></use>
             </svg>
           </div>
@@ -29,7 +37,11 @@
       <van-tabbar-item to="/courses">
         <template #icon="props">
           <div class="tabbar-icon-container">
-            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+            <svg
+              class="icon"
+              :class="{ 'active-icon': props.active }"
+              aria-hidden="true"
+            >
               <use xlink:href="#icon-kecheng"></use>
             </svg>
           </div>
@@ -39,7 +51,11 @@
       <van-tabbar-item to="/profile">
         <template #icon="props">
           <div class="tabbar-icon-container">
-            <svg class="icon" :class="{ 'active-icon': props.active }" aria-hidden="true">
+            <svg
+              class="icon"
+              :class="{ 'active-icon': props.active }"
+              aria-hidden="true"
+            >
               <use xlink:href="#icon-wode"></use>
             </svg>
           </div>
@@ -65,38 +81,42 @@ const active = ref(0);
 const showTabbar = computed(() => {
   // 一级页面（显示底部导航栏）
   const mainRoutes = ['/', '/chat', '/courses', '/profile'];
-  
+
   // 判断当前路由是否为一级页面
   return mainRoutes.includes(route.path);
 });
 
 // 监听路由变化，设置底部导航栏激活项和页面样式
-watch(() => route.path, (newPath) => {
-  // 设置底部导航栏激活项
-  if (newPath === '/') {
-    active.value = 0;
-  } else if (newPath === '/chat') {
-    active.value = 1;
-  } else if (newPath === '/courses') {
-    active.value = 2;
-  } else if (newPath === '/profile') {
-    active.value = 3;
-  }
-  
-  // 设置页面样式
-  const mainRoutes = ['/', '/chat', '/courses', '/profile'];
-  const isMainRoute = mainRoutes.includes(newPath);
-  
-  // 移除所有相关类
-  document.body.classList.remove('has-tabbar', 'no-tabbar');
-  
-  // 添加相应的类
-  if (isMainRoute) {
-    document.body.classList.add('has-tabbar');
-  } else {
-    document.body.classList.add('no-tabbar');
-  }
-}, { immediate: true });
+watch(
+  () => route.path,
+  (newPath) => {
+    // 设置底部导航栏激活项
+    if (newPath === '/') {
+      active.value = 0;
+    } else if (newPath === '/chat') {
+      active.value = 1;
+    } else if (newPath === '/courses') {
+      active.value = 2;
+    } else if (newPath === '/profile') {
+      active.value = 3;
+    }
+
+    // 设置页面样式
+    const mainRoutes = ['/', '/chat', '/courses', '/profile'];
+    const isMainRoute = mainRoutes.includes(newPath);
+
+    // 移除所有相关类
+    document.body.classList.remove('has-tabbar', 'no-tabbar');
+
+    // 添加相应的类
+    if (isMainRoute) {
+      document.body.classList.add('has-tabbar');
+    } else {
+      document.body.classList.add('no-tabbar');
+    }
+  },
+  { immediate: true },
+);
 
 // 在应用启动时获取当前登录用户信息
 onMounted(async () => {
@@ -117,8 +137,19 @@ onMounted(async () => {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
-    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+  font-family:
+    'Noto Sans SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Helvetica Neue',
+    Helvetica,
+    Segoe UI,
+    Arial,
+    Roboto,
+    'PingFang SC',
+    'miui',
+    'Hiragino Sans GB',
+    'Microsoft Yahei',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -136,13 +167,13 @@ body {
 
 .app {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: linear-gradient(to bottom, rgba(232, 242, 252, 0.8), rgba(255, 255, 255, 0.9));
 }
 
 /* 统一的页面容器样式 */
 .page-container {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: linear-gradient(to bottom, rgba(232, 242, 252, 0.8), rgba(255, 255, 255, 0.9));
   padding-bottom: 60px;
 }
 
@@ -233,6 +264,42 @@ body {
   font-family: 'Noto Sans SC', sans-serif !important;
 }
 
+/* 统一van-cell样式 */
+.van-cell {
+  position: relative;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+  margin: 4px 0;
+  line-height: 1.5;
+  font-size: var(--font-size-md) !important;
+  background-color: #fff;
+}
+
+.van-cell::after {
+  position: absolute;
+  box-sizing: border-box;
+  content: ' ';
+  pointer-events: none;
+  right: 16px;
+  bottom: 0;
+  left: 16px;
+  border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+  transform: scaleY(0.5);
+}
+
+.van-cell:hover {
+  background-color: #f7f8fa;
+}
+
+.van-cell:active {
+  background-color: #f2f3f5;
+}
+
+.van-cell--clickable:active {
+  background-color: #f2f3f5;
+}
+
 /* 卡片标题样式 */
 .van-cell-group__title {
   font-weight: 700 !important;
@@ -258,7 +325,9 @@ body {
 }
 
 /* 卡片内标题样式 */
-h2, h3, h4 {
+h2,
+h3,
+h4 {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;
 }
@@ -365,16 +434,20 @@ p {
   font-size: var(--font-size-md) !important;
 }
 
-.course-brief, .article-brief {
+.course-brief,
+.article-brief {
   font-size: var(--font-size-sm) !important;
 }
 
-.course-meta, .article-meta {
+.course-meta,
+.article-meta {
   font-size: var(--font-size-sm) !important;
 }
 
 /* 文章和课程标签样式 */
-.article-tag, .course-tag, .detail-tag {
+.article-tag,
+.course-tag,
+.detail-tag {
   font-weight: 500 !important;
   letter-spacing: 0.5px;
 }
@@ -394,7 +467,11 @@ p {
 }
 
 /* 统一所有图标样式 */
-.course-icon, .ai-icon, .notice-icon, .word-icon, .article-icon {
+.course-icon,
+.ai-icon,
+.notice-icon,
+.word-icon,
+.article-icon {
   font-size: var(--font-size-lg) !important;
   margin-right: 4px !important;
   vertical-align: middle !important;
