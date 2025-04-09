@@ -1,52 +1,36 @@
 <template>
-  <van-cell-group inset class="study-stats">
-    <van-grid :column-num="4" :border="false">
-      <van-grid-item>
-        <template #icon>
-          <div class="stat-icon-wrapper clock-bg">
-            <van-icon name="clock" color="#1989fa" size="24" />
-          </div>
-        </template>
-        <template #text>
-          <span class="stat-number">{{ stats.daysLearned }}</span>
-          <span class="stat-label">学习天数</span>
-        </template>
-      </van-grid-item>
-      <van-grid-item>
-        <template #icon>
-          <div class="stat-icon-wrapper fire-bg">
-            <van-icon name="fire" color="#ff976a" size="24" />
-          </div>
-        </template>
-        <template #text>
-          <span class="stat-number">{{ stats.streakDays }}</span>
-          <span class="stat-label">连续打卡</span>
-        </template>
-      </van-grid-item>
-      <van-grid-item>
-        <template #icon>
-          <div class="stat-icon-wrapper star-bg">
-            <van-icon name="star" color="#ffcd32" size="24" />
-          </div>
-        </template>
-        <template #text>
-          <span class="stat-number">{{ stats.stars }}</span>
-          <span class="stat-label">获得星星</span>
-        </template>
-      </van-grid-item>
-      <van-grid-item>
-        <template #icon>
-          <div class="stat-icon-wrapper medal-bg">
-            <van-icon name="medal-o" color="#7232dd" size="24" />
-          </div>
-        </template>
-        <template #text>
-          <span class="stat-number">{{ stats.badges }}</span>
-          <span class="stat-label">获得徽章</span>
-        </template>
-      </van-grid-item>
-    </van-grid>
-  </van-cell-group>
+  <div class="study-stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon-wrapper clock-bg">
+          <van-icon name="clock" color="#1989fa" size="24" />
+        </div>
+        <span class="stat-number">{{ stats.daysLearned }}</span>
+        <span class="stat-label">学习天数</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-wrapper fire-bg">
+          <van-icon name="fire" color="#ff976a" size="24" />
+        </div>
+        <span class="stat-number">{{ stats.streakDays }}</span>
+        <span class="stat-label">连续打卡</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-wrapper star-bg">
+          <van-icon name="star" color="#ffcd32" size="24" />
+        </div>
+        <span class="stat-number">{{ stats.stars }}</span>
+        <span class="stat-label">获得星星</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-wrapper medal-bg">
+          <van-icon name="medal-o" color="#7232dd" size="24" />
+        </div>
+        <span class="stat-number">{{ stats.badges }}</span>
+        <span class="stat-label">获得徽章</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +53,20 @@ defineProps<{
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  padding: 16px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .stat-icon-wrapper {
@@ -125,4 +123,4 @@ defineProps<{
 :deep(.van-grid-item__icon) {
   font-size: var(--font-size-xl);
 }
-</style> 
+</style>
