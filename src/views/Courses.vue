@@ -1,65 +1,76 @@
 <template>
   <div class="courses has-tabbar">
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <!-- 搜索栏 -->
-      <search-bar
-        v-model="searchText"
-        placeholder="搜索课程"
-        @search="onSearch"
-      />
-
+    <!-- 固定头部区域 -->
+    <div class="fixed-header">
+      <!-- 页面标题区域 -->
+      <div class="header">
+        <div class="page-title">
+          <i class="iconfont icon-kecheng title-icon"></i>
+          <span>课程</span>
+        </div>
+        <div class="header-actions">
+          <van-icon name="calendar-o" class="action-icon" @click="handleShowSchedule" />
+          <van-icon name="todo-list-o" class="action-icon" @click="handleShowTasks" />
+        </div>
+      </div>
+      
       <!-- 课程分类 -->
       <course-categories
         :categories="categories"
         :active-category="activeCategory"
         @select="selectCategory"
       />
+    </div>
 
-      <!-- 推荐课程 -->
-      <course-list
-        v-if="activeCategory === 0"
-        title="热门推荐"
-        :courses="recommendedCourses"
-        show-more
-        class-name="recommended"
-        @select="showCourseDetail"
-        @more="router.push('/courses/all')"
-      />
+    <!-- 可滚动内容区域 -->
+    <div class="scrollable-content">
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <!-- 推荐课程 -->
+        <course-list
+          v-if="activeCategory === 0"
+          title="热门推荐"
+          :courses="recommendedCourses"
+          show-more
+          class-name="recommended"
+          @select="showCourseDetail"
+          @more="router.push('/courses/all')"
+        />
 
-      <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
-      <div v-if="activeCategory !== 0" class="grade-selector-container">
-        <div class="custom-dropdown">
-          <div class="dropdown-trigger" @click="toggleDropdown">
-            <span>{{ currentGradeText }}</span>
-            <span class="dropdown-arrow"></span>
-          </div>
-          <div v-if="showDropdown" class="dropdown-content">
-            <div 
-              v-for="option in gradeOptions" 
-              :key="option.value" 
-              class="dropdown-option"
-              :class="{ 'dropdown-option-active': gradeValue === option.value }"
-              @click="selectGrade(option.value)"
-            >
-              {{ option.text }}
+        <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
+        <div v-if="activeCategory !== 0" class="grade-selector-container">
+          <div class="custom-dropdown">
+            <div class="dropdown-trigger" @click="toggleDropdown">
+              <span>{{ currentGradeText }}</span>
+              <span class="dropdown-arrow"></span>
+            </div>
+            <div v-if="showDropdown" class="dropdown-content">
+              <div
+                v-for="option in gradeOptions"
+                :key="option.value"
+                class="dropdown-option"
+                :class="{ 'dropdown-option-active': gradeValue === option.value }"
+                @click="selectGrade(option.value)"
+              >
+                {{ option.text }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 学科课程列表 -->
-      <course-list
-        v-if="activeCategory !== 0"
-        :title="getActiveCategoryName()"
-        :courses="filteredCourses"
-        class-name="subject-courses"
-        @select="showCourseDetail"
-      >
-        <template #right-icon>
-          <!-- 移除此处的年级选择器 -->
-        </template>
-      </course-list>
-    </van-pull-refresh>
+        <!-- 学科课程列表 -->
+        <course-list
+          v-if="activeCategory !== 0"
+          :title="getActiveCategoryName()"
+          :courses="filteredCourses"
+          class-name="subject-courses"
+          @select="showCourseDetail"
+        >
+          <template #right-icon>
+            <!-- 移除此处的年级选择器 -->
+          </template>
+        </course-list>
+      </van-pull-refresh>
+    </div>
 
     <!-- 课程详情弹出层 -->
     <course-detail
@@ -75,8 +86,13 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
-import SearchBar from '../components/SearchBar.vue';
-import { CourseCategories, CourseList, CourseDetail } from '../components/Course';
+import {
+  CourseCategories,
+  CourseList,
+  CourseDetail
+} from '../components/Course';
+import { BackButton } from '../components/Common';
+import { Course as CourseType } from '../api/mock';
 
 // 定义类型
 interface CourseHighlight {
@@ -85,17 +101,10 @@ interface CourseHighlight {
   text: string;
 }
 
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
+// 扩展Course类型为EnhancedCourse
+interface EnhancedCourse extends Omit<CourseType, 'studentsCount'> {
+  studentsCount: number;
   grade?: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
   description?: string;
   highlights?: CourseHighlight[];
 }
@@ -109,13 +118,22 @@ interface Category {
 
 const router = useRouter();
 const route = useRoute();
-const searchText = ref('');
 const showDetailPopup = ref(false);
-const selectedCourse = ref<Course | null>(null);
+const selectedCourse = ref<EnhancedCourse | null>(null);
 const activeCategory = ref(0);
 const gradeValue = ref(0);
 const showDropdown = ref(false);
 const refreshing = ref(false);
+
+// 课程表功能
+const handleShowSchedule = () => {
+  router.push('/course-schedule');
+};
+
+// 任务功能
+const handleShowTasks = () => {
+  router.push('/task-plans');
+};
 
 // 年级选项
 const gradeOptions = [
@@ -125,12 +143,12 @@ const gradeOptions = [
   { text: '三年级', value: 3, icon: '' },
   { text: '四年级', value: 4, icon: '' },
   { text: '五年级', value: 5, icon: '' },
-  { text: '六年级', value: 6, icon: '' }
+  { text: '六年级', value: 6, icon: '' },
 ];
 
 // 获取当前选中的年级文本
 const currentGradeText = computed(() => {
-  const option = gradeOptions.find(opt => opt.value === gradeValue.value);
+  const option = gradeOptions.find((opt) => opt.value === gradeValue.value);
   return option ? option.text : '全部年级';
 });
 
@@ -143,25 +161,31 @@ const toggleDropdown = () => {
 const selectGrade = (value: number) => {
   gradeValue.value = value;
   showDropdown.value = false;
-  
+
   // 更新 URL 参数
-  const query: Record<string, string> = { ...route.query as Record<string, string> };
+  const query: Record<string, string> = {
+    ...(route.query as Record<string, string>),
+  };
   if (value === 0) {
     delete query.grade;
   } else {
     query.grade = value.toString();
   }
-  
+
   router.replace({
     path: route.path,
-    query
+    query,
   });
 };
 
 // 点击外部关闭下拉菜单
 const closeDropdownOnClickOutside = (event: MouseEvent) => {
   const dropdown = document.querySelector('.custom-dropdown');
-  if (dropdown && !dropdown.contains(event.target as Node) && showDropdown.value) {
+  if (
+    dropdown &&
+    !dropdown.contains(event.target as Node) &&
+    showDropdown.value
+  ) {
     showDropdown.value = false;
   }
 };
@@ -177,117 +201,120 @@ const categories = ref<Category[]>([
     id: 0,
     name: '推荐',
     icon: 'star',
-    path: '/courses/recommended'
+    path: '/courses/recommended',
   },
   {
     id: 1,
     name: '语文',
     icon: 'yuwen',
-    path: '/courses/chinese'
+    path: '/courses/chinese',
   },
   {
     id: 2,
     name: '数学',
     icon: 'shuxue',
-    path: '/courses/math'
+    path: '/courses/math',
   },
   {
     id: 3,
     name: '英语',
     icon: 'yingyu1',
-    path: '/courses/english'
+    path: '/courses/english',
   },
   {
     id: 4,
     name: '物理',
     icon: 'wuli',
-    path: '/courses/physics'
+    path: '/courses/physics',
   },
   {
     id: 5,
     name: '化学',
     icon: 'huaxue',
-    path: '/courses/chemistry'
+    path: '/courses/chemistry',
   },
   {
     id: 6,
     name: '政治',
     icon: 'zhengzhi',
-    path: '/courses/politics'
+    path: '/courses/politics',
   },
   {
     id: 7,
     name: '历史',
     icon: 'lishi',
-    path: '/courses/history'
+    path: '/courses/history',
   },
   {
     id: 8,
     name: '生物',
     icon: 'shengwu',
-    path: '/courses/biology'
+    path: '/courses/biology',
   },
   {
     id: 9,
     name: '地理',
     icon: 'dili-',
-    path: '/courses/geography'
-  }
+    path: '/courses/geography',
+  },
 ]);
 
 // Mock 推荐课程数据
-const recommendedCourses = ref<Course[]>([
+const recommendedCourses = ref<EnhancedCourse[]>([
   {
     id: 1,
-    title: '趣味英语口语课堂',
-    brief: '通过游戏和动画学习日常英语对话',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    tag: '英语',
+    title: '填空选择秒选大招合集',
+    brief: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
+    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/f8b3549a57984426bd563291f081f9bf.png',
+    tag: '数学',
     tagColor: '#1989fa',
-    grade: '三年级',
-    level: '初级',
+    grade: '高一',
+    level: '中级',
     duration: 30,
     studentsCount: 1234,
-    description: '本课程通过有趣的动画和游戏互动，帮助同学们掌握日常英语口语...',
+    description:
+      '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
     highlights: [
       { icon: 'smile-o', color: '#ff976a', text: '趣味教学' },
       { icon: 'music-o', color: '#07c160', text: '互动练习' },
-      { icon: 'star-o', color: '#ffcd32', text: '奖励机制' }
-    ]
+      { icon: 'star-o', color: '#ffcd32', text: '奖励机制' },
+    ],
   },
   {
     id: 2,
-    title: '数学思维训练营',
-    brief: '培养数学逻辑思维能力',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    tag: '数学',
+    title: '典型实验大题解答合集',
+    brief: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
+    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/65e2cbeb958c47c4be3dcf06aa00057a.png',
+    tag: '物理',
     tagColor: '#07c160',
-    grade: '四年级',
+    grade: '初三',
     level: '中级',
     duration: 45,
     studentsCount: 856,
-    description: '通过趣味数学题和实际生活案例，培养同学们的数学思维能力...'
+    description: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
   },
   {
     id: 3,
     title: '科学实验室探索',
     brief: '动手做实验，探索科学奥秘',
-    cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/88e4f754e8d2413ea55a0c1c7d7f7b46.png',
     tag: '科学',
     tagColor: '#7232dd',
     grade: '五年级',
     level: '初级',
     duration: 40,
     studentsCount: 567,
-    description: '通过有趣的科学实验，了解身边的科学现象...'
-  }
+    description: '通过有趣的科学实验，了解身边的科学现象...',
+  },
 ]);
 
 // 根据分类和年级筛选课程
 const filteredCourses = computed(() => {
   let courses = recommendedCourses.value;
   if (gradeValue.value !== 0) {
-    courses = courses.filter(course => course.grade?.includes(gradeValue.value.toString()));
+    courses = courses.filter((course) =>
+      course.grade?.includes(gradeValue.value.toString()),
+    );
   }
   return courses;
 });
@@ -295,7 +322,7 @@ const filteredCourses = computed(() => {
 // 下拉刷新
 const onRefresh = () => {
   console.log('下拉刷新，重新获取课程页面数据');
-  
+
   // 模拟网络请求延迟
   setTimeout(() => {
     refreshing.value = false;
@@ -306,43 +333,46 @@ const onRefresh = () => {
 // 在组件挂载时检查 URL 参数
 onMounted(() => {
   console.log('Courses页面加载，开始获取数据');
-  
+
   // 从URL参数中获取分类和年级
   const categoryId = parseInt(route.query.category as string) || 0;
   const grade = parseInt(route.query.grade as string) || 0;
-  
-  if (categoryId !== 0 && categories.value.some(c => c.id === categoryId)) {
+
+  if (categoryId !== 0 && categories.value.some((c) => c.id === categoryId)) {
     activeCategory.value = categoryId;
   }
-  
-  if (grade !== 0 && gradeOptions.some(g => g.value === grade)) {
+
+  if (grade !== 0 && gradeOptions.some((g) => g.value === grade)) {
     gradeValue.value = grade;
   }
 });
 
 const selectCategory = (category: Category) => {
   activeCategory.value = category.id;
-  
+
   // 更新 URL 参数
-  const query: Record<string, string> = { ...route.query as Record<string, string>, category: category.id.toString() };
+  const query: Record<string, string> = {
+    ...(route.query as Record<string, string>),
+    category: category.id.toString(),
+  };
   // 如果是推荐分类，删除年级参数
   if (category.id === 0) {
     delete query.grade;
   }
-  
+
   router.replace({
     path: route.path,
-    query
+    query,
   });
 };
 
 const getActiveCategoryName = () => {
-  const category = categories.value.find(c => c.id === activeCategory.value);
+  const category = categories.value.find((c) => c.id === activeCategory.value);
   return category ? category.name + '课程' : '推荐课程';
 };
 
 // 显示课程详情
-const showCourseDetail = (course: Course) => {
+const showCourseDetail = (course: EnhancedCourse) => {
   selectedCourse.value = course;
   showDetailPopup.value = true;
 };
@@ -354,21 +384,75 @@ const startLearning = () => {
     router.push(`/course-study/${selectedCourse.value.id}`);
   }
 };
-
-// 搜索处理
-const onSearch = (text: string) => {
-  console.log('搜索:', text);
-};
 </script>
 
 <style scoped>
 .courses {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
   padding-bottom: 66px;
+  background-color: #F2F7FD;
+  min-height: 100vh;
+  position: relative;
 }
 
-.search-bar {
-  margin-bottom: 6px;
+.fixed-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #F2F7FD;
+  padding: 16px 16px 0;
+}
+
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 12px 12px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #323233;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.title-icon {
+  margin-right: 6px;
+  color: #1989fa;
+  font-size: 22px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.action-icon {
+  font-size: 24px;
+  color: #323233;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.85;
+}
+
+.action-icon:active {
+  opacity: 0.6;
+  transform: scale(0.95);
 }
 
 .grade-selector-container {
@@ -452,21 +536,9 @@ const onSearch = (text: string) => {
   position: relative;
 }
 
-/* 删除自定义勾选图标 */
-/* .dropdown-option-active::after {
-  content: "";
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231989fa'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") no-repeat;
-  background-size: contain;
-} */
-
 .recommended,
 .subject-courses {
+  margin-top: 16px;
   margin-bottom: 16px;
 }
 
@@ -484,4 +556,4 @@ const onSearch = (text: string) => {
 :deep(.van-pull-refresh__track) {
   padding-bottom: 16px;
 }
-</style> 
+</style>
