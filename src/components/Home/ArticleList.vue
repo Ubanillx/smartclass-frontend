@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 精美文章模块 -->
-    <van-cell-group inset class="article-module">
+    <van-cell-group class="article-module">
       <van-cell title="每日美文">
         <template #icon>
           <svg class="icon svg-icon article-icon" aria-hidden="true">
@@ -12,21 +12,19 @@
           <span class="more-link" @click="$emit('more')">更多</span>
         </template>
       </van-cell>
-      
+
       <div class="article-list">
-        <div 
-          v-for="article in articles" 
-          :key="article.id" 
+        <div
+          v-for="article in articles"
+          :key="article.id"
           class="article-item"
           @click="showArticleDetail(article)"
         >
           <div class="article-cover">
-            <van-image
-              :src="article.cover"
-              fit="cover"
-              radius="4"
-            />
-            <span class="article-tag" :style="getTagStyle(article.category)">{{ article.category }}</span>
+            <van-image :src="article.cover" fit="cover" radius="4" />
+            <span class="article-tag" :style="getTagStyle(article.category)">{{
+              article.category
+            }}</span>
           </div>
           <div class="article-info">
             <h3 class="article-title">{{ article.title }}</h3>
@@ -55,15 +53,15 @@
         <div class="article-content" v-if="selectedArticle">
           <h2>{{ selectedArticle.title }}</h2>
           <div class="article-info">
-            <span class="detail-tag" :style="getTagStyle(selectedArticle.category)">{{ selectedArticle.category }}</span>
+            <span
+              class="detail-tag"
+              :style="getTagStyle(selectedArticle.category)"
+              >{{ selectedArticle.category }}</span
+            >
             <span>{{ selectedArticle.readTime }}分钟</span>
             <span>{{ selectedArticle.difficulty }}</span>
           </div>
-          <van-image
-            :src="selectedArticle.cover"
-            fit="cover"
-            width="100%"
-          />
+          <van-image :src="selectedArticle.cover" fit="cover" width="100%" />
           <div class="article-text" v-html="selectedArticle.content"></div>
         </div>
       </div>
@@ -107,7 +105,7 @@ const showArticleDetail = (article: Article): void => {
 // 根据文章类别返回不同的样式
 const getTagStyle = (category: string): Record<string, string> => {
   const styles: Record<string, string> = {};
-  
+
   switch (category) {
     case '励志':
       styles.background = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%)';
@@ -124,7 +122,7 @@ const getTagStyle = (category: string): Record<string, string> => {
     default:
       styles.background = 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)';
   }
-  
+
   return styles;
 };
 </script>
@@ -132,6 +130,10 @@ const getTagStyle = (category: string): Record<string, string> => {
 <style scoped>
 .article-module {
   margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
 }
 
 .more-link {
@@ -325,4 +327,4 @@ const getTagStyle = (category: string): Record<string, string> => {
   font-size: var(--font-size-sm) !important;
   color: #969799;
 }
-</style> 
+</style>
