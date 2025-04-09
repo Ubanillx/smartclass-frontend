@@ -1,5 +1,5 @@
 <template>
-  <div class="back-button" @click="goBack">
+  <div class="back-button" @click="handleClick">
     <van-icon name="arrow-left" :size="iconSize" />
     <span v-if="title" class="page-title">{{ title }}</span>
   </div>
@@ -12,17 +12,33 @@ interface Props {
   title?: string;
   iconSize?: string | number;
   customPath?: string;
+  preventDefault?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   title: '',
   iconSize: '20',
-  customPath: ''
+  customPath: '',
+  preventDefault: false
 });
+
+// 定义点击事件
+const emit = defineEmits<{
+  (e: 'click'): void;
+}>();
 
 const router = useRouter();
 
-const goBack = (): void => {
+const handleClick = (): void => {
+  // 发送点击事件给父组件
+  emit('click');
+  
+  // 如果设置了阻止默认事件，则不执行默认的导航行为
+  if (props.preventDefault) {
+    return;
+  }
+  
+  // 否则执行默认导航行为
   if (props.customPath) {
     router.push(props.customPath);
   } else {
@@ -36,7 +52,11 @@ const goBack = (): void => {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85)
+  );
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -65,4 +85,4 @@ const goBack = (): void => {
   color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
 }
-</style> 
+</style>

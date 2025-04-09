@@ -40,7 +40,7 @@ import { showToast, showSuccessToast, showLoadingToast } from 'vant';
 import { BackButton } from '../../components/Common';
 import { Cropper, CircleStencil } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
-import { FileControllerService } from '../../services';
+import { FileControllerService } from '../../services/services/FileControllerService';
 
 const router = useRouter();
 const route = useRoute();
@@ -97,48 +97,33 @@ const onSave = async (): Promise<void> => {
     const { canvas } = cropperResult.value;
 
     try {
-      // 将canvas转换为base64
-      const base64Data = canvas.toDataURL('image/jpeg', 0.9);
-      console.log('裁剪结果base64前缀:', base64Data.substring(0, 30) + '...');
+      // 将canvas转换为Blob
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob(
+          (blob: Blob | null) => {
+            resolve(blob as Blob);
+          },
+          'image/jpeg',
+          0.9,
+        );
+      });
 
-      // 确保base64数据格式正确 - 只保留base64编码部分，去掉前缀
-      let base64Content = '';
-      if (base64Data.indexOf('base64,') >= 0) {
-        base64Content = base64Data.split('base64,')[1];
-      } else {
-        base64Content = base64Data;
-      }
+      console.log('裁剪结果转换为Blob成功，大小:', blob.size, 'bytes');
 
-      console.log('处理后的base64长度:', base64Content.length);
-
-      // 测试base64数据是否有效
-      try {
-        const testBlob = await fetch(
-          `data:image/jpeg;base64,${base64Content}`,
-        ).then((res) => res.blob());
-        console.log('测试base64转换为Blob成功，大小:', testBlob.size, 'bytes');
-      } catch (e) {
-        console.error('测试base64转换失败:', e);
-      }
-
-      // 构建上传请求
-      const uploadRequest = {
-        base64Data: base64Content,
-        biz: 'avatar',
-        filename: `avatar_${Date.now()}.jpg`,
-        description: '用户头像',
-      };
+      // 创建一个File对象，确保设置正确的类型
+      const avatarFile = new File([blob], `avatar_${Date.now()}.jpg`, {
+        type: 'image/jpeg',
+      });
 
       // 上传图片到服务器
-      console.log('开始上传base64图片...');
+      console.log('开始上传头像图片...');
       const response =
-        await FileControllerService.uploadBase64ImageUsingPost(uploadRequest);
+        await FileControllerService.uploadAvatarUsingPost(avatarFile);
       console.log('上传响应:', response);
 
       // 检查是否未登录
       if (response.code === 40100) {
         showToast('登录已过期，请重新登录');
-        // 可以在这里添加重定向到登录页面的逻辑
         setTimeout(() => {
           router.replace('/login');
         }, 1500);
