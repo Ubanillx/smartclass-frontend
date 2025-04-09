@@ -1,8 +1,8 @@
 <template>
   <div class="course-categories-container">
     <div class="course-categories">
-      <div 
-        v-for="category in categories" 
+      <div
+        v-for="category in categories"
         :key="category.id"
         :class="['category-item', { active: activeCategory === category.id }]"
         @click="emit('select', category)"
@@ -38,9 +38,9 @@ const emit = defineEmits<{
 
 const getIconName = (iconName: string) => {
   const iconMap: Record<string, string> = {
-    'star': 'tuijian'
+    star: 'tuijian',
   };
-  
+
   return iconMap[iconName] || iconName;
 };
 </script>
@@ -48,10 +48,13 @@ const getIconName = (iconName: string) => {
 <style scoped>
 .course-categories-container {
   position: relative;
-  margin-bottom: 16px;
-  margin-top: 12px;
+  margin-bottom: 0;
+  margin-top: 0;
   padding: 8px 0;
-  border-radius: 8px;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+  overflow: hidden;
 }
 
 .course-categories {
@@ -70,13 +73,13 @@ const getIconName = (iconName: string) => {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  padding: 8px 8px;
-  margin-right: 8px;
+  padding: 8px 12px;
+  margin-right: 12px;
   font-size: var(--font-size-base, 14px);
   font-weight: 700;
   font-family: 'Noto Sans SC', sans-serif;
   color: #646566;
-  background-color: #f7f8fa;
+  background-color: transparent;
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s;
@@ -84,7 +87,9 @@ const getIconName = (iconName: string) => {
 
 .category-item.active {
   color: #fff;
-  background-color: #1989fa;
+  background-color: #308fff;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(100, 177, 255, 0.2);
 }
 
 .category-item.active .category-icon {
@@ -102,38 +107,35 @@ const getIconName = (iconName: string) => {
 
 .category-icon {
   margin-right: 4px;
-  font-size: var(--font-size-md, 16px);
+  font-size: 16px;
 }
 
 .swipe-hint {
   position: absolute;
+  top: 0;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
+  height: 100%;
+  width: 40px;
+  background: transparent;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  z-index: 1;
+  justify-content: flex-end;
+  padding-right: 10px;
 }
 
 .swipe-icon {
   color: #969799;
-  animation: swipe-hint 1.5s infinite;
+  animation: swipeHint 1.5s infinite ease-in-out;
 }
 
-@keyframes swipe-hint {
-  0% {
+@keyframes swipeHint {
+  0%, 100% {
     transform: translateX(-2px);
+    opacity: 0.5;
   }
   50% {
     transform: translateX(2px);
-  }
-  100% {
-    transform: translateX(-2px);
+    opacity: 1;
   }
 }
-</style> 
+</style>
