@@ -1,14 +1,12 @@
 <template>
   <div class="register">
-    <back-button title="注册账号" :custom-path="route.query.redirect ? undefined : '/'" />
+    <back-button
+      title="注册账号"
+      :custom-path="route.query.redirect ? undefined : '/'"
+    />
 
     <div class="register-header">
-      <van-image
-        class="logo"
-        width="80"
-        height="80"
-        src="/logo.svg"
-      />
+      <van-image class="logo" width="80" height="80" src="/logo.svg" />
       <h2>创建账号</h2>
       <p class="subtitle">注册后开启您的学习之旅</p>
     </div>
