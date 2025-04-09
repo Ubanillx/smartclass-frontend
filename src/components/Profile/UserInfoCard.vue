@@ -1,13 +1,8 @@
 <template>
-  <van-cell-group inset class="user-card">
+  <div class="user-card">
     <van-row>
       <van-col span="6">
-        <van-image
-          round
-          width="4rem"
-          height="4rem"
-          :src="userInfo.avatar"
-        />
+        <van-image round width="4rem" height="4rem" :src="userInfo.avatar" />
       </van-col>
       <van-col span="16">
         <div class="user-info">
@@ -15,20 +10,22 @@
           <p class="phone">手机号：{{ formatPhone(userInfo.phone) }}</p>
           <div class="level-info">
             <van-tag type="primary">等级 {{ userInfo.level }}</van-tag>
-            <span class="exp-text">距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span>
+            <span class="exp-text"
+              >距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span
+            >
           </div>
         </div>
       </van-col>
       <van-col span="2">
-        <van-icon 
-          name="setting-o" 
-          size="24" 
+        <van-icon
+          name="setting-o"
+          size="24"
           class="settings-icon"
           @click="goToSettings"
         />
       </van-col>
     </van-row>
-  </van-cell-group>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -62,26 +59,25 @@ const formatPhone = (phone: string): string => {
 <style scoped>
 .user-card {
   margin-bottom: 12px;
-  padding: 12px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  padding: 0 0 12px;
+  border-radius: 0;
 }
 
 .user-info {
   padding-left: 12px;
+  padding-top: 4px;
 }
 
 .user-info h3 {
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: #323233;
 }
 
 .phone {
-  margin: 0 0 6px;
-  font-size: var(--font-size-base);
+  margin: 0 0 4px;
+  font-size: var(--font-size-sm);
   color: #646566;
 }
 
@@ -91,6 +87,7 @@ const formatPhone = (phone: string): string => {
   flex-wrap: nowrap;
   white-space: nowrap;
   overflow: hidden;
+  margin-top: 2px;
 }
 
 :deep(.van-tag) {
@@ -112,21 +109,11 @@ const formatPhone = (phone: string): string => {
 }
 
 .settings-icon {
-  margin-top: 4px;
+  margin-top: 8px;
   color: #323233;
   padding: 4px;
   border-radius: 50%;
   background-color: #f7f8fa;
-}
-
-:deep(.van-cell-group__inset) {
-  margin: 0;
-  background-color: transparent;
-  border: none;
-}
-
-:deep(.van-cell-group__inset) .van-cell::after {
-  border-bottom: none;
 }
 
 :deep(.van-image__img) {
@@ -134,4 +121,8 @@ const formatPhone = (phone: string): string => {
   border: 2px solid #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-</style> 
+
+:deep(.van-row) {
+  align-items: center;
+}
+</style>
