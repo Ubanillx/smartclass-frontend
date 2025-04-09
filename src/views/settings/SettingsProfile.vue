@@ -26,8 +26,6 @@
               <van-button
                 size="small"
                 type="primary"
-                round
-                icon="photograph"
                 plain
                 class="avatar-button"
                 >更换头像</van-button
@@ -70,8 +68,8 @@
       />
 
       <van-field
-        v-model="formData.userWechat"
-        name="userWechat"
+        v-model="formData.wechatId"
+        name="wechatId"
         label="微信"
         placeholder="请输入微信号"
         clearable
@@ -103,9 +101,9 @@
 
       <van-field
         :model-value="
-          formData.userBirthday ? formatBirthday(formData.userBirthday) : ''
+          formData.birthday ? formatBirthday(formData.birthday) : ''
         "
-        name="userBirthday"
+        name="birthday"
         label="生日"
         readonly
         is-link
@@ -114,8 +112,8 @@
       />
 
       <van-field
-        v-model="formData.userLocation"
-        name="userLocation"
+        :model-value="getLocationText()"
+        name="location"
         label="所在地"
         readonly
         is-link
@@ -138,7 +136,7 @@
     </div>
 
     <!-- 性别选择器 -->
-    <van-popup v-model:show="showGenderPicker" position="bottom">
+    <van-popup v-model:show="showGenderPicker" position="bottom" round>
       <van-picker
         title="选择性别"
         :columns="genderOptions"
@@ -149,7 +147,7 @@
     </van-popup>
 
     <!-- 日期选择器 -->
-    <van-popup v-model:show="showDatePicker" position="bottom">
+    <van-popup v-model:show="showDatePicker" position="bottom" round>
       <div class="date-picker-container">
         <div class="date-picker-header">
           <van-icon name="cross" @click="showDatePicker = false" />
@@ -168,12 +166,12 @@
     </van-popup>
 
     <!-- 地址选择器 -->
-    <van-popup v-model:show="showAddressPicker" position="bottom">
+    <van-popup v-model:show="showAddressPicker" position="bottom" round>
       <div class="area-picker-container">
         <div class="area-picker-header">
           <van-icon name="cross" @click="showAddressPicker = false" />
           <div class="area-picker-title">选择地区</div>
-          <van-button type="primary" size="small" @click="onAreaConfirm"
+          <van-button type="primary" size="small" @click="onAddressConfirm"
             >确认</van-button
           >
         </div>
@@ -197,32 +195,28 @@ import {
   showLoadingToast,
   showImagePreview,
 } from 'vant';
-import type { UploaderFileListItem } from 'vant';
+import type { Area, UploaderFileListItem } from 'vant';
 import { areaList } from '@vant/area-data';
 import { BackButton } from '../../components/Common';
-import { UserControllerService } from '../../services';
-import type { UserVO } from '../../services/models/UserVO';
-import type { UserUpdateMyRequest } from '../../services/models/UserUpdateMyRequest';
+import { UserControllerService } from '../../services/services/UserControllerService';
+import { FileControllerService } from '../../services/services/FileControllerService';
+import { User } from '../../services/models/User';
+import { UserUpdateMyRequest } from '../../services/models/UserUpdateMyRequest';
 import { useUserStore } from '../../stores/userStore';
 
-interface UserProfile {
-  id: number | null;
-  userAccount: string;
-  userGender: string | number;
-  userPhone: string;
-  unionId: string;
-  mpOpenId: string;
+interface FormData {
+  id?: number;
   userName: string;
   userAvatar: string;
-  userProfile: string;
-  userRole: string;
-  createTime: string;
-  updateTime: string;
-  isDelete: number;
-  userBirthday: string;
-  userLocation: string;
+  userPhone: string;
   userEmail: string;
-  userWechat: string;
+  userProfile: string;
+  userGender?: number;
+  birthday?: string;
+  wechatId?: string;
+  province?: string;
+  city?: string;
+  district?: string;
 }
 
 interface PickerOption {
@@ -235,24 +229,12 @@ const router = useRouter();
 const route = useRoute();
 
 // 表单数据
-const formData = ref<UserProfile>({
-  id: null,
-  userAccount: '',
-  userGender: '',
-  userPhone: '',
-  unionId: '',
-  mpOpenId: '',
+const formData = ref<FormData>({
   userName: '',
   userAvatar: '',
-  userProfile: '',
-  userRole: '',
-  createTime: '',
-  updateTime: '',
-  isDelete: 0,
-  userBirthday: '',
-  userLocation: '',
+  userPhone: '',
   userEmail: '',
-  userWechat: '',
+  userProfile: '',
 });
 
 // 监听路由参数，获取裁剪后的头像
@@ -280,7 +262,7 @@ watch(
     }
   },
   { immediate: true },
-); // 添加immediate: true确保页面加载时立即检查
+);
 
 // 性别选择器
 const showGenderPicker = ref(false);
@@ -297,58 +279,100 @@ const displayGender = ref('');
 const isSaving = ref(false);
 
 // 根据性别值获取显示文本
-const getGenderText = (value: string): string => {
-  console.log('获取性别文本，值:', value, '类型:', typeof value);
-  const option = genderOptions.find((item) => item.value === Number(value));
-  console.log('匹配到的性别选项:', option);
+const getGenderText = (gender?: number): string => {
+  if (gender === undefined || gender === null) return '';
+  const option = genderOptions.find((option) => option.value === gender);
   return option ? option.text : '';
 };
 
-// 处理性别选择
-const onGenderConfirm = (value: PickerOption): void => {
-  console.log('性别选择:', value);
-  const selectedValue = value.selectedValues[0];
-  const selectedOption = value.selectedOptions[0];
-
-  if (selectedValue && selectedOption) {
-    formData.value.userGender = selectedValue;
-    displayGender.value = selectedOption.text;
-    console.log(
-      '设置性别值:',
-      formData.value.userGender,
-      '显示文本:',
-      displayGender.value,
-    );
-  }
-
+// 性别确认事件
+const onGenderConfirm = (option: { text: string; value: number }): void => {
+  formData.value.userGender = option.value;
+  displayGender.value = option.text;
   showGenderPicker.value = false;
 };
 
 // 日期选择器
 const showDatePicker = ref(false);
-const minDate = new Date(1950, 0, 1);
+const selectedDate = ref<string[]>([]);
+const minDate = new Date(1900, 0, 1);
 const maxDate = new Date();
-const selectedDate = ref<string[]>([
-  String(new Date().getFullYear()),
-  String(new Date().getMonth() + 1),
-  String(new Date().getDate()),
-]);
+
+// 生日确认事件
+const onDateConfirm = (value: any): void => {
+  selectedDate.value = value;
+  const [year, month, day] = value;
+  // 确保月份和日期是两位数
+  const formattedMonth = month.padStart(2, '0');
+  const formattedDay = day.padStart(2, '0');
+  formData.value.birthday = `${year}-${formattedMonth}-${formattedDay}`;
+  showDatePicker.value = false;
+};
+
+// 格式化生日显示
+const formatBirthday = (birthday: string): string => {
+  if (!birthday) return '';
+
+  try {
+    // 处理ISO 8601格式的日期
+    if (birthday.includes('T')) {
+      const date = new Date(birthday);
+      if (!isNaN(date.getTime())) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      }
+    }
+
+    // 处理YYYY-MM-DD格式
+    return birthday;
+  } catch (e) {
+    console.error('格式化生日失败:', e);
+    return birthday;
+  }
+};
 
 // 地址选择器
 const showAddressPicker = ref(false);
 const areaCode = ref('');
-const selectedArea = ref<string[]>([]);
 const areaRef = ref<any>(null);
 
-// 头像预览
-const previewAvatar = () => {
-  const avatar =
-    formData.value.userAvatar ||
-    'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg';
-  showImagePreview([avatar]);
+// 获取地址文本显示
+const getLocationText = (): string => {
+  const parts = [];
+  if (formData.value.province) parts.push(formData.value.province);
+  if (formData.value.city) parts.push(formData.value.city);
+  if (formData.value.district) parts.push(formData.value.district);
+  return parts.join(' ');
 };
 
-// 选择头像后跳转到裁剪页面
+// 地址确认事件
+const onAddressConfirm = (): void => {
+  if (areaRef.value) {
+    try {
+      // 获取当前选中的值
+      const selectedValues = areaRef.value.getSelectedOptions();
+      if (selectedValues && selectedValues.length > 0) {
+        formData.value.province = selectedValues[0]?.text || '';
+        formData.value.city = selectedValues[1]?.text || '';
+        formData.value.district = selectedValues[2]?.text || '';
+      }
+    } catch (error) {
+      console.error('获取地址选择数据失败:', error);
+    }
+  }
+  showAddressPicker.value = false;
+};
+
+// 预览头像
+const previewAvatar = (): void => {
+  if (formData.value.userAvatar) {
+    showImagePreview({
+      images: [formData.value.userAvatar],
+      showIndex: false,
+    });
+  }
+};
+
+// 处理头像选择
 const onAvatarSelected = (
   file: UploaderFileListItem | UploaderFileListItem[],
 ): void => {
@@ -363,101 +387,6 @@ const onAvatarSelected = (
       },
     });
   }
-};
-
-// 直接处理头像上传响应
-const handleAvatarUploadResponse = (response: any): void => {
-  if (response && response.code === 0 && response.data) {
-    // 设置新的头像URL到表单
-    formData.value.userAvatar = response.data;
-    // 不再自动保存个人资料，避免覆盖其他表单数据
-    showSuccessToast('头像更新成功');
-  } else {
-    showToast(response.message || '头像更新失败');
-  }
-};
-
-// 处理直接传入的JSON字符串
-const handleDirectJsonInput = (jsonStr: string): void => {
-  try {
-    console.log('处理直接传入的JSON字符串:', jsonStr);
-    const response = JSON.parse(jsonStr);
-    if (response && response.code === 0 && response.data) {
-      // 设置新的头像URL到表单
-      formData.value.userAvatar = response.data;
-      console.log('已更新头像URL:', response.data);
-    }
-  } catch (e) {
-    console.error('解析JSON字符串失败:', e);
-  }
-};
-
-// 格式化生日显示
-const formatBirthday = (date: string): string => {
-  console.log('格式化生日，原始值:', date);
-
-  if (!date) return '';
-
-  try {
-    // 处理ISO 8601格式的日期（如：2025-03-12T16:00:00.000+00:00）
-    if (date.includes('T')) {
-      const dateObj = new Date(date);
-      if (isNaN(dateObj.getTime())) {
-        console.log('无效的日期对象');
-        return date; // 如果日期无效，返回原始字符串
-      }
-
-      const year = dateObj.getFullYear();
-      // getMonth()返回0-11，需要+1
-      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-      const day = dateObj.getDate().toString().padStart(2, '0');
-
-      const formatted = `${year}年${month}月${day}日`;
-      console.log('格式化后的ISO日期:', formatted);
-      return formatted;
-    }
-
-    // 处理普通的YYYY-MM-DD格式
-    const dateParts = date.split('-');
-    if (dateParts.length !== 3) {
-      console.log('无效的日期格式');
-      return date;
-    }
-
-    const [year, month, day] = dateParts;
-    const formatted = `${year}年${month}月${day}日`;
-    console.log('格式化后的标准日期:', formatted);
-    return formatted;
-  } catch (error) {
-    console.error('格式化生日失败:', error, date);
-    return date;
-  }
-};
-
-// 处理日期选择
-const onDateConfirm = (): void => {
-  const [year, month, day] = selectedDate.value;
-  const formattedMonth = (month || '').padStart(2, '0');
-  const formattedDay = (day || '').padStart(2, '0');
-  formData.value.userBirthday = `${year}-${formattedMonth}-${formattedDay}`;
-  showDatePicker.value = false;
-};
-
-// 处理地址选择
-const onAreaConfirm = (): void => {
-  if (areaRef.value) {
-    try {
-      // 获取当前选中的值
-      const selectedValues = areaRef.value.getSelectedOptions();
-      const areaNames = selectedValues.map((item: any) => item.text);
-      selectedArea.value = areaNames;
-      formData.value.userLocation = areaNames.join(' ');
-    } catch (error) {
-      console.error('获取地址选择数据失败:', error);
-      showToast('获取地址选择数据失败');
-    }
-  }
-  showAddressPicker.value = false;
 };
 
 // 获取用户信息
@@ -508,92 +437,54 @@ const fetchUserProfile = async (): Promise<void> => {
 // 根据用户ID获取用户信息
 const fetchUserProfileById = async (userId: number): Promise<void> => {
   try {
-    // 使用UserControllerService获取用户信息，传入用户ID
-    const response = await UserControllerService.getUserVoByIdUsingGet(userId);
+    // 使用UserControllerService.getUserByIdUsingGet获取用户信息
+    const response = await UserControllerService.getUserByIdUsingGet(userId);
     console.log('获取用户信息响应:', response);
 
     if (response.code === 0 && response.data) {
-      const userVO: UserVO = response.data;
-      console.log('获取到的用户信息:', userVO);
-      console.log(
-        'wechatId字段:',
-        userVO.wechatId,
-        '类型:',
-        typeof userVO.wechatId,
-      );
-      console.log(
-        'birthday字段:',
-        userVO.birthday,
-        '类型:',
-        typeof userVO.birthday,
-      );
+      const user: User = response.data;
+      console.log('获取到的用户信息:', user);
 
-      // 将UserVO数据映射到formData
+      // 映射用户数据到表单
       formData.value = {
-        ...formData.value,
-        id: userVO.id || null,
-        userName: userVO.userName || '',
-        userAvatar: userVO.userAvatar || '',
-        userPhone: userVO.userPhone || '',
-        userEmail: userVO.userEmail || '',
-        userProfile: userVO.userProfile || '',
-        userRole: userVO.userRole || '',
-        userGender:
-          userVO.userGender !== undefined ? String(userVO.userGender) : '',
-        userBirthday: userVO.birthday || '',
-        userWechat: userVO.wechatId || '',
-        createTime: userVO.createTime || '',
+        id: user.id,
+        userName: user.userName || '',
+        userAvatar: user.userAvatar || '',
+        userPhone: user.userPhone || '',
+        userEmail: user.userEmail || '',
+        userProfile: user.userProfile || '',
+        userGender: user.userGender,
+        birthday: user.birthday,
+        wechatId: user.wechatId,
+        province: user.province,
+        city: user.city,
+        district: user.district,
       };
 
-      console.log('映射后的表单数据:', formData.value);
-      console.log(
-        'userWechat字段:',
-        formData.value.userWechat,
-        '类型:',
-        typeof formData.value.userWechat,
-      );
-      console.log(
-        'userBirthday字段:',
-        formData.value.userBirthday,
-        '类型:',
-        typeof formData.value.userBirthday,
-      );
-
       // 设置性别显示文本
-      if (
-        formData.value.userGender !== undefined &&
-        formData.value.userGender !== ''
-      ) {
-        displayGender.value = getGenderText(String(formData.value.userGender));
-        console.log(
-          '设置性别显示文本:',
-          formData.value.userGender,
-          displayGender.value,
-        );
+      if (formData.value.userGender !== undefined) {
+        displayGender.value = getGenderText(formData.value.userGender);
       }
 
       // 如果有生日数据，初始化日期选择器
-      if (formData.value.userBirthday) {
+      if (formData.value.birthday) {
         try {
           let year, month, day;
 
           // 处理ISO 8601格式的日期
-          if (formData.value.userBirthday.includes('T')) {
-            const dateObj = new Date(formData.value.userBirthday);
+          if (formData.value.birthday.includes('T')) {
+            const dateObj = new Date(formData.value.birthday);
             if (!isNaN(dateObj.getTime())) {
               year = String(dateObj.getFullYear());
-              // getMonth()返回0-11，需要+1
-              month = String(dateObj.getMonth() + 1);
-              day = String(dateObj.getDate());
+              month = String(dateObj.getMonth() + 1).padStart(2, '0');
+              day = String(dateObj.getDate()).padStart(2, '0');
 
               // 更新formData中的生日格式为YYYY-MM-DD
-              const formattedMonth = month.padStart(2, '0');
-              const formattedDay = day.padStart(2, '0');
-              formData.value.userBirthday = `${year}-${formattedMonth}-${formattedDay}`;
+              formData.value.birthday = `${year}-${month}-${day}`;
             }
           } else {
             // 处理普通的YYYY-MM-DD格式
-            const dateParts = formData.value.userBirthday.split('-');
+            const dateParts = formData.value.birthday.split('-');
             if (dateParts.length === 3) {
               [year, month, day] = dateParts;
             }
@@ -601,26 +492,9 @@ const fetchUserProfileById = async (userId: number): Promise<void> => {
 
           if (year && month && day) {
             selectedDate.value = [year, month, day];
-            console.log('初始化日期选择器:', selectedDate.value);
           }
         } catch (error) {
-          console.error(
-            '初始化日期选择器失败:',
-            error,
-            formData.value.userBirthday,
-          );
-        }
-      }
-
-      // 如果有地址数据，初始化地址选择器
-      if (userVO.province || userVO.city || userVO.district) {
-        const locationParts = [];
-        if (userVO.province) locationParts.push(userVO.province);
-        if (userVO.city) locationParts.push(userVO.city);
-        if (userVO.district) locationParts.push(userVO.district);
-
-        if (locationParts.length > 0) {
-          formData.value.userLocation = locationParts.join(' ');
+          console.error('初始化日期选择器失败:', error);
         }
       }
     } else {
@@ -643,67 +517,30 @@ const saveProfile = async (): Promise<void> => {
   });
 
   try {
-    console.log('保存前的表单数据:', formData.value);
-    console.log(
-      'userWechat字段:',
-      formData.value.userWechat,
-      '类型:',
-      typeof formData.value.userWechat,
-    );
-    console.log(
-      'userBirthday字段:',
-      formData.value.userBirthday,
-      '类型:',
-      typeof formData.value.userBirthday,
-    );
-
     // 构建符合UserUpdateMyRequest的数据结构
     const updateData: UserUpdateMyRequest = {
-      userAvatar: formData.value.userAvatar,
       userName: formData.value.userName,
+      userAvatar: formData.value.userAvatar,
       userPhone: formData.value.userPhone,
-      userProfile: formData.value.userProfile,
       userEmail: formData.value.userEmail,
-      wechatId: formData.value.userWechat,
-      userGender:
-        formData.value.userGender !== undefined &&
-        formData.value.userGender !== ''
-          ? Number(formData.value.userGender)
-          : undefined,
-      birthday: formData.value.userBirthday || undefined,
+      userProfile: formData.value.userProfile,
+      userGender: formData.value.userGender,
+      birthday: formData.value.birthday,
+      wechatId: formData.value.wechatId,
+      province: formData.value.province,
+      city: formData.value.city,
+      district: formData.value.district,
     };
-
-    console.log(
-      'wechatId字段:',
-      updateData.wechatId,
-      '类型:',
-      typeof updateData.wechatId,
-    );
-    console.log(
-      'birthday字段:',
-      updateData.birthday,
-      '类型:',
-      typeof updateData.birthday,
-    );
-
-    // 如果有地址信息，添加到请求中
-    if (formData.value.userLocation) {
-      const locationParts = formData.value.userLocation.split(' ');
-      if (locationParts.length >= 1) updateData.province = locationParts[0];
-      if (locationParts.length >= 2) updateData.city = locationParts[1];
-      if (locationParts.length >= 3) updateData.district = locationParts[2];
-    }
 
     console.log('准备更新的用户数据:', updateData);
 
     // 使用UserControllerService更新用户信息
     const response =
       await UserControllerService.updateMyUserUsingPost(updateData);
-    console.log('保存个人资料响应:', response);
 
     if (response.code === 0 && response.data) {
       showSuccessToast('个人资料保存成功');
-      // 重新获取用户信息
+      // 重新获取最新的用户信息
       fetchUserProfile();
     } else if (response.code === 40100) {
       // 未登录
@@ -727,19 +564,6 @@ const saveProfile = async (): Promise<void> => {
 onMounted(() => {
   console.log('页面加载，开始获取用户信息');
   fetchUserProfile();
-
-  // 添加一个定时器，在页面加载后打印出所有表单字段的值
-  setTimeout(() => {
-    console.log('表单字段值:');
-    console.log('userName:', formData.value.userName);
-    console.log('userPhone:', formData.value.userPhone);
-    console.log('userEmail:', formData.value.userEmail);
-    console.log('userWechat:', formData.value.userWechat);
-    console.log('userProfile:', formData.value.userProfile);
-    console.log('userGender:', formData.value.userGender);
-    console.log('userBirthday:', formData.value.userBirthday);
-    console.log('userLocation:', formData.value.userLocation);
-  }, 2000);
 });
 </script>
 
@@ -747,6 +571,7 @@ onMounted(() => {
 .profile-settings {
   min-height: 100vh;
   background: #f7f8fa;
+  padding-bottom: 30px;
 }
 
 .profile-form {
@@ -757,21 +582,42 @@ onMounted(() => {
   margin: 20px 16px;
 }
 
+:deep(.van-button--primary) {
+  background-color: #1989fa;
+  border-color: #1989fa;
+}
+
+:deep(.van-button--round) {
+  border-radius: 22px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 16px;
+}
+
 .avatar-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-  width: 100%;
+  gap: 16px;
+  width: auto;
 }
 
 .avatar-uploader {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .avatar-button {
-  border: none;
+  padding: 0 12px;
   color: #1989fa;
+  border-radius: 16px;
+  font-size: 14px;
+  background-color: transparent;
+  border: 1px solid #1989fa;
+  height: 28px;
+  line-height: 26px;
+}
+
+:deep(.van-button--plain) {
+  background: transparent;
 }
 
 .area-picker-container,
@@ -787,21 +633,59 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
+  padding: 16px;
   border-bottom: 1px solid #ebedf0;
 }
 
 .area-picker-title,
 .date-picker-title {
-  font-size: 16px;
   font-weight: 500;
+  font-size: 16px;
 }
 
-:deep(.van-cell__title) {
-  flex: 0 0 80px;
+.area-picker-close,
+.date-picker-close {
+  font-size: 14px;
+  color: #1989fa;
+}
+
+.area-picker-content,
+.date-picker-content {
+  flex: 1;
+  overflow: hidden;
 }
 
 :deep(.van-field__label) {
+  color: #323233;
+  font-weight: normal;
   width: 80px;
+}
+
+:deep(.van-cell__title) {
+  flex: none;
+  width: 80px;
+}
+
+:deep(.van-cell) {
+  padding: 15px 16px;
+  line-height: 24px;
+  font-size: 14px;
+}
+
+:deep(.van-field__control) {
+  color: #323233;
+}
+
+:deep(.van-cell-group--inset) {
+  margin: 12px 16px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:deep(.van-field__word-limit) {
+  margin-top: 4px;
+  text-align: right;
+  margin-right: 0;
+  color: #969799;
 }
 </style>
