@@ -90,7 +90,7 @@
     <!-- 提醒时间选择器 -->
     <van-popup v-model:show="showReminderPicker" position="bottom">
       <van-picker
-        :columns="timeColumns.map(time => ({ text: time, value: time }))"
+        :columns="timeColumns.map((time) => ({ text: time, value: time }))"
         @confirm="onReminderConfirm"
         @cancel="showReminderPicker = false"
         show-toolbar
@@ -192,7 +192,9 @@ const selectedMinute = ref('00');
 // 默认时间索引
 const defaultTimeIndex = computed(() => {
   const currentTime = `${selectedHour.value}:${selectedMinute.value}`;
-  return timeColumns.indexOf(currentTime) !== -1 ? timeColumns.indexOf(currentTime) : 0;
+  return timeColumns.indexOf(currentTime) !== -1
+    ? timeColumns.indexOf(currentTime)
+    : 0;
 });
 
 interface PickerOption {
@@ -213,14 +215,14 @@ const onGoalConfirm = (value: PickerOption): void => {
 const onReminderConfirm = (value: PickerOption): void => {
   const formattedTime = value.selectedValues[0] as string;
   learningSettings.value.reminderTime = formattedTime;
-  
+
   // 更新选中的小时和分钟值
   const [hour, minute] = formattedTime.split(':');
   if (hour && minute) {
     selectedHour.value = hour;
     selectedMinute.value = minute;
   }
-  
+
   showReminderPicker.value = false;
   showToast('设置已保存');
 };
