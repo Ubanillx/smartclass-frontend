@@ -10,10 +10,10 @@
         <div v-if="articles.length === 0 && !loading" class="empty-state">
           <van-empty description="暂无文章" />
         </div>
-        
-        <div 
-          v-for="article in articles" 
-          :key="article.id" 
+
+        <div
+          v-for="article in articles"
+          :key="article.id"
           class="article-item"
           @click="$emit('article-click', article)"
         >
@@ -25,7 +25,9 @@
               width="120"
               height="80"
             />
-            <span class="article-tag" :style="getTagStyle(article.category)">{{ article.category }}</span>
+            <span class="article-tag" :style="getTagStyle(article.category)">{{
+              article.category
+            }}</span>
           </div>
           <div class="article-info">
             <h3 class="article-title">{{ article.title }}</h3>
@@ -43,7 +45,10 @@
                 <van-icon name="good-job-o" />
                 <span>{{ article.likeCount }}</span>
               </div>
-              <div class="meta-item difficulty-tag" :class="getDifficultyClass(article.difficulty)">
+              <div
+                class="meta-item difficulty-tag"
+                :class="getDifficultyClass(article.difficulty)"
+              >
                 {{ article.difficulty }}
               </div>
             </div>
@@ -94,7 +99,7 @@ const refreshing = ref(props.refreshing || false);
 // 根据文章类别返回不同的样式
 const getTagStyle = (category: string): Record<string, string> => {
   const styles: Record<string, string> = {};
-  
+
   switch (category) {
     case '励志':
       styles.background = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%)';
@@ -114,7 +119,7 @@ const getTagStyle = (category: string): Record<string, string> => {
     default:
       styles.background = 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)';
   }
-  
+
   return styles;
 };
 
@@ -238,4 +243,4 @@ const getDifficultyClass = (difficulty: string): string => {
 .empty-state {
   padding: 32px 0;
 }
-</style> 
+</style>
