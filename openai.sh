@@ -1,0 +1,1 @@
+openapi --input default_OpenAPI.json --output ./generated --client axios
