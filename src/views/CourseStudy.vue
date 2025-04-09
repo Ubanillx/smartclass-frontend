@@ -13,6 +13,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { CourseStudy } from '../components/Course';
 import { BackButton } from '../components/Common';
+import { fetchCourseDetail, Course as CourseType } from '../api/mock';
 
 interface CourseHighlight {
   icon: string;
@@ -20,17 +21,9 @@ interface CourseHighlight {
   text: string;
 }
 
-interface Course {
-  id: number;
-  title: string;
-  brief: string;
-  cover: string;
-  tag: string;
-  tagColor: string;
+// 扩展Course类型，添加我们需要的描述和亮点
+interface EnhancedCourse extends CourseType {
   grade?: string;
-  level: string;
-  duration: number;
-  studentsCount?: number;
   description?: string;
   highlights?: CourseHighlight[];
 }
@@ -38,33 +31,33 @@ interface Course {
 const route = useRoute();
 const router = useRouter();
 const courseId = ref<number>(Number(route.params.id) || 0);
-const course = ref<Course | null>(null);
+const course = ref<EnhancedCourse | null>(null);
 
-// 模拟获取课程数据
-onMounted(() => {
-  // 这里应该是从API获取课程数据
-  // 这里使用模拟数据
-  setTimeout(() => {
+// 获取课程数据
+onMounted(async () => {
+  try {
+    // 从mock API获取课程数据
+    const courseData = await fetchCourseDetail(courseId.value);
+    
+    // 准备课程描述和亮点
     course.value = {
-      id: courseId.value,
-      title: '趣味英语口语课堂',
-      brief: '通过游戏和动画学习日常英语对话',
-      cover: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-      tag: '英语',
-      tagColor: '#1989fa',
-      grade: '三年级',
-      level: '初级',
-      duration: 30,
-      studentsCount: 1234,
-      description:
-        '本课程通过有趣的动画和游戏互动，帮助同学们掌握日常英语口语。课程内容包括基础发音、常用对话、情景会话等，通过生动有趣的教学方式，让学习变得轻松愉快。',
+      ...courseData,
+      description: `本课程是${courseData.subject || ''}学科的${courseData.level}课程，${courseData.brief}`,
       highlights: [
-        { icon: 'smile-o', color: '#ff976a', text: '趣味教学' },
-        { icon: 'music-o', color: '#07c160', text: '互动练习' },
-        { icon: 'star-o', color: '#ffcd32', text: '奖励机制' },
-      ],
+        { 
+          icon: courseData.level === '初级' ? 'smile-o' : 
+                courseData.level === '中级' ? 'bulb-o' : 'certificate',
+          color: courseData.tagColor,
+          text: `${courseData.level}级别` 
+        },
+        { icon: 'clock-o', color: '#1989fa', text: `${courseData.duration}分钟` },
+        { icon: 'friends-o', color: '#07c160', text: `${courseData.studentsCount || 0}人学习` }
+      ]
     };
-  }, 500);
+  } catch (error) {
+    console.error('获取课程数据失败:', error);
+    showToast('获取课程数据失败，请重试');
+  }
 });
 </script>
 
