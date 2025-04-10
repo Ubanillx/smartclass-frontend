@@ -73,7 +73,7 @@ import { showToast } from 'vant';
 // 定义聊天项类型
 interface ChatItemType {
   id: number;
-  sessionId: string;
+  sessionId: any;
   assistantId: number;
   assistantName: string;
   avatar: string;
@@ -100,21 +100,21 @@ const chatMessages = ref<ChatMessageVO[]>([]);
 // 将API返回的数据转换为UI组件需要的格式
 const transformedChatHistory = computed(() => {
   return chatMessages.value.map(message => {
-    // 确保sessionId不为空，如果为空则使用消息ID的字符串形式
     const chatSessionId = message.sessionId || String(message.id || '0');
+    const content = message.content || '';
+    const messageType = message.messageType || '对话';
     
-    // 使用any类型暂时绕过类型检查问题
     return {
       id: message.id || 0,
       sessionId: chatSessionId as any,
       assistantId: message.aiAvatarId || 0,
       assistantName: message.aiAvatarName || '未知助手',
       avatar: message.aiAvatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-      lastMessage: message.content || '',
-      summary: `对话内容: ${message.content?.substring(0, 50)}${message.content && message.content.length > 50 ? '...' : ''}`,
+      lastMessage: content,
+      summary: `对话内容: ${content.substring(0, 50)}${content.length > 50 ? '...' : ''}`,
       lastTime: message.createTime ? formatTime(message.createTime as string) : '未知时间',
       online: false,
-      tags: [message.messageType || '对话'],
+      tags: [messageType],
       type: 1,
     };
   });
@@ -131,7 +131,6 @@ const formatTime = (timeStr: string): string => {
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
     if (diffDays === 0) {
-      // 今天，显示小时和分钟
       return date.getHours().toString().padStart(2, '0') + ':' + 
              date.getMinutes().toString().padStart(2, '0');
     } else if (diffDays === 1) {
@@ -140,11 +139,9 @@ const formatTime = (timeStr: string): string => {
       const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
       return days[date.getDay()];
     } else {
-      // 超过一周，显示日期
       return `${date.getMonth() + 1}月${date.getDate()}日`;
     }
   } catch (e) {
-    console.error('日期格式化错误:', e);
     return timeStr;
   }
 };
@@ -154,29 +151,30 @@ const loadChatHistory = async () => {
   loading.value = true;
   try {
     const response = await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
-      undefined, // aiAvatarId 可选
+      undefined,
       currentPage.value,
       pageSize.value
     );
     
     if (response.code === 0 && response.data) {
-      // 确保每条记录都有有效的sessionId
-      chatMessages.value = (response.data.records || []).map(record => {
-        if (!record.sessionId && record.id) {
-          // 如果没有sessionId，使用id字符串作为会话ID
-          record.sessionId = String(record.id);
-        } else if (!record.sessionId) {
-          // 如果既没有sessionId也没有id，设置一个默认值
-          record.sessionId = '0';
-        }
-        return record;
-      });
-      total.value = response.data.total || 0;
+      chatMessages.value = (response.data.records || [])
+        .filter(record => {
+          return !(record.content && record.content.includes("会话已创建"));
+        })
+        .map(record => {
+          if (!record.sessionId && record.id) {
+            record.sessionId = String(record.id);
+          } else if (!record.sessionId) {
+            record.sessionId = '0';
+          }
+          return record;
+        });
+      
+      total.value = chatMessages.value.length;
     } else {
       showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
     }
   } catch (error) {
-    console.error('加载聊天历史出错:', error);
     showToast('加载聊天历史出错');
   } finally {
     loading.value = false;
@@ -191,7 +189,6 @@ const handlePageChange = (page: number) => {
 
 // 处理对话选择
 const handleChatSelect = (chat: any) => {
-  // 确保传递的是会话ID
   const sessionIdToUse = chat.sessionId || String(chat.id);
   emit('select', sessionIdToUse, chat.assistantId);
 };
