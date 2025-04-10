@@ -190,7 +190,7 @@ const fetchUserData = async () => {
   try {
     await userStore.fetchCurrentUser();
     
-    if (userStore.isLoggedIn && userStore.userInfo) {
+    if (userStore.userInfo) {
       if (userStore.userInfo.id) {
         // 尝试从API获取最新的用户数据
         const response = await UserControllerService.getUserVoByIdUsingGet(
