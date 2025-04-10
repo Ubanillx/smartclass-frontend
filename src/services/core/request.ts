@@ -244,6 +244,17 @@ export const getResponseHeader = (response: AxiosResponse<any>, responseHeader?:
 
 export const getResponseBody = (response: AxiosResponse<any>): any => {
     if (response.status !== 204) {
+        if (response.data && response.data.code === 40100) {
+            console.log('API返回未登录状态码40100，正在清除登录状态并跳转到登录页');
+            localStorage.removeItem('userInfo');
+            localStorage.removeItem('token');
+            
+            if (!window.location.pathname.includes('/login')) {
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 100);
+            }
+        }
         return response.data;
     }
     return undefined;

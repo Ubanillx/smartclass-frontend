@@ -245,7 +245,9 @@ router.beforeEach(
     from: RouteLocationNormalized,
     next: NavigationGuardNext,
   ) => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    // 检查localStorage中是否有用户信息来判断登录状态
+    const userInfo = localStorage.getItem('userInfo');
+    const isLoggedIn = userInfo !== null && userInfo !== undefined;
 
     if (to.meta.requiresAuth && !isLoggedIn) {
       // 需要登录但未登录，重定向到登录页

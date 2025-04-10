@@ -8,7 +8,6 @@ export const DEFAULT_USER_AVATAR = '/default.jpg';
 
 export const useUserStore = defineStore('user', () => {
   // 状态
-  const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
   const userInfo = ref<LoginUserVO | null>(null);
 
   // 初始化用户信息
@@ -31,9 +30,7 @@ export const useUserStore = defineStore('user', () => {
           response.data.userAvatar = DEFAULT_USER_AVATAR;
         }
         userInfo.value = response.data;
-        isLoggedIn.value = true;
         localStorage.setItem('userInfo', JSON.stringify(response.data));
-        localStorage.setItem('isLoggedIn', 'true');
         return response.data;
       }
       return null;
@@ -57,9 +54,7 @@ export const useUserStore = defineStore('user', () => {
           response.data.userAvatar = DEFAULT_USER_AVATAR;
         }
         userInfo.value = response.data;
-        isLoggedIn.value = true;
         localStorage.setItem('userInfo', JSON.stringify(response.data));
-        localStorage.setItem('isLoggedIn', 'true');
         return { success: true, data: response.data };
       }
 
@@ -82,9 +77,7 @@ export const useUserStore = defineStore('user', () => {
     } finally {
       // 无论API调用是否成功，都清除本地状态
       userInfo.value = null;
-      isLoggedIn.value = false;
       localStorage.removeItem('userInfo');
-      localStorage.removeItem('isLoggedIn');
     }
   };
 
@@ -94,7 +87,6 @@ export const useUserStore = defineStore('user', () => {
   };
 
   return {
-    isLoggedIn,
     userInfo,
     login,
     logout,
