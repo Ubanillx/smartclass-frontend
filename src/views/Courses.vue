@@ -300,7 +300,7 @@ const recommendedCourses = ref<EnhancedCourse[]>([
     cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/88e4f754e8d2413ea55a0c1c7d7f7b46.png',
     tag: '科学',
     tagColor: '#7232dd',
-    grade: '五年级',
+    grade: '初三',
     level: '初级',
     duration: 40,
     studentsCount: 567,
@@ -321,8 +321,6 @@ const filteredCourses = computed(() => {
 
 // 下拉刷新
 const onRefresh = () => {
-  console.log('下拉刷新，重新获取课程页面数据');
-
   // 模拟网络请求延迟
   setTimeout(() => {
     refreshing.value = false;
@@ -332,8 +330,6 @@ const onRefresh = () => {
 
 // 在组件挂载时检查 URL 参数
 onMounted(() => {
-  console.log('Courses页面加载，开始获取数据');
-
   // 从URL参数中获取分类和年级
   const categoryId = parseInt(route.query.category as string) || 0;
   const grade = parseInt(route.query.grade as string) || 0;
