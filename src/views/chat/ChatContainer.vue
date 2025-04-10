@@ -90,9 +90,6 @@ const handleMore = () => {
 
 // 下拉刷新
 const onRefresh = () => {
-  console.log('下拉刷新，重新获取对话页面数据');
-
-  // 模拟网络请求延迟
   setTimeout(() => {
     refreshing.value = false;
     showToast('刷新成功');
@@ -130,7 +127,6 @@ const switchTab = (tab: string) => {
 
 // 处理对话选择
 const handleChatSelect = (messageId: string, assistantId: number) => {
-  console.log('选择历史对话:', messageId, '助手ID:', assistantId);
   router.push({
     path: `/chat-detail/${assistantId}`,
     query: { sessionId: messageId }
@@ -139,7 +135,6 @@ const handleChatSelect = (messageId: string, assistantId: number) => {
 
 // 处理智能助手选择
 const handleAssistantSelect = (assistantId: number) => {
-  console.log('选择智能助手:', assistantId);
   router.push(`/chat-detail/${assistantId}`);
 };
 </script>
