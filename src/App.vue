@@ -34,6 +34,20 @@
         </template>
         <span :class="{ 'active-text': active === 1 }">对话</span>
       </van-tabbar-item>
+      <van-tabbar-item to="/circle">
+        <template #icon="props">
+          <div class="tabbar-icon-container">
+            <svg
+              class="icon"
+              :class="{ 'active-icon': props.active }"
+              aria-hidden="true"
+            >
+              <use xlink:href="#icon-friends"></use>
+            </svg>
+          </div>
+        </template>
+        <span :class="{ 'active-text': active === 2 }">圈子</span>
+      </van-tabbar-item>
       <van-tabbar-item to="/courses">
         <template #icon="props">
           <div class="tabbar-icon-container">
@@ -46,7 +60,7 @@
             </svg>
           </div>
         </template>
-        <span :class="{ 'active-text': active === 2 }">课程</span>
+        <span :class="{ 'active-text': active === 3 }">课程</span>
       </van-tabbar-item>
       <van-tabbar-item to="/profile">
         <template #icon="props">
@@ -60,7 +74,7 @@
             </svg>
           </div>
         </template>
-        <span :class="{ 'active-text': active === 3 }">我的</span>
+        <span :class="{ 'active-text': active === 4 }">我的</span>
       </van-tabbar-item>
     </van-tabbar>
   </div>
@@ -80,7 +94,7 @@ const active = ref(0);
 // 计算是否显示底部导航栏
 const showTabbar = computed(() => {
   // 一级页面（显示底部导航栏）
-  const mainRoutes = ['/', '/chat', '/courses', '/profile'];
+  const mainRoutes = ['/', '/chat', '/circle', '/courses', '/profile'];
 
   // 判断当前路由是否为一级页面
   return mainRoutes.includes(route.path);
@@ -95,14 +109,16 @@ watch(
       active.value = 0;
     } else if (newPath === '/chat') {
       active.value = 1;
-    } else if (newPath === '/courses') {
+    } else if (newPath === '/circle') {
       active.value = 2;
-    } else if (newPath === '/profile') {
+    } else if (newPath === '/courses') {
       active.value = 3;
+    } else if (newPath === '/profile') {
+      active.value = 4;
     }
 
     // 设置页面样式
-    const mainRoutes = ['/', '/chat', '/courses', '/profile'];
+    const mainRoutes = ['/', '/chat', '/circle', '/courses', '/profile'];
     const isMainRoute = mainRoutes.includes(newPath);
 
     // 移除所有相关类
