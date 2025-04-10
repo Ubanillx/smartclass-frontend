@@ -195,7 +195,7 @@ const switchChapter = (index: number) => {
   if (videoRef.value) {
     videoRef.value.load();
     videoRef.value.play().catch((err) => {
-      console.error('视频播放失败:', err);
+      // 视频播放失败的静默处理
     });
   }
 };
