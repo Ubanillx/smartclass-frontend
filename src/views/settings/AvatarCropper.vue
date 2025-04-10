@@ -74,7 +74,6 @@ onMounted(() => {
 // 裁剪变化时的回调
 const onChange = (result: any): void => {
   cropperResult.value = result;
-  console.log('裁剪变化:', result);
 };
 
 // 保存裁剪结果
@@ -108,18 +107,14 @@ const onSave = async (): Promise<void> => {
         );
       });
 
-      console.log('裁剪结果转换为Blob成功，大小:', blob.size, 'bytes');
-
       // 创建一个File对象，确保设置正确的类型
       const avatarFile = new File([blob], `avatar_${Date.now()}.jpg`, {
         type: 'image/jpeg',
       });
 
       // 上传图片到服务器
-      console.log('开始上传头像图片...');
       const response =
         await FileControllerService.uploadAvatarUsingPost(avatarFile);
-      console.log('上传响应:', response);
 
       // 检查是否未登录
       if (response.code === 40100) {
@@ -133,7 +128,6 @@ const onSave = async (): Promise<void> => {
       if (response.code === 0 && response.data) {
         // 上传成功，获取图片URL
         const imageUrl = response.data;
-        console.log('上传成功，URL:', imageUrl);
 
         // 将图片URL传回个人资料页面
         router.replace({
@@ -148,13 +142,11 @@ const onSave = async (): Promise<void> => {
         throw new Error(response.message || '上传失败');
       }
     } catch (error) {
-      console.error('上传头像失败:', error);
       showToast('上传头像失败，请重试');
     } finally {
       uploading.value = false;
     }
   } catch (error) {
-    console.error('裁剪失败:', error);
     showToast('裁剪失败，请重试');
     uploading.value = false;
   }
