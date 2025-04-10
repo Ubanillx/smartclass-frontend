@@ -4,6 +4,8 @@ import CourseItem from './CourseItem.vue';
 import CourseDetail from './CourseDetail.vue';
 import CourseStudy from './CourseStudy.vue';
 
+class CourseSchedule {}
+
 export {
   CourseCategories,
   CourseList,
