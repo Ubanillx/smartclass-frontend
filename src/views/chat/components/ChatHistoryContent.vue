@@ -14,7 +14,7 @@
       
       <!-- 分页控件 -->
       <div class="pagination-container" v-if="total > 0">
-        <!-- 大屏幕显示完整分页 -->
+        <!-- 统一使用大屏幕分页样式 -->
         <van-pagination 
           v-model="currentPage" 
           :total-items="total" 
@@ -22,7 +22,7 @@
           :show-page-size="5"
           force-ellipses
           @change="handlePageChange"
-          class="custom-pagination desktop-pagination"
+          class="custom-pagination"
         >
           <template #prev-text>
             <van-icon name="arrow-left" />
@@ -34,27 +34,6 @@
             <span class="page-desc-text">{{ currentPage }}/{{ Math.ceil(total / pageSize) }} 页</span>
           </template>
         </van-pagination>
-
-        <!-- 小屏幕显示简化版分页 -->
-        <div class="mobile-pagination">
-          <van-button 
-            :disabled="currentPage <= 1" 
-            @click="handlePageChange(currentPage - 1)"
-            class="page-btn prev-btn"
-            icon="arrow-left"
-            size="small"
-          />
-          
-          <div class="page-indicator">{{ currentPage }}/{{ Math.ceil(total / pageSize) }}</div>
-          
-          <van-button 
-            :disabled="currentPage >= Math.ceil(total / pageSize)" 
-            @click="handlePageChange(currentPage + 1)"
-            class="page-btn next-btn"
-            icon="arrow"
-            size="small"
-          />
-        </div>
       </div>
       
       <!-- 空状态提示 -->
@@ -405,96 +384,19 @@ onMounted(() => {
   margin-right: auto;
 }
 
-/* 移动端分页样式 */
-.mobile-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 280px;
-  padding: 8px 0;
-}
-
-.page-btn {
-  margin: 0 5px;
-  border-radius: 8px;
-  background-color: rgba(234, 240, 246, 0.7);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.page-btn:hover {
-  background-color: rgba(220, 230, 240, 0.85);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.page-btn:active {
-  transform: translateY(0) scale(0.95);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.page-btn.prev-btn:hover, 
-.page-btn.next-btn:hover {
-  color: #1989fa;
-}
-
-.prev-btn[disabled], 
-.next-btn[disabled] {
-  opacity: 0.5;
-  background-color: rgba(234, 234, 234, 0.5);
-  cursor: not-allowed;
-  transform: none;
-}
-
-.page-indicator {
-  font-family: 'Noto Sans SC', sans-serif;
-  color: #666;
-  padding: 0 10px;
-  font-size: 14px;
-  font-weight: 500;
-  min-width: 60px;
-  text-align: center;
-}
-
-/* 响应式设计 */
+/* 响应式设计调整 */
 @media (max-width: 480px) {
-  .mobile-pagination {
-    max-width: 240px;
-  }
-  
-  .mobile-pagination .page-btn {
-    min-width: 32px;
-    height: 32px;
-  }
-  
-  .page-indicator {
-    font-size: 13px;
-    min-width: 50px;
-  }
-  
   .pagination-container {
     max-width: 95%;
     margin: 12px auto;
-    padding: 6px 8px;
-  }
-  
-  .desktop-pagination {
-    display: none;
-  }
-  
-  .mobile-pagination {
-    display: flex;
+    padding: 8px 12px;
   }
 }
 
 @media (min-width: 481px) {
-  .desktop-pagination {
-    display: flex;
-  }
-  
-  .mobile-pagination {
-    display: none;
+  .pagination-container {
+    max-width: 600px;
+    margin: 16px auto;
   }
 }
 
@@ -508,6 +410,9 @@ onMounted(() => {
   --van-pagination-item-border-width: 0;
   --van-pagination-background-color: transparent;
   margin-top: 8px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 :deep(.custom-pagination .van-pagination__item) {
@@ -560,33 +465,5 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-/* 修改移动端按钮样式 */
-.mobile-pagination .page-btn {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 8px;
-}
-
-/* 修改移动端分页按钮的图标大小 */
-.mobile-pagination .van-icon {
-  font-size: 16px;
-}
-
-@media (max-width: 480px) {
-  .mobile-pagination {
-    max-width: 240px;
-  }
-  
-  .mobile-pagination .page-btn {
-    min-width: 32px;
-    height: 32px;
-  }
-  
-  .page-indicator {
-    font-size: 13px;
-    min-width: 50px;
-  }
 }
 </style>
