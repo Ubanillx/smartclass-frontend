@@ -186,7 +186,7 @@ const emojiList = ref([
 const userInfo = ref<UserInfo>({
   id: 1,
   name: '用户',
-  avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+  avatar: userStore.DEFAULT_USER_AVATAR,
 });
 
 // 助手信息
@@ -214,9 +214,9 @@ let currentEventSource: EventSource | null = null;
 let currentStreamController: AbortController | null = null;
 
 // 更新AI消息内容的辅助函数
-const updateAiMessage = (messageId: number, content: string) => {
+const updateAIMessage = (content: string) => {
   const messageIndex = messages.value.findIndex(
-    (msg) => msg && msg.id === messageId,
+    (msg) => msg && msg.id === currentAIMessageId.value,
   );
   if (messageIndex !== -1 && messages.value[messageIndex]) {
     messages.value[messageIndex].content = content;
@@ -251,14 +251,12 @@ const loadChatHistory = async () => {
     );
     
     if (response.code === 0 && response.data) {
-      console.log('获取历史消息成功:', response.data);
-      
       // 不再替换现有消息，始终保持欢迎消息
     } else {
-      console.error('获取历史消息失败:', response);
+      // 处理失败情况
     }
   } catch (error) {
-    console.error('获取历史消息失败:', error);
+    // 处理错误情况
   }
 };
 
@@ -271,16 +269,12 @@ const initializeChat = async () => {
     
     if (response.code === 0 && response.data) {
       sessionId.value = response.data;
-      console.log('创建会话成功，会话ID:', sessionId.value);
-      
       // 不再加载历史消息，确保欢迎消息始终显示
     } else {
       showToast('创建会话失败');
-      console.error('创建会话失败:', response);
     }
   } catch (error) {
     showToast('创建会话失败');
-    console.error('创建会话失败:', error);
   }
 };
 
@@ -291,8 +285,6 @@ const loadAiAvatarInfo = async () => {
     const response = await AiAvatarControllerService.getAiAvatarByIdUsingGet(aiAvatarId);
     
     if (response.code === 0 && response.data) {
-      console.log('获取AI分身信息成功:', response.data);
-      
       // 更新AI助手信息
       assistant.value = {
         id: response.data.id || aiAvatarId,
@@ -306,19 +298,14 @@ const loadAiAvatarInfo = async () => {
       if (messages.value.length > 0 && messages.value[0]?.type === 'ai') {
         messages.value[0].content = `你好！我是${assistant.value.name}。${assistant.value.description}`;
       }
-    } else {
-      console.error('获取AI分身信息失败:', response);
     }
   } catch (error) {
-    console.error('获取AI分身信息失败:', error);
+    // 处理错误情况
   }
 };
 
 // 初始化用户信息
 onMounted(async () => {
-  console.log('ChatDetail 组件挂载');
-  console.log('路由参数:', route.params);
-  
   // 如果用户信息不存在，尝试获取
   if (!userStore.userInfo) {
     await userStore.fetchCurrentUser();
@@ -327,6 +314,8 @@ onMounted(async () => {
   // 更新用户头像
   if (userStore.userInfo && userStore.userInfo.userAvatar) {
     userInfo.value.avatar = userStore.userInfo.userAvatar;
+  } else {
+    userInfo.value.avatar = userStore.DEFAULT_USER_AVATAR;
   }
   
   // 获取路由中的会话ID参数
@@ -337,7 +326,6 @@ onMounted(async () => {
 
   if (routeSessionId) {
     // 如果URL中有sessionId参数，说明是从历史对话列表进入
-    console.log('从历史对话列表进入，会话ID:', routeSessionId);
     sessionId.value = routeSessionId;
     
     // 获取历史消息
@@ -345,8 +333,6 @@ onMounted(async () => {
       const response = await AiAvatarChatControllerService.getChatHistoryUsingGet(sessionId.value);
       
       if (response.code === 0 && response.data) {
-        console.log('获取历史消息成功:', response.data);
-        
         // 转换消息格式并显示历史消息
         messages.value = response.data.map((msg: any) => ({
           id: msg.id || Date.now(),
@@ -355,7 +341,6 @@ onMounted(async () => {
           timestamp: msg.createTime ? new Date(msg.createTime).getTime() : Date.now(),
         }));
       } else {
-        console.error('获取历史消息失败:', response);
         // 显示欢迎消息作为后备
         const welcomeMessage: Message = {
           id: Date.now(),
@@ -366,7 +351,6 @@ onMounted(async () => {
         messages.value = [welcomeMessage];
       }
     } catch (error) {
-      console.error('获取历史消息失败:', error);
       // 显示欢迎消息作为后备
       const welcomeMessage: Message = {
         id: Date.now(),
@@ -378,7 +362,6 @@ onMounted(async () => {
     }
   } else {
     // 如果没有sessionId参数，说明是新建对话
-    console.log('新建对话');
     
     // 立即显示欢迎消息，不等待任何网络请求
     const welcomeMessage: Message = {
@@ -416,7 +399,8 @@ const stopStreamingResponse = async () => {
       };
       await AiAvatarChatControllerService.stopStreamingResponseUsingPost(stopRequest);
     } catch (error) {
-      console.error('停止流式响应失败:', error);
+      isAITyping.value = false;
+      currentAIMessageId.value = null;
     } finally {
       isAITyping.value = false;
       currentAIMessageId.value = null;
@@ -468,7 +452,6 @@ const sendMessage = async (text: string) => {
       const sessionResponse = await AiAvatarChatControllerService.createSessionUsingPost(assistant.value.id);
       if (sessionResponse.code === 0 && sessionResponse.data) {
         sessionId.value = sessionResponse.data;
-        console.log('创建新会话ID:', sessionId.value);
       } else {
         throw new Error('创建会话失败');
       }
@@ -481,8 +464,6 @@ const sendMessage = async (text: string) => {
       sessionId: sessionId.value || '',
       messageType: 'user',
     };
-
-    console.log('发送消息请求:', messageRequest);
     
     // 创建控制器
     const controller = new AbortController();
@@ -493,8 +474,6 @@ const sendMessage = async (text: string) => {
     
     // 获取API基础URL
     const apiUrl = `${OpenAPI.BASE}/api/chat/message/stream`;
-    
-    console.log('开始流式请求');
     
     // 使用fetchEventSource发起POST请求获取SSE流
     await fetchEventSource(apiUrl, {
@@ -508,19 +487,11 @@ const sendMessage = async (text: string) => {
       
       // 处理连接打开事件
       async onopen(response) {
-        console.log('SSE流式连接已打开, 状态:', response.status);
-        
         // 判断是否连接成功
         if (response.ok && response.headers.get('content-type')?.includes('text/event-stream')) {
-          console.log('SSE流式连接已建立成功');
-          // 打印头信息，辅助调试
-          response.headers.forEach((value, name) => {
-            console.log(`响应头 ${name}: ${value}`);
-          });
           return; // 连接成功
         } else if (response.status === 401 || response.status === 403) {
           // 未授权或禁止访问（未登录）
-          console.error('用户未登录或登录已过期:', response.status);
           showToast('登录已过期，请重新登录');
           
           // 清除本地登录状态
@@ -535,15 +506,12 @@ const sendMessage = async (text: string) => {
           throw new Error(`未登录: ${response.status}`);
         } else if (response.status === 404) {
           // 会话不存在，需要重新创建会话
-          console.error('会话不存在，将重新创建会话:', response.status);
-          
           // 将sessionId设为undefined，使下次发送消息时创建新会话
           sessionId.value = undefined;
           
           throw new Error('会话不存在，请重新发送消息');
         } else {
           // 其他错误
-          console.error('SSE连接失败:', response.status);
           throw new Error(`SSE连接失败: ${response.status}`);
         }
       },
@@ -553,25 +521,17 @@ const sendMessage = async (text: string) => {
         try {
           // 检查数据是否为空
           if (!event.data || event.data.trim() === '') {
-            console.log('收到空SSE消息，跳过处理');
             return;
           }
           
-          // 记录原始消息内容
-          console.log('SSE原始消息:', event.data.substring(0, 100) + (event.data.length > 100 ? '...' : ''));
-          
           // 解析消息数据
           const data = JSON.parse(event.data);
-          console.log('收到SSE消息:', data);
           
           // 根据消息格式提取内容
           if (data) {
             // 检查是否包含会话ID信息，如果有则更新会话ID
             if (data.event === 'message_end' && data.conversation_id) {
-              console.log('检测到会话结束事件，包含会话ID:', data.conversation_id);
-              console.log('message_end完整内容:', JSON.stringify(data));
               if (data.conversation_id !== sessionId.value) {
-                console.log('更新会话ID:', sessionId.value, '->', data.conversation_id);
                 sessionId.value = data.conversation_id;
               }
               return; // message_end 事件不包含内容，直接返回
@@ -584,172 +544,80 @@ const sendMessage = async (text: string) => {
                 data.content === "流式响应已完成" || data.data === "流式响应已完成" ||
                 /流式响应已完成/.test(JSON.stringify(data)) || /SSE连接已建立/.test(JSON.stringify(data)) ||
                 /会话已创建/.test(JSON.stringify(data))) {
-              console.log('跳过系统消息:', data);
               return;
             }
-
-            // 检查消息体是否包含内容 - 这里需要详细记录每种消息格式，帮助调试
-            console.log('消息类型:', data.event);
             
             // 检查message事件的各种可能格式
             if (data.event === 'message') {
-              // 打印完整的消息对象，用于调试
-              console.log('消息完整内容:', JSON.stringify(data));
-              
               if (data.answer) {
-                // Dify格式：{event: 'message', answer: 'content'}
-                console.log('检测到answer字段内容:', data.answer);
                 content += data.answer;
+              } else if (data.content) {
+                content += data.content;
               } else if (data.data) {
-                // 标准格式：{event: 'message', data: 'content'}
-                console.log('检测到data字段内容:', data.data);
                 content += data.data;
-              } else if (data.text) {
-                // 可能的格式：{event: 'message', text: 'content'}
-                console.log('检测到text字段内容:', data.text);
-                content += data.text;
-              } else if (data.body) {
-                // 可能的格式：{event: 'message', body: 'content'} or {event: 'message', body: {text: 'content'}}
-                if (typeof data.body === 'string') {
-                  console.log('检测到body字段(string)内容:', data.body);
-                  content += data.body;
-                } else if (data.body && data.body.text) {
-                  console.log('检测到body.text字段内容:', data.body.text);
-                  content += data.body.text;
-                } else if (data.body && data.body.content) {
-                  console.log('检测到body.content字段内容:', data.body.content);
-                  content += data.body.content;
+              } else if (data.choices && data.choices.length > 0) {
+                // OpenAI格式
+                if (data.choices[0].delta && data.choices[0].delta.content) {
+                  content += data.choices[0].delta.content;
+                } else if (data.choices[0].message && data.choices[0].message.content) {
+                  content += data.choices[0].message.content;
                 }
-              } else {
-                // 尝试查找消息对象中的文本内容字段
-                const possibleTextFields = ['text', 'content', 'message', 'value', 'chunk'];
-                let foundText = false;
-                
-                for (const field of possibleTextFields) {
-                  if (data[field] && typeof data[field] === 'string') {
-                    console.log(`检测到${field}字段内容:`, data[field]);
-                    content += data[field];
-                    foundText = true;
-                    break;
-                  }
-                }
-                
-                if (!foundText) {
-                  console.log('message事件但未找到内容字段，可用字段:', Object.keys(data));
-                }
-              }
-            } else if (data.answer) {
-              // 简化的Dify格式：{answer: 'content'}
-              console.log('检测到直接的answer字段:', data.answer);
-              content += data.answer;
-            } else if (data.choices && data.choices[0]?.delta?.content) {
-              // 类ChatGPT格式：{choices: [{delta: {content: 'content'}}]}
-              content += data.choices[0].delta.content;
-            } else if (data.content) {
-              // 简单格式：{content: 'content'}
-              content += data.content;
-            } else if (typeof data === 'string') {
-              // 纯文本格式
-              content += data;
-            } else {
-              // 尝试查找对象中的任何可能的文本内容
-              const possibleTextFields = ['text', 'content', 'message', 'value', 'chunk', 'data'];
-              let foundText = false;
-              
-              for (const field of possibleTextFields) {
-                if (data[field] && typeof data[field] === 'string') {
-                  console.log(`检测到${field}字段内容:`, data[field]);
-                  content += data[field];
-                  foundText = true;
-                  break;
-                }
-              }
-              
-              if (!foundText) {
-                console.log('未识别的消息格式，可用字段:', Object.keys(data));
+              } else if (typeof data === 'string') {
+                content += data;
               }
             }
             
-            // 更新AI消息内容
+            // 更新消息内容（如果有变化）
             if (content) {
-              updateAiMessage(aiMessageId, content);
+              updateAIMessage(content);
             }
           }
-        } catch (error) {
-          console.error('解析SSE消息失败:', error, '原始数据:', event.data);
-          
-          // 尝试以纯文本方式处理消息
-          try {
-            if (event.data) {
-              // 如果不是JSON，直接作为纯文本添加
-              content += event.data;
-              updateAiMessage(aiMessageId, content);
-            }
-          } catch (textError) {
-            console.error('以纯文本方式处理消息也失败:', textError);
-          }
+        } catch (err: any) {
+          // 处理错误，可能是JSON解析错误或其他异常
+          showToast('处理消息时发生错误');
         }
       },
       
       // 处理错误事件
-      onerror(error) {
-        console.error('SSE流式响应错误:', error);
-        // 在消息中显示错误
-        updateAiMessage(aiMessageId, content + "\n\n[连接出现错误，请重试]");
+      onerror(err: Error) {
+        // 处理连接错误
+        showToast('连接服务器失败，请重试');
+        
+        // 尝试恢复UI状态
+        isAITyping.value = false;
+        
+        // 添加错误消息
+        if (currentAIMessageId.value && messages.value.length > 0) {
+          const lastMessage = messages.value.find(m => m.id === currentAIMessageId.value);
+          if (lastMessage) {
+            lastMessage.content = '抱歉，我遇到了一些问题，请重试。';
+          }
+          currentAIMessageId.value = null;
+        }
       },
       
       // 处理连接关闭事件
       onclose() {
-        console.log('SSE流式响应已关闭');
-        currentStreamController = null;
+        // 连接关闭，更新UI状态
         isAITyping.value = false;
         currentAIMessageId.value = null;
-        
-        // 检查响应中是否有新的会话ID
-        console.log('关闭连接时的会话ID:', sessionId.value);
+        currentEventSource = null;
+        currentStreamController = null;
       }
     });
-    
-    // 在控制台记录，但不显示给用户
-    console.log('流式响应成功完成');
   } catch (error) {
-    console.error('发送消息失败:', error);
-    // 在消息中显示错误
-    updateAiMessage(aiMessageId, "抱歉，发送消息失败，请稍后重试。");
-    
-    // 如果是会话不存在的错误，尝试重新创建会话并重新发送消息
-    if (error instanceof Error && error.message && error.message.includes('会话不存在')) {
-      console.log('检测到会话不存在错误，尝试重新创建会话并重新发送');
-      try {
-        // 创建新会话
-        const sessionResponse = await AiAvatarChatControllerService.createSessionUsingPost(assistant.value.id);
-        if (sessionResponse.code === 0 && sessionResponse.data) {
-          sessionId.value = sessionResponse.data;
-          console.log('创建新会话ID:', sessionId.value);
-          
-          // 更新AI消息提示正在重试
-          updateAiMessage(aiMessageId, "正在重新连接...");
-          
-          // 重新调用sendMessage（去掉第一个已存在的用户消息）
-          messages.value.pop(); // 移除AI消息
-          currentAIMessageId.value = null;
-          isAITyping.value = false;
-          
-          // 等待一小段时间后重试
-          setTimeout(() => {
-            sendMessage(text);
-          }, 1000);
-          
-          return;
-        }
-      } catch (retryError) {
-        console.error('重新创建会话失败:', retryError);
-        updateAiMessage(aiMessageId, "抱歉，重新连接失败，请刷新页面重试。");
-      }
-    }
-    
+    // 处理发送过程中的错误
     isAITyping.value = false;
-    currentAIMessageId.value = null;
+    showToast('发送消息失败，请重试');
+    
+    // 如果有错误，添加错误提示到AI消息中
+    if (currentAIMessageId.value && messages.value.length > 0) {
+      const lastMessage = messages.value.find(m => m.id === currentAIMessageId.value);
+      if (lastMessage) {
+        lastMessage.content = '抱歉，发送消息时遇到了问题，请重试。';
+      }
+      currentAIMessageId.value = null;
+    }
   }
 };
 
@@ -1066,3 +934,4 @@ const startVoiceRecord = (): void => {
   font-style: italic;
 }
 </style>
+
