@@ -5,6 +5,10 @@
       :key="chat.id"
       class="chat-item"
       @click="$emit('select', chat)"
+      @touchstart="startTouch(chat)"
+      @touchend="endTouch"
+      @touchmove="cancelTouch"
+      @touchcancel="cancelTouch"
     >
       <div class="chat-avatar">
         <van-image :src="chat.avatar" round width="50" height="50" />
@@ -25,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 interface Chat {
   id: number;
   sessionId?: string;
@@ -48,9 +54,47 @@ const props = withDefaults(defineProps<{
 });
 
 // 定义事件
-defineEmits<{
+const emit = defineEmits<{
   (e: 'select', chat: Chat): void;
+  (e: 'long-press', chat: Chat): void;
 }>();
+
+// 长按处理相关变量
+const touchTimeout = ref<number | null>(null);
+const touchedChat = ref<Chat | null>(null);
+const longPressDuration = 600; // 长按判定时间（毫秒）
+
+// 触摸开始事件
+const startTouch = (chat: Chat) => {
+  touchedChat.value = chat;
+  
+  // 清除可能存在的旧定时器
+  if (touchTimeout.value !== null) {
+    clearTimeout(touchTimeout.value);
+  }
+  
+  // 设置新的定时器
+  touchTimeout.value = window.setTimeout(() => {
+    if (touchedChat.value) {
+      emit('long-press', touchedChat.value);
+    }
+    endTouch(); // 触发长按后清理状态
+  }, longPressDuration);
+};
+
+// 触摸结束事件
+const endTouch = () => {
+  if (touchTimeout.value !== null) {
+    clearTimeout(touchTimeout.value);
+    touchTimeout.value = null;
+  }
+  touchedChat.value = null;
+};
+
+// 触摸移动或取消时取消长按
+const cancelTouch = () => {
+  endTouch();
+};
 </script>
 
 <style scoped>
@@ -68,6 +112,13 @@ defineEmits<{
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent; /* 避免移动端点击出现蓝色背景 */
+  user-select: none; /* 防止选中文本 */
+  touch-action: pan-y; /* 允许垂直滚动，但阻止其他默认行为 */
+}
+
+.chat-item:active {
+  background-color: rgba(245, 245, 245, 0.9);
 }
 
 .chat-item:hover {

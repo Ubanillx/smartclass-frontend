@@ -3,7 +3,13 @@
     <div class="history-container">
       <transition-group name="chat-fade" tag="div">
         <!-- 对话记录列表 -->
-        <chat-list :key="'chat-list-' + currentPage" :chats="transformedChatHistory" :show-status="false" @select="handleChatSelect" />
+        <chat-list 
+          :key="'chat-list-' + currentPage" 
+          :chats="transformedChatHistory" 
+          :show-status="false" 
+          @select="handleChatSelect" 
+          @long-press="handleLongPress"
+        />
       </transition-group>
       
       <!-- 分页控件 -->
@@ -60,6 +66,25 @@
       <van-loading type="spinner" color="#1989fa" class="loading" />
       <p class="loading-text">加载中...</p>
     </div>
+
+    <!-- 操作菜单 -->
+    <van-action-sheet
+      v-model:show="showActionSheet"
+      :actions="actionOptions"
+      cancel-text="取消"
+      close-on-click-action
+      @select="handleActionSelect"
+      @cancel="showActionSheet = false"
+    />
+
+    <!-- 删除确认弹窗 -->
+    <van-dialog
+      v-model:show="showDeleteConfirm"
+      title="删除对话"
+      :message="`确定要删除这条对话记录吗？该操作不可恢复。`"
+      show-cancel-button
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -68,12 +93,12 @@ import { ref, onMounted, computed } from 'vue';
 import { ChatList } from '../../../components/Dialogue';
 import { AiAvatarChatControllerService } from '../../../services/services/AiAvatarChatControllerService.ts';
 import type { ChatMessageVO } from '../../../services/models/ChatMessageVO.ts';
-import { showToast } from 'vant';
+import { showToast, showSuccessToast } from 'vant';
 
 // 定义聊天项类型
 interface ChatItemType {
   id: number;
-  sessionId: any;
+  sessionId?: any;
   assistantId: number;
   assistantName: string;
   avatar: string;
@@ -85,6 +110,13 @@ interface ChatItemType {
   type: number;
 }
 
+// 定义操作菜单项类型
+interface ActionOption {
+  name: string;
+  color?: string;
+  className?: string;
+}
+
 // 定义事件
 const emit = defineEmits(['select']);
 
@@ -94,34 +126,78 @@ const pageSize = ref(10);
 const total = ref(0);
 const loading = ref(false);
 
+// 操作菜单相关状态
+const showActionSheet = ref(false);
+const showDeleteConfirm = ref(false);
+const chatToDelete = ref<ChatItemType | null>(null);
+
+// 定义操作菜单选项
+const actionOptions = [
+  { name: '删除对话', color: '#ee0a24' }
+];
+
 // 存储从API获取的聊天历史
 const chatMessages = ref<ChatMessageVO[]>([]);
 
-// 将API返回的数据转换为UI组件需要的格式
+// 将API返回的数据转换为UI组件需要的格式，只保留每个sessionId的最后一条消息
 const transformedChatHistory = computed(() => {
-  return chatMessages.value.map(message => {
-    const chatSessionId = message.sessionId || String(message.id || '0');
+  // 用于跟踪已处理的会话ID
+  const processedSessionIds = new Set<string>();
+  const result: Array<{
+    id: number;
+    sessionId: any;
+    assistantId: number;
+    assistantName: string;
+    avatar: string;
+    lastMessage: string;
+    summary?: string;
+    lastTime: string;
+    online?: boolean;
+    tags?: string[];
+    type: number;
+  }> = [];
+  
+  // 按创建时间降序排序，确保最新消息排在前面
+  const sortedMessages = [...chatMessages.value].sort((a, b) => {
+    const timeA = a.createTime ? new Date(a.createTime).getTime() : 0;
+    const timeB = b.createTime ? new Date(b.createTime).getTime() : 0;
+    return timeB - timeA;
+  });
+  
+  // 遍历排序后的消息，只保留每个sessionId的第一条（即最新的）消息
+  for (const message of sortedMessages) {
+    const sessionId = message.sessionId || String(message.id || '0');
+    
+    // 如果这个sessionId已经处理过，就跳过
+    if (processedSessionIds.has(sessionId)) continue;
+    
+    // 标记这个sessionId已处理
+    processedSessionIds.add(sessionId);
+    
+    // 添加到结果中
     const content = message.content || '';
     const messageType = message.messageType || '对话';
     
-    return {
+    result.push({
       id: message.id || 0,
-      sessionId: chatSessionId as any,
+      sessionId: sessionId,
       assistantId: message.aiAvatarId || 0,
       assistantName: message.aiAvatarName || '未知助手',
       avatar: message.aiAvatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
       lastMessage: content,
       summary: `对话内容: ${content.substring(0, 50)}${content.length > 50 ? '...' : ''}`,
-      lastTime: message.createTime ? formatTime(message.createTime as string) : '未知时间',
+      lastTime: message.createTime ? formatTime(message.createTime) : '未知时间',
       online: false,
       tags: [messageType],
       type: 1,
-    };
-  });
+    });
+  }
+  
+  return result;
 });
 
 // 格式化时间显示
-const formatTime = (timeStr: string): string => {
+const formatTime = (timeStr: string | undefined): string => {
   if (!timeStr) return '未知时间';
   
   try {
@@ -137,12 +213,12 @@ const formatTime = (timeStr: string): string => {
       return '昨天';
     } else if (diffDays < 7) {
       const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-      return days[date.getDay()];
+      return days[date.getDay()] || '未知时间';
     } else {
       return `${date.getMonth() + 1}月${date.getDate()}日`;
     }
   } catch (e) {
-    return timeStr;
+    return timeStr || '未知时间';
   }
 };
 
@@ -170,7 +246,9 @@ const loadChatHistory = async () => {
           return record;
         });
       
-      total.value = chatMessages.value.length;
+      // 更新总条数为过滤后的不同sessionId的数量
+      const uniqueSessionIds = new Set(chatMessages.value.map(msg => msg.sessionId));
+      total.value = uniqueSessionIds.size;
     } else {
       showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
     }
@@ -188,9 +266,55 @@ const handlePageChange = (page: number) => {
 };
 
 // 处理对话选择
-const handleChatSelect = (chat: any) => {
+const handleChatSelect = (chat: ChatItemType) => {
   const sessionIdToUse = chat.sessionId || String(chat.id);
   emit('select', sessionIdToUse, chat.assistantId);
+};
+
+// 处理长按事件，显示操作菜单
+const handleLongPress = (chat: ChatItemType) => {
+  chatToDelete.value = chat;
+  showActionSheet.value = true;
+};
+
+// 处理操作菜单选择
+const handleActionSelect = (action: ActionOption) => {
+  if (action.name === '删除对话') {
+    showDeleteConfirm.value = true;
+  }
+};
+
+// 确认删除对话
+const confirmDelete = async () => {
+  if (!chatToDelete.value) return;
+  
+  loading.value = true;
+  try {
+    // 确保sessionId是字符串类型，并且不为undefined
+    let sessionId = '';
+    if (typeof chatToDelete.value.sessionId === 'string') {
+      sessionId = chatToDelete.value.sessionId;
+    } else if (chatToDelete.value.sessionId) {
+      sessionId = String(chatToDelete.value.sessionId);
+    } else {
+      sessionId = String(chatToDelete.value.id);
+    }
+    
+    const response = await AiAvatarChatControllerService.deleteSessionUsingPost(sessionId);
+    
+    if (response.code === 0 && response.data) {
+      showSuccessToast('删除成功');
+      // 刷新列表
+      loadChatHistory();
+    } else {
+      showToast('删除失败: ' + (response.message || '未知错误'));
+    }
+  } catch (error) {
+    showToast('删除失败，请稍后重试');
+  } finally {
+    loading.value = false;
+    chatToDelete.value = null;
+  }
 };
 
 // 组件挂载时加载数据
