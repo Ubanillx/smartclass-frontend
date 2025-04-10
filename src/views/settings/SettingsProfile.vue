@@ -148,40 +148,25 @@
 
     <!-- 日期选择器 -->
     <van-popup v-model:show="showDatePicker" position="bottom" round>
-      <div class="date-picker-container">
-        <div class="date-picker-header">
-          <van-icon name="cross" @click="showDatePicker = false" />
-          <div class="date-picker-title">选择生日</div>
-          <van-button type="primary" size="small" @click="onDateConfirm"
-            >确认</van-button
-          >
-        </div>
-        <van-date-picker
-          v-model="selectedDate"
-          :min-date="minDate"
-          :max-date="maxDate"
-          :show-toolbar="false"
-        />
-      </div>
+      <van-date-picker
+        title="选择生日"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @confirm="onDateConfirm"
+        @cancel="showDatePicker = false"
+        show-toolbar
+      />
     </van-popup>
 
     <!-- 地址选择器 -->
     <van-popup v-model:show="showAddressPicker" position="bottom" round>
-      <div class="area-picker-container">
-        <div class="area-picker-header">
-          <van-icon name="cross" @click="showAddressPicker = false" />
-          <div class="area-picker-title">选择地区</div>
-          <van-button type="primary" size="small" @click="onAddressConfirm"
-            >确认</van-button
-          >
-        </div>
-        <van-area
-          :area-list="areaList"
-          :value="areaCode"
-          ref="areaRef"
-          :show-toolbar="false"
-        />
-      </div>
+      <van-area
+        :area-list="areaList"
+        title="选择地区"
+        @confirm="onAddressConfirm"
+        @cancel="showAddressPicker = false"
+        show-toolbar
+      />
     </van-popup>
   </div>
 </template>
@@ -195,11 +180,10 @@ import {
   showLoadingToast,
   showImagePreview,
 } from 'vant';
-import type { Area, UploaderFileListItem } from 'vant';
+import type { UploaderFileListItem } from 'vant';
 import { areaList } from '@vant/area-data';
 import { BackButton } from '../../components/Common';
 import { UserControllerService } from '../../services/services/UserControllerService';
-import { FileControllerService } from '../../services/services/FileControllerService';
 import { User } from '../../services/models/User';
 import { UserUpdateMyRequest } from '../../services/models/UserUpdateMyRequest';
 import { useUserStore } from '../../stores/userStore';
@@ -219,12 +203,6 @@ interface FormData {
   district?: string;
 }
 
-interface PickerOption {
-  selectedOptions: Array<{ text: string; value: any }>;
-  selectedValues: any[];
-  selectedIndexes: number[];
-}
-
 const router = useRouter();
 const route = useRoute();
 
@@ -242,9 +220,7 @@ watch(
   () => route.query.avatar,
   (newAvatar) => {
     if (newAvatar) {
-      console.log('接收到avatar参数:', newAvatar);
       formData.value.userAvatar = newAvatar as string;
-      // 清除URL参数
       router.replace({ path: route.path });
     }
   },
@@ -255,9 +231,7 @@ watch(
   () => route.query.avatarUrl,
   (newAvatarUrl) => {
     if (newAvatarUrl) {
-      console.log('接收到avatarUrl参数:', newAvatarUrl);
       formData.value.userAvatar = newAvatarUrl as string;
-      // 清除URL参数
       router.replace({ path: route.path });
     }
   },
@@ -286,26 +260,67 @@ const getGenderText = (gender?: number): string => {
 };
 
 // 性别确认事件
-const onGenderConfirm = (option: { text: string; value: number }): void => {
-  formData.value.userGender = option.value;
-  displayGender.value = option.text;
+const onGenderConfirm = (value: any): void => {
+  try {
+    if (value && typeof value === 'object') {
+      if (Array.isArray(value.selectedValues)) {
+        const option = value.selectedOptions?.[0];
+        if (option) {
+          formData.value.userGender = option.value;
+          displayGender.value = option.text;
+        }
+      } else if (value.value !== undefined) {
+        const option = genderOptions.find(opt => opt.value === value.value);
+        if (option) {
+          formData.value.userGender = option.value;
+          displayGender.value = option.text;
+        }
+      } else if (value.text && value.value !== undefined) {
+        formData.value.userGender = value.value;
+        displayGender.value = value.text;
+      }
+    }
+  } catch (error) {
+    console.error('处理性别选择数据失败:', error);
+  }
+  
   showGenderPicker.value = false;
 };
 
 // 日期选择器
 const showDatePicker = ref(false);
-const selectedDate = ref<string[]>([]);
 const minDate = new Date(1900, 0, 1);
 const maxDate = new Date();
 
-// 生日确认事件
+// 日期确认事件
 const onDateConfirm = (value: any): void => {
-  selectedDate.value = value;
-  const [year, month, day] = value;
-  // 确保月份和日期是两位数
-  const formattedMonth = month.padStart(2, '0');
-  const formattedDay = day.padStart(2, '0');
-  formData.value.birthday = `${year}-${formattedMonth}-${formattedDay}`;
+  try {
+    let date: Date | null = null;
+    
+    if (value instanceof Date) {
+      date = value;
+    } else if (value && typeof value === 'object') {
+      if (value.selectedValues && Array.isArray(value.selectedValues)) {
+        const [yearStr, monthStr, dayStr] = value.selectedValues;
+        const year = parseInt(String(yearStr), 10);
+        const month = parseInt(String(monthStr), 10) - 1; 
+        const day = parseInt(String(dayStr), 10);
+        date = new Date(year, month, day);
+      } else if (value.value instanceof Date) {
+        date = value.value;
+      }
+    }
+    
+    if (date && !isNaN(date.getTime())) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      formData.value.birthday = `${year}-${month}-${day}`;
+    }
+  } catch (error) {
+    console.error('处理日期选择数据失败:', error);
+  }
+  
   showDatePicker.value = false;
 };
 
@@ -314,15 +329,12 @@ const formatBirthday = (birthday: string): string => {
   if (!birthday) return '';
 
   try {
-    // 处理ISO 8601格式的日期
     if (birthday.includes('T')) {
       const date = new Date(birthday);
       if (!isNaN(date.getTime())) {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       }
     }
-
-    // 处理YYYY-MM-DD格式
     return birthday;
   } catch (e) {
     console.error('格式化生日失败:', e);
@@ -332,8 +344,6 @@ const formatBirthday = (birthday: string): string => {
 
 // 地址选择器
 const showAddressPicker = ref(false);
-const areaCode = ref('');
-const areaRef = ref<any>(null);
 
 // 获取地址文本显示
 const getLocationText = (): string => {
@@ -345,20 +355,34 @@ const getLocationText = (): string => {
 };
 
 // 地址确认事件
-const onAddressConfirm = (): void => {
-  if (areaRef.value) {
-    try {
-      // 获取当前选中的值
-      const selectedValues = areaRef.value.getSelectedOptions();
-      if (selectedValues && selectedValues.length > 0) {
-        formData.value.province = selectedValues[0]?.text || '';
-        formData.value.city = selectedValues[1]?.text || '';
-        formData.value.district = selectedValues[2]?.text || '';
+const onAddressConfirm = (value: any): void => {
+  try {
+    if (value && typeof value === 'object') {
+      if (value.selectedOptions && Array.isArray(value.selectedOptions)) {
+        const options = value.selectedOptions;
+        formData.value.province = options[0]?.text || '';
+        formData.value.city = options[1]?.text || '';
+        formData.value.district = options[2]?.text || '';
+      } else if (value.values && Array.isArray(value.values) && value.items && Array.isArray(value.items)) {
+        const codes = value.values;
+        const columns = value.items;
+        
+        const findTextByCode = (code: string, options: any[]) => {
+          const option = options.find(opt => opt.value === code);
+          return option ? option.text : '';
+        };
+        
+        if (codes.length >= 3 && columns.length >= 3) {
+          formData.value.province = findTextByCode(codes[0], columns[0]);
+          formData.value.city = findTextByCode(codes[1], columns[1]);
+          formData.value.district = findTextByCode(codes[2], columns[2]);
+        }
       }
-    } catch (error) {
-      console.error('获取地址选择数据失败:', error);
     }
+  } catch (error) {
+    console.error('处理地址选择数据失败:', error);
   }
+  
   showAddressPicker.value = false;
 };
 
@@ -379,7 +403,6 @@ const onAvatarSelected = (
   if (!Array.isArray(file) && file.file) {
     const URL = window.URL || window.webkitURL;
     const imageUrl = URL.createObjectURL(file.file);
-    // 跳转到裁剪页面
     router.push({
       path: '/settings/avatar-cropper',
       query: {
@@ -397,18 +420,15 @@ const fetchUserProfile = async (): Promise<void> => {
   });
 
   try {
-    // 从用户存储中获取用户ID
     const userStore = useUserStore();
     const userId = userStore.userInfo?.id;
 
     if (!userId) {
-      // 尝试从本地存储中获取
       try {
         const userInfoStr = localStorage.getItem('userInfo');
         if (userInfoStr) {
           const userInfo = JSON.parse(userInfoStr);
           if (userInfo && userInfo.id) {
-            console.log('从本地存储获取的用户ID:', userInfo.id);
             await fetchUserProfileById(userInfo.id);
             return;
           }
@@ -424,7 +444,6 @@ const fetchUserProfile = async (): Promise<void> => {
       return;
     }
 
-    console.log('从用户存储获取的用户ID:', userId);
     await fetchUserProfileById(userId);
   } catch (error) {
     console.error('获取用户信息失败:', error);
@@ -437,15 +456,11 @@ const fetchUserProfile = async (): Promise<void> => {
 // 根据用户ID获取用户信息
 const fetchUserProfileById = async (userId: number): Promise<void> => {
   try {
-    // 使用UserControllerService.getUserByIdUsingGet获取用户信息
     const response = await UserControllerService.getUserByIdUsingGet(userId);
-    console.log('获取用户信息响应:', response);
 
     if (response.code === 0 && response.data) {
       const user: User = response.data;
-      console.log('获取到的用户信息:', user);
 
-      // 映射用户数据到表单
       formData.value = {
         id: user.id,
         userName: user.userName || '',
@@ -461,37 +476,20 @@ const fetchUserProfileById = async (userId: number): Promise<void> => {
         district: user.district,
       };
 
-      // 设置性别显示文本
       if (formData.value.userGender !== undefined) {
         displayGender.value = getGenderText(formData.value.userGender);
       }
 
-      // 如果有生日数据，初始化日期选择器
       if (formData.value.birthday) {
         try {
-          let year, month, day;
-
-          // 处理ISO 8601格式的日期
           if (formData.value.birthday.includes('T')) {
             const dateObj = new Date(formData.value.birthday);
             if (!isNaN(dateObj.getTime())) {
-              year = String(dateObj.getFullYear());
-              month = String(dateObj.getMonth() + 1).padStart(2, '0');
-              day = String(dateObj.getDate()).padStart(2, '0');
-
-              // 更新formData中的生日格式为YYYY-MM-DD
+              const year = String(dateObj.getFullYear());
+              const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+              const day = String(dateObj.getDate()).padStart(2, '0');
               formData.value.birthday = `${year}-${month}-${day}`;
             }
-          } else {
-            // 处理普通的YYYY-MM-DD格式
-            const dateParts = formData.value.birthday.split('-');
-            if (dateParts.length === 3) {
-              [year, month, day] = dateParts;
-            }
-          }
-
-          if (year && month && day) {
-            selectedDate.value = [year, month, day];
           }
         } catch (error) {
           console.error('初始化日期选择器失败:', error);
@@ -517,7 +515,6 @@ const saveProfile = async (): Promise<void> => {
   });
 
   try {
-    // 构建符合UserUpdateMyRequest的数据结构
     const updateData: UserUpdateMyRequest = {
       userName: formData.value.userName,
       userAvatar: formData.value.userAvatar,
@@ -532,18 +529,13 @@ const saveProfile = async (): Promise<void> => {
       district: formData.value.district,
     };
 
-    console.log('准备更新的用户数据:', updateData);
-
-    // 使用UserControllerService更新用户信息
     const response =
       await UserControllerService.updateMyUserUsingPost(updateData);
 
     if (response.code === 0 && response.data) {
       showSuccessToast('个人资料保存成功');
-      // 重新获取最新的用户信息
       fetchUserProfile();
     } else if (response.code === 40100) {
-      // 未登录
       showToast('登录已过期，请重新登录');
       setTimeout(() => {
         router.replace('/login');
@@ -562,7 +554,6 @@ const saveProfile = async (): Promise<void> => {
 
 // 页面加载时获取用户信息
 onMounted(() => {
-  console.log('页面加载，开始获取用户信息');
   fetchUserProfile();
 });
 </script>
