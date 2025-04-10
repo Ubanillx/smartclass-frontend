@@ -1,30 +1,28 @@
 <template>
   <div class="user-card">
-    <van-row>
-      <van-col span="6">
+    <div class="user-card-content">
+      <div class="avatar-container">
         <van-image round width="4rem" height="4rem" :src="userInfo.avatar" />
-      </van-col>
-      <van-col span="16">
-        <div class="user-info">
-          <h3>{{ userInfo.nickname }}</h3>
-          <p class="phone">手机号：{{ formatPhone(userInfo.phone) }}</p>
-          <div class="level-info">
-            <van-tag type="primary">等级 {{ userInfo.level }}</van-tag>
-            <span class="exp-text"
-              >距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span
-            >
-          </div>
+      </div>
+      <div class="user-info">
+        <h3>{{ userInfo.nickname }}</h3>
+        <p class="phone">手机号：{{ formatPhone(userInfo.phone) }}</p>
+        <div class="level-info">
+          <van-tag type="primary">等级 {{ userInfo.level }}</van-tag>
+          <span class="exp-text"
+            >距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span
+          >
         </div>
-      </van-col>
-      <van-col span="2">
+      </div>
+      <div class="settings-container">
         <van-icon
           name="setting-o"
           size="24"
           class="settings-icon"
           @click="goToSettings"
         />
-      </van-col>
-    </van-row>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,9 +61,24 @@ const formatPhone = (phone: string): string => {
   border-radius: 0;
 }
 
+.user-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-container {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
 .user-info {
-  padding-left: 12px;
-  padding-top: 4px;
+  flex: 1;
+  min-width: 0; /* 确保文字可以正确截断 */
+}
+
+.settings-container {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .user-info h3 {
@@ -109,7 +122,6 @@ const formatPhone = (phone: string): string => {
 }
 
 .settings-icon {
-  margin-top: 8px;
   color: #323233;
   padding: 4px;
   border-radius: 50%;
@@ -120,9 +132,5 @@ const formatPhone = (phone: string): string => {
   object-fit: cover;
   border: 2px solid #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-:deep(.van-row) {
-  align-items: center;
 }
 </style>
