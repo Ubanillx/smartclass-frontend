@@ -55,7 +55,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, markRaw, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
@@ -74,9 +74,26 @@ import {
   dailyWords,
   getRandomArticles,
   getRandomWord,
+  type Course,
+  type Word,
 } from '../api/mock';
 import { useCollectedWordsStore } from '../stores/collectedWordsStore';
 import { AiAvatarControllerService } from '../services/services/AiAvatarControllerService.ts';
+import { useUserStore } from '../stores/userStore';
+
+// 定义类型
+interface Assistant {
+  id: number;
+  name: string;
+  description: string;
+  avatar: string;
+}
+
+interface Action {
+  name: string;
+  icon: string;
+  color: string;
+}
 
 // 使用markRaw包装组件，防止被转换为响应式对象
 const PopularCoursesRaw = markRaw(PopularCourses);
@@ -86,17 +103,18 @@ const searchText = ref('');
 const showActionSheet = ref(false);
 const refreshing = ref(false);
 const collectedWordsStore = useCollectedWordsStore();
+const userStore = useUserStore();
 
 // 设置公告数据
 const notices = ref(mockNotices);
 
 // 设置热门课程数据
-const popularCourses = ref(mockPopularCourses.map(course => markRaw(course)));
+const popularCourses = ref<Course[]>(mockPopularCourses);
 
 // 筛选热门课程（选取每个学科中最热门的课程）
 const filteredPopularCourses = computed(() => {
   // 获取不同的学科
-  const subjects = [...new Set(popularCourses.value.map(course => course.subject))];
+  const subjects = [...new Set(popularCourses.value.map(course => course.subject).filter(Boolean))];
   
   // 从每个学科中选择一个课程（按studentsCount排序）
   const topCourses = subjects
@@ -146,7 +164,7 @@ const ensureCollectedCategory = () => {
 };
 
 // AI助手数据
-const aiAssistants = ref([]);
+const aiAssistants = ref<Assistant[]>([]);
 
 // 从后端获取智慧体数据
 const fetchAiAssistants = async () => {
@@ -154,22 +172,18 @@ const fetchAiAssistants = async () => {
     const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
     
     if (response.code === 0 && response.data) {
-      console.log('获取到的智慧体列表:', response.data);
-      
       // 将后端数据转换为前端需要的格式
       aiAssistants.value = response.data.map(avatar => ({
         id: avatar.id || 0,
         name: avatar.name || '未命名智慧体',
         description: avatar.description || '',
-        avatar: avatar.avatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        avatar: avatar.avatarImgUrl || userStore.DEFAULT_USER_AVATAR,
       }));
     } else {
-      console.error('获取智慧体列表失败:', response);
       // 使用默认数据作为备用
       setDefaultAiAssistants();
     }
   } catch (error) {
-    console.error('加载智慧体信息失败:', error);
     // 使用默认数据作为备用
     setDefaultAiAssistants();
   }
@@ -182,39 +196,38 @@ const setDefaultAiAssistants = () => {
       id: 1,
       name: '英语教师 Emma',
       description: '专业英语教学，语法讲解，口语指导',
-      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      avatar: userStore.DEFAULT_USER_AVATAR,
     },
     {
       id: 2,
       name: '口语伙伴 Mike',
       description: '日常英语对话，地道表达，场景练习',
-      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      avatar: userStore.DEFAULT_USER_AVATAR,
     },
     {
       id: 3,
       name: '写作助手 Sarah',
       description: '作文指导，文章润色，写作技巧',
-      avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      avatar: userStore.DEFAULT_USER_AVATAR,
     },
   ];
 };
 
 // 快捷操作列表
-const actions = [
+const actions = ref<Action[]>([
   { name: '添加生词', icon: 'edit', color: '#1989fa' },
   { name: '上传笔记', icon: 'notes-o', color: '#07c160' },
   { name: '发起对话', icon: 'chat-o', color: '#ff976a' },
   { name: '分享内容', icon: 'share-o', color: '#ee0a24' },
-];
+]);
 
 // 搜索处理
-const onSearch = (text) => {
-  console.log('搜索:', text);
+const onSearch = (text: string) => {
   // 这里添加实际的搜索逻辑
 };
 
 // 开始对话
-const startChat = (assistant) => {
+const startChat = (assistant: Assistant) => {
   router.push({
     path: '/chat-detail',
     query: { assistantId: assistant.id },
@@ -222,7 +235,7 @@ const startChat = (assistant) => {
 };
 
 // 查看课程详情
-const viewCourseDetail = (course) => {
+const viewCourseDetail = (course: any) => {
   router.push({
     path: '/popular-courses',
     query: { showDetail: 'true', courseId: course.id }
@@ -230,7 +243,7 @@ const viewCourseDetail = (course) => {
 };
 
 // 处理快捷操作选择
-const onActionSelect = (action) => {
+const onActionSelect = (action: Action) => {
   switch (action.name) {
     case '添加生词':
       router.push('/vocabulary/add');
@@ -249,8 +262,6 @@ const onActionSelect = (action) => {
 
 // 下拉刷新
 const onRefresh = () => {
-  console.log('下拉刷新，重新获取首页数据');
-
   // 重新获取随机美文
   articles.value = getRandomArticles(4);
   
@@ -272,8 +283,6 @@ const onRefresh = () => {
 
 // 页面加载时获取数据
 onMounted(() => {
-  console.log('Home页面加载，开始获取数据');
-  
   // 确保有生词本分类
   ensureCollectedCategory();
   
