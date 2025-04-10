@@ -55,13 +55,10 @@ const loadAiAvatars = async () => {
   error.value = '';
   
   try {
-    console.log('开始调用AiAvatarControllerService.listAllAiAvatarUsingGet获取AI分身列表');
     // 获取所有AI分身信息
     const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
     
     if (response.code === 0 && response.data) {
-      console.log('获取到的AI分身列表:', response.data);
-      
       // 将AI分身信息转换为智能助手格式
       assistants.value = response.data.map((avatar: AiAvatarBriefVO) => {
         // 将tags字符串转换为数组
@@ -80,15 +77,11 @@ const loadAiAvatars = async () => {
           type: avatar.status || 1,
         };
       });
-      
-      console.log('转换后的助手列表:', assistants.value);
     } else {
-      console.error('获取AI分身列表失败:', response);
       showToast('获取AI分身列表失败');
       error.value = '无法加载智慧体列表，请重试';
     }
   } catch (err: any) {
-    console.error('加载AI分身信息失败:', err);
     showToast('加载AI分身信息失败');
     error.value = '无法加载智慧体列表，请重试';
   } finally {
@@ -98,13 +91,11 @@ const loadAiAvatars = async () => {
 
 // 处理助手选择
 const handleAssistantSelect = (assistant: Assistant) => {
-  console.log('选择的分身:', assistant);
   emit('select', assistant.assistantId);
 };
 
 // 组件挂载时加载AI分身信息
 onMounted(() => {
-  console.log('智慧体中心组件挂载，开始加载AI分身信息');
   loadAiAvatars();
 });
 </script>
