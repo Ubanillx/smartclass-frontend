@@ -55,7 +55,6 @@ onMounted(async () => {
       ]
     };
   } catch (error) {
-    console.error('获取课程数据失败:', error);
     showToast('获取课程数据失败，请重试');
   }
 });
