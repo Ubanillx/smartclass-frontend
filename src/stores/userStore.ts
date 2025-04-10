@@ -3,6 +3,9 @@ import { ref } from 'vue';
 import { UserControllerService } from '../services/services/UserControllerService';
 import type { LoginUserVO } from '../services/models/LoginUserVO';
 
+// 默认用户头像路径
+export const DEFAULT_USER_AVATAR = '/default.jpg';
+
 export const useUserStore = defineStore('user', () => {
   // 状态
   const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
@@ -23,6 +26,10 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await UserControllerService.getLoginUserUsingGet();
       if (response.code === 0 && response.data) {
+        // 确保用户头像有默认值
+        if (!response.data.userAvatar) {
+          response.data.userAvatar = DEFAULT_USER_AVATAR;
+        }
         userInfo.value = response.data;
         isLoggedIn.value = true;
         localStorage.setItem('userInfo', JSON.stringify(response.data));
@@ -45,6 +52,10 @@ export const useUserStore = defineStore('user', () => {
       });
 
       if (response.code === 0 && response.data) {
+        // 确保用户头像有默认值
+        if (!response.data.userAvatar) {
+          response.data.userAvatar = DEFAULT_USER_AVATAR;
+        }
         userInfo.value = response.data;
         isLoggedIn.value = true;
         localStorage.setItem('userInfo', JSON.stringify(response.data));
@@ -53,10 +64,11 @@ export const useUserStore = defineStore('user', () => {
       }
 
       return { success: false, message: response.message || '登录失败' };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '登录失败，请检查网络连接';
       return {
         success: false,
-        message: error.message || '登录失败，请检查网络连接',
+        message: errorMessage,
       };
     }
   };
@@ -76,11 +88,18 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  // 获取用户头像，确保有默认值
+  const getUserAvatar = () => {
+    return userInfo.value?.userAvatar || DEFAULT_USER_AVATAR;
+  };
+
   return {
     isLoggedIn,
     userInfo,
     login,
     logout,
     fetchCurrentUser,
+    getUserAvatar,
+    DEFAULT_USER_AVATAR,
   };
 });
