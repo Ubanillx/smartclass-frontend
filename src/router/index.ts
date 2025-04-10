@@ -10,6 +10,7 @@ import Courses from '../views/Courses.vue';
 import Profile from '../views/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
+import Circle from '../views/circle/Circle.vue';
 import {
   ChatHistory,
   ChatDetail,
@@ -227,6 +228,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/history',
     name: 'History',
     component: () => import('../views/history/HistoryPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/circle',
+    name: 'Circle',
+    component: Circle,
     meta: {
       requiresAuth: true,
     },
