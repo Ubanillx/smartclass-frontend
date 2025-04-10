@@ -120,7 +120,7 @@ watch(
 
 // 在应用启动时获取当前登录用户信息
 onMounted(async () => {
-  if (userStore.isLoggedIn) {
+  if (userStore.userInfo) {
     try {
       await userStore.fetchCurrentUser();
     } catch (error) {
