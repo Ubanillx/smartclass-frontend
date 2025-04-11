@@ -19,8 +19,14 @@ export type OpenAPIConfig = {
     ENCODE_PATH?: ((path: string) => string) | undefined;
 };
 
+// 根据当前环境判断使用哪个API基础URL
+const isDevelopment = import.meta.env.MODE === 'development';
+const API_BASE = isDevelopment 
+    ? 'http://10.16.62.100:12345' 
+    : 'http://backend.smartclass.ubanillx.cn:8081';
+
 export const OpenAPI: OpenAPIConfig = {
-    BASE: 'http://localhost:12345',
+    BASE: API_BASE,
     VERSION: '1.0',
     WITH_CREDENTIALS: true,
     CREDENTIALS: 'include',
