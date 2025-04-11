@@ -3,8 +3,12 @@
  * 提供与Dify AI对话API的交互功能
  */
 
+// 根据当前环境判断使用哪个API基础URL
+const isDevelopment = import.meta.env.MODE === 'development';
 // Dify API配置
-const DIFY_API_BASE_URL = 'http://10.0.124.181/v1';
+const DIFY_API_BASE_URL = isDevelopment 
+    ? 'http://10.0.124.181/v1'
+    : 'http://backend.smartclass.ubanillx.cn/v1';
 const DIFY_API_KEY = 'app-Hq8YLYBObZI0XbfjtGOWY2MC';
 
 interface ChatMessage {
