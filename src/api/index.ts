@@ -5,8 +5,14 @@ import axios, {
   AxiosError,
 } from 'axios';
 
+// 根据当前环境判断使用哪个API基础URL
+const isDevelopment = import.meta.env.MODE === 'development';
+const API_BASE = isDevelopment 
+    ? 'http://10.16.62.100:12345/api' 
+    : 'http://backend.smartclass.ubanillx.cn:8081/api';
+
 const apiClient: AxiosInstance = axios.create({
-  baseURL: 'localhost:12345/api',
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
