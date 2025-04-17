@@ -46,54 +46,6 @@ export interface Notice {
   content: string;
 }
 
-// 模拟公告数据
-export const mockNotices: Notice[] = [
-  {
-    id: 1,
-    title: '智能导学功能全新上线',
-    date: '2024-04-08',
-    content:
-      '我们推出了全新的智能导学功能，能够根据学生的学习进度和知识掌握情况，个性化推荐学习内容和练习题，帮助学生高效提升成绩。立即体验！',
-  },
-  {
-    id: 2,
-    title: '系统升级维护通知',
-    date: '2024-04-05',
-    content:
-      '为提升服务稳定性，系统将于2024年4月10日（周三）凌晨2:00-4:00进行版本升级，期间可能短暂影响登录和部分功能使用。请您提前安排学习时间。',
-  },
-  {
-    id: 3,
-    title: '2024中高考备考专题上线',
-    date: '2024-03-20',
-    content:
-      '为帮助广大考生备战2024年中高考，我们特别推出"冲刺专题"系列课程，涵盖各科考点梳理、解题技巧和模拟训练。即日起开通学习通道，助力考生取得优异成绩！',
-  },
-  {
-    id: 4,
-    title: '4月课程更新预告',
-    date: '2024-03-28',
-    content:
-      '4月课程资源已完成更新，新增初中物理"力学专题"、高中数学"立体几何"等重点内容，并更新各学科同步练习题库。欢迎前往课程中心查看。',
-  },
-  {
-    id: 5,
-    title: '线上家长会通知',
-    date: '2024-04-01',
-    content:
-      '我们将于4月15日（周一）晚19:00举办线上家长会，主题为"如何有效提升孩子的学习自主性"，特邀知名教育专家进行讲解并解答家长疑问。可通过小程序预约参加。',
-  },
-];
-
-// 模拟获取公告数据
-export const fetchMockNotices = (): Promise<Notice[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([...mockNotices]);
-    }, 1000);
-  });
-};
-
 // 课程接口
 export interface Course {
   id: number;
@@ -870,6 +822,9 @@ export interface Word {
   lastViewTime: string;
   difficulty: string;
   category?: string; // 添加类别字段，方便筛选
+  audioUrl?: string;
+  exampleTranslation?: string;
+  notes?: string;
 }
 
 // 词汇分类接口
