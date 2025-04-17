@@ -78,12 +78,11 @@ import {
   type Notice
 } from '../api/mock';
 import { useCollectedWordsStore } from '../stores/collectedWordsStore';
-import { AiAvatarControllerService } from '../services/services/AiAvatarControllerService.ts';
+import { AiAvatarControllerService, DailyWordControllerService, DailyWordFavourControllerService } from '../services';
 import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
 import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
 import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
 import { useUserStore } from '../stores/userStore';
-import { DailyWordControllerService } from '../services/services/DailyWordControllerService.ts';
 
 // 定义类型
 interface Assistant {
@@ -201,6 +200,8 @@ const fetchDailyWord = async () => {
           translation: todayWord.translation || '大的',
           example: todayWord.example || defaultExample, // 使用默认值确保例句显示
           isCollected: false, // 默认未收藏，将在checkCollectedStatus中检查
+          isThumbUp: false, // 默认未点赞，将在后续API中检查
+          thumbCount: (todayWord as any).likeCount || 0, // 使用类型断言处理可能不存在的字段
           meanings: [
             {
               partOfSpeech: todayWord.category || 'adj.',
@@ -218,6 +219,7 @@ const fetchDailyWord = async () => {
           // 确保正确处理例句翻译
           exampleTranslation: todayWord.exampleTranslation || defaultExampleTranslation,
           notes: todayWord.notes,
+          likeCount: (todayWord as any).likeCount || 0, // 同时保存原始likeCount数据
         };
         
         dailyWord.value = word;
@@ -259,10 +261,60 @@ const convertDifficultyToText = (difficulty?: number): string => {
 };
 
 // 检查单词是否已收藏
-const checkCollectedStatus = () => {
-  // 使用store的方法检查单词是否已收藏
-  const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
-  dailyWord.value.isCollected = isCollected;
+const checkCollectedStatus = async () => {
+  if (!dailyWord.value.id) {
+    // 如果没有单词ID（可能是mock数据），使用本地存储检查
+    const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
+    dailyWord.value.isCollected = isCollected;
+    return;
+  }
+  
+  try {
+    // 使用API检查单词是否已收藏
+    const response = await DailyWordFavourControllerService.isFavourWordUsingGet(
+      dailyWord.value.id as number
+    );
+    
+    if (response.code === 0 && response.data !== undefined) {
+      // 更新单词收藏状态
+      dailyWord.value.isCollected = response.data;
+      
+      // 同步本地存储状态
+      if (response.data) {
+        // 如果服务器显示已收藏但本地未收藏，添加到本地
+        if (!collectedWordsStore.isWordCollected(dailyWord.value.text)) {
+          const wordToCollect = {
+            id: dailyWord.value.id as number,
+            text: dailyWord.value.text,
+            phonetic: dailyWord.value.phonetic,
+            translation: dailyWord.value.translation,
+            example: dailyWord.value.example,
+            meanings: dailyWord.value.meanings,
+            viewCount: 1,
+            lastViewTime: new Date().toISOString(),
+            difficulty: dailyWord.value.difficulty || '中级',
+          };
+          
+          collectedWordsStore.collectWord(wordToCollect);
+        }
+      } else {
+        // 如果服务器显示未收藏但本地已收藏，从本地移除
+        if (collectedWordsStore.isWordCollected(dailyWord.value.text)) {
+          const collectedWords = collectedWordsStore.getCollectedWords();
+          const wordToRemove = collectedWords.find(w => w.text.toLowerCase() === dailyWord.value.text.toLowerCase());
+          
+          if (wordToRemove) {
+            collectedWordsStore.removeWord(wordToRemove.id);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('检查单词收藏状态失败', error);
+    // 发生错误时，回退到使用本地存储
+    const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
+    dailyWord.value.isCollected = isCollected;
+  }
 };
 
 // 设置美文数据（随机获取4篇）
