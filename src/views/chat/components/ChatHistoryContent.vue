@@ -162,7 +162,7 @@ const transformedChatHistory = computed(() => {
       sessionId: sessionId,
       assistantId: message.aiAvatarId || 0,
       assistantName: message.aiAvatarName || '未知助手',
-      avatar: message.aiAvatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      avatar: message.aiAvatarImgUrl || '/default.jpg',
       lastMessage: content,
       summary: `对话内容: ${content.substring(0, 50)}${content.length > 50 ? '...' : ''}`,
       lastTime: message.createTime ? formatTime(message.createTime) : '未知时间',
