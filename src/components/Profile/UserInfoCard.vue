@@ -5,13 +5,12 @@
         <van-image round width="4rem" height="4rem" :src="userInfo.avatar" />
       </div>
       <div class="user-info">
-        <h3>{{ userInfo.nickname }}</h3>
+        <h3 class="nickname">{{ userInfo.nickname }}</h3>
         <p class="phone">手机号：{{ formatPhone(userInfo.phone) }}</p>
         <div class="level-info">
           <van-tag type="primary">等级 {{ userInfo.level }}</van-tag>
-          <span class="exp-text"
-            >距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span
-          >
+          <span class="id-text" v-if="userInfo.userId">ID: {{ userInfo.userId }}</span>
+          <span class="exp-text">距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span>
         </div>
       </div>
       <div class="settings-container">
@@ -33,6 +32,7 @@ interface UserInfo {
   phone: string;
   level: number;
   nextLevelExp: number;
+  userId?: string | number;
 }
 
 defineProps<{
@@ -74,14 +74,11 @@ const formatPhone = (phone: string): string => {
 .user-info {
   flex: 1;
   min-width: 0; /* 确保文字可以正确截断 */
+  display: flex;
+  flex-direction: column;
 }
 
-.settings-container {
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.user-info h3 {
+.nickname {
   margin: 0 0 4px;
   font-size: var(--font-size-lg);
   font-weight: 600;
@@ -97,10 +94,18 @@ const formatPhone = (phone: string): string => {
 .level-info {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 2px;
+}
+
+.id-text {
+  font-size: 12px;
+  color: #909399;
+  background-color: rgba(240, 240, 245, 0.8);
+  padding: 2px 6px;
+  border-radius: 10px;
+  display: inline-block;
 }
 
 :deep(.van-tag) {
@@ -113,12 +118,16 @@ const formatPhone = (phone: string): string => {
 }
 
 .exp-text {
-  margin-left: 6px;
   font-size: var(--font-size-sm);
   color: #969799;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.settings-container {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .settings-icon {
