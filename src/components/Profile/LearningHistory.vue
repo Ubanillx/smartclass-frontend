@@ -84,7 +84,7 @@ const onViewAll = (): void => {
 }
 
 .history-item {
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #f5f5f5;
 }
 
@@ -95,7 +95,7 @@ const onViewAll = (): void => {
 .history-date {
   font-size: var(--font-size-sm);
   color: #969799;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-family: 'Noto Sans SC', sans-serif;
   font-weight: 500;
 }
@@ -103,26 +103,35 @@ const onViewAll = (): void => {
 .history-content {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .icon-wrapper {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: rgba(25, 137, 250, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .history-icon {
-  font-size: var(--font-size-lg);
+  font-size: 20px;
   color: #1989fa;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .history-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
 }
 
 .history-title {
@@ -137,6 +146,9 @@ const onViewAll = (): void => {
   font-size: var(--font-size-sm);
   color: #646566;
   font-family: 'Noto Sans SC', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .history-time {
@@ -144,8 +156,10 @@ const onViewAll = (): void => {
   color: #969799;
   font-family: 'Noto Sans SC', sans-serif;
   background-color: #f7f8fa;
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 :deep(.van-cell__title) {
