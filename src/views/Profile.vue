@@ -77,7 +77,7 @@ const userInfo = ref({
   username: '',
   nickname: '',
   phone: '',
-  avatar: 'https://img.zcool.cn/community/01a0d45d145963a8012187f447cfef.jpg@1280w_1l_2o_100sh.jpg',
+  avatar: userStore.DEFAULT_USER_AVATAR,
   level: 1,
   nextLevelExp: 100,
 });
