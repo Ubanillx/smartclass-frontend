@@ -204,4 +204,38 @@ onUpdated(scrollToBottom);
   outline: none;
   line-height: 1.4;
 }
+
+/* LaTeX公式样式优化 */
+:deep(.katex) {
+  font-size: 1.15em;
+  line-height: 1.5;
+  font-family: KaTeX_Math, 'Times New Roman', Times, serif;
+  white-space: normal; /* 允许公式自动换行 */
+  text-align: center;
+}
+
+:deep(.katex-display) {
+  display: block;
+  margin: 0.5em 0;
+  overflow: auto hidden;
+  text-align: center;
+}
+
+:deep(.katex-display > .katex) {
+  display: inline-block;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* 确保公式在移动设备上也能正常显示 */
+@media screen and (max-width: 600px) {
+  :deep(.katex-display) {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  :deep(.katex) {
+    font-size: 1.1em;
+  }
+}
 </style>

@@ -103,6 +103,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { showToast } from 'vant';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import { MessageList, ChatInput } from '../../components/Dialogue';
 import { BackButton } from '../../components/Common';
 import { useUserStore } from '../../stores/userStore';
@@ -639,16 +641,67 @@ const formatTime = (timestamp: number): string => {
   return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 };
 
-// 格式化消息内容（处理Markdown）
+// 配置DOMPurify允许KaTeX相关标签和属性
+DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+  // 如果是KaTeX生成的元素，保留所有属性
+  if (node.classList && (
+    node.classList.contains('katex') || 
+    node.classList.contains('katex-html') ||
+    node.classList.contains('katex-mathml')
+  )) {
+    node.setAttribute('data-katex-processed', 'true');
+  }
+});
+
+// 格式化消息内容（处理Markdown和LaTeX）
 const formatMessage = (content: string): string => {
   try {
-    // 使用marked解析Markdown，设置async: false确保返回string类型
-    const rawHtml = marked.parse(content, { async: false });
-    // 使用DOMPurify净化HTML，防止XSS攻击
-    const cleanHtml = DOMPurify.sanitize(rawHtml);
-    return cleanHtml;
+    // 处理块级公式 $$...$$
+    let processedContent = content.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
+      try {
+        return `<div class="katex-block">${katex.renderToString(formula.trim(), {
+          displayMode: true,
+          throwOnError: false
+        })}</div>`;
+      } catch (err) {
+        console.error('LaTeX块级公式解析错误:', err);
+        return match;
+      }
+    });
+
+    // 处理行内公式 $...$，但排除可能的货币符号 ($10, 10$等)
+    const inlineFormulaRegex = /\$([^\$\n]+?)\$/g;
+    processedContent = processedContent.replace(inlineFormulaRegex, (match, formula) => {
+      // 检查是否为货币符号
+      if (/^\$\d/.test(match) || /\d\$$/.test(match)) {
+        return match;
+      }
+      
+      try {
+        return katex.renderToString(formula.trim(), {
+          displayMode: false,
+          throwOnError: false
+        });
+      } catch (err) {
+        console.error('LaTeX行内公式解析错误:', err);
+        return match;
+      }
+    });
+
+    // 使用Marked解析Markdown
+    const html = marked.parse(processedContent, { async: false });
+    
+    // 配置DOMPurify
+    const purifyConfig = {
+      ADD_TAGS: ['math', 'mrow', 'mi', 'mo', 'mn', 'msup', 'msub', 'mfrac', 'mspace', 'mtext', 'annotation', 'semantics', 'svg', 'line', 'path', 'g'],
+      ADD_ATTR: ['xlink:href', 'href', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'd', 'width', 'height', 'viewBox', 'style', 'data-katex-processed', 'class'],
+      ALLOW_DATA_ATTR: true
+    };
+    
+    // 净化HTML防止XSS攻击
+    return DOMPurify.sanitize(html, purifyConfig);
   } catch (error) {
-    console.error('Markdown解析失败:', error);
+    console.error('内容解析失败:', error);
     return content;
   }
 };
@@ -932,6 +985,38 @@ const startVoiceRecord = (): void => {
 
 :deep(.markdown-body em) {
   font-style: italic;
+}
+
+/* KaTeX公式块样式 */
+:deep(.katex-block) {
+  display: block;
+  margin: 12px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* 确保LaTeX公式在暗模式下也可见 */
+:deep(.katex) {
+  font-size: 1.1em;
+}
+
+:deep(.katex-display) {
+  margin: 0.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 移动设备适配 */
+@media (max-width: 767px) {
+  :deep(.katex-block) {
+    font-size: 0.9em;
+  }
+  
+  :deep(.katex) {
+    font-size: 1em;
+  }
 }
 </style>
 
