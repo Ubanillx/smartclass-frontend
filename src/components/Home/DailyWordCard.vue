@@ -10,11 +10,13 @@
         </template>
         <template #right-icon>
           <div class="right-actions">
-            <van-icon
-              name="bookmark-o"
-              class="vocabulary-icon"
-              @click.stop="$emit('category-click', vocabularyCategory)"
-            />
+            <div class="vocabulary-btn" @click.stop="$emit('category-click', vocabularyCategory)">
+              <van-icon
+                name="bookmark-o"
+                class="vocabulary-icon"
+              />
+              <span class="vocabulary-text">生词本</span>
+            </div>
             <span class="more-link" @click="$emit('more')">更多</span>
           </div>
         </template>
@@ -941,8 +943,30 @@ const playAudio = (): void => {
   gap: 12px;
 }
 
+.vocabulary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: #f2f8ff;
+  padding: 4px 10px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vocabulary-btn:hover {
+  background-color: #e6f1ff;
+}
+
+.vocabulary-text {
+  font-size: var(--font-size-sm);
+  color: #1989fa;
+  font-weight: 500;
+}
+
 .vocabulary-icon {
-  font-size: 20px;
+  font-size: 18px;
   color: #1989fa;
   vertical-align: middle;
 }
