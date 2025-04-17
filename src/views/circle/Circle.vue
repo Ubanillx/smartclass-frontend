@@ -100,85 +100,112 @@ const handlePublish = () => {
 
 <style scoped>
 .circle {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 66px;
+  background-color: #F2F7FD;
   min-height: 100vh;
-  background-color: #f7f8fa;
+  position: relative;
 }
 
 .fixed-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-  background-color: #ffffff;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  background-color: #F2F7FD;
+  padding: 16px 16px 0;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  margin-top: 12px;
+  padding: 12px 12px;
 }
 
 .page-title {
   display: flex;
   align-items: center;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 700;
+  color: #323233;
+  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .title-icon {
-  margin-right: 8px;
+  margin-right: 6px;
+  color: #1989fa;
   font-size: 22px;
 }
 
 .header-actions {
   display: flex;
-  gap: 16px;
+  align-items: center;
 }
 
 .action-icon {
-  font-size: 22px;
+  font-size: 24px;
+  color: #323233;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.85;
+}
+
+.action-icon:active {
+  opacity: 0.6;
+  transform: scale(0.95);
 }
 
 .nav-tabs {
   display: flex;
-  border-bottom: 1px solid #f2f2f2;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ebedf0;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
 }
 
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 12px 0;
-  font-size: 16px;
+  padding: 14px 0;
+  font-size: var(--font-size-md, 16px);
   font-weight: 700;
   color: #646566;
   position: relative;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .nav-tab.active {
   color: #1989fa;
+  background-color: transparent;
 }
 
 .nav-tab.active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
+  width: 40%;
   height: 3px;
   background-color: #1989fa;
-  border-radius: 3px;
+  border-radius: 3px 3px 0 0;
 }
 
 .scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px;
   padding-top: 104px;
-  padding-bottom: 16px;
-  min-height: calc(100vh - 104px);
 }
 
 .tab-content {
@@ -195,12 +222,9 @@ const handlePublish = () => {
 
 .publish-btn {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: auto;
-  padding: 0 20px;
-  height: 40px;
-  z-index: 10;
+  right: 16px;
+  bottom: 70px;
+  z-index: 999;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 </style> 
