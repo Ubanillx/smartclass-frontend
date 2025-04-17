@@ -3,6 +3,8 @@
  * 提供与Dify AI对话API的交互功能
  */
 
+import { useUserStore } from '../stores/userStore';
+
 // 根据当前环境判断使用哪个API基础URL
 const isDevelopment = import.meta.env.MODE === 'development';
 // Dify API配置
@@ -280,6 +282,7 @@ export interface Persona {
 export const getAllPersonas = async (): Promise<Persona[]> => {
   try {
     console.log('开始获取分身信息...');
+    const userStore = useUserStore();
     
     // 直接返回预设分身数据
     const presetPersonas: Persona[] = [
@@ -287,7 +290,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 1,
         name: '英语教师 Emma',
         description: '专业英语教学，语法讲解，口语指导',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 1,
         tags: ['语法', '口语', '教学']
       },
@@ -295,7 +298,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 2,
         name: '口语伙伴 Mike',
         description: '日常英语对话，地道表达，场景练习',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 2,
         tags: ['口语', '日常对话', '场景练习']
       },
@@ -303,7 +306,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 3,
         name: '写作助手 Sarah',
         description: '作文指导，文章润色，写作技巧',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 3,
         tags: ['写作', '润色', '技巧']
       },
@@ -311,7 +314,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 4,
         name: '考试辅导员 Jack',
         description: '考试技巧，备考指导，模拟测试',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 4,
         tags: ['考试', '备考', '技巧']
       },
@@ -319,7 +322,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 5,
         name: '商务英语专家 Lisa',
         description: '商务邮件，会议对话，职场英语',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 5,
         tags: ['商务', '职场', '邮件']
       }
@@ -329,6 +332,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
     return presetPersonas;
   } catch (error) {
     console.error('获取分身信息失败:', error);
+    const userStore = useUserStore();
     
     // 出错时返回默认分身列表
     return [
@@ -336,7 +340,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 1,
         name: '英语教师 Emma',
         description: '专业英语教学，语法讲解，口语指导',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 1,
         tags: ['语法', '口语', '教学']
       },
@@ -344,7 +348,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 2,
         name: '口语伙伴 Mike',
         description: '日常英语对话，地道表达，场景练习',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 2,
         tags: ['口语', '日常对话', '场景练习']
       },
@@ -352,7 +356,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 3,
         name: '写作助手 Sarah',
         description: '作文指导，文章润色，写作技巧',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 3,
         tags: ['写作', '润色', '技巧']
       },
@@ -360,7 +364,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 4,
         name: '考试辅导员 Jack',
         description: '考试技巧，备考指导，模拟测试',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 4,
         tags: ['考试', '备考', '技巧']
       },
@@ -368,7 +372,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         id: 5,
         name: '商务英语专家 Lisa',
         description: '商务邮件，会议对话，职场英语',
-        icon: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        icon: userStore.DEFAULT_USER_AVATAR,
         type: 5,
         tags: ['商务', '职场', '邮件']
       }
