@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile has-tabbar">
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <!-- 用户基本信息卡片 -->
       <component
@@ -36,6 +36,9 @@
         :history-items="learningHistory"
         @view-all="router.push('/history')"
       />
+      
+      <!-- 内容导航栏组件 -->
+      <component :is="ContentTabsRaw" />
 
       <!-- 退出登录按钮 -->
       <component :is="LogoutButtonRaw" @logout="handleLogout" />
@@ -55,6 +58,7 @@ import {
   RecentLearning,
   LearningHistory,
   LogoutButton,
+  ContentTabs
 } from '../components/Profile';
 import { useUserStore } from '../stores/userStore';
 import { UserControllerService } from '../services';
@@ -67,6 +71,7 @@ const AchievementWallRaw = markRaw(AchievementWall);
 const RecentLearningRaw = markRaw(RecentLearning);
 const LearningHistoryRaw = markRaw(LearningHistory);
 const LogoutButtonRaw = markRaw(LogoutButton);
+const ContentTabsRaw = markRaw(ContentTabs);
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -80,6 +85,7 @@ const userInfo = ref({
   avatar: userStore.DEFAULT_USER_AVATAR,
   level: 1,
   nextLevelExp: 100,
+  userId: '' as string | number
 });
 
 const userStats = ref({
@@ -207,6 +213,7 @@ const fetchUserData = async () => {
             avatar: userData.userAvatar || userStore.DEFAULT_USER_AVATAR,
             level: 3,
             nextLevelExp: 100,
+            userId: userData.id || ''
           };
 
           userStats.value = {
@@ -247,54 +254,43 @@ const onRefresh = () => {
 };
 
 const addGoal = (goalText: string) => {
-  const newId = todayGoals.value.length > 0
-    ? Math.max(...todayGoals.value.map((goal) => goal.id)) + 1
+  const newId = todayGoals.value.length > 0 
+    ? Math.max(...todayGoals.value.map(g => g.id)) + 1 
     : 1;
-
+  
   todayGoals.value.push({
     id: newId,
     text: goalText,
     completed: false,
   });
-
+  
   updateProgress();
-  showToast('已添加新的学习目标');
 };
 
 const toggleGoalStatus = (goalId: number) => {
-  const goalIndex = todayGoals.value.findIndex((goal) => goal.id === goalId);
-  if (goalIndex !== -1) {
-    const goal = todayGoals.value[goalIndex];
-    if (goal) {
-      goal.completed = !goal.completed;
-      updateProgress();
-
-      if (goal.completed) {
-        showToast('恭喜完成学习目标！');
-      }
-    }
+  const goal = todayGoals.value.find(g => g.id === goalId);
+  if (goal) {
+    goal.completed = !goal.completed;
+    updateProgress();
   }
 };
 
 const updateProgress = () => {
-  if (todayGoals.value.length === 0) {
+  const totalGoals = todayGoals.value.length;
+  if (totalGoals === 0) {
     todayProgress.value = 0;
     return;
   }
-
-  const completedCount = todayGoals.value.filter((goal) => goal.completed).length;
-  todayProgress.value = Math.round((completedCount / todayGoals.value.length) * 100);
+  
+  const completedGoals = todayGoals.value.filter(g => g.completed).length;
+  todayProgress.value = Math.round((completedGoals / totalGoals) * 100);
 };
 
 const handleLogout = async () => {
   try {
     await userStore.logout();
-    showSuccessToast({
-      message: '已退出登录',
-      onClose: () => {
-        router.push('/login');
-      },
-    });
+    showSuccessToast('退出登录成功');
+    router.push('/login');
   } catch (error) {
     console.error('退出登录失败:', error);
     showToast('退出登录失败，请重试');
@@ -310,18 +306,14 @@ onMounted(() => {
 
 <style scoped>
 .profile {
-  padding: 16px 16px 66px;
+  padding-bottom: 66px;
   background-color: #F2F7FD;
   min-height: 100vh;
 }
 
-/* 在二级页面中不需要为底部导航栏预留空间 */
-:deep(.has-tabbar) {
-  padding-bottom: 60px;
-}
-
 :deep(.van-pull-refresh) {
-  min-height: calc(100vh - 32px);
+  min-height: calc(100vh - 50px);
+  padding: 12px 16px 0;
 }
 
 :deep(.van-pull-refresh__track) {
