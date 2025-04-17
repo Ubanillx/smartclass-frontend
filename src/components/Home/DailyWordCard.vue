@@ -30,9 +30,19 @@
             @click.stop="toggleCollect"
           />
         </div>
-        <div class="word-phonetic">/{{ word.phonetic }}/</div>
+        <div class="word-phonetic">
+          /{{ word.phonetic }}/
+          <van-icon name="volume-o" class="audio-icon" @click.stop="playAudio" v-if="word.audioUrl" />
+        </div>
         <div class="word-translation">{{ word.translation }}</div>
-        <div class="word-example">{{ word.example }}</div>
+        <div class="word-info">
+          <span class="word-category" v-if="word.category">{{ word.category }}</span>
+          <span class="word-difficulty" v-if="word.difficulty">{{ word.difficulty }}</span>
+        </div>
+        <div class="word-example-wrapper">
+          <div class="word-example">{{ word.example }}</div>
+          <div class="word-example-translation" v-if="word.exampleTranslation">{{ word.exampleTranslation }}</div>
+        </div>
       </div>
     </van-cell-group>
 
@@ -41,7 +51,7 @@
       v-model:show="showWordPopup"
       round
       position="bottom"
-      :style="{ height: '60%' }"
+      :style="{ height: '70%' }"
     >
       <div class="word-detail">
         <div class="popup-header">
@@ -50,7 +60,10 @@
         </div>
         <div class="word-content" v-if="word">
           <div class="word-main">
-            <span class="word-text">{{ word.text }}</span>
+            <div class="word-title">
+              <span class="word-text">{{ word.text }}</span>
+              <van-icon name="volume-o" class="audio-icon" @click="playAudio" v-if="word.audioUrl" />
+            </div>
             <van-icon
               :name="word.isCollected ? 'star' : 'star-o'"
               :class="['collect-icon', { collected: word.isCollected }]"
@@ -58,6 +71,25 @@
             />
           </div>
           <div class="word-phonetic">/{{ word.phonetic }}/</div>
+          <div class="word-info-detail">
+            <span class="tag category-tag" v-if="word.category">{{ word.category }}</span>
+            <span class="tag difficulty-tag" v-if="word.difficulty">{{ word.difficulty }}</span>
+          </div>
+          <div class="word-translation detail-item">
+            <div class="item-label">释义</div>
+            <div class="item-content">{{ word.translation }}</div>
+          </div>
+          <div class="word-example-detail detail-item">
+            <div class="item-label">例句</div>
+            <div class="item-content">{{ word.example }}</div>
+            <div class="item-content example-translation" v-if="word.exampleTranslation">
+              {{ word.exampleTranslation }}
+            </div>
+          </div>
+          <div class="word-notes detail-item" v-if="word.notes">
+            <div class="item-label">笔记</div>
+            <div class="item-content notes-content">{{ word.notes }}</div>
+          </div>
           <div class="word-meanings">
             <div
               class="meaning-item"
@@ -87,12 +119,21 @@ interface WordMeaning {
 }
 
 interface Word {
+  id?: number;
   text: string;
   phonetic: string;
   translation: string;
   example: string;
   isCollected: boolean;
   meanings: WordMeaning[];
+  viewCount?: number;
+  collectCount?: number;
+  lastViewTime?: string;
+  difficulty?: string;
+  category?: string;
+  audioUrl?: string;
+  exampleTranslation?: string;
+  notes?: string;
 }
 
 interface Category {
@@ -190,6 +231,20 @@ const getDifficulty = (word: Word): string => {
     return '高级';
   }
 };
+
+// 播放单词发音
+const playAudio = (): void => {
+  if (props.word.audioUrl) {
+    const audio = new Audio(props.word.audioUrl);
+    audio.play().catch(error => {
+      console.error('播放音频失败', error);
+      showToast({
+        message: '音频播放失败',
+        position: 'bottom',
+      });
+    });
+  }
+};
 </script>
 
 <style scoped>
@@ -247,10 +302,22 @@ const getDifficulty = (word: Word): string => {
   font-weight: 500;
 }
 
+.word-example-wrapper {
+  margin-top: 10px;
+}
+
 .word-example {
   font-size: var(--font-size-sm);
   color: #646566;
   font-style: italic;
+  margin-bottom: 4px;
+}
+
+.word-example-translation {
+  font-size: var(--font-size-xs);
+  color: #969799;
+  font-style: normal;
+  margin-top: 2px;
 }
 
 .word-detail {
@@ -372,5 +439,91 @@ const getDifficulty = (word: Word): string => {
   font-size: 20px;
   color: #1989fa;
   vertical-align: middle;
+}
+
+.audio-icon {
+  font-size: var(--font-size-md);
+  color: #1989fa;
+  margin-left: 6px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.word-info {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.word-category, .word-difficulty {
+  font-size: var(--font-size-xs);
+  padding: 2px 6px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.word-category {
+  background-color: #1989fa;
+}
+
+.word-difficulty {
+  background-color: #ff976a;
+}
+
+.word-title {
+  display: flex;
+  align-items: center;
+}
+
+.word-info-detail {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+
+.tag {
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.category-tag {
+  background-color: #1989fa;
+}
+
+.difficulty-tag {
+  background-color: #ff976a;
+}
+
+.detail-item {
+  margin-bottom: 16px;
+}
+
+.item-label {
+  font-size: var(--font-size-sm);
+  color: #969799;
+  margin-bottom: 4px;
+}
+
+.item-content {
+  font-size: var(--font-size-md);
+  color: #323233;
+  line-height: 1.5;
+}
+
+.example-translation {
+  color: #969799;
+  font-size: var(--font-size-sm);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.notes-content {
+  font-size: var(--font-size-sm);
+  background-color: #f7f8fa;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #1989fa;
 }
 </style>

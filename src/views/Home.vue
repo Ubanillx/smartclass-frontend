@@ -83,6 +83,7 @@ import { AnnouncementControllerService } from '../services/services/Announcement
 import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
 import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
 import { useUserStore } from '../stores/userStore';
+import { DailyWordControllerService } from '../services/services/DailyWordControllerService.ts';
 
 // 定义类型
 interface Assistant {
@@ -171,8 +172,91 @@ const filteredPopularCourses = computed(() => {
   return topCourses;
 });
 
-// 设置每日单词数据（随机获取）
+// 设置每日单词数据（从后端API获取）
 const dailyWord = ref(getRandomWord());
+
+// 从后端获取今日单词
+const fetchDailyWord = async () => {
+  try {
+    const response = await DailyWordControllerService.getTodayWordUsingGet();
+    
+    if (response.code === 0 && response.data && response.data.length > 0) {
+      // 使用API返回的第一个单词作为今日单词
+      const todayWord = response.data[0];
+      
+      if (todayWord) {
+        // 转换API返回的DailyWordVO格式为组件使用的Word格式
+        // 扩展现有的Word类型
+        const mockWord = getRandomWord(); // 获取一个模板
+
+        // 示例单词：big
+        const defaultExample = "The elephant is a big animal.";
+        const defaultExampleTranslation = "大象是一种大型动物。";
+        
+        const word = {
+          ...mockWord, // 保留原有字段
+          id: todayWord.id || 0,
+          text: todayWord.word || 'big',
+          phonetic: todayWord.pronunciation || 'bɪɡ',
+          translation: todayWord.translation || '大的',
+          example: todayWord.example || defaultExample, // 使用默认值确保例句显示
+          isCollected: false, // 默认未收藏，将在checkCollectedStatus中检查
+          meanings: [
+            {
+              partOfSpeech: todayWord.category || 'adj.',
+              definition: todayWord.translation || '大的',
+              example: todayWord.example || defaultExample,
+            },
+          ],
+          viewCount: mockWord.viewCount,
+          collectCount: mockWord.collectCount,
+          lastViewTime: new Date().toISOString(),
+          difficulty: convertDifficultyToText(todayWord.difficulty),
+          category: todayWord.category || '日常用语',
+          // 保存额外信息到Word对象
+          audioUrl: todayWord.audioUrl,
+          // 确保正确处理例句翻译
+          exampleTranslation: todayWord.exampleTranslation || defaultExampleTranslation,
+          notes: todayWord.notes,
+        };
+        
+        dailyWord.value = word;
+        checkCollectedStatus();
+      } else {
+        // 如果API返回数据为空，使用mock数据作为备用
+        dailyWord.value = getRandomWord();
+        // 确保备用数据有例句翻译
+        dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+        checkCollectedStatus();
+      }
+    } else {
+      // 如果API请求失败，使用mock数据作为备用
+      dailyWord.value = getRandomWord();
+      // 确保备用数据有例句翻译
+      dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+      checkCollectedStatus();
+    }
+  } catch (error) {
+    console.error('获取今日单词数据失败', error);
+    // 使用mock数据作为备用
+    dailyWord.value = getRandomWord();
+    // 确保备用数据有例句翻译
+    dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+    checkCollectedStatus();
+  }
+};
+
+// 将数字难度转换为文本描述
+const convertDifficultyToText = (difficulty?: number): string => {
+  if (!difficulty) return '中级';
+  
+  switch (difficulty) {
+    case 1: return '初级';
+    case 2: return '中级';
+    case 3: return '高级';
+    default: return '中级';
+  }
+};
 
 // 检查单词是否已收藏
 const checkCollectedStatus = () => {
@@ -306,12 +390,11 @@ const onRefresh = async () => {
     // 刷新所有数据
     await Promise.all([
       fetchAiAssistants(),
-      fetchNotices()  // 刷新公告数据
+      fetchNotices(),  // 刷新公告数据
+      fetchDailyWord() // 刷新今日单词数据
     ]);
     
     // 更新其他数据
-    dailyWord.value = getRandomWord();
-    checkCollectedStatus();
     articles.value = getRandomArticles(4);
     
     showToast('刷新成功');
@@ -328,6 +411,7 @@ onMounted(() => {
   ensureCollectedCategory();
   fetchAiAssistants();
   fetchNotices(); // 获取公告数据
+  fetchDailyWord(); // 获取今日单词数据
 });
 </script>
 
