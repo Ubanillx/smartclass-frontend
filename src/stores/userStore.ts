@@ -33,18 +33,48 @@ export const useUserStore = defineStore('user', () => {
         localStorage.setItem('userInfo', JSON.stringify(response.data));
         return response.data;
       }
-      return null;
+      // 如果响应码不为0或没有数据，保持当前状态，不清除用户信息
+      return userInfo.value;
     } catch (error) {
       console.error('Failed to fetch current user', error);
-      return null;
+      // 发生异常时，保留现有用户状态，返回当前的userInfo
+      return userInfo.value;
     }
   };
 
-  // 登录
+  // 用户名登录
   const login = async (userAccount: string, userPassword: string) => {
     try {
       const response = await UserControllerService.userLoginUsingPost({
         userAccount,
+        userPassword,
+      });
+
+      if (response.code === 0 && response.data) {
+        // 确保用户头像有默认值
+        if (!response.data.userAvatar) {
+          response.data.userAvatar = DEFAULT_USER_AVATAR;
+        }
+        userInfo.value = response.data;
+        localStorage.setItem('userInfo', JSON.stringify(response.data));
+        return { success: true, data: response.data };
+      }
+
+      return { success: false, message: response.message || '登录失败' };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '登录失败，请检查网络连接';
+      return {
+        success: false,
+        message: errorMessage,
+      };
+    }
+  };
+
+  // 手机号登录
+  const loginByPhone = async (userPhone: string, userPassword: string) => {
+    try {
+      const response = await UserControllerService.userLoginByPhoneUsingPost({
+        userPhone,
         userPassword,
       });
 
@@ -89,6 +119,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     userInfo,
     login,
+    loginByPhone,
     logout,
     fetchCurrentUser,
     getUserAvatar,

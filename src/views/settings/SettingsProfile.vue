@@ -11,10 +11,7 @@
               round
               width="60"
               height="60"
-              :src="
-                formData.userAvatar ||
-                'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
-              "
+              :src="formData.userAvatar || userStore.DEFAULT_USER_AVATAR"
               fit="cover"
               @click="previewAvatar"
             />
@@ -205,6 +202,7 @@ interface FormData {
 
 const router = useRouter();
 const route = useRoute();
+const userStore = useUserStore();
 
 // 表单数据
 const formData = ref<FormData>({
