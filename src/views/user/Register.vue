@@ -146,7 +146,7 @@ const handleRegister = async () => {
         checkPassword: formData.value.confirmPassword,
       });
     } else {
-      response = await UserControllerService.userPhoneRegisterUsingPost({
+      response = await UserControllerService.userRegisterByPhoneUsingPost({
         userPhone: formData.value.userPhone,
         userPassword: formData.value.password,
         checkPassword: formData.value.confirmPassword,
