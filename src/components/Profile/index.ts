@@ -5,6 +5,7 @@ import AchievementWall from './AchievementWall.vue';
 import RecentLearning from './RecentLearning.vue';
 import LearningHistory from './LearningHistory.vue';
 import LogoutButton from './LogoutButton.vue';
+import ContentTabs from './ContentTabs.vue';
 
 export {
   UserInfoCard,
@@ -14,4 +15,5 @@ export {
   RecentLearning,
   LearningHistory,
   LogoutButton,
+  ContentTabs
 };
