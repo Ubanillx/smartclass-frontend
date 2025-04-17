@@ -14,20 +14,51 @@
       </van-cell>
       <div class="notice-preview">
         <template v-if="notices && notices.length > 0">
-          <!-- 循环显示多条公告 -->
+          <!-- 默认只显示第一条公告 -->
           <div 
-            v-for="notice in notices" 
-            :key="notice.id" 
             class="notice-item"
-            @click="showNoticeDetail(notice)"
+            @click="notices[0] && showNoticeDetail(notices[0])"
           >
-            <h4>{{ notice.title }}</h4>
-            <p class="notice-brief">{{ notice.content }}</p>
+            <h4>{{ notices[0]?.title }}</h4>
+            <p class="notice-brief">{{ notices[0]?.content }}</p>
             <div class="notice-footer">
-              <span class="notice-date">{{ notice.date }}</span>
+              <span class="notice-date">{{ notices[0]?.date }}</span>
               <van-icon name="arrow" />
             </div>
           </div>
+          
+          <!-- 展开更多按钮 -->
+          <div v-if="notices.length > 1 && !expanded" class="expand-button" @click="expanded = true">
+            <div class="expand-button-content">
+              <van-icon name="arrow-down" />
+              <span>展开更多公告</span>
+            </div>
+          </div>
+          
+          <!-- 展开后显示的额外公告 -->
+          <template v-if="expanded">
+            <div 
+              v-for="notice in notices.slice(1, 3)" 
+              :key="notice.id" 
+              class="notice-item"
+              @click="showNoticeDetail(notice)"
+            >
+              <h4>{{ notice.title }}</h4>
+              <p class="notice-brief">{{ notice.content }}</p>
+              <div class="notice-footer">
+                <span class="notice-date">{{ notice.date }}</span>
+                <van-icon name="arrow" />
+              </div>
+            </div>
+            
+            <!-- 收起按钮 -->
+            <div v-if="notices.length > 1" class="expand-button collapse" @click="expanded = false">
+              <div class="expand-button-content">
+                <van-icon name="arrow-up" />
+                <span>收起</span>
+              </div>
+            </div>
+          </template>
         </template>
         <template v-else>
           <div class="empty-notice">
@@ -73,6 +104,7 @@ const props = defineProps<{
 const router = useRouter();
 const showDetail = ref(false);
 const selectedNotice = ref<Notice | null>(null);
+const expanded = ref(false); // 控制是否展开显示更多公告
 
 // 跳转到公告列表页面
 const goToNoticeList = (): void => {
@@ -240,5 +272,43 @@ const showNoticeDetail = (notice: Notice): void => {
   font-size: var(--font-size-md);
   margin-bottom: 8px;
   color: #323233;
+}
+
+.expand-button {
+  padding: 0;
+  margin-top: 4px;
+  border-top: 0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.expand-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1989fa;
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  height: 20px;
+  padding: 5px 0;
+}
+
+.expand-button.collapse .expand-button-content {
+  color: #969799;
+}
+
+.expand-button-content span {
+  margin-left: 4px;
+  display: inline-block;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+.expand-button-content .van-icon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
 }
 </style>
