@@ -193,7 +193,7 @@ const userInfo = ref<UserInfo>({
 const assistant = ref<Assistant>({
   id: Number(route.params.assistantId) || 1,
   name: 'AI助手',
-  avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+  avatar: '/default.jpg',
   description: '智能AI助手，可回答各类问题',
 });
 
@@ -289,7 +289,7 @@ const loadAiAvatarInfo = async () => {
       assistant.value = {
         id: response.data.id || aiAvatarId,
         name: response.data.name || 'AI助手',
-        avatar: response.data.avatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+        avatar: response.data.avatarImgUrl || '/default.jpg',
         description: response.data.description || '智能AI助手，可回答各类问题',
         status: response.data.status,
       };
