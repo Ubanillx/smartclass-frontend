@@ -24,14 +24,34 @@
       <div class="daily-word" @click="showWordDetail">
         <div class="word-header">
           <span class="word-text">{{ word.text }}</span>
-          <van-icon
-            :name="word.isCollected ? 'star' : 'star-o'"
-            :class="['collect-icon', { collected: word.isCollected }]"
-            @click.stop="toggleCollect"
-          />
+          <div class="header-actions">
+            <div class="thumb-action" :class="{ thumbed: word.isThumbUp }">
+              <van-icon
+                :name="word.isThumbUp ? 'good-job' : 'good-job-o'"
+                :class="['thumb-icon', { thumbed: word.isThumbUp }]"
+                @click.stop="toggleThumbUp"
+              />
+              <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
+            </div>
+            <van-icon
+              :name="word.isCollected ? 'star' : 'star-o'"
+              :class="['collect-icon', { collected: word.isCollected }]"
+              @click.stop="toggleCollect"
+            />
+            <van-button
+              v-if="word.id"
+              size="mini"
+              type="primary"
+              class="study-button"
+              :loading="isMarkingStudied"
+              @click="markAsStudied"
+            >
+              已学习
+            </van-button>
+          </div>
         </div>
         <div class="word-phonetic">
-          /{{ word.phonetic }}/
+          <span class="phonetic-text">/{{ word.phonetic }}/</span>
           <van-icon name="volume-o" class="audio-icon" @click.stop="playAudio" v-if="word.audioUrl" />
         </div>
         <div class="word-translation">{{ word.translation }}</div>
@@ -64,11 +84,21 @@
               <span class="word-text">{{ word.text }}</span>
               <van-icon name="volume-o" class="audio-icon" @click="playAudio" v-if="word.audioUrl" />
             </div>
-            <van-icon
-              :name="word.isCollected ? 'star' : 'star-o'"
-              :class="['collect-icon', { collected: word.isCollected }]"
-              @click="toggleCollect"
-            />
+            <div class="action-icons">
+              <div class="thumb-action" :class="{ thumbed: word.isThumbUp }">
+                <van-icon
+                  :name="word.isThumbUp ? 'good-job' : 'good-job-o'"
+                  :class="['thumb-icon', { thumbed: word.isThumbUp }]"
+                  @click="toggleThumbUp"
+                />
+                <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
+              </div>
+              <van-icon
+                :name="word.isCollected ? 'star' : 'star-o'"
+                :class="['collect-icon', { collected: word.isCollected }]"
+                @click="toggleCollect"
+              />
+            </div>
           </div>
           <div class="word-phonetic">/{{ word.phonetic }}/</div>
           <div class="word-info-detail">
@@ -86,11 +116,73 @@
               {{ word.exampleTranslation }}
             </div>
           </div>
-          <div class="word-notes detail-item" v-if="word.notes">
-            <div class="item-label">笔记</div>
-            <div class="item-content notes-content">{{ word.notes }}</div>
+          
+          <!-- 掌握程度设置 -->
+          <div class="word-mastery detail-item" v-if="word.isCollected && word.id">
+            <div class="item-label">掌握程度</div>
+            <div class="mastery-slider">
+              <van-slider
+                v-model="masteryLevel"
+                :min="1"
+                :max="3"
+                :step="1"
+                bar-height="4px"
+                active-color="#1989fa"
+                inactive-color="#e8eaec"
+                @change="updateMasteryLevel"
+              >
+                <template #button>
+                  <div class="mastery-button">{{ masteryLevel }}</div>
+                </template>
+              </van-slider>
+              <div class="mastery-progress">
+                <div class="mastery-level" :class="{ active: masteryLevel >= 1 }">生疏</div>
+                <div class="mastery-level" :class="{ active: masteryLevel >= 2 }">一般</div>
+                <div class="mastery-level" :class="{ active: masteryLevel >= 3 }">掌握</div>
+              </div>
+            </div>
           </div>
-          <div class="word-meanings">
+          
+          <!-- 个人笔记 -->
+          <div class="word-notes detail-item">
+            <div class="item-label-with-action">
+              <span>笔记</span>
+              <van-button
+                v-if="isEditingNote"
+                size="mini"
+                type="primary"
+                plain
+                @click="saveWordNote"
+                :loading="isSavingNote"
+              >
+                保存
+              </van-button>
+              <van-icon
+                v-else
+                name="edit"
+                class="edit-icon"
+                @click="startEditingNote"
+              />
+            </div>
+            <div v-if="isEditingNote" class="note-editor">
+              <van-field
+                v-model="noteContent"
+                type="textarea"
+                rows="3"
+                placeholder="添加个人笔记..."
+                class="note-textarea"
+              />
+            </div>
+            <div v-else-if="word.notes" class="item-content notes-content">
+              {{ word.notes }}
+            </div>
+            <div v-else class="empty-note" @click="startEditingNote">
+              点击添加笔记
+            </div>
+          </div>
+          
+          <!-- 其他单词意思 -->
+          <div class="word-meanings" v-if="word.meanings && word.meanings.length > 0">
             <div
               class="meaning-item"
               v-for="(meaning, index) in word.meanings"
@@ -108,9 +200,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { showToast } from 'vant';
 import { useCollectedWordsStore } from '../../stores/collectedWordsStore';
+import { DailyWordFavourControllerService, DailyWordThumbControllerService } from '../../services';
 
 interface WordMeaning {
   partOfSpeech: string;
@@ -125,6 +218,9 @@ interface Word {
   translation: string;
   example: string;
   isCollected: boolean;
+  isThumbUp?: boolean;
+  thumbCount?: number;
+  likeCount?: number;
   meanings: WordMeaning[];
   viewCount?: number;
   collectCount?: number;
@@ -159,6 +255,18 @@ const emit = defineEmits<{
 const showWordPopup = ref(false);
 const collectedWordsStore = useCollectedWordsStore();
 
+// 笔记编辑状态
+const isEditingNote = ref(false);
+const noteContent = ref('');
+const isSavingNote = ref(false);
+
+// 点赞状态
+const isThumbUping = ref(false);
+
+// 掌握程度
+const masteryLevel = ref(1);
+const isMarkingStudied = ref(false);
+
 // 获取生词本分类
 const vocabularyCategory = computed(() => {
   return (
@@ -178,47 +286,296 @@ const showWordDetail = (): void => {
   showWordPopup.value = true;
 };
 
-// 收藏/取消收藏单词
-const toggleCollect = (): void => {
-  const updatedWord: Word = {
-    ...props.word,
-    isCollected: !props.word.isCollected,
-  };
-
-  // 通过事件更新父组件中的数据
-  emit('update:word', updatedWord);
-
-  // 如果是收藏操作，添加到生词本
-  if (updatedWord.isCollected) {
-    const wordToCollect = {
-      id: Date.now(), // 使用时间戳作为临时ID
-      text: updatedWord.text,
-      phonetic: updatedWord.phonetic,
-      translation: updatedWord.translation,
-      example: updatedWord.example,
-      meanings: updatedWord.meanings,
-      viewCount: 1,
-      lastViewTime: new Date().toISOString(),
-      difficulty: getDifficulty(updatedWord),
-    };
+// 检查单词是否已被收藏
+const checkWordFavourStatus = async (): Promise<void> => {
+  if (!props.word.id) return;
+  
+  try {
+    const response = await DailyWordFavourControllerService.isFavourWordUsingGet(props.word.id);
     
-    collectedWordsStore.collectWord(wordToCollect);
-  } else {
-    // 如果是取消收藏，需要从生词本中移除
-    // 由于我们没有直接的ID映射关系，所以需要先查找对应单词
-    const collectedWords = collectedWordsStore.getCollectedWords();
-    const wordToRemove = collectedWords.find(w => w.text.toLowerCase() === updatedWord.text.toLowerCase());
-    
-    if (wordToRemove) {
-      collectedWordsStore.removeWord(wordToRemove.id);
+    if (response.code === 0 && response.data !== undefined) {
+      // 如果当前收藏状态与后端不一致，更新本地状态
+      if (props.word.isCollected !== response.data) {
+        const updatedWord: Word = {
+          ...props.word,
+          isCollected: response.data
+        };
+        emit('update:word', updatedWord);
+      }
     }
+  } catch (error) {
+    console.error('检查单词收藏状态失败', error);
   }
-
-  showToast({
-    message: updatedWord.isCollected ? '已添加到生词本' : '已取消收藏',
-    position: 'bottom',
-  });
 };
+
+// 检查单词是否已被点赞
+const checkWordThumbStatus = async (): Promise<void> => {
+  if (!props.word.id) return;
+  
+  try {
+    const response = await DailyWordThumbControllerService.isThumbWordUsingGet(props.word.id);
+    
+    if (response.code === 0 && response.data !== undefined) {
+      // 如果当前点赞状态与后端不一致，更新本地状态
+      if (props.word.isThumbUp !== response.data) {
+        const updatedWord: Word = {
+          ...props.word,
+          isThumbUp: response.data,
+          // 使用原有的likeCount或thumbCount
+          thumbCount: props.word.likeCount || props.word.thumbCount
+        };
+        emit('update:word', updatedWord);
+      }
+    }
+  } catch (error) {
+    console.error('检查单词点赞状态失败', error);
+  }
+};
+
+// 收藏/取消收藏单词
+const toggleCollect = async (): Promise<void> => {
+  // 如果没有wordId，不能执行收藏操作
+  if (!props.word.id) {
+    showToast({
+      message: '单词ID不存在，无法收藏',
+      position: 'bottom'
+    });
+    return;
+  }
+  
+  try {
+    // 调用后端API进行收藏或取消收藏
+    const response = await DailyWordFavourControllerService.doWordFavourUsingPost(props.word.id);
+    
+    if (response.code === 0) {
+      // API调用成功，更新本地状态
+      const newCollectedStatus = !props.word.isCollected;
+      const updatedWord: Word = {
+        ...props.word,
+        isCollected: newCollectedStatus
+      };
+      
+      // 通过事件更新父组件中的数据
+      emit('update:word', updatedWord);
+      
+      // 同步更新本地存储
+      if (newCollectedStatus) {
+        // 如果是收藏操作，添加到本地生词本
+        const wordToCollect = {
+          id: props.word.id || Date.now(), // 使用后端ID或临时ID
+          text: updatedWord.text,
+          phonetic: updatedWord.phonetic,
+          translation: updatedWord.translation,
+          example: updatedWord.example,
+          meanings: updatedWord.meanings,
+          viewCount: 1,
+          lastViewTime: new Date().toISOString(),
+          difficulty: getDifficulty(updatedWord),
+        };
+        
+        collectedWordsStore.collectWord(wordToCollect);
+      } else {
+        // 如果是取消收藏，从本地生词本中移除
+        const collectedWords = collectedWordsStore.getCollectedWords();
+        const wordToRemove = collectedWords.find(w => w.text.toLowerCase() === updatedWord.text.toLowerCase());
+        
+        if (wordToRemove) {
+          collectedWordsStore.removeWord(wordToRemove.id);
+        }
+      }
+      
+      showToast({
+        message: newCollectedStatus ? '已添加到生词本' : '已取消收藏',
+        position: 'bottom',
+      });
+    } else {
+      // API调用失败
+      showToast({
+        message: `操作失败: ${response.message || '未知错误'}`,
+        position: 'bottom',
+      });
+    }
+  } catch (error) {
+    console.error('收藏/取消收藏单词失败', error);
+    showToast({
+      message: '操作失败，请稍后再试',
+      position: 'bottom',
+    });
+  }
+};
+
+// 点赞/取消点赞单词
+const toggleThumbUp = async (): Promise<void> => {
+  // 如果没有wordId，不能执行点赞操作
+  if (!props.word.id) {
+    showToast({
+      message: '单词ID不存在，无法点赞',
+      position: 'bottom'
+    });
+    return;
+  }
+  
+  if (isThumbUping.value) return; // 防止重复点击
+  
+  isThumbUping.value = true;
+  
+  try {
+    // 调用后端API进行点赞或取消点赞
+    const response = await DailyWordThumbControllerService.doWordThumbUsingPost(props.word.id);
+    
+    if (response.code === 0) {
+      // API调用成功，更新本地状态
+      const newThumbStatus = !props.word.isThumbUp;
+      // 根据点赞状态计算新的点赞数
+      const currentCount = props.word.likeCount || props.word.thumbCount || 0;
+      const newThumbCount = newThumbStatus ? currentCount + 1 : Math.max(currentCount - 1, 0);
+      
+      const updatedWord: Word = {
+        ...props.word,
+        isThumbUp: newThumbStatus,
+        thumbCount: newThumbCount
+      };
+      
+      // 通过事件更新父组件中的数据
+      emit('update:word', updatedWord);
+      
+      showToast({
+        message: newThumbStatus ? '点赞成功' : '已取消点赞',
+        position: 'bottom',
+      });
+    } else {
+      // API调用失败
+      showToast({
+        message: `操作失败: ${response.message || '未知错误'}`,
+        position: 'bottom',
+      });
+    }
+  } catch (error) {
+    console.error('点赞/取消点赞单词失败', error);
+    showToast({
+      message: '操作失败，请稍后再试',
+      position: 'bottom',
+    });
+  } finally {
+    isThumbUping.value = false;
+  }
+};
+
+// 开始编辑笔记
+const startEditingNote = (): void => {
+  noteContent.value = props.word.notes || '';
+  isEditingNote.value = true;
+};
+
+// 保存单词笔记
+const saveWordNote = async (): Promise<void> => {
+  if (!props.word.id) {
+    showToast('单词ID不存在，无法保存笔记');
+    return;
+  }
+  
+  isSavingNote.value = true;
+  
+  try {
+    const response = await DailyWordFavourControllerService.saveWordNoteUsingPost(
+      noteContent.value,
+      props.word.id
+    );
+    
+    if (response.code === 0 && response.data) {
+      // 更新本地单词数据
+      const updatedWord: Word = {
+        ...props.word,
+        notes: noteContent.value
+      };
+      
+      emit('update:word', updatedWord);
+      isEditingNote.value = false;
+      showToast('笔记保存成功');
+    } else {
+      showToast(`保存失败: ${response.message || '未知错误'}`);
+    }
+  } catch (error) {
+    console.error('保存单词笔记失败', error);
+    showToast('保存失败，请稍后再试');
+  } finally {
+    isSavingNote.value = false;
+  }
+};
+
+// 更新掌握程度
+const updateMasteryLevel = async (): Promise<void> => {
+  if (!props.word.id) return;
+  
+  try {
+    const response = await DailyWordFavourControllerService.updateMasteryLevelUsingPost(
+      masteryLevel.value,
+      props.word.id
+    );
+    
+    if (response.code === 0 && response.data) {
+      showToast('掌握程度已更新');
+    } else {
+      showToast(`更新失败: ${response.message || '未知错误'}`);
+    }
+  } catch (error) {
+    console.error('更新单词掌握程度失败', error);
+    showToast('更新失败，请稍后再试');
+  }
+};
+
+// 标记单词为已学习
+const markAsStudied = async (): Promise<void> => {
+  if (!props.word.id) return;
+  
+  isMarkingStudied.value = true;
+  
+  try {
+    const response = await DailyWordFavourControllerService.markWordAsStudiedUsingPost(
+      props.word.id
+    );
+    
+    if (response.code === 0 && response.data) {
+      showToast('已标记为学习完成');
+    } else {
+      showToast(`操作失败: ${response.message || '未知错误'}`);
+    }
+  } catch (error) {
+    console.error('标记单词为已学习失败', error);
+    showToast('操作失败，请稍后再试');
+  } finally {
+    isMarkingStudied.value = false;
+  }
+};
+
+// 组件挂载时检查单词收藏状态与初始化数据
+onMounted(() => {
+  if (props.word.id) {
+    // 如果有likeCount数据，使用它初始化thumbCount
+    if (props.word.likeCount !== undefined && props.word.thumbCount === undefined) {
+      const updatedWord: Word = {
+        ...props.word,
+        thumbCount: props.word.likeCount
+      };
+      emit('update:word', updatedWord);
+    }
+    
+    checkWordFavourStatus();
+    checkWordThumbStatus();
+    // 初始化笔记内容
+    noteContent.value = props.word.notes || '';
+    // 初始化默认掌握程度
+    masteryLevel.value = 1;
+  }
+});
+
+// 在props变化时也检查点赞状态
+watch(() => props.word.id, (newId) => {
+  if (newId) {
+    checkWordFavourStatus();
+    checkWordThumbStatus();
+  }
+});
 
 // 根据单词信息估计难度
 const getDifficulty = (word: Word): string => {
@@ -280,9 +637,72 @@ const playAudio = (): void => {
   color: #323233;
 }
 
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 32px;
+}
+
+.action-icons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 32px;
+}
+
+.thumb-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: #f8f8f8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  line-height: 1;
+  height: 24px;
+}
+
+.thumb-action.thumbed {
+  background-color: #ffebee;
+}
+
+.thumb-number {
+  font-size: var(--font-size-sm);
+  color: #969799;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.thumb-number.thumbed {
+  color: #ee0a24;
+}
+
+.thumb-icon {
+  font-size: var(--font-size-md);
+  color: #969799;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 24px;
+}
+
+.thumb-icon.thumbed {
+  color: #ee0a24;
+}
+
 .collect-icon {
   font-size: var(--font-size-lg);
   color: #969799;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
 }
 
 .collect-icon.collected {
@@ -293,6 +713,25 @@ const playAudio = (): void => {
   font-size: var(--font-size-sm);
   color: #969799;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.phonetic-text {
+  display: inline-block;
+  line-height: 1;
+}
+
+.audio-icon {
+  font-size: var(--font-size-md);
+  color: #1989fa;
+  margin-left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
 }
 
 .word-translation {
@@ -441,14 +880,6 @@ const playAudio = (): void => {
   vertical-align: middle;
 }
 
-.audio-icon {
-  font-size: var(--font-size-md);
-  color: #1989fa;
-  margin-left: 6px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
 .word-info {
   display: flex;
   gap: 8px;
@@ -525,5 +956,115 @@ const playAudio = (): void => {
   padding: 8px;
   border-radius: 4px;
   border-left: 3px solid #1989fa;
+}
+
+.word-mastery {
+  margin-bottom: 20px;
+  background-color: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mastery-slider {
+  padding: 0 4px;
+  margin-top: 12px;
+}
+
+.mastery-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  position: relative;
+}
+
+.mastery-progress::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #e8eaec;
+  z-index: 0;
+}
+
+.mastery-level {
+  position: relative;
+  z-index: 1;
+  font-size: var(--font-size-xs);
+  color: #969799;
+  padding: 4px 8px;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #ebedf0;
+  transition: all 0.3s ease;
+}
+
+.mastery-level.active {
+  color: #1989fa;
+  background-color: #e6f7ff;
+  border-color: #a7d0ff;
+  font-weight: 500;
+}
+
+.mastery-button {
+  width: 24px;
+  height: 24px;
+  background-color: #1989fa;
+  border-radius: 50%;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(25, 137, 250, 0.3);
+}
+
+.item-label-with-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: #969799;
+  margin-bottom: 4px;
+}
+
+.edit-icon {
+  color: #1989fa;
+  font-size: 16px;
+}
+
+.note-editor {
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.note-textarea {
+  background-color: #f7f8fa;
+  border-radius: 8px;
+}
+
+.empty-note {
+  padding: 12px;
+  background-color: #f7f8fa;
+  border-radius: 8px;
+  color: #c8c9cc;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.study-button {
+  height: 24px;
+  padding: 0 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
