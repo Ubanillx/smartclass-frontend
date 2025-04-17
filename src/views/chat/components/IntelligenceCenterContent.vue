@@ -1,15 +1,28 @@
 <template>
   <div class="intelligence-center-content">
     <!-- 智能助手列表 -->
-    <chat-list :chats="assistants" :show-status="true" @select="handleAssistantSelect" />
+    <chat-list 
+      v-if="!loading && !error && assistants.length > 0" 
+      :chats="assistants" 
+      :show-status="true" 
+      @select="handleAssistantSelect" 
+    />
+    
+    <!-- 加载状态 -->
     <div v-if="loading" class="loading-container">
-      <van-loading type="spinner" />
+      <van-loading type="spinner" size="32" color="#1989fa" />
       <p>正在加载智慧体列表...</p>
     </div>
-    <div v-if="error" class="error-container">
-      <p>{{ error }}</p>
-      <van-button type="primary" size="small" @click="loadAiAvatars">重试</van-button>
-    </div>
+    
+    <!-- 错误状态 -->
+    <network-error 
+      v-if="error" 
+      :message="error" 
+      :loading="retryLoading"
+      @retry="retryLoadData"
+    />
+    
+    <!-- 空状态 -->
     <div v-if="!loading && assistants.length === 0 && !error" class="empty-container">
       <van-empty description="暂无智慧体数据">
         <template #image>
@@ -23,6 +36,7 @@
 <script setup lang="ts">
 import { ref, onMounted, defineEmits } from 'vue';
 import { ChatList } from '../../../components/Dialogue';
+import { NetworkError } from '../../../components/Common';
 import { showToast } from 'vant';
 import { AiAvatarControllerService } from '../../../services';
 import type { AiAvatarBriefVO } from '../../../services/models/AiAvatarBriefVO';
@@ -47,7 +61,16 @@ const emit = defineEmits<{
 // 智能助手数据
 const assistants = ref<Assistant[]>([]);
 const loading = ref<boolean>(false);
+const retryLoading = ref<boolean>(false);
 const error = ref<string>('');
+
+// 重试加载数据
+const retryLoadData = () => {
+  retryLoading.value = true;
+  loadAiAvatars().finally(() => {
+    retryLoading.value = false;
+  });
+};
 
 // 从API加载AI分身信息
 const loadAiAvatars = async () => {
@@ -78,12 +101,12 @@ const loadAiAvatars = async () => {
         };
       });
     } else {
+      error.value = '获取智慧体列表失败，请检查网络连接';
       showToast('获取AI分身列表失败');
-      error.value = '无法加载智慧体列表，请重试';
     }
-  } catch (err: any) {
+  } catch (err) {
+    error.value = '网络连接失败，请检查网络设置后重试';
     showToast('加载AI分身信息失败');
-    error.value = '无法加载智慧体列表，请重试';
   } finally {
     loading.value = false;
   }
@@ -103,6 +126,7 @@ onMounted(() => {
 <style scoped>
 .intelligence-center-content {
   width: 100%;
+  position: relative;
 }
 
 .loading-container {
@@ -110,20 +134,18 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
+  padding: 40px 0;
 }
 
-.error-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-  color: #ff4d4f;
+.loading-container p {
+  margin-top: 12px;
+  color: #666;
+  font-size: 14px;
+  font-family: 'Noto Sans SC', sans-serif;
 }
 
 .empty-container {
-  padding: 2rem 0;
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
