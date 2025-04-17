@@ -68,7 +68,7 @@ const loadAiAvatars = async () => {
           id: avatar.id || 0,
           assistantId: avatar.id || 0,
           assistantName: avatar.name || '未命名智慧体',
-          avatar: avatar.avatarImgUrl || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+          avatar: avatar.avatarImgUrl || '/default.jpg',
           lastMessage: '',
           summary: avatar.description || '',
           lastTime: '在线',
