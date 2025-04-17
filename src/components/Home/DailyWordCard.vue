@@ -33,21 +33,21 @@
               />
               <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
             </div>
+            <div class="collect-action" :class="{ collected: word.isCollected }">
+              <van-icon
+                :name="word.isCollected ? 'star' : 'star-o'"
+                :class="['collect-icon', { collected: word.isCollected }]"
+                @click.stop="toggleCollect"
+              />
+            </div>
             <van-icon
-              :name="word.isCollected ? 'star' : 'star-o'"
-              :class="['collect-icon', { collected: word.isCollected }]"
-              @click.stop="toggleCollect"
-            />
-            <van-button
               v-if="word.id"
-              size="mini"
-              type="primary"
-              class="study-button"
+              name="success"
+              class="study-icon"
+              :class="{ studied: word.isStudied }"
               :loading="isMarkingStudied"
-              @click="markAsStudied"
-            >
-              已学习
-            </van-button>
+              @click.stop="markAsStudied"
+            />
           </div>
         </div>
         <div class="word-phonetic">
@@ -93,11 +93,13 @@
                 />
                 <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
               </div>
-              <van-icon
-                :name="word.isCollected ? 'star' : 'star-o'"
-                :class="['collect-icon', { collected: word.isCollected }]"
-                @click="toggleCollect"
-              />
+              <div class="collect-action" :class="{ collected: word.isCollected }">
+                <van-icon
+                  :name="word.isCollected ? 'star' : 'star-o'"
+                  :class="['collect-icon', { collected: word.isCollected }]"
+                  @click="toggleCollect"
+                />
+              </div>
             </div>
           </div>
           <div class="word-phonetic">/{{ word.phonetic }}/</div>
@@ -219,6 +221,7 @@ interface Word {
   example: string;
   isCollected: boolean;
   isThumbUp?: boolean;
+  isStudied?: boolean;
   thumbCount?: number;
   likeCount?: number;
   meanings: WordMeaning[];
@@ -329,6 +332,28 @@ const checkWordThumbStatus = async (): Promise<void> => {
     }
   } catch (error) {
     console.error('检查单词点赞状态失败', error);
+  }
+};
+
+// 检查单词是否已被学习
+const checkWordStudiedStatus = async (): Promise<void> => {
+  if (!props.word.id) return;
+  
+  try {
+    // 从本地存储判断
+    const studiedWords = JSON.parse(localStorage.getItem('studiedWords') || '{}');
+    const isStudied = studiedWords[props.word.id] === true;
+    
+    // 如果当前学习状态与存储不一致，更新本地状态
+    if (props.word.isStudied !== isStudied) {
+      const updatedWord: Word = {
+        ...props.word,
+        isStudied: isStudied
+      };
+      emit('update:word', updatedWord);
+    }
+  } catch (error) {
+    console.error('检查单词学习状态失败', error);
   }
 };
 
@@ -531,12 +556,34 @@ const markAsStudied = async (): Promise<void> => {
   isMarkingStudied.value = true;
   
   try {
+    // 检查当前状态
+    const studiedWords = JSON.parse(localStorage.getItem('studiedWords') || '{}');
+    const isCurrentlyStudied = studiedWords[props.word.id] === true;
+    
+    // 切换学习状态
+    const newStudiedStatus = !isCurrentlyStudied;
+    
     const response = await DailyWordFavourControllerService.markWordAsStudiedUsingPost(
       props.word.id
     );
     
     if (response.code === 0 && response.data) {
-      showToast('已标记为学习完成');
+      // 更新本地状态
+      const updatedWord: Word = {
+        ...props.word,
+        isStudied: newStudiedStatus
+      };
+      emit('update:word', updatedWord);
+      
+      // 更新本地存储
+      try {
+        studiedWords[props.word.id as number] = newStudiedStatus;
+        localStorage.setItem('studiedWords', JSON.stringify(studiedWords));
+      } catch (error) {
+        console.error('保存学习状态到本地存储失败', error);
+      }
+      
+      showToast(newStudiedStatus ? '已标记为学习完成' : '已取消学习标记');
     } else {
       showToast(`操作失败: ${response.message || '未知错误'}`);
     }
@@ -562,6 +609,7 @@ onMounted(() => {
     
     checkWordFavourStatus();
     checkWordThumbStatus();
+    checkWordStudiedStatus();
     // 初始化笔记内容
     noteContent.value = props.word.notes || '';
     // 初始化默认掌握程度
@@ -569,11 +617,12 @@ onMounted(() => {
   }
 });
 
-// 在props变化时也检查点赞状态
+// 在props变化时也检查状态
 watch(() => props.word.id, (newId) => {
   if (newId) {
     checkWordFavourStatus();
     checkWordThumbStatus();
+    checkWordStudiedStatus();
   }
 });
 
@@ -696,6 +745,23 @@ const playAudio = (): void => {
   color: #ee0a24;
 }
 
+.collect-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  line-height: 1;
+  height: 24px;
+  width: 32px;
+}
+
+.collect-action.collected {
+  background-color: #fffbe5;
+}
+
 .collect-icon {
   font-size: var(--font-size-lg);
   color: #969799;
@@ -703,6 +769,7 @@ const playAudio = (): void => {
   align-items: center;
   justify-content: center;
   height: 24px;
+  transition: color 0.3s ease;
 }
 
 .collect-icon.collected {
@@ -1057,14 +1124,25 @@ const playAudio = (): void => {
   cursor: pointer;
 }
 
-.study-button {
+/* 添加学习图标样式 */
+.study-icon {
+  font-size: 20px;
+  color: #c8c9cc;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  width: 24px;
   height: 24px;
-  padding: 0 10px;
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #f7f8fa;
+  border: 1px solid #e8e8e8;
+}
+
+.study-icon.studied {
+  color: #fff;
+  background-color: #07c160;
+  border-color: #07c160;
+  box-shadow: 0 2px 4px rgba(7, 193, 96, 0.2);
 }
 </style>
