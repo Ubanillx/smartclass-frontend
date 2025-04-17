@@ -75,10 +75,16 @@ import {
   getRandomWord,
   type Course,
   type Word,
-  type Notice
+  type Notice,
+  type Article
 } from '../api/mock';
 import { useCollectedWordsStore } from '../stores/collectedWordsStore';
-import { AiAvatarControllerService, DailyWordControllerService, DailyWordFavourControllerService } from '../services';
+import { 
+  AiAvatarControllerService, 
+  DailyWordControllerService, 
+  DailyWordFavourControllerService,
+  DailyArticleControllerService
+} from '../services';
 import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
 import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
 import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
@@ -317,8 +323,73 @@ const checkCollectedStatus = async () => {
   }
 };
 
-// 设置美文数据（随机获取4篇）
-const articles = ref(getRandomArticles(4));
+// 设置美文数据
+const articles = ref<Article[]>([]);
+
+// 获取今日美文数据
+const fetchTodayArticles = async () => {
+  try {
+    const response = await DailyArticleControllerService.getTodayArticleUsingGet();
+    
+    if (response.code === 0) {
+      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+        // 数组形式的响应
+        articles.value = response.data.map(article => {
+          // 处理标签字符串，将逗号分隔的标签转换为数组
+          const tagsList = article.tags ? article.tags.split(',').map(tag => tag.trim()) : [];
+          
+          return {
+            id: article.id || 0,
+            title: article.title || '未命名文章',
+            brief: article.summary || '暂无简介',
+            cover: article.coverImage || 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
+            category: article.category || '文化',
+            readTime: article.readTime || 5,
+            difficulty: convertDifficultyToText(article.difficulty),
+            content: article.content || '暂无内容',
+            publishDate: article.publishDate || '',
+            viewCount: article.viewCount || 0,
+            likeCount: article.likeCount || 0,
+            tags: tagsList, // 添加标签数组
+            author: article.author || '', // 添加作者信息
+            source: article.source || '' // 添加来源信息
+          };
+        });
+      } else if (response.data && typeof response.data === 'object') {
+        // 单个对象形式的响应
+        const article = response.data;
+        const tagsList = article.tags ? article.tags.split(',').map(tag => tag.trim()) : [];
+        
+        articles.value = [{
+          id: article.id || 0,
+          title: article.title || '未命名文章',
+          brief: article.summary || '暂无简介',
+          cover: article.coverImage || 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
+          category: article.category || '文化',
+          readTime: article.readTime || 5,
+          difficulty: convertDifficultyToText(article.difficulty),
+          content: article.content || '暂无内容',
+          publishDate: article.publishDate || '',
+          viewCount: article.viewCount || 0,
+          likeCount: article.likeCount || 0,
+          tags: tagsList, // 添加标签数组
+          author: article.author || '', // 添加作者信息
+          source: article.source || '' // 添加来源信息
+        }];
+      } else {
+        // 如果API数据为空，使用mock数据作为备用
+        articles.value = getRandomArticles(4);
+      }
+    } else {
+      // 如果API请求失败，使用mock数据作为备用
+      articles.value = getRandomArticles(4);
+    }
+  } catch (error) {
+    console.error('获取今日美文数据失败', error);
+    // 使用模拟数据作为备用
+    articles.value = getRandomArticles(4);
+  }
+};
 
 // 获取单词分类数据（使用mock.ts中的数据）
 const wordCategories = ref(vocabularyCategories);
@@ -439,15 +510,11 @@ const onActionSelect = (action: Action) => {
 // 下拉刷新
 const onRefresh = async () => {
   try {
-    // 刷新所有数据
-    await Promise.all([
-      fetchAiAssistants(),
-      fetchNotices(),  // 刷新公告数据
-      fetchDailyWord() // 刷新今日单词数据
-    ]);
-    
-    // 更新其他数据
-    articles.value = getRandomArticles(4);
+    // 依次刷新所有数据，避免 Promise.all 的错误
+    await fetchAiAssistants();
+    await fetchNotices();  // 刷新公告数据
+    await fetchDailyWord(); // 刷新今日单词数据
+    await fetchTodayArticles(); // 刷新今日美文数据
     
     showToast('刷新成功');
   } catch (error) {
@@ -464,6 +531,7 @@ onMounted(() => {
   fetchAiAssistants();
   fetchNotices(); // 获取公告数据
   fetchDailyWord(); // 获取今日单词数据
+  fetchTodayArticles(); // 获取今日美文数据
 });
 </script>
 
