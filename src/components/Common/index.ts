@@ -1,3 +1,9 @@
 import BackButton from './BackButton.vue';
+import ErrorBlock from './ErrorBlock.vue';
+import NetworkError from './NetworkError.vue';
 
-export { BackButton };
+export {
+  BackButton,
+  ErrorBlock,
+  NetworkError
+};
