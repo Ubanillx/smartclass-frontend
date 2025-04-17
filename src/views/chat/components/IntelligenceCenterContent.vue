@@ -24,11 +24,7 @@
     
     <!-- 空状态 -->
     <div v-if="!loading && assistants.length === 0 && !error" class="empty-container">
-      <van-empty description="暂无智慧体数据">
-        <template #image>
-          <van-icon name="smile-o" size="80" color="#1989fa" />
-        </template>
-      </van-empty>
+      <van-empty description="暂无智慧体数据" />
     </div>
   </div>
 </template>
