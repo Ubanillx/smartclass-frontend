@@ -68,7 +68,6 @@ import {
   ArticleList,
 } from '../components/Home';
 import { 
-  mockNotices, 
   mockPopularCourses, 
   vocabularyCategories,
   dailyWords,
@@ -76,9 +75,13 @@ import {
   getRandomWord,
   type Course,
   type Word,
+  type Notice
 } from '../api/mock';
 import { useCollectedWordsStore } from '../stores/collectedWordsStore';
 import { AiAvatarControllerService } from '../services/services/AiAvatarControllerService.ts';
+import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
+import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
+import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
 import { useUserStore } from '../stores/userStore';
 
 // 定义类型
@@ -106,7 +109,44 @@ const collectedWordsStore = useCollectedWordsStore();
 const userStore = useUserStore();
 
 // 设置公告数据
-const notices = ref(mockNotices);
+const notices = ref<Notice[]>([]);
+
+// 将后端公告数据转换为组件使用的格式
+const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
+  return {
+    id: announcement.id || 0,
+    title: announcement.title || '未命名公告',
+    content: announcement.content || '',
+    date: announcement.createTime ? new Date(announcement.createTime).toLocaleDateString() : ''
+  };
+};
+
+// 获取公告数据
+const fetchNotices = async () => {
+  try {
+    // 创建请求参数，按创建时间倒序排列
+    const queryRequest: AnnouncementQueryRequest = {
+      current: 1,
+      pageSize: 3,  // 只获取3条
+      sortField: 'createTime',
+      sortOrder: 'desc'  // 按时间倒序，最新的在前面
+    };
+    
+    // 调用list/page/vo接口
+    const response = await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(queryRequest);
+    
+    if (response.code === 0 && response.data && response.data.records && response.data.records.length > 0) {
+      // 直接使用返回的记录转换为Notice格式
+      notices.value = response.data.records.map(convertAnnouncementToNotice);
+    } else {
+      // 如果API请求失败，使用空数组
+      notices.value = [];
+    }
+  } catch (error) {
+    console.error('获取公告数据失败', error);
+    notices.value = [];
+  }
+};
 
 // 设置热门课程数据
 const popularCourses = ref<Course[]>(mockPopularCourses);
@@ -261,42 +301,33 @@ const onActionSelect = (action: Action) => {
 };
 
 // 下拉刷新
-const onRefresh = () => {
-  // 重新获取随机美文
-  articles.value = getRandomArticles(4);
-  
-  // 重新获取随机单词
-  dailyWord.value = getRandomWord();
-  
-  // 检查单词收藏状态
-  checkCollectedStatus();
-  
-  // 重新获取智慧体数据
-  fetchAiAssistants();
-  
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    refreshing.value = false;
+const onRefresh = async () => {
+  try {
+    // 刷新所有数据
+    await Promise.all([
+      fetchAiAssistants(),
+      fetchNotices()  // 刷新公告数据
+    ]);
+    
+    // 更新其他数据
+    dailyWord.value = getRandomWord();
+    checkCollectedStatus();
+    articles.value = getRandomArticles(4);
+    
     showToast('刷新成功');
-  }, 1000);
+  } catch (error) {
+    showToast('刷新失败');
+  } finally {
+    refreshing.value = false;
+  }
 };
 
 // 页面加载时获取数据
 onMounted(() => {
-  // 确保有生词本分类
-  ensureCollectedCategory();
-  
-  // 获取随机单词
-  dailyWord.value = getRandomWord();
-  
-  // 检查单词收藏状态
   checkCollectedStatus();
-  
-  // 获取随机美文
-  articles.value = getRandomArticles(4);
-  
-  // 获取智慧体数据
+  ensureCollectedCategory();
   fetchAiAssistants();
+  fetchNotices(); // 获取公告数据
 });
 </script>
 

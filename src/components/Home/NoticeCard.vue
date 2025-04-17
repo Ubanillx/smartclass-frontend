@@ -14,17 +14,26 @@
       </van-cell>
       <div class="notice-preview">
         <template v-if="notices && notices.length > 0">
-          <div @click="showNoticeDetail(notices[0]!)">
-            <h4>{{ notices[0]!.title }}</h4>
-            <p class="notice-brief">{{ notices[0]!.content }}</p>
+          <!-- 循环显示多条公告 -->
+          <div 
+            v-for="notice in notices" 
+            :key="notice.id" 
+            class="notice-item"
+            @click="showNoticeDetail(notice)"
+          >
+            <h4>{{ notice.title }}</h4>
+            <p class="notice-brief">{{ notice.content }}</p>
             <div class="notice-footer">
-              <span class="notice-date">{{ notices[0]!.date }}</span>
+              <span class="notice-date">{{ notice.date }}</span>
               <van-icon name="arrow" />
             </div>
           </div>
         </template>
         <template v-else>
-          <h4>暂无公告</h4>
+          <div class="empty-notice">
+            <h4>暂无公告</h4>
+            <p class="notice-brief">当前没有任何公告信息</p>
+          </div>
         </template>
       </div>
     </van-cell-group>
@@ -88,7 +97,16 @@ const showNoticeDetail = (notice: Notice): void => {
 
 .notice-preview {
   padding: 12px 16px 16px;
+}
+
+.notice-item {
   cursor: pointer;
+  padding: 10px 0;
+}
+
+.notice-item:not(:last-child) {
+  border-bottom: 1px dashed #ebedf0;
+  margin-bottom: 8px;
 }
 
 .notice-preview h4 {
@@ -107,6 +125,7 @@ const showNoticeDetail = (notice: Notice): void => {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 限制显示两行 */
 }
 
 .notice-footer {
@@ -209,5 +228,17 @@ const showNoticeDetail = (notice: Notice): void => {
 
 :deep(.van-cell::after) {
   display: none !important;
+}
+
+.empty-notice {
+  padding: 20px 0;
+  text-align: center;
+  color: #969799;
+}
+
+.empty-notice h4 {
+  font-size: var(--font-size-md);
+  margin-bottom: 8px;
+  color: #323233;
 }
 </style>
