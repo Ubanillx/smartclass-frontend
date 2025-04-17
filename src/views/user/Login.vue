@@ -9,25 +9,53 @@
       <p class="subtitle">登录后即刻开启您的学习之旅</p>
     </div>
 
+    <!-- 登录方式导航 -->
+    <van-tabs v-model:active="loginType" class="login-tabs">
+      <van-tab name="account" title="用户名登录" />
+      <van-tab name="phone" title="手机号登录" />
+    </van-tabs>
+
     <van-form @submit="onSubmit" class="login-form">
       <van-cell-group inset>
-        <van-field
-          v-model="username"
-          name="username"
-          label="用户名"
-          placeholder="请输入用户名"
-          :rules="[{ required: true, message: '请填写用户名' }]"
-          label-width="60"
-        />
-        <van-field
-          v-model="password"
-          type="password"
-          name="password"
-          label="密码"
-          placeholder="请输入密码"
-          :rules="[{ required: true, message: '请填写密码' }]"
-          label-width="60"
-        />
+        <template v-if="loginType === 'account'">
+          <van-field
+            v-model="formData.userAccount"
+            name="username"
+            label="用户名"
+            placeholder="请输入用户名"
+            :rules="[{ required: true, message: '请填写用户名' }]"
+            label-width="60"
+          />
+          <van-field
+            v-model="formData.password"
+            type="password"
+            name="password"
+            label="密码"
+            placeholder="请输入密码"
+            :rules="[{ required: true, message: '请填写密码' }]"
+            label-width="60"
+          />
+        </template>
+        <template v-else>
+          <van-field
+            v-model="formData.userPhone"
+            type="tel"
+            name="phone"
+            label="手机号"
+            placeholder="请输入手机号"
+            :rules="[{ required: true, message: '请填写手机号' }]"
+            label-width="60"
+          />
+          <van-field
+            v-model="formData.password"
+            type="password"
+            name="password"
+            label="密码"
+            placeholder="请输入密码"
+            :rules="[{ required: true, message: '请填写密码' }]"
+            label-width="60"
+          />
+        </template>
       </van-cell-group>
 
       <div class="form-actions">
@@ -63,15 +91,27 @@ import { BackButton } from '../../components/Common';
 
 const router = useRouter();
 const userStore = useUserStore();
-const username = ref('');
-const password = ref('');
 const loading = ref(false);
+const loginType = ref('account'); // 登录方式：account - 用户名登录，phone - 手机号登录
 
-const onSubmit = async (values) => {
+const formData = ref({
+  userAccount: '',
+  userPhone: '',
+  password: '',
+});
+
+const onSubmit = async () => {
   loading.value = true;
   try {
-    // 使用userStore进行登录
-    const result = await userStore.login(values.username, values.password);
+    let result;
+    
+    if (loginType.value === 'account') {
+      // 用户名登录
+      result = await userStore.login(formData.value.userAccount, formData.value.password);
+    } else {
+      // 手机号登录
+      result = await userStore.loginByPhone(formData.value.userPhone, formData.value.password);
+    }
 
     if (result.success) {
       showToast({
@@ -165,5 +205,18 @@ const onSubmit = async (values) => {
 
 :deep(.van-nav-bar .van-icon) {
   color: #323233;
+}
+
+.login-tabs {
+  margin-bottom: 16px;
+}
+
+:deep(.van-tabs__line) {
+  background-color: #1989fa;
+}
+
+:deep(.van-tab--active) {
+  color: #1989fa;
+  font-weight: 500;
 }
 </style>
