@@ -42,11 +42,7 @@
         v-if="total === 0 && !loading && !error" 
         description="暂无对话记录"
         class="empty-state"
-      >
-        <template #image>
-          <van-icon name="chat-o" size="80" color="#1989fa" />
-        </template>
-      </van-empty>
+      />
       
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-container">
