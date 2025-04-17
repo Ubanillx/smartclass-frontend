@@ -42,7 +42,7 @@
               :class="{ 'active-icon': props.active }"
               aria-hidden="true"
             >
-              <use xlink:href="#icon-friends"></use>
+              <use xlink:href="#icon-quanzi"></use>
             </svg>
           </div>
         </template>
@@ -222,6 +222,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 24px;
+  width: 24px;
 }
 
 .active-icon {
@@ -236,11 +237,13 @@ body {
 
 .van-icon {
   transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
 }
 
 /* iconfont图标样式 */
 .iconfont {
-  font-size: 22px;
+  font-size: 24px;
   transition: all 0.3s ease;
   color: #646566;
 }
@@ -488,11 +491,12 @@ p {
 .notice-icon,
 .word-icon,
 .article-icon {
-  font-size: var(--font-size-lg) !important;
+  font-size: 24px !important;
   margin-right: 4px !important;
   vertical-align: middle !important;
   display: flex !important;
   align-items: center !important;
   height: 24px !important;
+  width: 24px !important;
 }
 </style>
