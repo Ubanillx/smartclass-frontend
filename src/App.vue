@@ -485,6 +485,21 @@ p {
   vertical-align: middle !important;
 }
 
+/* 统一所有图标居中显示 */
+.icon, .van-icon, .svg-icon, [class*="icon-"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+/* 确保所有图标容器都居中显示内容 */
+.icon-container, [class*="-icon-container"], [class$="-icon"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 /* 统一所有图标样式 */
 .course-icon,
 .ai-icon,
@@ -497,6 +512,5 @@ p {
   display: flex !important;
   align-items: center !important;
   height: 24px !important;
-  width: 24px !important;
 }
 </style>
