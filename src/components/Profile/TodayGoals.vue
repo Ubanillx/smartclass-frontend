@@ -2,7 +2,11 @@
   <div class="today-goals">
     <div class="goals-header">
       <h3 class="section-title">今日学习目标</h3>
-      <van-icon name="plus" class="add-goal-icon" @click="showAddGoalPopup" />
+      <div class="add-goal-button" @click="showAddGoalPopup">
+        <svg class="add-icon" viewBox="0 0 24 24" width="22" height="22">
+          <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+        </svg>
+      </div>
     </div>
     <div class="progress-container">
       <van-progress
@@ -120,6 +124,7 @@ const toggleGoalStatus = (goal: Goal) => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  position: relative;
 }
 
 .section-title {
@@ -142,35 +147,68 @@ const toggleGoalStatus = (goal: Goal) => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
+  padding: 8px 0;
   color: #323233;
   font-size: var(--font-size-base);
   transition: all 0.3s ease;
+  position: relative;
+  line-height: 24px;
+}
+
+.goal-item .van-icon {
+  font-size: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.goal-item span {
+  flex: 1;
+  padding-top: 1px;
 }
 
 .goal-item.completed {
   color: #1989fa;
 }
 
-.goal-item .van-icon {
-  font-size: var(--font-size-lg);
-  cursor: pointer;
-}
-
 .goal-item.completed .van-icon {
   color: #1989fa;
   background-color: rgba(25, 137, 250, 0.1);
   border-radius: 50%;
-  padding: 2px;
 }
 
-.add-goal-icon {
-  font-size: var(--font-size-lg);
-  color: #1989fa;
-  padding: 4px;
+.add-goal-button {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background-color: rgba(25, 137, 250, 0.1);
+  background-color: #1989fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(25, 137, 250, 0.3);
+  color: white;
+}
+
+.add-goal-button:hover {
+  background-color: #1675db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 137, 250, 0.4);
+}
+
+.add-goal-button:active {
+  transform: scale(0.95) translateY(0);
+  box-shadow: 0 2px 4px rgba(25, 137, 250, 0.3);
+}
+
+.add-icon {
+  width: 22px;
+  height: 22px;
 }
 
 :deep(.van-cell__title) {
