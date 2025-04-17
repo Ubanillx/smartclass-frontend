@@ -4,6 +4,7 @@
       <transition-group name="chat-fade" tag="div">
         <!-- 对话记录列表 -->
         <chat-list 
+          v-if="!loading && !error && total > 0"
           :key="'chat-list-' + currentPage" 
           :chats="transformedChatHistory" 
           :show-status="false" 
@@ -13,7 +14,7 @@
       </transition-group>
       
       <!-- 分页控件 -->
-      <div class="pagination-container" v-if="total > 0">
+      <div class="pagination-container" v-if="total > 0 && !loading && !error">
         <!-- 统一使用大屏幕分页样式 -->
         <van-pagination 
           v-model="currentPage" 
@@ -37,15 +38,31 @@
       </div>
       
       <!-- 空状态提示 -->
-      <van-empty v-if="total === 0" description="暂无对话记录" />
+      <van-empty 
+        v-if="total === 0 && !loading && !error" 
+        description="暂无对话记录"
+        class="empty-state"
+      >
+        <template #image>
+          <van-icon name="chat-o" size="80" color="#1989fa" />
+        </template>
+      </van-empty>
+      
+      <!-- 加载状态 -->
+      <div v-if="loading" class="loading-container">
+        <van-loading type="spinner" size="32" color="#1989fa" />
+        <p>正在加载对话记录...</p>
+      </div>
+
+      <!-- 错误状态 -->
+      <network-error 
+        v-if="error" 
+        :message="error" 
+        :loading="retryLoading"
+        @retry="retryLoadData"
+      />
     </div>
     
-    <!-- 加载状态 -->
-    <div v-if="loading" class="loading-overlay">
-      <van-loading type="spinner" color="#1989fa" class="loading" />
-      <p class="loading-text">加载中...</p>
-    </div>
-
     <!-- 操作菜单 -->
     <van-action-sheet
       v-model:show="showActionSheet"
@@ -61,6 +78,9 @@
       v-model:show="showDeleteConfirm"
       title="删除对话"
       :message="`确定要删除这条对话记录吗？该操作不可恢复。`"
+      theme="round-button"
+      confirm-button-color="#1989fa"
+      cancel-button-color="#7d7e80"
       show-cancel-button
       @confirm="confirmDelete"
     />
@@ -70,6 +90,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { ChatList } from '../../../components/Dialogue';
+import { NetworkError } from '../../../components/Common';
 import { AiAvatarChatControllerService } from '../../../services/services/AiAvatarChatControllerService.ts';
 import type { ChatMessageVO } from '../../../services/models/ChatMessageVO.ts';
 import { showToast, showSuccessToast } from 'vant';
@@ -104,6 +125,8 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 const loading = ref(false);
+const retryLoading = ref(false);
+const error = ref('');
 
 // 操作菜单相关状态
 const showActionSheet = ref(false);
@@ -175,6 +198,14 @@ const transformedChatHistory = computed(() => {
   return result;
 });
 
+// 重试加载数据
+const retryLoadData = () => {
+  retryLoading.value = true;
+  loadChatHistory().finally(() => {
+    retryLoading.value = false;
+  });
+};
+
 // 格式化时间显示
 const formatTime = (timeStr: string | undefined): string => {
   if (!timeStr) return '未知时间';
@@ -204,6 +235,7 @@ const formatTime = (timeStr: string | undefined): string => {
 // 加载聊天历史数据
 const loadChatHistory = async () => {
   loading.value = true;
+  error.value = '';
   try {
     const response = await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
       undefined,
@@ -229,9 +261,11 @@ const loadChatHistory = async () => {
       const uniqueSessionIds = new Set(chatMessages.value.map(msg => msg.sessionId));
       total.value = uniqueSessionIds.size;
     } else {
+      error.value = '获取聊天历史失败，请检查网络连接';
       showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
     }
-  } catch (error) {
+  } catch (err) {
+    error.value = '网络连接失败，请检查网络设置后重试';
     showToast('加载聊天历史出错');
   } finally {
     loading.value = false;
@@ -268,6 +302,7 @@ const confirmDelete = async () => {
   if (!chatToDelete.value) return;
   
   loading.value = true;
+  error.value = '';
   try {
     // 确保sessionId是字符串类型，并且不为undefined
     let sessionId = '';
@@ -286,9 +321,11 @@ const confirmDelete = async () => {
       // 刷新列表
       loadChatHistory();
     } else {
+      error.value = '删除失败，请稍后再试';
       showToast('删除失败: ' + (response.message || '未知错误'));
     }
-  } catch (error) {
+  } catch (err) {
+    error.value = '网络连接失败，请检查网络设置后重试';
     showToast('删除失败，请稍后重试');
   } finally {
     loading.value = false;
@@ -324,32 +361,23 @@ onMounted(() => {
   }
 }
 
-/* 加载状态覆盖层 */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(3px);
-  z-index: 10;
-  border-radius: 12px;
+  padding: 40px 0;
 }
 
-.loading-text {
-  margin-top: 10px;
-  color: #1989fa;
+.loading-container p {
+  margin-top: 12px;
+  color: #666;
   font-size: 14px;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-.loading {
-  font-size: 24px;
+.empty-state {
+  padding: 40px 0;
 }
 
 /* 列表切换动画 */
