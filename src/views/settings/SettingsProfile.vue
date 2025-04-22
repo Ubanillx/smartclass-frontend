@@ -33,6 +33,14 @@
       </van-cell>
 
       <van-field
+        v-model="formData.userAccount"
+        name="userAccount"
+        label="账号"
+        readonly
+        placeholder="暂无账号"
+      />
+
+      <van-field
         v-model="formData.userName"
         name="username"
         label="昵称"
@@ -187,6 +195,7 @@ import { useUserStore } from '../../stores/userStore';
 
 interface FormData {
   id?: number;
+  userAccount?: string;
   userName: string;
   userAvatar: string;
   userPhone: string;
@@ -461,6 +470,7 @@ const fetchUserProfileById = async (userId: number): Promise<void> => {
 
       formData.value = {
         id: user.id,
+        userAccount: user.userAccount || '',
         userName: user.userName || '',
         userAvatar: user.userAvatar || '',
         userPhone: user.userPhone || '',
