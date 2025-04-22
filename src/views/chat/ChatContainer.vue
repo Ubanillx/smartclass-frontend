@@ -127,10 +127,7 @@ const switchTab = (tab: string) => {
 
 // 处理对话选择
 const handleChatSelect = (messageId: string, assistantId: number) => {
-  router.push({
-    path: `/chat-detail/${assistantId}`,
-    query: { sessionId: messageId }
-  });
+  router.push(`/chat-detail/${assistantId}?sessionId=${messageId}`);
 };
 
 // 处理智能助手选择
