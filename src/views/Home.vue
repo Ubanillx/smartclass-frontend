@@ -475,10 +475,7 @@ const onSearch = (text: string) => {
 
 // 开始对话
 const startChat = (assistant: Assistant) => {
-  router.push({
-    path: '/chat-detail',
-    query: { assistantId: assistant.id },
-  });
+  router.push(`/chat-detail/${assistant.id}`);
 };
 
 // 查看课程详情
