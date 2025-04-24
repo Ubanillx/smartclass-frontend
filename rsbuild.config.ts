@@ -13,4 +13,13 @@ export default defineConfig({
     title: '智云星课',
     favicon: './public/logo.svg',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://10.16.62.100:12345',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  },
 });

@@ -8,7 +8,7 @@ import axios, {
 // 根据当前环境判断使用哪个API基础URL
 const isDevelopment = import.meta.env.MODE === 'development';
 const API_BASE = isDevelopment 
-    ? 'http://10.16.62.100:12345/api' 
+    ? '/api' // 使用相对路径，会被代理到后端服务器
     : 'http://backend.smartclass.ubanillx.cn:8081/api';
 
 const apiClient: AxiosInstance = axios.create({
