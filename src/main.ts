@@ -28,16 +28,14 @@ window.handleBackButton = () => {
     const mainRoutes = ['/', '/chat', '/circle', '/courses', '/profile'];
     
     if (mainRoutes.includes(path)) {
-      // 如果在主页面上，返回false让原生层直接退出应用
-      if (path === '/') {
-        console.log('在主页上，返回false（将退出应用）');
-        return false;
-      } else {
-        // 如果不在主页，导航到主页
+      if (path !== '/') {
+        // 如果在底部导航页面但不是主页，则返回到主页
         console.log('在其他一级页面上，返回到主页');
         router.push('/');
         return true;
       }
+      // 在主页，返回false允许默认行为
+      return false;
     } else {
       // 如果不在一级页面，执行路由返回
       console.log('在二级页面上，执行路由返回');

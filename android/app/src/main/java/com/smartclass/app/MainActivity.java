@@ -25,18 +25,12 @@ public class MainActivity extends BridgeActivity {
             webView.evaluateJavascript("window.handleBackButton ? window.handleBackButton() : 'none'", result -> {
                 Log.d(TAG, "JavaScript返回结果: " + result);
                 
+                // 处理JavaScript返回值
                 if (result != null) {
                     result = result.trim().toLowerCase();
                     
-                    if (result.equals("true")) {
-                        // JavaScript处理了返回操作，不需要原生干预
-                        Log.d(TAG, "JavaScript处理了返回操作");
-                    } else if (result.equals("false") || result.equals("\"false\"")) {
-                        // JavaScript返回false，直接退出应用
-                        Log.d(TAG, "退出应用");
-                        finish();
-                    } else {
-                        // 如果返回值不是true或false，尝试执行普通返回操作
+                    if (!result.equals("true")) {
+                        // 如果JS没有处理返回操作，执行默认的history.back()
                         Log.d(TAG, "执行默认返回操作");
                         webView.evaluateJavascript("window.history.back()", null);
                     }
