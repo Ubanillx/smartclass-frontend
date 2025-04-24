@@ -8,13 +8,84 @@ import 'vant/lib/index.css';
 import '../public/icons/iconfont.js';
 import '../public/icons/iconfont.css';
 
+// 导入Capacitor核心功能
+import { SplashScreen } from '@capacitor/splash-screen';
+import { Capacitor } from '@capacitor/core';
+import capacitor from './capacitor';
+
 // 设置网页标题
 document.title = '智云星课';
+
+// 添加全局返回按钮处理
+window.handleBackButton = () => {
+  try {
+    const currentRoute = router.currentRoute.value;
+    const path = currentRoute.path;
+    
+    console.log('处理返回按钮，当前路径:', path);
+    
+    // 一级页面列表（底部导航栏页面）
+    const mainRoutes = ['/', '/chat', '/circle', '/courses', '/profile'];
+    
+    if (mainRoutes.includes(path)) {
+      // 如果在主页面上，返回false让原生层直接退出应用
+      if (path === '/') {
+        console.log('在主页上，返回false（将退出应用）');
+        return false;
+      } else {
+        // 如果不在主页，导航到主页
+        console.log('在其他一级页面上，返回到主页');
+        router.push('/');
+        return true;
+      }
+    } else {
+      // 如果不在一级页面，执行路由返回
+      console.log('在二级页面上，执行路由返回');
+      router.back();
+      return true;
+    }
+  } catch (error) {
+    console.error('返回按钮处理出错:', error);
+    return false;
+  }
+};
 
 const app = createApp(App);
 const pinia = createPinia();
 
+// 注册Capacitor服务
+app.config.globalProperties.$capacitor = capacitor;
+
+// 初始化Capacitor插件
+const initCapacitor = async () => {
+  if (Capacitor.isNativePlatform()) {
+    // 隐藏启动页
+    await SplashScreen.hide();
+    
+    // 检查网络状态
+    const networkStatus = await capacitor.networkServices.getNetworkStatus();
+    console.log('网络状态:', networkStatus);
+    
+    // 监听网络变化
+    capacitor.networkServices.addNetworkListener((status) => {
+      console.log('网络状态变化:', status);
+    });
+  }
+};
+
 app.use(router);
 app.use(Vant);
 app.use(pinia);
+
+// 挂载应用
 app.mount('#app');
+
+// 初始化Capacitor (在挂载之后)
+initCapacitor().catch(error => console.error('Capacitor初始化失败:', error));
+
+// 声明全局类型
+declare global {
+  interface Window {
+    handleBackButton: () => boolean;
+  }
+}

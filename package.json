@@ -12,6 +12,14 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/camera": "^6.0.0",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/network": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.0",
+    "@capacitor/toast": "^5.0.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@vant/area-data": "^2.0.0",
     "axios": "^1.8.2",
