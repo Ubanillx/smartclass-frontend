@@ -1,10 +1,12 @@
 <template>
   <div class="app">
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" />
-      </transition>
-    </router-view>
+    <div class="router-view-container">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
     <van-tabbar v-model="active" v-if="showTabbar" route>
       <van-tabbar-item to="/">
         <template #icon="props">
@@ -173,7 +175,8 @@ body {
 
 /* 有底部标签栏的页面 */
 .has-tabbar {
-  padding-bottom: 60px !important;
+  padding-bottom: 50px !important;
+  min-height: calc(100vh - 50px);
 }
 
 /* 没有底部标签栏的页面 */
@@ -184,6 +187,14 @@ body {
 .app {
   min-height: 100vh;
   background: linear-gradient(to bottom, rgba(232, 242, 252, 0.8), rgba(255, 255, 255, 0.9));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.app > .router-view-container {
+  flex: 1;
 }
 
 /* 统一的页面容器样式 */
@@ -208,6 +219,19 @@ body {
 }
 
 /* 底部导航栏样式 */
+.van-tabbar {
+  height: 50px;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 0;
+  border-top: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* van-tabbar-item__text 样式 */
 .van-tabbar-item__text {
   font-weight: 700 !important;
   font-family: 'Noto Sans SC', sans-serif !important;

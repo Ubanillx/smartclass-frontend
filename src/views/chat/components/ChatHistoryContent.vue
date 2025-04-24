@@ -32,7 +32,7 @@
             <van-icon name="arrow" />
           </template>
           <template #page-desc>
-            <span class="page-desc-text">{{ currentPage }}/{{ Math.ceil(total / pageSize) }} 页</span>
+            <span class="page-desc-text">{{ currentPage }}/{{ totalPages }} 页</span>
           </template>
         </van-pagination>
       </div>
@@ -47,7 +47,7 @@
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-container">
         <van-loading type="spinner" size="32" color="#1989fa" />
-        <p>正在加载对话记录...</p>
+        <p>正在加载对话记录，可能需要一段时间...</p>
       </div>
 
       <!-- 错误状态 -->
@@ -120,6 +120,7 @@ const emit = defineEmits(['select']);
 const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
+const totalPages = ref(0);
 const loading = ref(false);
 const retryLoading = ref(false);
 const error = ref('');
@@ -139,8 +140,6 @@ const chatMessages = ref<ChatMessageVO[]>([]);
 
 // 将API返回的数据转换为UI组件需要的格式，只保留每个sessionId的最后一条消息
 const transformedChatHistory = computed(() => {
-  // 用于跟踪已处理的会话ID
-  const processedSessionIds = new Set<string>();
   const result: Array<{
     id: number;
     sessionId: any;
@@ -155,26 +154,11 @@ const transformedChatHistory = computed(() => {
     type: number;
   }> = [];
   
-  // 按创建时间降序排序，确保最新消息排在前面
-  const sortedMessages = [...chatMessages.value].sort((a, b) => {
-    const timeA = a.createTime ? new Date(a.createTime).getTime() : 0;
-    const timeB = b.createTime ? new Date(b.createTime).getTime() : 0;
-    return timeB - timeA;
-  });
-  
-  // 遍历排序后的消息，只保留每个sessionId的第一条（即最新的）消息
-  for (const message of sortedMessages) {
-    const sessionId = message.sessionId || String(message.id || '0');
-    
-    // 如果这个sessionId已经处理过，就跳过
-    if (processedSessionIds.has(sessionId)) continue;
-    
-    // 标记这个sessionId已处理
-    processedSessionIds.add(sessionId);
-    
-    // 添加到结果中
+  // 直接使用接口返回的数据，不做筛选
+  for (const message of chatMessages.value) {
     const content = message.content || '';
     const messageType = message.messageType || '对话';
+    const sessionId = message.sessionId || String(message.id || '0');
     
     result.push({
       id: message.id || 0,
@@ -183,7 +167,7 @@ const transformedChatHistory = computed(() => {
       assistantName: message.aiAvatarName || '未知助手',
       avatar: message.aiAvatarImgUrl || '/default.jpg',
       lastMessage: content,
-      summary: `对话内容: ${content.substring(0, 50)}${content.length > 50 ? '...' : ''}`,
+      summary: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
       lastTime: message.createTime ? formatTime(message.createTime) : '未知时间',
       online: false,
       tags: [messageType],
@@ -240,22 +224,14 @@ const loadChatHistory = async () => {
     );
     
     if (response.code === 0 && response.data) {
-      chatMessages.value = (response.data.records || [])
-        .filter(record => {
-          return !(record.content && record.content.includes("会话已创建"));
-        })
-        .map(record => {
-          if (!record.sessionId && record.id) {
-            record.sessionId = String(record.id);
-          } else if (!record.sessionId) {
-            record.sessionId = '0';
-          }
-          return record;
-        });
+      // 使用接口返回的分页参数
+      total.value = parseInt(String(response.data.total || '0'));
+      pageSize.value = parseInt(String(response.data.size || '10'));
+      currentPage.value = parseInt(String(response.data.current || '1'));
+      totalPages.value = parseInt(String(response.data.pages || '1'));
       
-      // 更新总条数为过滤后的不同sessionId的数量
-      const uniqueSessionIds = new Set(chatMessages.value.map(msg => msg.sessionId));
-      total.value = uniqueSessionIds.size;
+      // 直接使用API返回的记录，不做任何筛选
+      chatMessages.value = response.data.records || [];
     } else {
       error.value = '获取聊天历史失败，请检查网络连接';
       showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
