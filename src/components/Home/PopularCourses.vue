@@ -197,6 +197,15 @@ defineEmits<{
   color: #969799;
   align-items: center;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+/* 隐藏WebKit浏览器的滚动条 */
+.popular-courses-module .course-item .course-meta::-webkit-scrollbar {
+  display: none;
 }
 
 :deep(.van-cell) {
