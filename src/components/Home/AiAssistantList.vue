@@ -14,30 +14,37 @@
       </van-cell>
 
       <div class="assistant-list">
-        <div
-          v-for="assistant in assistants"
-          :key="assistant.id"
-          class="assistant-item"
-          @click="$emit('chat', assistant)"
-        >
-          <van-image :src="assistant.avatar" round width="50" height="50" />
-          <div class="assistant-info">
-            <div class="assistant-name">{{ assistant.name }}</div>
-            <div class="assistant-desc-container">
-              <div class="assistant-desc" :class="{ 'truncated': !expanded[assistant.id] }">
-                {{ assistant.description }}
+        <template v-if="assistants && assistants.length > 0">
+          <div
+            v-for="assistant in assistants"
+            :key="assistant.id"
+            class="assistant-item"
+            @click="$emit('chat', assistant)"
+          >
+            <van-image :src="assistant.avatar" round width="50" height="50" />
+            <div class="assistant-info">
+              <div class="assistant-name">{{ assistant.name }}</div>
+              <div class="assistant-desc-container">
+                <div class="assistant-desc" :class="{ 'truncated': !expanded[assistant.id] }">
+                  {{ assistant.description }}
+                </div>
+                <span 
+                  v-if="shouldShowToggle(assistant.description)" 
+                  class="toggle-truncate"
+                  @click.stop="toggleExpand(assistant.id)"
+                >
+                  {{ expanded[assistant.id] ? '收起' : '更多' }}
+                </span>
               </div>
-              <span 
-                v-if="shouldShowToggle(assistant.description)" 
-                class="toggle-truncate"
-                @click.stop="toggleExpand(assistant.id)"
-              >
-                {{ expanded[assistant.id] ? '收起' : '更多' }}
-              </span>
             </div>
+            <van-icon name="chat-o" class="chat-icon" />
           </div>
-          <van-icon name="chat-o" class="chat-icon" />
-        </div>
+        </template>
+        <template v-else>
+          <div class="empty-assistant">
+            <van-empty description="暂无智慧体" />
+          </div>
+        </template>
       </div>
     </van-cell-group>
   </div>
@@ -194,5 +201,10 @@ const shouldShowToggle = (description: string) => {
 
 :deep(.van-cell__title) {
   font-size: var(--font-size-md) !important;
+}
+
+.empty-assistant {
+  padding: 30px 0;
+  text-align: center;
 }
 </style>

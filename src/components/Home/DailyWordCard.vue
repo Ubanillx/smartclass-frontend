@@ -23,49 +23,56 @@
       </van-cell>
 
       <!-- 每日一词 -->
-      <div class="daily-word" @click="showWordDetail">
-        <div class="word-header">
-          <span class="word-text">{{ word.text }}</span>
-          <div class="header-actions">
-            <div class="thumb-action" :class="{ thumbed: word.isThumbUp }">
+      <template v-if="word && word.text">
+        <div class="daily-word" @click="showWordDetail">
+          <div class="word-header">
+            <span class="word-text">{{ word.text }}</span>
+            <div class="header-actions">
+              <div class="thumb-action" :class="{ thumbed: word.isThumbUp }">
+                <van-icon
+                  :name="word.isThumbUp ? 'good-job' : 'good-job-o'"
+                  :class="['thumb-icon', { thumbed: word.isThumbUp }]"
+                  @click.stop="toggleThumbUp"
+                />
+                <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
+              </div>
+              <div class="collect-action" :class="{ collected: word.isCollected }">
+                <van-icon
+                  :name="word.isCollected ? 'star' : 'star-o'"
+                  :class="['collect-icon', { collected: word.isCollected }]"
+                  @click.stop="toggleCollect"
+                />
+              </div>
               <van-icon
-                :name="word.isThumbUp ? 'good-job' : 'good-job-o'"
-                :class="['thumb-icon', { thumbed: word.isThumbUp }]"
-                @click.stop="toggleThumbUp"
-              />
-              <span class="thumb-number" :class="{ thumbed: word.isThumbUp }" v-if="word.thumbCount">{{ word.thumbCount }}</span>
-            </div>
-            <div class="collect-action" :class="{ collected: word.isCollected }">
-              <van-icon
-                :name="word.isCollected ? 'star' : 'star-o'"
-                :class="['collect-icon', { collected: word.isCollected }]"
-                @click.stop="toggleCollect"
+                v-if="word.id"
+                name="success"
+                class="study-icon"
+                :class="{ studied: word.isStudied }"
+                :loading="isMarkingStudied"
+                @click.stop="markAsStudied"
               />
             </div>
-            <van-icon
-              v-if="word.id"
-              name="success"
-              class="study-icon"
-              :class="{ studied: word.isStudied }"
-              :loading="isMarkingStudied"
-              @click.stop="markAsStudied"
-            />
+          </div>
+          <div class="word-phonetic">
+            <span class="phonetic-text">/{{ word.phonetic }}/</span>
+            <van-icon name="volume-o" class="audio-icon" @click.stop="playAudio" v-if="word.audioUrl" />
+          </div>
+          <div class="word-translation">{{ word.translation }}</div>
+          <div class="word-info">
+            <span class="word-category" v-if="word.category">{{ word.category }}</span>
+            <span class="word-difficulty" v-if="word.difficulty">{{ word.difficulty }}</span>
+          </div>
+          <div class="word-example-wrapper">
+            <div class="word-example">{{ word.example }}</div>
+            <div class="word-example-translation" v-if="word.exampleTranslation">{{ word.exampleTranslation }}</div>
           </div>
         </div>
-        <div class="word-phonetic">
-          <span class="phonetic-text">/{{ word.phonetic }}/</span>
-          <van-icon name="volume-o" class="audio-icon" @click.stop="playAudio" v-if="word.audioUrl" />
+      </template>
+      <template v-else>
+        <div class="empty-word">
+          <van-empty description="暂无单词" />
         </div>
-        <div class="word-translation">{{ word.translation }}</div>
-        <div class="word-info">
-          <span class="word-category" v-if="word.category">{{ word.category }}</span>
-          <span class="word-difficulty" v-if="word.difficulty">{{ word.difficulty }}</span>
-        </div>
-        <div class="word-example-wrapper">
-          <div class="word-example">{{ word.example }}</div>
-          <div class="word-example-translation" v-if="word.exampleTranslation">{{ word.exampleTranslation }}</div>
-        </div>
-      </div>
+      </template>
     </van-cell-group>
 
     <!-- 单词详情弹出层 -->
@@ -1168,5 +1175,10 @@ const playAudio = (): void => {
   background-color: #07c160;
   border-color: #07c160;
   box-shadow: 0 2px 4px rgba(7, 193, 96, 0.2);
+}
+
+.empty-word {
+  padding: 30px 0;
+  text-align: center;
 }
 </style>

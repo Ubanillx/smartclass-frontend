@@ -231,24 +231,24 @@ const fetchDailyWord = async () => {
         dailyWord.value = word;
         checkCollectedStatus();
       } else {
-        // 如果API返回数据为空，使用mock数据作为备用
+        // 如果API返回数据为空，使用模拟数据
         dailyWord.value = getRandomWord();
-        // 确保备用数据有例句翻译
+        // 确保模拟数据有例句翻译
         dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
         checkCollectedStatus();
       }
     } else {
-      // 如果API请求失败，使用mock数据作为备用
+      // 如果API请求失败，使用模拟数据
       dailyWord.value = getRandomWord();
-      // 确保备用数据有例句翻译
+      // 确保模拟数据有例句翻译
       dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
       checkCollectedStatus();
     }
   } catch (error) {
     console.error('获取今日单词数据失败', error);
-    // 使用mock数据作为备用
+    // 使用模拟数据
     dailyWord.value = getRandomWord();
-    // 确保备用数据有例句翻译
+    // 确保模拟数据有例句翻译
     dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
     checkCollectedStatus();
   }

@@ -62,8 +62,7 @@
         </template>
         <template v-else>
           <div class="empty-notice">
-            <h4>暂无公告</h4>
-            <p class="notice-brief">当前没有任何公告信息</p>
+            <van-empty description="暂无公告" />
           </div>
         </template>
       </div>
