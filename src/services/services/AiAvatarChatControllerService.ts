@@ -449,7 +449,7 @@ export class AiAvatarChatControllerService {
     public static getUserHistoryPageUsingGet(
         aiAvatarId?: number,
         current: number = 1,
-        pageSize: number = 10,
+        pageSize: number = 100,
     ): CancelablePromise<BaseResponse_Page_ChatMessageVO_> {
         return __request(OpenAPI, {
             method: 'GET',
