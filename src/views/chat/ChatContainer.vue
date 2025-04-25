@@ -160,7 +160,7 @@ const handleAssistantSelect = (assistantId: number) => {
   flex: 1;
   overflow-y: auto;
   padding: 0 16px;
-  margin-top: 120px; /* 添加顶部边距，为固定导航腾出空间 */
+  margin-top: 150px; /* 再次增加顶部边距，确保内容不会与导航栏重叠 */
 }
 
 .header {
@@ -251,7 +251,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .new-chat-btn {
   position: fixed;
   right: 16px;
-  bottom: 70px;
+  bottom: 120px; /* 将按钮向上移动，避开分页栏和导航栏 */
   z-index: 999;
 }
 </style>

@@ -3,27 +3,42 @@
     <div
       v-for="message in messages"
       :key="message.id"
-      :class="['message-item', message.type]"
+      class="message-item-container"
     >
-      <div class="avatar">
-        <van-image
-          :src="message.type === 'ai' ? assistantAvatar : userAvatar"
-          round
-          width="40"
-          height="40"
-        />
-      </div>
-      <div class="message-content">
-        <div
-          v-if="message.type === 'ai'"
-          v-html="
-            customFormatMessage
-              ? customFormatMessage(message.content)
-              : defaultFormatMessage(message.content)
-          "
-          class="markdown-body"
-        ></div>
-        <div v-else>{{ message.content }}</div>
+      <!-- 只有当AI消息有内容或用户消息时才显示消息项 -->
+      <div v-if="message.type === 'user' || (message.type === 'ai' && message.content.trim())" :class="['message-item', message.type]">
+        <!-- AI消息头像在左侧 -->
+        <div v-if="message.type === 'ai'" class="avatar left-avatar">
+          <van-image
+            :src="assistantAvatar"
+            round
+            width="40"
+            height="40"
+          />
+        </div>
+        
+        <div class="message-content">
+          <div
+            v-if="message.type === 'ai'"
+            v-html="
+              customFormatMessage
+                ? customFormatMessage(message.content)
+                : defaultFormatMessage(message.content)
+            "
+            class="markdown-body"
+          ></div>
+          <div v-else>{{ message.content }}</div>
+        </div>
+        
+        <!-- 用户消息头像在右侧 -->
+        <div v-if="message.type === 'user'" class="avatar right-avatar">
+          <van-image
+            :src="userAvatar"
+            round
+            width="40"
+            height="40"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -78,34 +93,47 @@ onUpdated(scrollToBottom);
 <style scoped>
 .message-list {
   flex: 1;
-  padding: 16px;
+  padding: 16px 10px;
   padding-bottom: 30px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
+.message-item-container {
+  margin-bottom: 20px;
+}
+
 .message-item {
   display: flex;
-  margin-bottom: 12px;
+  flex-direction: row;
+  width: 100%;
   align-items: flex-start;
 }
 
 .message-item.user {
-  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.message-item.ai {
+  justify-content: flex-start;
 }
 
 .avatar {
-  margin: 0 6px;
   flex-shrink: 0;
-  align-self: flex-start;
-  margin-top: 2px;
+  margin: 0 10px;
+}
+
+.left-avatar {
+  margin-right: 6px;
+}
+
+.right-avatar {
+  margin-left: 6px;
 }
 
 .message-content {
-  max-width: 70%;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 8px;
-  position: relative;
   min-height: 20px;
   min-width: 16px;
   display: flex;
@@ -113,14 +141,14 @@ onUpdated(scrollToBottom);
   justify-content: center;
   border: none;
   outline: none;
+  width: auto;
+  max-width: 75%;
 }
 
 .message-item.user .message-content {
   background-color: #1989fa;
   color: #fff;
   text-align: left;
-  position: relative;
-  margin-right: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
 }
@@ -136,37 +164,12 @@ onUpdated(scrollToBottom);
 .message-item.ai .message-content {
   background-color: #ffffff;
   color: #323233;
-  position: relative;
-  margin-left: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: none;
+  width: auto;
 }
 
-.message-item.ai .message-content::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: -8px;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-right: 8px solid #ffffff;
-  border-bottom: 6px solid transparent;
-  z-index: 1;
-}
-
-.message-item.user .message-content::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  right: -8px;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-left: 8px solid #1989fa;
-  border-bottom: 6px solid transparent;
-  z-index: 1;
-}
+/* 移除三角形样式 */
 
 /* Markdown样式 */
 .markdown-body {
@@ -174,10 +177,11 @@ onUpdated(scrollToBottom);
   line-height: 1.5;
   margin: 0;
   word-break: break-word;
+  width: 100%; /* 确保内容区域占满容器宽度 */
 }
 
 .markdown-body p {
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 .markdown-body code {
@@ -191,10 +195,17 @@ onUpdated(scrollToBottom);
 
 .markdown-body pre {
   background-color: rgba(0, 0, 0, 0.05);
-  padding: 6px;
+  padding: 8px;
   border-radius: 4px;
   overflow-x: auto;
-  margin: 6px 0;
+  margin: 8px 0;
+  width: 100%; /* 确保代码块占满宽度 */
+  box-sizing: border-box;
+}
+
+.markdown-body pre code {
+  display: block;
+  width: 100%;
 }
 
 .message-item.ai .message-content div:not(.markdown-body) {

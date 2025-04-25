@@ -316,7 +316,7 @@ onMounted(() => {
   width: 100%;
   position: relative;
   min-height: 200px;
-  padding-bottom: 16px;
+  padding-bottom: 70px; /* 增加底部padding，为固定的分页栏腾出空间 */
 }
 
 .history-container {
@@ -372,31 +372,31 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 16px 8px;
-  padding: 10px 15px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
-  max-width: 600px;
+  padding: 8px 15px;
+  background-color: transparent;
   box-sizing: border-box;
-  align-self: center;
-  margin-left: auto;
-  margin-right: auto;
+  position: fixed;
+  bottom: 50px; /* 调整位置，恰好与底部导航栏接缝 */
+  left: 0;
+  right: 0;
+  z-index: 99;
+  margin: 0;
+  max-width: 100%;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 /* 响应式设计调整 */
 @media (max-width: 480px) {
   .pagination-container {
-    max-width: 95%;
-    margin: 12px auto;
     padding: 8px 12px;
   }
 }
 
 @media (min-width: 481px) {
   .pagination-container {
-    max-width: 600px;
-    margin: 16px auto;
+    max-width: 100%;
+    padding: 10px 15px;
   }
 }
 
@@ -409,15 +409,15 @@ onMounted(() => {
   --van-pagination-item-font-size: 15px;
   --van-pagination-item-border-width: 0;
   --van-pagination-background-color: transparent;
-  margin-top: 8px;
   width: 100%;
   display: flex;
   justify-content: center;
+  margin: 0;
 }
 
 :deep(.custom-pagination .van-pagination__item) {
   border-radius: 8px;
-  background-color: rgba(234, 240, 246, 0.7);
+  background-color: #E0F1FE;
   transition: all 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -432,7 +432,7 @@ onMounted(() => {
 
 :deep(.custom-pagination .van-pagination__prev),
 :deep(.custom-pagination .van-pagination__next) {
-  background-color: rgba(234, 240, 246, 0.7);
+  background-color: #E0F1FE;
   color: #666;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);

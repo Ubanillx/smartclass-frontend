@@ -16,15 +16,35 @@
 
     <!-- 底部输入框 -->
     <div class="input-container">
-      <chat-input
-        v-model="inputMessage"
-        :disabled="isAITyping"
-        @send="sendMessage"
-        @emoji="showEmojiPicker = true"
-        @image="uploadImage"
-        @voice="startVoiceRecord"
-        @fullscreen="showFullscreenInput = true"
-      />
+      <div class="input-wrapper">
+        <textarea
+          v-model="inputMessage"
+          :disabled="isAITyping"
+          @keypress.enter.prevent="sendMessage(inputMessage)"
+          placeholder="输入消息..."
+          class="textarea"
+          rows="2"
+        ></textarea>
+      </div>
+      
+      <div class="toolbar">
+        <div class="action-icons">
+          <van-icon name="smile-o" size="24" @click="showEmojiPicker = true" />
+          <van-icon name="photograph" size="24" @click="uploadImage" />
+          <van-icon name="records" size="24" @click="startVoiceRecord" />
+          <van-icon name="expand-o" size="24" @click="showFullscreenInput = true" />
+        </div>
+        <van-button
+          size="normal"
+          type="primary"
+          :disabled="isAITyping || !inputMessage.trim()"
+          :loading="isAITyping"
+          @click="sendMessage(inputMessage)"
+          class="send-button"
+        >
+          {{ isAITyping ? '等待中...' : '发送' }}
+        </van-button>
+      </div>
     </div>
 
     <!-- 表情选择器 -->
@@ -83,13 +103,14 @@
             </div>
           </div>
           <van-button 
-            size="mini" 
+            size="normal" 
             type="primary" 
-            :disabled="!inputMessage.trim()"
+            :disabled="isAITyping || !inputMessage.trim()"
+            :loading="isAITyping"
             @click="sendFullscreenMessage"
             class="send-button"
           >
-            发送
+            {{ isAITyping ? '等待中...' : '发送' }}
           </van-button>
         </div>
       </div>
@@ -186,17 +207,17 @@ const emojiList = ref([
 
 // 用户信息
 const userInfo = ref<UserInfo>({
-  id: 1,
-  name: '用户',
-  avatar: userStore.DEFAULT_USER_AVATAR,
+  id: 0,
+  name: '',
+  avatar: '',
 });
 
 // 助手信息
 const assistant = ref<Assistant>({
-  id: Number(route.params.assistantId) || 1,
-  name: 'AI助手',
-  avatar: '/default.jpg',
-  description: '智能AI助手，可回答各类问题',
+  id: Number(route.params.assistantId) || 0,
+  name: '',
+  avatar: '',
+  description: '',
 });
 
 // 消息列表
@@ -283,22 +304,22 @@ const initializeChat = async () => {
 // 获取AI分身信息
 const loadAiAvatarInfo = async () => {
   try {
-    const aiAvatarId = Number(route.params.assistantId) || 1;
+    const aiAvatarId = Number(route.params.assistantId) || 0;
     const response = await AiAvatarControllerService.getAiAvatarByIdUsingGet(aiAvatarId);
     
     if (response.code === 0 && response.data) {
       // 更新AI助手信息
       assistant.value = {
         id: response.data.id || aiAvatarId,
-        name: response.data.name || 'AI助手',
-        avatar: response.data.avatarImgUrl || '/default.jpg',
-        description: response.data.description || '智能AI助手，可回答各类问题',
+        name: response.data.name || '',
+        avatar: response.data.avatarImgUrl || '',
+        description: response.data.description || '',
         status: response.data.status,
       };
       
       // 如果已经有欢迎消息，更新它
       if (messages.value.length > 0 && messages.value[0]?.type === 'ai') {
-        messages.value[0].content = `你好！我是${assistant.value.name}。${assistant.value.description}`;
+        messages.value[0].content = `你好！我是${assistant.value.name}。${assistant.value.description ? assistant.value.description : '有什么我可以帮助你的吗？'}`;
       }
     }
   } catch (error) {
@@ -313,11 +334,13 @@ onMounted(async () => {
     await userStore.fetchCurrentUser();
   }
 
-  // 更新用户头像
-  if (userStore.userInfo && userStore.userInfo.userAvatar) {
-    userInfo.value.avatar = userStore.userInfo.userAvatar;
-  } else {
-    userInfo.value.avatar = userStore.DEFAULT_USER_AVATAR;
+  // 更新用户信息
+  if (userStore.userInfo) {
+    userInfo.value = {
+      id: userStore.userInfo.id || 0,
+      name: userStore.userInfo.userName || '',
+      avatar: userStore.userInfo.userAvatar || userStore.DEFAULT_USER_AVATAR,
+    };
   }
   
   // 获取路由中的会话ID参数
@@ -343,41 +366,32 @@ onMounted(async () => {
           timestamp: msg.createTime ? new Date(msg.createTime).getTime() : Date.now(),
         }));
       } else {
-        // 显示欢迎消息作为后备
-        const welcomeMessage: Message = {
-          id: Date.now(),
-          type: 'ai',
-          content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
-          timestamp: Date.now(),
-        };
-        messages.value = [welcomeMessage];
+        // 显示欢迎消息
+        addWelcomeMessage();
       }
     } catch (error) {
-      // 显示欢迎消息作为后备
-      const welcomeMessage: Message = {
-        id: Date.now(),
-        type: 'ai',
-        content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
-        timestamp: Date.now(),
-      };
-      messages.value = [welcomeMessage];
+      // 错误处理时显示欢迎消息
+      addWelcomeMessage();
     }
   } else {
-    // 如果没有sessionId参数，说明是新建对话
-    
-    // 立即显示欢迎消息，不等待任何网络请求
+    // 如果没有sessionId参数，创建新会话并显示欢迎消息
+    initializeChat();
+    addWelcomeMessage();
+  }
+});
+
+// 添加欢迎消息
+const addWelcomeMessage = () => {
+  if (assistant.value.name) {
     const welcomeMessage: Message = {
       id: Date.now(),
       type: 'ai',
-      content: `你好！我是${assistant.value.name}。${assistant.value.description || '有什么我可以帮助你的吗？'}`,
+      content: `你好！我是${assistant.value.name}。${assistant.value.description ? assistant.value.description : '有什么我可以帮助你的吗？'}`,
       timestamp: Date.now(),
     };
     messages.value = [welcomeMessage];
-    
-    // 创建新会话
-    initializeChat();
   }
-});
+};
 
 // 停止流式响应
 const stopStreamingResponse = async () => {
@@ -729,36 +743,122 @@ const startVoiceRecord = (): void => {
   flex-direction: column;
   height: 100vh;
   background-color: #f7f8fa;
+  overflow: hidden;
   position: relative;
 }
 
 .back-button {
   flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .message-container {
   flex: 1;
   overflow: hidden;
-  position: relative;
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 52px;
+  margin-bottom: 120px;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 确保消息列表占据整个容器 */
+:deep(.message-list) {
+  flex: 1;
+  padding: 8px 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* 调整AI消息样式 */
+:deep(.message-item.ai) {
+  width: 100%;
+  margin-right: 0;
+}
+
+:deep(.message-item.ai .message-content) {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 8px 12px;
+  max-width: 90%;
+  width: auto;
+  margin-left: 6px;
+  box-sizing: border-box;
 }
 
 .input-container {
-  flex-shrink: 0;
-  position: sticky;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background-color: #fff;
+  padding: 12px 16px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
   z-index: 10;
-  padding-bottom: 8px;
+  box-sizing: border-box;
 }
 
-/* 消息列表样式覆盖 */
-:deep(.message-list) {
-  height: 100%;
+.input-wrapper {
+  width: 100%;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.textarea {
+  resize: none;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 12px 14px;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 60px;
+  max-height: 120px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
   overflow-y: auto;
-  padding-bottom: 30px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.textarea:focus {
+  border-color: #5e72e4;
+  background-color: #fff;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.action-icons {
+  display: flex;
+  gap: 24px;
+  color: #969799;
+}
+
+.send-button {
+  height: 36px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #1989fa;
+  border-radius: 4px;
 }
 
 /* 全屏输入框样式 */
@@ -818,10 +918,10 @@ const startVoiceRecord = (): void => {
   width: 100%;
   height: 100%;
   min-height: 400px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  border: none;
-  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #eaeaea;
+  padding: 16px;
   font-size: 16px;
   line-height: 1.5;
   resize: none;
@@ -829,6 +929,12 @@ const startVoiceRecord = (): void => {
   outline: none;
   box-sizing: border-box;
   overflow-y: auto;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.custom-textarea:focus {
+  border-color: #5e72e4;
+  background-color: #fff;
 }
 
 .emoji-picker {
@@ -859,13 +965,6 @@ const startVoiceRecord = (): void => {
   text-align: center;
   cursor: pointer;
   user-select: none;
-}
-
-/* 自定义AI消息样式 */
-:deep(.message-item.ai .message-content) {
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 4px;
 }
 
 /* 增强Markdown样式 */
