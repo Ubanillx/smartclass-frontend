@@ -11,8 +11,21 @@
         :user-avatar="userInfo?.avatar || ''"
         :loading="isAITyping"
         :custom-format-message="formatMessage"
+        @regenerate="handleRegenerateResponse"
       />
     </div>
+
+    <!-- 停止响应按钮 -->
+    <van-button
+      v-if="isAITyping"
+      class="stop-response-btn"
+      size="small"
+      type="default"
+      @click="stopStreamingResponse"
+    >
+      <van-icon name="pause-circle-o" style="margin-right: 4px; vertical-align: -2px;" />
+      停止响应
+    </van-button>
 
     <!-- 底部输入框 -->
     <div class="input-container">
@@ -505,8 +518,9 @@ const sendMessage = async (text: string) => {
     const messageRequest: ChatMessageAddRequest = {
       aiAvatarId: assistant.value.id,
       content: text,
-      sessionId: sessionId.value || '',
+      sessionId: sessionId.value ? sessionId.value : '',
       messageType: 'user',
+      // 由于类型定义中没有regenerate属性，我们使用类型断言来添加额外属性
     };
 
     // 创建控制器
@@ -821,6 +835,247 @@ const uploadImage = (): void => {
 // 开始语音录制
 const startVoiceRecord = (): void => {
   showToast('语音录制功能开发中');
+};
+
+// 重新回答功能
+const handleRegenerateResponse = async (messageId: number) => {
+  // 如果当前正在生成回答，先停止
+  if (isAITyping.value) {
+    await stopStreamingResponse();
+  }
+
+  // 找到对应消息的前一条用户消息
+  const aiMessageIndex = messages.value.findIndex(msg => msg.id === messageId);
+  if (aiMessageIndex <= 0) {
+    showToast('无法找到相关消息');
+    return;
+  }
+  
+  // 查找AI消息之前的最近一条用户消息
+  let userMessageIndex = -1;
+  for (let i = aiMessageIndex - 1; i >= 0; i--) {
+    if (messages.value[i] && messages.value[i].type === 'user') {
+      userMessageIndex = i;
+      break;
+    }
+  }
+
+  if (userMessageIndex === -1) {
+    showToast('无法找到相关问题');
+    return;
+  }
+
+  // 确保用户消息存在
+  const userMessage = messages.value[userMessageIndex];
+  if (!userMessage) {
+    showToast('无法找到相关问题');
+    return;
+  }
+  
+  // 移除AI回复消息
+  messages.value.splice(aiMessageIndex, 1);
+  
+  // 重新发送用户消息内容（复用现有的发送逻辑，但不再添加用户消息）
+  const text = userMessage.content;
+  
+  // 设置AI正在输入状态
+  isAITyping.value = true;
+
+  // 创建AI消息占位
+  const aiMessageId = Date.now() + 1;
+  currentAIMessageId.value = aiMessageId;
+  const aiMessage: Message = {
+    id: aiMessageId,
+    type: 'ai',
+    content: '',
+    timestamp: Date.now(),
+  };
+  messages.value.push(aiMessage);
+
+  try {
+    // 准备消息请求
+    const messageRequest: ChatMessageAddRequest = {
+      aiAvatarId: assistant.value.id,
+      content: text,
+      sessionId: sessionId.value ? sessionId.value : '',
+      messageType: 'user',
+      // 由于类型定义中没有regenerate属性，我们使用类型断言来添加额外属性
+    };
+
+    // 将regenerate属性添加到对象中
+    (messageRequest as any).regenerate = true;
+
+    // 创建控制器
+    const controller = new AbortController();
+    currentStreamController = controller;
+
+    // 保存消息内容变量
+    let content = '';
+
+    // 获取API基础URL
+    const apiUrl = `${OpenAPI.BASE}/api/chat/message/stream`;
+
+    // 使用fetchEventSource发起POST请求获取SSE流
+    await fetchEventSource(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(messageRequest),
+      signal: controller.signal,
+      credentials: 'include',
+      
+      // 处理连接打开事件
+      async onopen(response) {
+        // 判断是否连接成功
+        if (
+          response.ok &&
+          response.headers.get('content-type')?.includes('text/event-stream')
+        ) {
+          return; // 连接成功
+        } else if (response.status === 401 || response.status === 403) {
+          // 未授权或禁止访问（未登录）
+          showToast('登录已过期，请重新登录');
+
+          // 清除本地登录状态
+          userStore.logout();
+
+          // 重定向到登录页面，可以保存当前路径用于登录后返回
+          router.push({
+            path: '/login',
+            query: { redirect: router.currentRoute.value.fullPath },
+          });
+
+          throw new Error(`未登录: ${response.status}`);
+        } else if (response.status === 404) {
+          // 会话不存在，需要重新创建会话
+          // 将sessionId设为undefined，使下次发送消息时创建新会话
+          sessionId.value = undefined;
+
+          throw new Error('会话不存在，请重新发送消息');
+        } else {
+          // 其他错误
+          throw new Error(`SSE连接失败: ${response.status}`);
+        }
+      },
+
+      // 处理消息事件
+      onmessage(event) {
+        try {
+          // 检查数据是否为空
+          if (!event.data || event.data.trim() === '') {
+            return;
+          }
+
+          // 解析消息数据
+          const data = JSON.parse(event.data);
+
+          // 根据消息格式提取内容
+          if (data) {
+            // 检查是否包含会话ID信息，如果有则更新会话ID
+            if (data.event === 'message_end' && data.conversation_id) {
+              if (data.conversation_id !== sessionId.value) {
+                sessionId.value = data.conversation_id;
+              }
+              return; // message_end 事件不包含内容，直接返回
+            }
+
+            // 跳过系统消息类型，如"SSE连接已建立"等提示信息
+            if (
+              data.message === 'SSE连接已建立' ||
+              data.content === 'SSE连接已建立' ||
+              data.data === '会话已创建' ||
+              data.message === '会话已创建' ||
+              data.content === '会话已创建' ||
+              data.message === '流式响应已完成' ||
+              data.content === '流式响应已完成' ||
+              data.data === '流式响应已完成' ||
+              /流式响应已完成/.test(JSON.stringify(data)) ||
+              /SSE连接已建立/.test(JSON.stringify(data)) ||
+              /会话已创建/.test(JSON.stringify(data))
+            ) {
+              return;
+            }
+
+            // 检查message事件的各种可能格式
+            if (data.event === 'message') {
+              if (data.answer) {
+                content += data.answer;
+              } else if (data.content) {
+                content += data.content;
+              } else if (data.data) {
+                content += data.data;
+              } else if (data.choices && data.choices.length > 0) {
+                // OpenAI格式
+                if (data.choices[0].delta && data.choices[0].delta.content) {
+                  content += data.choices[0].delta.content;
+                } else if (
+                  data.choices[0].message &&
+                  data.choices[0].message.content
+                ) {
+                  content += data.choices[0].message.content;
+                }
+              } else if (typeof data === 'string') {
+                content += data;
+              }
+            }
+
+            // 更新消息内容（如果有变化）
+            if (content) {
+              updateAIMessage(content);
+            }
+          }
+        } catch (err: any) {
+          // 处理错误，可能是JSON解析错误或其他异常
+          showToast('处理消息时发生错误');
+        }
+      },
+
+      // 处理错误事件
+      onerror(err: Error) {
+        // 处理连接错误
+        showToast('连接服务器失败，请重试');
+
+        // 尝试恢复UI状态
+        isAITyping.value = false;
+
+        // 添加错误消息
+        if (currentAIMessageId.value && messages.value.length > 0) {
+          const lastMessage = messages.value.find(
+            (m) => m.id === currentAIMessageId.value,
+          );
+          if (lastMessage) {
+            lastMessage.content = '抱歉，我遇到了一些问题，请重试。';
+          }
+          currentAIMessageId.value = null;
+        }
+      },
+
+      // 处理连接关闭事件
+      onclose() {
+        // 连接关闭，更新UI状态
+        isAITyping.value = false;
+        currentAIMessageId.value = null;
+        currentEventSource = null;
+        currentStreamController = null;
+      },
+    });
+  } catch (error) {
+    // 处理发送过程中的错误
+    isAITyping.value = false;
+    showToast('重新生成回答失败，请重试');
+
+    // 如果有错误，添加错误提示到AI消息中
+    if (currentAIMessageId.value && messages.value.length > 0) {
+      const lastMessage = messages.value.find(
+        (m) => m.id === currentAIMessageId.value,
+      );
+      if (lastMessage) {
+        lastMessage.content = '抱歉，重新生成回答时遇到了问题，请重试。';
+      }
+      currentAIMessageId.value = null;
+    }
+  }
 };
 </script>
 
@@ -1203,5 +1458,34 @@ const startVoiceRecord = (): void => {
   :deep(.katex) {
     font-size: 1em;
   }
+}
+
+.new-chat-btn {
+  position: fixed;
+  right: 16px;
+  bottom: 120px; /* 将按钮向上移动，避开分页栏和导航栏 */
+  z-index: 999;
+}
+
+/* 停止响应按钮样式 */
+.stop-response-btn {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 140px;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 0 12px;
+  height: 32px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #eaeaea;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.stop-response-btn:active {
+  background-color: #f2f3f5;
 }
 </style>

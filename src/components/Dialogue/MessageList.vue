@@ -36,12 +36,25 @@
           <van-image :src="userAvatar" round width="40" height="40" />
         </div>
       </div>
+      
+      <!-- AI消息操作按钮 -->
+      <div v-if="message.type === 'ai' && message.content.trim()" class="message-actions">
+        <div class="action-buttons-container">
+          <button class="action-button" @click="copyMessage(message.content)">
+            <van-icon name="description" />
+          </button>
+          <button class="action-button" @click="regenerateResponse(message.id)">
+            <van-icon name="replay" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUpdated, watch } from 'vue';
+import { showToast } from 'vant';
 
 interface Message {
   id: number;
@@ -58,12 +71,39 @@ const props = defineProps<{
   customFormatMessage?: (content: string) => string;
 }>();
 
+// 定义emit
+const emit = defineEmits<{
+  (e: 'regenerate', messageId: number): void;
+}>();
+
 const messageList = ref<HTMLElement | null>(null);
 
 // 默认的格式化消息内容方法
 const defaultFormatMessage = (content: string): string => {
   // 默认不做任何处理，直接返回原始内容
   return content;
+};
+
+// 复制消息内容
+const copyMessage = (content: string): void => {
+  // 创建一个普通文本版本（移除HTML标签）
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = content;
+  const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+  // 复制到剪贴板
+  navigator.clipboard.writeText(plainText)
+    .then(() => {
+      showToast('已复制到剪贴板');
+    })
+    .catch(() => {
+      showToast('复制失败，请手动复制');
+    });
+};
+
+// 触发重新回答事件
+const regenerateResponse = (messageId: number): void => {
+  emit('regenerate', messageId);
 };
 
 // 滚动到底部
@@ -163,6 +203,41 @@ onUpdated(scrollToBottom);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: none;
   width: auto;
+}
+
+/* 消息操作按钮样式 */
+.message-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.action-buttons-container {
+  display: flex;
+  background-color: #f2f2f2;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.action-button {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #666;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #e8e8e8;
+}
+
+.action-button:active {
+  background-color: #ddd;
 }
 
 /* 移除三角形样式 */
