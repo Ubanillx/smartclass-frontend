@@ -32,24 +32,22 @@
 
     <!-- 可滚动内容区域 -->
     <div class="scrollable-content">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <!-- 内容区域 -->
-        <div class="tab-content">
-          <!-- 推荐内容 -->
-          <div v-show="activeTab === 'recommend'" class="tab-pane">
-            <div class="empty-state">
-              <van-empty description="暂无内容" />
-            </div>
-          </div>
-
-          <!-- 关注内容 -->
-          <div v-show="activeTab === 'following'" class="tab-pane">
-            <div class="empty-state">
-              <van-empty description="暂无内容" />
-            </div>
+      <!-- 内容区域 -->
+      <div class="tab-content">
+        <!-- 推荐内容 -->
+        <div v-show="activeTab === 'recommend'" class="tab-pane">
+          <div class="empty-state">
+            <van-empty description="暂无内容" />
           </div>
         </div>
-      </van-pull-refresh>
+
+        <!-- 关注内容 -->
+        <div v-show="activeTab === 'following'" class="tab-pane">
+          <div class="empty-state">
+            <van-empty description="暂无内容" />
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 发布按钮 -->
@@ -72,7 +70,6 @@ import { showToast } from 'vant';
 
 const router = useRouter();
 const activeTab = ref('recommend'); // 默认显示推荐
-const refreshing = ref(false);
 
 // 切换标签页
 const switchTab = (tab: string) => {
@@ -82,14 +79,6 @@ const switchTab = (tab: string) => {
 // 搜索功能
 const handleSearch = () => {
   showToast('搜索功能开发中');
-};
-
-// 刷新功能
-const onRefresh = () => {
-  setTimeout(() => {
-    showToast('刷新成功');
-    refreshing.value = false;
-  }, 1000);
 };
 
 // 发布功能

@@ -32,54 +32,52 @@
 
     <!-- 可滚动内容区域 -->
     <div class="scrollable-content">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <!-- 推荐课程 -->
-        <course-list
-          v-if="activeCategory === 0"
-          title="热门推荐"
-          :courses="recommendedCourses"
-          show-more
-          class-name="recommended"
-          @select="showCourseDetail"
-          @more="router.push('/courses/all')"
-        />
+      <!-- 推荐课程 -->
+      <course-list
+        v-if="activeCategory === 0"
+        title="热门推荐"
+        :courses="recommendedCourses"
+        show-more
+        class-name="recommended"
+        @select="showCourseDetail"
+        @more="router.push('/courses/all')"
+      />
 
-        <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
-        <div v-if="activeCategory !== 0" class="grade-selector-container">
-          <div class="custom-dropdown">
-            <div class="dropdown-trigger" @click="toggleDropdown">
-              <span>{{ currentGradeText }}</span>
-              <span class="dropdown-arrow"></span>
-            </div>
-            <div v-if="showDropdown" class="dropdown-content">
-              <div
-                v-for="option in gradeOptions"
-                :key="option.value"
-                class="dropdown-option"
-                :class="{
-                  'dropdown-option-active': gradeValue === option.value,
-                }"
-                @click="selectGrade(option.value)"
-              >
-                {{ option.text }}
-              </div>
+      <!-- 单独放置年级选择器 - 使用自定义下拉菜单替代 van-dropdown-menu -->
+      <div v-if="activeCategory !== 0" class="grade-selector-container">
+        <div class="custom-dropdown">
+          <div class="dropdown-trigger" @click="toggleDropdown">
+            <span>{{ currentGradeText }}</span>
+            <span class="dropdown-arrow"></span>
+          </div>
+          <div v-if="showDropdown" class="dropdown-content">
+            <div
+              v-for="option in gradeOptions"
+              :key="option.value"
+              class="dropdown-option"
+              :class="{
+                'dropdown-option-active': gradeValue === option.value,
+              }"
+              @click="selectGrade(option.value)"
+            >
+              {{ option.text }}
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- 学科课程列表 -->
-        <course-list
-          v-if="activeCategory !== 0"
-          :title="getActiveCategoryName()"
-          :courses="filteredCourses"
-          class-name="subject-courses"
-          @select="showCourseDetail"
-        >
-          <template #right-icon>
-            <!-- 移除此处的年级选择器 -->
-          </template>
-        </course-list>
-      </van-pull-refresh>
+      <!-- 学科课程列表 -->
+      <course-list
+        v-if="activeCategory !== 0"
+        :title="getActiveCategoryName()"
+        :courses="filteredCourses"
+        class-name="subject-courses"
+        @select="showCourseDetail"
+      >
+        <template #right-icon>
+          <!-- 移除此处的年级选择器 -->
+        </template>
+      </course-list>
     </div>
 
     <!-- 课程详情弹出层 -->
@@ -133,7 +131,6 @@ const selectedCourse = ref<EnhancedCourse | null>(null);
 const activeCategory = ref(0);
 const gradeValue = ref(0);
 const showDropdown = ref(false);
-const refreshing = ref(false);
 
 // 课程表功能
 const handleShowSchedule = () => {
@@ -330,15 +327,6 @@ const filteredCourses = computed(() => {
   }
   return courses;
 });
-
-// 下拉刷新
-const onRefresh = () => {
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    refreshing.value = false;
-    showToast('刷新成功');
-  }, 1000);
-};
 
 // 在组件挂载时检查 URL 参数
 onMounted(() => {

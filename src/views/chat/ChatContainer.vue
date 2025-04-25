@@ -32,20 +32,18 @@
 
     <!-- 可滚动内容区域 -->
     <div class="scrollable-content">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <!-- 内容区域 -->
-        <div class="tab-content">
-          <!-- 历史对话内容 -->
-          <div v-show="activeTab === 'history'" class="tab-pane">
-            <chat-history-content @select="handleChatSelect" />
-          </div>
-
-          <!-- 智慧体中心内容 -->
-          <div v-show="activeTab === 'intelligence'" class="tab-pane">
-            <intelligence-center-content @select="handleAssistantSelect" />
-          </div>
+      <!-- 内容区域 -->
+      <div class="tab-content">
+        <!-- 历史对话内容 -->
+        <div v-show="activeTab === 'history'" class="tab-pane">
+          <chat-history-content @select="handleChatSelect" />
         </div>
-      </van-pull-refresh>
+
+        <!-- 智慧体中心内容 -->
+        <div v-show="activeTab === 'intelligence'" class="tab-pane">
+          <intelligence-center-content @select="handleAssistantSelect" />
+        </div>
+      </div>
     </div>
 
     <!-- 新建对话按钮 -->
@@ -72,7 +70,6 @@ import IntelligenceCenterContent from './components/IntelligenceCenterContent.vu
 const router = useRouter();
 const route = useRoute();
 const activeTab = ref('history'); // 默认显示历史对话
-const refreshing = ref(false);
 
 // 搜索功能
 const handleSearch = () => {
@@ -82,14 +79,6 @@ const handleSearch = () => {
 // 更多功能
 const handleMore = () => {
   showToast('更多功能开发中');
-};
-
-// 下拉刷新
-const onRefresh = () => {
-  setTimeout(() => {
-    refreshing.value = false;
-    showToast('刷新成功');
-  }, 1000);
 };
 
 // 检查URL参数，决定默认显示哪个标签页
