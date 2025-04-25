@@ -3,19 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserDailyWord = {
-    collectTime?: string;
-    createTime?: string;
-    id?: number;
-    isCollected?: number;
-    isLiked?: number;
-    isStudied?: number;
-    likeTime?: string;
-    masteryLevel?: number;
-    noteContent?: string;
-    noteTime?: string;
-    studyTime?: string;
-    updateTime?: string;
-    userId?: number;
-    wordId?: number;
+  collectTime?: string;
+  createTime?: string;
+  id?: number;
+  isCollected?: number;
+  isLiked?: number;
+  isStudied?: number;
+  likeTime?: string;
+  masteryLevel?: number;
+  noteContent?: string;
+  noteTime?: string;
+  studyTime?: string;
+  updateTime?: string;
+  userId?: number;
+  wordId?: number;
 };
-

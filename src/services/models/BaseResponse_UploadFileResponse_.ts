@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { UploadFileResponse } from './UploadFileResponse.ts';
 export type BaseResponse_UploadFileResponse_ = {
-    code?: number;
-    data?: UploadFileResponse;
-    message?: string;
+  code?: number;
+  data?: UploadFileResponse;
+  message?: string;
 };
-

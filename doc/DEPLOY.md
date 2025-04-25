@@ -34,6 +34,7 @@ docker-compose up -d
 ```
 
 这将会：
+
 - 构建前端应用Docker镜像
 - 创建并启动容器
 - 在后台运行服务
@@ -87,11 +88,11 @@ docker-compose up -d          # 启动新容器
 
 ```yaml
 ports:
-  - "你的新端口:80"
+  - '你的新端口:80'
 ```
 
 ## 自定义配置
 
 ### 修改Nginx配置
 
-如需修改Nginx配置，编辑项目中的`nginx.conf`文件，然后重新构建并启动容器。 
+如需修改Nginx配置，编辑项目中的`nginx.conf`文件，然后重新构建并启动容器。

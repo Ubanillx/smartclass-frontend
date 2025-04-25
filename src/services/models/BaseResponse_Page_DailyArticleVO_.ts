@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { Page_DailyArticleVO_ } from './Page_DailyArticleVO_.ts';
 export type BaseResponse_Page_DailyArticleVO_ = {
-    code?: number;
-    data?: Page_DailyArticleVO_;
-    message?: string;
+  code?: number;
+  data?: Page_DailyArticleVO_;
+  message?: string;
 };
-

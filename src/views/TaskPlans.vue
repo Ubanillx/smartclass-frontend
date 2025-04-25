@@ -21,11 +21,11 @@
 
       <!-- 任务筛选 -->
       <div class="task-filters">
-        <div 
-          v-for="filter in filterOptions" 
+        <div
+          v-for="filter in filterOptions"
           :key="filter.value"
           class="filter-option"
-          :class="{ 'active': activeFilter === filter.value }"
+          :class="{ active: activeFilter === filter.value }"
           @click="activeFilter = filter.value"
         >
           {{ filter.label }}
@@ -35,22 +35,27 @@
       <!-- 任务列表 -->
       <div class="task-list">
         <van-empty v-if="filteredTasks.length === 0" description="暂无任务" />
-        
-        <div v-else v-for="task in filteredTasks" :key="task.id" class="task-card">
+
+        <div
+          v-else
+          v-for="task in filteredTasks"
+          :key="task.id"
+          class="task-card"
+        >
           <div class="task-card-left">
             <div class="task-checkbox">
-              <van-checkbox 
-                :checked="task.completed" 
+              <van-checkbox
+                :checked="task.completed"
                 @update:checked="toggleTaskStatus(task)"
                 :icon-size="20"
               />
             </div>
           </div>
-          
-          <div 
-            class="task-card-content" 
+
+          <div
+            class="task-card-content"
             @click="openTaskDetails(task)"
-            :class="{ 'completed': task.completed }"
+            :class="{ completed: task.completed }"
           >
             <div class="task-header">
               <div class="task-title">{{ task.title }}</div>
@@ -58,27 +63,28 @@
                 {{ getPriorityText(task.priority) }}
               </div>
             </div>
-            
+
             <div class="task-course">
-              <span 
-                class="course-tag" 
+              <span
+                class="course-tag"
                 :style="{ backgroundColor: task.color }"
-              >{{ task.courseName }}</span>
+                >{{ task.courseName }}</span
+              >
             </div>
-            
+
             <div class="task-description">{{ task.description }}</div>
-            
+
             <div class="task-footer">
               <div class="task-dates">
                 <van-icon name="clock-o" />
                 <span>{{ formatDateRange(task.startDate, task.endDate) }}</span>
               </div>
-              
+
               <div class="task-progress">
                 <div class="progress-text">{{ task.progress }}%</div>
-                <van-progress 
-                  :percentage="task.progress" 
-                  :color="getProgressColor(task)" 
+                <van-progress
+                  :percentage="task.progress"
+                  :color="getProgressColor(task)"
                   :show-pivot="false"
                   :stroke-width="3"
                 />
@@ -90,18 +96,18 @@
     </div>
 
     <!-- 添加任务按钮 -->
-    <van-button 
-      class="add-task-btn" 
-      type="primary" 
-      icon="plus" 
+    <van-button
+      class="add-task-btn"
+      type="primary"
+      icon="plus"
       round
       @click="showTaskForm = true"
     />
 
     <!-- 任务详情弹窗 -->
-    <van-popup 
-      v-model:show="showTaskDetails" 
-      round 
+    <van-popup
+      v-model:show="showTaskDetails"
+      round
       position="bottom"
       :style="{ height: '60%' }"
     >
@@ -110,48 +116,62 @@
           <span class="popup-title">任务详情</span>
           <van-icon name="cross" @click="showTaskDetails = false" />
         </div>
-        
+
         <div class="task-details-content">
-          <div class="task-details-header" :style="{ backgroundColor: selectedTask.color }">
+          <div
+            class="task-details-header"
+            :style="{ backgroundColor: selectedTask.color }"
+          >
             <h3>{{ selectedTask.title }}</h3>
-            <div :class="['task-priority-badge', `priority-${selectedTask.priority}`]">
+            <div
+              :class="[
+                'task-priority-badge',
+                `priority-${selectedTask.priority}`,
+              ]"
+            >
               {{ getPriorityText(selectedTask.priority) }}
             </div>
           </div>
-          
+
           <div class="task-details-info">
             <div class="details-item">
               <div class="item-label">所属课程</div>
               <div class="item-value">{{ selectedTask.courseName }}</div>
             </div>
-            
+
             <div class="details-item">
               <div class="item-label">任务时间</div>
-              <div class="item-value">{{ formatDateRange(selectedTask.startDate, selectedTask.endDate) }}</div>
+              <div class="item-value">
+                {{
+                  formatDateRange(selectedTask.startDate, selectedTask.endDate)
+                }}
+              </div>
             </div>
-            
+
             <div class="details-item">
               <div class="item-label">任务说明</div>
-              <div class="item-value description">{{ selectedTask.description }}</div>
+              <div class="item-value description">
+                {{ selectedTask.description }}
+              </div>
             </div>
-            
+
             <div class="details-item">
               <div class="item-label">完成进度</div>
               <div class="progress-bar-container">
                 <div class="progress-value">{{ selectedTask.progress }}%</div>
-                <van-progress 
-                  :percentage="selectedTask.progress" 
+                <van-progress
+                  :percentage="selectedTask.progress"
                   :color="getProgressColor(selectedTask)"
                   :stroke-width="4"
                 />
               </div>
             </div>
           </div>
-          
+
           <div class="task-action-buttons">
-            <van-button 
-              block 
-              :type="selectedTask.completed ? 'default' : 'primary'" 
+            <van-button
+              block
+              :type="selectedTask.completed ? 'default' : 'primary'"
               @click="toggleTaskStatus(selectedTask)"
             >
               {{ selectedTask.completed ? '标记为未完成' : '标记为已完成' }}
@@ -162,8 +182,8 @@
     </van-popup>
 
     <!-- 添加任务表单 -->
-    <van-popup 
-      v-model:show="showTaskForm" 
+    <van-popup
+      v-model:show="showTaskForm"
       position="bottom"
       :style="{ height: '70%' }"
       round
@@ -173,7 +193,7 @@
           <span class="popup-title">添加任务</span>
           <van-icon name="cross" @click="showTaskForm = false" />
         </div>
-        
+
         <van-form @submit="onSubmitTask">
           <van-cell-group inset>
             <van-field
@@ -183,7 +203,7 @@
               placeholder="请输入任务标题"
               :rules="[{ required: true, message: '请输入任务标题' }]"
             />
-            
+
             <van-field
               v-model="newTask.description"
               name="description"
@@ -192,7 +212,7 @@
               rows="3"
               placeholder="请输入任务描述"
             />
-            
+
             <van-field
               readonly
               name="course"
@@ -202,7 +222,7 @@
               @click="showCoursePopup = true"
               :rules="[{ required: true, message: '请选择所属课程' }]"
             />
-            
+
             <van-field
               readonly
               name="dateRange"
@@ -212,10 +232,13 @@
               @click="showDatePicker = true"
               :rules="[{ required: true, message: '请选择任务起止时间' }]"
             />
-            
+
             <van-field name="priority" label="优先级">
               <template #input>
-                <van-radio-group v-model="newTask.priority" direction="horizontal">
+                <van-radio-group
+                  v-model="newTask.priority"
+                  direction="horizontal"
+                >
                   <van-radio name="high">高</van-radio>
                   <van-radio name="medium">中</van-radio>
                   <van-radio name="low">低</van-radio>
@@ -223,8 +246,8 @@
               </template>
             </van-field>
           </van-cell-group>
-          
-          <div style="margin: 16px;">
+
+          <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit">
               添加任务
             </van-button>
@@ -234,11 +257,7 @@
     </van-popup>
 
     <!-- 课程选择弹窗 -->
-    <van-popup 
-      v-model:show="showCoursePopup" 
-      position="bottom"
-      round
-    >
+    <van-popup v-model:show="showCoursePopup" position="bottom" round>
       <van-picker
         title="选择课程"
         :columns="courseOptions"
@@ -249,15 +268,13 @@
     </van-popup>
 
     <!-- 日期选择弹窗 -->
-    <van-popup 
-      v-model:show="showDatePicker" 
-      position="bottom"
-      round
-    >
+    <van-popup v-model:show="showDatePicker" position="bottom" round>
       <van-date-picker
         title="选择日期范围"
         :min-date="new Date()"
-        :max-date="new Date(new Date().setFullYear(new Date().getFullYear() + 1))"
+        :max-date="
+          new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+        "
         @confirm="onSelectDateRange"
         @cancel="showDatePicker = false"
         show-toolbar
@@ -289,7 +306,7 @@ const filterOptions = [
   { label: '全部', value: 'all' },
   { label: '进行中', value: 'pending' },
   { label: '已完成', value: 'completed' },
-  { label: '高优先级', value: 'high' }
+  { label: '高优先级', value: 'high' },
 ];
 
 // 新任务表单数据
@@ -301,15 +318,15 @@ const newTask = ref({
   startDate: '',
   endDate: '',
   priority: 'medium' as 'high' | 'medium' | 'low',
-  color: ''
+  color: '',
 });
 
 // 课程选项
 const courseOptions = computed(() => {
-  return mockPopularCourses.map(course => ({
+  return mockPopularCourses.map((course) => ({
     text: course.title,
     value: course.id,
-    color: course.tagColor
+    color: course.tagColor,
   }));
 });
 
@@ -328,15 +345,15 @@ onMounted(() => {
 
 // 筛选任务
 const pendingTasks = computed(() => {
-  return tasks.value.filter(task => !task.completed);
+  return tasks.value.filter((task) => !task.completed);
 });
 
 const completedTasks = computed(() => {
-  return tasks.value.filter(task => task.completed);
+  return tasks.value.filter((task) => task.completed);
 });
 
 const highPriorityTasks = computed(() => {
-  return tasks.value.filter(task => task.priority === 'high');
+  return tasks.value.filter((task) => task.priority === 'high');
 });
 
 const filteredTasks = computed(() => {
@@ -396,7 +413,7 @@ const getProgressColor = (task: TaskPlan): string => {
   if (task.completed) {
     return '#07c160';
   }
-  
+
   if (task.priority === 'high') {
     return '#ee0a24';
   } else if (task.priority === 'medium') {
@@ -407,7 +424,11 @@ const getProgressColor = (task: TaskPlan): string => {
 };
 
 // 选择课程
-const onSelectCourse = (course: { text: string, value: number, color: string }) => {
+const onSelectCourse = (course: {
+  text: string;
+  value: number;
+  color: string;
+}) => {
   newTask.value.courseId = course.value;
   newTask.value.courseName = course.text;
   newTask.value.color = course.color;
@@ -424,11 +445,15 @@ const onSelectDateRange = (values: Date[]) => {
 
 // 提交任务表单
 const onSubmitTask = () => {
-  if (!newTask.value.courseId || !newTask.value.startDate || !newTask.value.endDate) {
+  if (
+    !newTask.value.courseId ||
+    !newTask.value.startDate ||
+    !newTask.value.endDate
+  ) {
     showToast('请完善任务信息');
     return;
   }
-  
+
   // 创建新任务对象
   const newTaskObj: TaskPlan = {
     id: tasks.value.length + 1,
@@ -441,12 +466,12 @@ const onSubmitTask = () => {
     completed: false,
     progress: 0,
     priority: newTask.value.priority,
-    color: newTask.value.color
+    color: newTask.value.color,
   };
-  
+
   // 添加到任务列表
   tasks.value.unshift(newTaskObj);
-  
+
   // 重置表单
   newTask.value = {
     title: '',
@@ -456,9 +481,9 @@ const onSubmitTask = () => {
     startDate: '',
     endDate: '',
     priority: 'medium',
-    color: ''
+    color: '',
   };
-  
+
   showTaskForm.value = false;
   showToast('任务已添加');
 };
@@ -753,4 +778,4 @@ const onSubmitTask = () => {
 :deep(.van-radio) {
   margin-right: 16px;
 }
-</style> 
+</style>

@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { Page_Post_ } from './Page_Post_.ts';
 export type BaseResponse_Page_Post_ = {
-    code?: number;
-    data?: Page_Post_;
-    message?: string;
+  code?: number;
+  data?: Page_Post_;
+  message?: string;
 };
-

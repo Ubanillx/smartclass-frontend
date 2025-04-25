@@ -8,9 +8,9 @@ import { useUserStore } from '../stores/userStore';
 // 根据当前环境判断使用哪个API基础URL
 const isDevelopment = import.meta.env.MODE === 'development';
 // Dify API配置
-const DIFY_API_BASE_URL = isDevelopment 
-    ? 'http://10.0.124.181/v1'
-    : 'http://backend.smartclass.ubanillx.cn/v1';
+const DIFY_API_BASE_URL = isDevelopment
+  ? 'http://10.0.124.181/v1'
+  : 'http://backend.smartclass.ubanillx.cn/v1';
 const DIFY_API_KEY = 'app-Hq8YLYBObZI0XbfjtGOWY2MC';
 
 interface ChatMessage {
@@ -108,7 +108,7 @@ export const sendChatMessage = (
         if (!reader) {
           return Promise.resolve();
         }
-        
+
         return reader.read().then(({ done, value }) => {
           if (done) {
             // 流结束，如果有剩余文本则处理
@@ -131,16 +131,19 @@ export const sendChatMessage = (
             if (line.startsWith('data: ')) {
               try {
                 const data = line.substring(6); // 去掉 'data: ' 前缀
-                
+
                 // 清理可能的无效Unicode转义序列
-                const cleanData = data.replace(/\\u[0-9A-Fa-f]{0,3}([^0-9A-Fa-f]|$)/g, (match) => {
-                  // 将无效的Unicode转义序列替换为问号
-                  return '?' + match.substring(match.length - 1);
-                });
-                
+                const cleanData = data.replace(
+                  /\\u[0-9A-Fa-f]{0,3}([^0-9A-Fa-f]|$)/g,
+                  (match) => {
+                    // 将无效的Unicode转义序列替换为问号
+                    return '?' + match.substring(match.length - 1);
+                  },
+                );
+
                 // 检查是否是有效的JSON
                 if (!cleanData.trim()) continue;
-                
+
                 const jsonData = JSON.parse(cleanData) as ChatResponse;
 
                 // 处理不同类型的事件
@@ -247,15 +250,18 @@ export const getDifyMeta = async (): Promise<any> => {
 
     const metaData = await response.json();
     console.log('获取到的Dify Meta信息:', JSON.stringify(metaData, null, 2));
-    
+
     // 特别检查工具图标
     if (metaData.tool_icons) {
       console.log('工具图标数量:', Object.keys(metaData.tool_icons).length);
-      console.log('工具图标内容:', JSON.stringify(metaData.tool_icons, null, 2));
+      console.log(
+        '工具图标内容:',
+        JSON.stringify(metaData.tool_icons, null, 2),
+      );
     } else {
       console.warn('未找到工具图标数据!');
     }
-    
+
     return metaData;
   } catch (error) {
     console.error('获取Dify Meta信息失败:', error);
@@ -283,7 +289,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
   try {
     console.log('开始获取分身信息...');
     const userStore = useUserStore();
-    
+
     // 直接返回预设分身数据
     const presetPersonas: Persona[] = [
       {
@@ -292,7 +298,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '专业英语教学，语法讲解，口语指导',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 1,
-        tags: ['语法', '口语', '教学']
+        tags: ['语法', '口语', '教学'],
       },
       {
         id: 2,
@@ -300,7 +306,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '日常英语对话，地道表达，场景练习',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 2,
-        tags: ['口语', '日常对话', '场景练习']
+        tags: ['口语', '日常对话', '场景练习'],
       },
       {
         id: 3,
@@ -308,7 +314,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '作文指导，文章润色，写作技巧',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 3,
-        tags: ['写作', '润色', '技巧']
+        tags: ['写作', '润色', '技巧'],
       },
       {
         id: 4,
@@ -316,7 +322,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '考试技巧，备考指导，模拟测试',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 4,
-        tags: ['考试', '备考', '技巧']
+        tags: ['考试', '备考', '技巧'],
       },
       {
         id: 5,
@@ -324,16 +330,16 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '商务邮件，会议对话，职场英语',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 5,
-        tags: ['商务', '职场', '邮件']
-      }
+        tags: ['商务', '职场', '邮件'],
+      },
     ];
-    
+
     console.log('返回的分身列表:', presetPersonas);
     return presetPersonas;
   } catch (error) {
     console.error('获取分身信息失败:', error);
     const userStore = useUserStore();
-    
+
     // 出错时返回默认分身列表
     return [
       {
@@ -342,7 +348,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '专业英语教学，语法讲解，口语指导',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 1,
-        tags: ['语法', '口语', '教学']
+        tags: ['语法', '口语', '教学'],
       },
       {
         id: 2,
@@ -350,7 +356,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '日常英语对话，地道表达，场景练习',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 2,
-        tags: ['口语', '日常对话', '场景练习']
+        tags: ['口语', '日常对话', '场景练习'],
       },
       {
         id: 3,
@@ -358,7 +364,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '作文指导，文章润色，写作技巧',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 3,
-        tags: ['写作', '润色', '技巧']
+        tags: ['写作', '润色', '技巧'],
       },
       {
         id: 4,
@@ -366,7 +372,7 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '考试技巧，备考指导，模拟测试',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 4,
-        tags: ['考试', '备考', '技巧']
+        tags: ['考试', '备考', '技巧'],
       },
       {
         id: 5,
@@ -374,8 +380,8 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
         description: '商务邮件，会议对话，职场英语',
         icon: userStore.DEFAULT_USER_AVATAR,
         type: 5,
-        tags: ['商务', '职场', '邮件']
-      }
+        tags: ['商务', '职场', '邮件'],
+      },
     ];
   }
 };
@@ -386,31 +392,34 @@ export const getAllPersonas = async (): Promise<Persona[]> => {
  * @param backgroundColor 背景颜色
  * @returns 头像URL
  */
-const createEmojiAvatarUrl = (emoji: string, backgroundColor: string = '#1989fa'): string => {
+const createEmojiAvatarUrl = (
+  emoji: string,
+  backgroundColor: string = '#1989fa',
+): string => {
   // 检查是否在浏览器环境中
   if (typeof document === 'undefined') {
     return '';
   }
-  
+
   // 创建一个canvas元素
   const canvas = document.createElement('canvas');
   canvas.width = 200;
   canvas.height = 200;
-  
+
   const ctx = canvas.getContext('2d');
   if (!ctx) return '';
-  
+
   // 绘制背景
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
+
   // 绘制emoji
   ctx.font = '120px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'white';
   ctx.fillText(emoji, canvas.width / 2, canvas.height / 2);
-  
+
   // 将canvas转换为图片URL
   return canvas.toDataURL('image/png');
 };

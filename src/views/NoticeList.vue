@@ -12,7 +12,11 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="notice-item-wrapper" v-for="notice in notices" :key="notice.id">
+          <div
+            class="notice-item-wrapper"
+            v-for="notice in notices"
+            :key="notice.id"
+          >
             <div class="notice-card" @click="showNoticeDetail(notice)">
               <!-- 公告内容区域 -->
               <div class="notice-content-area">
@@ -23,20 +27,27 @@
                   <div class="notice-stats">
                     <div class="view-count-wrapper">
                       <van-icon name="eye-o" class="eye-icon" />
-                      <span class="count-number">{{ notice.viewCount || 0 }}</span>
+                      <span class="count-number">{{
+                        notice.viewCount || 0
+                      }}</span>
                     </div>
-                    <div class="read-status-wrapper" :class="{ 'read': notice.hasRead }">
-                      <span class="read-status">{{ notice.hasRead ? '已读' : '' }}</span>
+                    <div
+                      class="read-status-wrapper"
+                      :class="{ read: notice.hasRead }"
+                    >
+                      <span class="read-status">{{
+                        notice.hasRead ? '已读' : ''
+                      }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <!-- 公告封面图 -->
               <div class="notice-cover" v-if="notice.coverImage">
                 <img :src="notice.coverImage" alt="公告封面" />
               </div>
-              
+
               <!-- 箭头指示器 -->
               <div class="arrow-indicator">
                 <van-icon name="arrow" />
@@ -64,13 +75,15 @@
           <div class="notice-detail-cover" v-if="selectedNotice.coverImage">
             <img :src="selectedNotice.coverImage" alt="公告封面" />
           </div>
-          
+
           <h3>{{ selectedNotice.title }}</h3>
           <div class="notice-detail-info">
             <span class="notice-date">{{ selectedNotice.date }}</span>
             <div class="view-count-wrapper detail">
               <van-icon name="eye-o" class="eye-icon" />
-              <span class="count-number">{{ selectedNotice.viewCount || 0 }} 人已读</span>
+              <span class="count-number"
+                >{{ selectedNotice.viewCount || 0 }} 人已读</span
+              >
             </div>
           </div>
           <div class="notice-text">{{ selectedNotice.content }}</div>
@@ -108,15 +121,19 @@ const currentPage = ref(1);
 const pageSize = 10;
 
 // 将后端公告数据转换为前端需要的格式
-const convertAnnouncementToNotice = (announcement: AnnouncementVO): ExtendedNotice => {
+const convertAnnouncementToNotice = (
+  announcement: AnnouncementVO,
+): ExtendedNotice => {
   return {
     id: announcement.id || 0,
     title: announcement.title || '未命名公告',
     content: announcement.content || '',
-    date: announcement.createTime ? new Date(announcement.createTime).toLocaleDateString() : '',
+    date: announcement.createTime
+      ? new Date(announcement.createTime).toLocaleDateString()
+      : '',
     viewCount: announcement.viewCount,
     hasRead: announcement.hasRead,
-    coverImage: announcement.coverImage
+    coverImage: announcement.coverImage,
   };
 };
 
@@ -125,7 +142,7 @@ const markNoticeAsRead = async (id: number) => {
   try {
     await AnnouncementControllerService.readAnnouncementUsingPost(id);
     // 更新本地已读状态
-    const notice = notices.value.find(item => item.id === id);
+    const notice = notices.value.find((item) => item.id === id);
     if (notice) {
       notice.hasRead = true;
       // 增加已读计数
@@ -153,21 +170,28 @@ const onLoad = async () => {
       current: currentPage.value,
       pageSize: pageSize,
       sortField: 'createTime',
-      sortOrder: 'desc'  // 按创建时间倒序排列
+      sortOrder: 'desc', // 按创建时间倒序排列
     };
-    
+
     // 请求数据
-    const response = await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(queryRequest);
-    
+    const response =
+      await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(
+        queryRequest,
+      );
+
     if (response.code === 0 && response.data) {
-      const newNotices = response.data.records?.map(convertAnnouncementToNotice) || [];
+      const newNotices =
+        response.data.records?.map(convertAnnouncementToNotice) || [];
       notices.value = [...notices.value, ...newNotices];
-      
+
       // 检查每个公告的已读状态
       await checkReadStatus(newNotices);
-      
+
       // 判断是否还有更多数据
-      if (response.data.current >= response.data.pages || newNotices.length === 0) {
+      if (
+        response.data.current >= response.data.pages ||
+        newNotices.length === 0
+      ) {
         finished.value = true;
       } else {
         currentPage.value++;
@@ -191,11 +215,20 @@ const checkReadStatus = async (announcementList: ExtendedNotice[]) => {
     for (const notice of announcementList) {
       if (notice.id) {
         try {
-          const response = await AnnouncementControllerService.hasReadAnnouncementUsingGet(notice.id);
-          
+          const response =
+            await AnnouncementControllerService.hasReadAnnouncementUsingGet(
+              notice.id,
+            );
+
           // 仅当响应成功且数据为布尔值时更新状态
-          if (response && typeof response.data === 'boolean' && response.code === 0) {
-            const index = notices.value.findIndex(item => item.id === notice.id);
+          if (
+            response &&
+            typeof response.data === 'boolean' &&
+            response.code === 0
+          ) {
+            const index = notices.value.findIndex(
+              (item) => item.id === notice.id,
+            );
             if (index !== -1) {
               notices.value[index].hasRead = response.data;
             }
@@ -221,11 +254,11 @@ const onRefresh = () => {
 const showNoticeDetail = async (notice: ExtendedNotice): Promise<void> => {
   selectedNotice.value = notice;
   showDetail.value = true;
-  
+
   // 标记公告为已读
   if (notice.id && !notice.hasRead) {
     await markNoticeAsRead(notice.id);
-    
+
     // 更新当前所有公告的已读状态
     await checkReadStatus(notices.value);
   }

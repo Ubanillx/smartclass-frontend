@@ -3,15 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CourseCategory = {
-    adminId?: number;
-    createTime?: string;
-    description?: string;
-    icon?: string;
-    id?: number;
-    isDelete?: number;
-    name?: string;
-    parentId?: number;
-    sort?: number;
-    updateTime?: string;
+  adminId?: number;
+  createTime?: string;
+  description?: string;
+  icon?: string;
+  id?: number;
+  isDelete?: number;
+  name?: string;
+  parentId?: number;
+  sort?: number;
+  updateTime?: string;
 };
-

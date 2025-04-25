@@ -9,7 +9,10 @@
     "dev": "rsbuild dev --open",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "cap:sync": "npx cap sync",
+    "cap:android": "npx cap sync android",
+    "cap:open:android": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",

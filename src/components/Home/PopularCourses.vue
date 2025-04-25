@@ -27,10 +27,10 @@
             <h3 class="course-title">{{ course.title }}</h3>
             <p class="course-brief">{{ course.brief }}</p>
             <div class="course-meta">
-              <span class="tag" :class="course.level">{{
-                course.level
+              <span class="tag" :class="course.level">{{ course.level }}</span>
+              <span class="tag" :style="{ background: course.tagColor }">{{
+                course.tag
               }}</span>
-              <span class="tag" :style="{ background: course.tagColor }">{{ course.tag }}</span>
               <span>{{ course.duration }}分钟</span>
               <span v-if="course.studentsCount"
                 >{{ course.studentsCount }}人在学</span

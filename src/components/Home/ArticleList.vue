@@ -30,7 +30,10 @@
             <h3 class="article-title">{{ article.title }}</h3>
             <p class="article-brief">{{ article.brief }}</p>
             <!-- 显示前两个标签（如果有） -->
-            <div class="list-tags-container" v-if="article.tags && article.tags.length > 0">
+            <div
+              class="list-tags-container"
+              v-if="article.tags && article.tags.length > 0"
+            >
               <van-tag
                 v-for="(tag, index) in article.tags.slice(0, 2)"
                 :key="index"
@@ -40,7 +43,9 @@
               >
                 {{ tag }}
               </van-tag>
-              <span v-if="article.tags.length > 2" class="more-tags">+{{ article.tags.length - 2 }}</span>
+              <span v-if="article.tags.length > 2" class="more-tags"
+                >+{{ article.tags.length - 2 }}</span
+              >
             </div>
             <div class="article-meta">
               <span>{{ article.readTime }}分钟</span>
@@ -66,7 +71,7 @@
         </div>
         <div class="article-content" v-if="selectedArticle">
           <h2>{{ selectedArticle.title }}</h2>
-          
+
           <div class="article-header-info">
             <div class="header-left">
               <div class="author-info" v-if="selectedArticle.author">
@@ -79,18 +84,22 @@
               </div>
             </div>
           </div>
-          
+
           <div class="article-tag-row">
             <span
               class="category-tag"
               :style="getTagStyle(selectedArticle.category)"
-            >{{ selectedArticle.category }}</span>
+              >{{ selectedArticle.category }}</span
+            >
             <span class="time-tag">{{ selectedArticle.readTime }}分钟</span>
             <span class="difficulty-tag">{{ selectedArticle.difficulty }}</span>
           </div>
-          
+
           <!-- 标签显示 -->
-          <div class="tags-container" v-if="selectedArticle.tags && selectedArticle.tags.length > 0">
+          <div
+            class="tags-container"
+            v-if="selectedArticle.tags && selectedArticle.tags.length > 0"
+          >
             <van-tag
               v-for="(tag, index) in selectedArticle.tags"
               :key="index"
@@ -101,12 +110,20 @@
               {{ tag }}
             </van-tag>
           </div>
-          
+
           <div class="article-cover-image">
-            <van-image :src="selectedArticle.cover" fit="cover" width="100%" radius="4" />
+            <van-image
+              :src="selectedArticle.cover"
+              fit="cover"
+              width="100%"
+              radius="4"
+            />
           </div>
-          
-          <div class="article-text markdown-body" v-html="renderMarkdown(selectedArticle.content)"></div>
+
+          <div
+            class="article-text markdown-body"
+            v-html="renderMarkdown(selectedArticle.content)"
+          ></div>
         </div>
       </div>
     </van-popup>
@@ -347,12 +364,14 @@ const renderMarkdown = (content: string): string => {
   border-top: 1px dashed #ebedf0;
 }
 
-.header-left, .header-right {
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
 }
 
-.author-info, .source-info {
+.author-info,
+.source-info {
   display: flex;
   align-items: center;
 }
@@ -370,7 +389,9 @@ const renderMarkdown = (content: string): string => {
   align-items: center;
 }
 
-.category-tag, .time-tag, .difficulty-tag {
+.category-tag,
+.time-tag,
+.difficulty-tag {
   padding: 2px 10px;
   border-radius: 16px;
   font-size: var(--font-size-sm);
@@ -382,7 +403,8 @@ const renderMarkdown = (content: string): string => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.time-tag, .difficulty-tag {
+.time-tag,
+.difficulty-tag {
   color: #646566;
   background-color: #f5f5f5;
   border: 1px solid #ebedf0;
@@ -421,11 +443,11 @@ const renderMarkdown = (content: string): string => {
 }
 
 /* Markdown 样式 */
-.markdown-body h1, 
-.markdown-body h2, 
-.markdown-body h3, 
-.markdown-body h4, 
-.markdown-body h5, 
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
 .markdown-body h6 {
   margin-top: 24px;
   margin-bottom: 16px;
@@ -447,7 +469,7 @@ const renderMarkdown = (content: string): string => {
   margin-bottom: 16px;
 }
 
-.markdown-body ul, 
+.markdown-body ul,
 .markdown-body ol {
   padding-left: 2em;
   margin-top: 0;
@@ -545,7 +567,8 @@ const renderMarkdown = (content: string): string => {
 }
 
 /* 优化时间和难度标签 */
-.time-tag, .difficulty-tag {
+.time-tag,
+.difficulty-tag {
   padding: 3px 12px;
   border-radius: 16px;
   font-size: 12px;

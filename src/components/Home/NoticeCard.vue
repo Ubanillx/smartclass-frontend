@@ -15,7 +15,7 @@
       <div class="notice-preview">
         <template v-if="notices && notices.length > 0">
           <!-- 默认只显示第一条公告 -->
-          <div 
+          <div
             class="notice-item"
             @click="notices[0] && showNoticeDetail(notices[0])"
           >
@@ -26,20 +26,24 @@
               <van-icon name="arrow" />
             </div>
           </div>
-          
+
           <!-- 展开更多按钮 -->
-          <div v-if="notices.length > 1 && !expanded" class="expand-button" @click="expanded = true">
+          <div
+            v-if="notices.length > 1 && !expanded"
+            class="expand-button"
+            @click="expanded = true"
+          >
             <div class="expand-button-content">
               <van-icon name="arrow-down" />
               <span>展开更多公告</span>
             </div>
           </div>
-          
+
           <!-- 展开后显示的额外公告 -->
           <template v-if="expanded">
-            <div 
-              v-for="notice in notices.slice(1, 3)" 
-              :key="notice.id" 
+            <div
+              v-for="notice in notices.slice(1, 3)"
+              :key="notice.id"
               class="notice-item"
               @click="showNoticeDetail(notice)"
             >
@@ -50,9 +54,13 @@
                 <van-icon name="arrow" />
               </div>
             </div>
-            
+
             <!-- 收起按钮 -->
-            <div v-if="notices.length > 1" class="expand-button collapse" @click="expanded = false">
+            <div
+              v-if="notices.length > 1"
+              class="expand-button collapse"
+              @click="expanded = false"
+            >
               <div class="expand-button-content">
                 <van-icon name="arrow-up" />
                 <span>收起</span>

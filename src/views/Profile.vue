@@ -36,7 +36,7 @@
         :history-items="learningHistory"
         @view-all="router.push('/history')"
       />
-      
+
       <!-- 内容导航栏组件 -->
       <component :is="ContentTabsRaw" />
 
@@ -58,7 +58,7 @@ import {
   RecentLearning,
   LearningHistory,
   LogoutButton,
-  ContentTabs
+  ContentTabs,
 } from '../components/Profile';
 import { useUserStore } from '../stores/userStore';
 import { UserControllerService } from '../services';
@@ -85,7 +85,7 @@ const userInfo = ref({
   avatar: userStore.DEFAULT_USER_AVATAR,
   level: 1,
   nextLevelExp: 100,
-  userId: '' as string | number
+  userId: '' as string | number,
 });
 
 const userStats = ref({
@@ -195,14 +195,14 @@ const fetchUserData = async () => {
 
   try {
     await userStore.fetchCurrentUser();
-    
+
     if (userStore.userInfo) {
       if (userStore.userInfo.id) {
         // 尝试从API获取最新的用户数据
         const response = await UserControllerService.getUserVoByIdUsingGet(
-          userStore.userInfo.id
+          userStore.userInfo.id,
         );
-        
+
         if (response.code === 0 && response.data) {
           const userData = response.data;
 
@@ -213,7 +213,7 @@ const fetchUserData = async () => {
             avatar: userData.userAvatar || userStore.DEFAULT_USER_AVATAR,
             level: 3,
             nextLevelExp: 100,
-            userId: userData.id || ''
+            userId: userData.id || '',
           };
 
           userStats.value = {
@@ -254,21 +254,22 @@ const onRefresh = () => {
 };
 
 const addGoal = (goalText: string) => {
-  const newId = todayGoals.value.length > 0 
-    ? Math.max(...todayGoals.value.map(g => g.id)) + 1 
-    : 1;
-  
+  const newId =
+    todayGoals.value.length > 0
+      ? Math.max(...todayGoals.value.map((g) => g.id)) + 1
+      : 1;
+
   todayGoals.value.push({
     id: newId,
     text: goalText,
     completed: false,
   });
-  
+
   updateProgress();
 };
 
 const toggleGoalStatus = (goalId: number) => {
-  const goal = todayGoals.value.find(g => g.id === goalId);
+  const goal = todayGoals.value.find((g) => g.id === goalId);
   if (goal) {
     goal.completed = !goal.completed;
     updateProgress();
@@ -281,8 +282,8 @@ const updateProgress = () => {
     todayProgress.value = 0;
     return;
   }
-  
-  const completedGoals = todayGoals.value.filter(g => g.completed).length;
+
+  const completedGoals = todayGoals.value.filter((g) => g.completed).length;
   todayProgress.value = Math.round((completedGoals / totalGoals) * 100);
 };
 
@@ -307,7 +308,7 @@ onMounted(() => {
 <style scoped>
 .profile {
   padding-bottom: 66px;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
 }
 

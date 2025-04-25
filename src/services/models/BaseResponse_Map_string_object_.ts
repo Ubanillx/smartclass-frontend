@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type BaseResponse_Map_string_object_ = {
-    code?: number;
-    data?: any;
-    message?: string;
+  code?: number;
+  data?: any;
+  message?: string;
 };
-

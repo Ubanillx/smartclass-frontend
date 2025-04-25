@@ -14,10 +14,10 @@ export const networkServices = {
   async getNetworkStatus() {
     return await Network.getStatus();
   },
-  
+
   addNetworkListener(callback: (status: { connected: boolean }) => void) {
     return Network.addListener('networkStatusChange', callback);
-  }
+  },
 };
 
 // 本地存储服务
@@ -28,7 +28,7 @@ export const storageServices = {
       value: JSON.stringify(value),
     });
   },
-  
+
   async get(key: string) {
     const item = await Preferences.get({ key });
     if (item && item.value) {
@@ -40,14 +40,14 @@ export const storageServices = {
     }
     return null;
   },
-  
+
   async remove(key: string) {
     await Preferences.remove({ key });
   },
-  
+
   async clear() {
     await Preferences.clear();
-  }
+  },
 };
 
 // 相机服务
@@ -58,39 +58,39 @@ export const cameraServices = {
         quality: 90,
         allowEditing: true,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Camera
+        source: CameraSource.Camera,
       });
-      
+
       return image;
     } catch (error) {
       console.error('相机错误:', error);
       throw error;
     }
   },
-  
+
   async pickFromGallery() {
     try {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: true,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Photos
+        source: CameraSource.Photos,
       });
-      
+
       return image;
     } catch (error) {
       console.error('相册错误:', error);
       throw error;
     }
   },
-  
+
   async checkPermissions() {
     return await Camera.checkPermissions();
   },
-  
+
   async requestPermissions() {
     return await Camera.requestPermissions();
-  }
+  },
 };
 
 // 设备信息
@@ -108,13 +108,13 @@ export const toastServices = {
     if (isNativePlatform) {
       await Toast.show({
         text: message,
-        duration: duration
+        duration: duration,
       });
     } else {
       // 在Web上使用alert或自定义Toast
       console.log('Toast:', message);
     }
-  }
+  },
 };
 
 export default {
@@ -125,5 +125,5 @@ export default {
   storageServices,
   cameraServices,
   toastServices,
-  getDeviceInfo
-}; 
+  getDeviceInfo,
+};

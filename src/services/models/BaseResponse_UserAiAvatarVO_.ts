@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { UserAiAvatarVO } from './UserAiAvatarVO.ts';
 export type BaseResponse_UserAiAvatarVO_ = {
-    code?: number;
-    data?: UserAiAvatarVO;
-    message?: string;
+  code?: number;
+  data?: UserAiAvatarVO;
+  message?: string;
 };
-

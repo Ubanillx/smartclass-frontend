@@ -6,17 +6,18 @@
       class="message-item-container"
     >
       <!-- 只有当AI消息有内容或用户消息时才显示消息项 -->
-      <div v-if="message.type === 'user' || (message.type === 'ai' && message.content.trim())" :class="['message-item', message.type]">
+      <div
+        v-if="
+          message.type === 'user' ||
+          (message.type === 'ai' && message.content.trim())
+        "
+        :class="['message-item', message.type]"
+      >
         <!-- AI消息头像在左侧 -->
         <div v-if="message.type === 'ai'" class="avatar left-avatar">
-          <van-image
-            :src="assistantAvatar"
-            round
-            width="40"
-            height="40"
-          />
+          <van-image :src="assistantAvatar" round width="40" height="40" />
         </div>
-        
+
         <div class="message-content">
           <div
             v-if="message.type === 'ai'"
@@ -29,15 +30,10 @@
           ></div>
           <div v-else>{{ message.content }}</div>
         </div>
-        
+
         <!-- 用户消息头像在右侧 -->
         <div v-if="message.type === 'user'" class="avatar right-avatar">
-          <van-image
-            :src="userAvatar"
-            round
-            width="40"
-            height="40"
-          />
+          <van-image :src="userAvatar" round width="40" height="40" />
         </div>
       </div>
     </div>
@@ -244,7 +240,7 @@ onUpdated(scrollToBottom);
     overflow-x: auto;
     overflow-y: hidden;
   }
-  
+
   :deep(.katex) {
     font-size: 1.1em;
   }

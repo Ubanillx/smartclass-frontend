@@ -3,11 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UploadFileResponse = {
-    createdAt?: number;
-    extension?: string;
-    fileId?: string;
-    fileName?: string;
-    fileSize?: number;
-    mimeType?: string;
+  createdAt?: number;
+  extension?: string;
+  fileId?: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
 };
-

@@ -1,7 +1,7 @@
 <template>
   <div class="course-schedule-page">
     <back-button title="课程表" />
-    
+
     <div class="course-schedule">
       <div class="schedule-header">
         <div class="week-navigator">
@@ -24,22 +24,24 @@
           <!-- 每天的课程列 -->
           <div v-for="day in weekdays" :key="day.value" class="day-column">
             <div class="weekday-header">{{ day.text }}</div>
-            
+
             <!-- 课程卡片 -->
             <div class="course-slots">
-              <div 
-                v-for="course in getDayCourses(day.value)" 
-                :key="course.id" 
+              <div
+                v-for="course in getDayCourses(day.value)"
+                :key="course.id"
                 class="course-card"
                 :style="{
                   top: getTopPosition(course),
                   height: getHeight(course),
-                  backgroundColor: course.color
+                  backgroundColor: course.color,
                 }"
                 @click="showCourseDetails(course)"
               >
                 <div class="course-title">{{ course.title }}</div>
-                <div class="course-time">{{ course.startTime }}-{{ course.endTime }}</div>
+                <div class="course-time">
+                  {{ course.startTime }}-{{ course.endTime }}
+                </div>
                 <div class="course-info">{{ course.classroom }}</div>
               </div>
             </div>
@@ -48,16 +50,27 @@
       </div>
 
       <!-- 课程详情弹出层 -->
-      <van-popup v-model:show="showDetails" round position="bottom" :style="{ height: '40%' }">
+      <van-popup
+        v-model:show="showDetails"
+        round
+        position="bottom"
+        :style="{ height: '40%' }"
+      >
         <div v-if="selectedCourse" class="course-details">
-          <div class="details-header" :style="{ backgroundColor: selectedCourse.color }">
+          <div
+            class="details-header"
+            :style="{ backgroundColor: selectedCourse.color }"
+          >
             <h3>{{ selectedCourse.title }}</h3>
             <p>{{ selectedCourse.subject }}</p>
           </div>
           <div class="details-content">
             <div class="details-item">
               <van-icon name="clock-o" />
-              <span>{{ selectedCourse.startTime }} - {{ selectedCourse.endTime }}</span>
+              <span
+                >{{ selectedCourse.startTime }} -
+                {{ selectedCourse.endTime }}</span
+              >
             </div>
             <div class="details-item">
               <van-icon name="location-o" />
@@ -69,7 +82,9 @@
             </div>
           </div>
           <div class="details-actions">
-            <van-button type="primary" block @click="startLearning">开始学习</van-button>
+            <van-button type="primary" block @click="startLearning"
+              >开始学习</van-button
+            >
           </div>
         </div>
       </van-popup>
@@ -103,7 +118,7 @@ const timeSlots = [
   '14:00',
   '15:00',
   '16:00',
-  '17:00'
+  '17:00',
 ];
 
 // 一周的天数
@@ -112,7 +127,7 @@ const weekdays = [
   { text: '周二', value: 2 },
   { text: '周三', value: 3 },
   { text: '周四', value: 4 },
-  { text: '周五', value: 5 }
+  { text: '周五', value: 5 },
 ];
 
 // 计算当前周文本
@@ -134,7 +149,7 @@ const schedule = computed(() => {
 
 // 获取指定日期的课程
 const getDayCourses = (day: number) => {
-  return schedule.value.filter(course => course.day === day);
+  return schedule.value.filter((course) => course.day === day);
 };
 
 // 计算课程卡片的顶部位置
@@ -142,12 +157,12 @@ const getTopPosition = (course: ScheduleCourse) => {
   // 根据时间计算课程卡片的顶部位置
   const startHour = parseInt(course.startTime.substring(0, 2));
   const startMinute = parseInt(course.startTime.substring(3, 5));
-  
+
   // 计算相对于08:00的分钟数
   const minutesFromStart = (startHour - 8) * 60 + startMinute;
-  
+
   // 转化为像素位置 (每分钟的高度 = slotHeightPx/60min)
-  return `${minutesFromStart * (slotHeightPx.value/60)}px`;
+  return `${minutesFromStart * (slotHeightPx.value / 60)}px`;
 };
 
 // 计算课程卡片的高度
@@ -157,12 +172,13 @@ const getHeight = (course: ScheduleCourse) => {
   const startMinute = parseInt(course.startTime.substring(3, 5));
   const endHour = parseInt(course.endTime.substring(0, 2));
   const endMinute = parseInt(course.endTime.substring(3, 5));
-  
+
   // 计算总分钟数
-  const durationMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-  
+  const durationMinutes =
+    (endHour - startHour) * 60 + (endMinute - startMinute);
+
   // 转化为像素高度
-  return `${durationMinutes * (slotHeightPx.value/60)}px`;
+  return `${durationMinutes * (slotHeightPx.value / 60)}px`;
 };
 
 // 上一周
@@ -197,7 +213,7 @@ const startLearning = () => {
 const adjustScheduleLayout = () => {
   const isMobile = window.innerWidth < 768;
   const isLandscape = window.innerWidth > window.innerHeight;
-  
+
   // 设置时间槽高度
   if (isMobile) {
     if (isLandscape) {
@@ -208,18 +224,21 @@ const adjustScheduleLayout = () => {
   } else {
     slotHeightPx.value = 100; // 桌面设备
   }
-  
+
   // 计算总高度
   gridHeight.value = timeSlots.length * slotHeightPx.value + 40; // 40是标题行高度
-  
+
   // 应用高度到网格
   if (scheduleGridRef.value) {
     scheduleGridRef.value.style.minHeight = `${gridHeight.value}px`;
   }
-  
+
   // 更新CSS变量
-  document.documentElement.style.setProperty('--slot-height', `${slotHeightPx.value}px`);
-  
+  document.documentElement.style.setProperty(
+    '--slot-height',
+    `${slotHeightPx.value}px`,
+  );
+
   // 调整设备特定样式
   if (isMobile) {
     document.body.classList.add('mobile-schedule-view');
@@ -232,10 +251,10 @@ const adjustScheduleLayout = () => {
 onMounted(() => {
   // 调整布局适配不同设备
   adjustScheduleLayout();
-  
+
   // 监听窗口大小变化
   window.addEventListener('resize', adjustScheduleLayout);
-  
+
   // 初始滚动定位到当前时间
   scrollToCurrentTime();
 });
@@ -250,15 +269,15 @@ const scrollToCurrentTime = () => {
   const now = new Date();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
-  
+
   // 只在8:00-17:00之间的工作时间滚动
   if (currentHour >= 8 && currentHour < 17) {
     // 计算当前时间相对于8:00的分钟数
     const minutesFromStart = (currentHour - 8) * 60 + currentMinute;
-    
+
     // 转化为像素位置
-    const scrollPosition = minutesFromStart * (slotHeightPx.value/60);
-    
+    const scrollPosition = minutesFromStart * (slotHeightPx.value / 60);
+
     // 获取容器并滚动
     const container = document.querySelector('.schedule-container');
     if (container) {
@@ -486,32 +505,32 @@ const scrollToCurrentTime = () => {
   .course-schedule {
     height: calc(100vh - 50px);
   }
-  
+
   .schedule-header {
     padding: 10px;
   }
-  
+
   .week-navigator {
     padding: 8px 10px;
   }
-  
+
   .day-column {
     min-width: 80px;
   }
-  
+
   .time-column {
     width: 40px;
   }
-  
+
   .course-card {
     padding: 6px;
   }
-  
+
   .course-title {
     font-size: 12px;
     margin-bottom: 2px;
   }
-  
+
   .course-time,
   .course-info {
     font-size: 10px;
@@ -524,19 +543,19 @@ const scrollToCurrentTime = () => {
   .course-schedule {
     height: calc(100vh - 40px);
   }
-  
+
   .schedule-header {
     padding: 6px;
   }
-  
+
   .week-navigator {
     padding: 4px 8px;
   }
-  
+
   .weekday-header {
     height: 32px;
   }
-  
+
   .time-slot {
     height: 70px;
   }
@@ -547,13 +566,13 @@ const scrollToCurrentTime = () => {
   .schedule-header {
     padding: 6px;
   }
-  
+
   .time-slot {
     height: 65px;
   }
-  
+
   .course-schedule {
     margin: 0;
   }
 }
-</style> 
+</style>

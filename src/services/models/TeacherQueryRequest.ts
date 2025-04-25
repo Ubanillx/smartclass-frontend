@@ -3,15 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TeacherQueryRequest = {
-    adminId?: number;
-    current?: number;
-    expertise?: string;
-    id?: number;
-    name?: string;
-    pageSize?: number;
-    sortField?: string;
-    sortOrder?: string;
-    title?: string;
-    userId?: number;
+  adminId?: number;
+  current?: number;
+  expertise?: string;
+  id?: number;
+  name?: string;
+  pageSize?: number;
+  sortField?: string;
+  sortOrder?: string;
+  title?: string;
+  userId?: number;
 };
-

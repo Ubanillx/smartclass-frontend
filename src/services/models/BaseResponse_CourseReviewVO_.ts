@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { CourseReviewVO } from './CourseReviewVO.ts';
 export type BaseResponse_CourseReviewVO_ = {
-    code?: number;
-    data?: CourseReviewVO;
-    message?: string;
+  code?: number;
+  data?: CourseReviewVO;
+  message?: string;
 };
-

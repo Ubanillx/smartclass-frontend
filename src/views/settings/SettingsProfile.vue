@@ -277,7 +277,7 @@ const onGenderConfirm = (value: any): void => {
           displayGender.value = option.text;
         }
       } else if (value.value !== undefined) {
-        const option = genderOptions.find(opt => opt.value === value.value);
+        const option = genderOptions.find((opt) => opt.value === value.value);
         if (option) {
           formData.value.userGender = option.value;
           displayGender.value = option.text;
@@ -290,7 +290,7 @@ const onGenderConfirm = (value: any): void => {
   } catch (error) {
     console.error('处理性别选择数据失败:', error);
   }
-  
+
   showGenderPicker.value = false;
 };
 
@@ -303,21 +303,21 @@ const maxDate = new Date();
 const onDateConfirm = (value: any): void => {
   try {
     let date: Date | null = null;
-    
+
     if (value instanceof Date) {
       date = value;
     } else if (value && typeof value === 'object') {
       if (value.selectedValues && Array.isArray(value.selectedValues)) {
         const [yearStr, monthStr, dayStr] = value.selectedValues;
         const year = parseInt(String(yearStr), 10);
-        const month = parseInt(String(monthStr), 10) - 1; 
+        const month = parseInt(String(monthStr), 10) - 1;
         const day = parseInt(String(dayStr), 10);
         date = new Date(year, month, day);
       } else if (value.value instanceof Date) {
         date = value.value;
       }
     }
-    
+
     if (date && !isNaN(date.getTime())) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -327,7 +327,7 @@ const onDateConfirm = (value: any): void => {
   } catch (error) {
     console.error('处理日期选择数据失败:', error);
   }
-  
+
   showDatePicker.value = false;
 };
 
@@ -370,15 +370,20 @@ const onAddressConfirm = (value: any): void => {
         formData.value.province = options[0]?.text || '';
         formData.value.city = options[1]?.text || '';
         formData.value.district = options[2]?.text || '';
-      } else if (value.values && Array.isArray(value.values) && value.items && Array.isArray(value.items)) {
+      } else if (
+        value.values &&
+        Array.isArray(value.values) &&
+        value.items &&
+        Array.isArray(value.items)
+      ) {
         const codes = value.values;
         const columns = value.items;
-        
+
         const findTextByCode = (code: string, options: any[]) => {
-          const option = options.find(opt => opt.value === code);
+          const option = options.find((opt) => opt.value === code);
           return option ? option.text : '';
         };
-        
+
         if (codes.length >= 3 && columns.length >= 3) {
           formData.value.province = findTextByCode(codes[0], columns[0]);
           formData.value.city = findTextByCode(codes[1], columns[1]);
@@ -389,7 +394,7 @@ const onAddressConfirm = (value: any): void => {
   } catch (error) {
     console.error('处理地址选择数据失败:', error);
   }
-  
+
   showAddressPicker.value = false;
 };
 

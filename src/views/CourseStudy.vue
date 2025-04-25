@@ -38,21 +38,33 @@ onMounted(async () => {
   try {
     // 从mock API获取课程数据
     const courseData = await fetchCourseDetail(courseId.value);
-    
+
     // 准备课程描述和亮点
     course.value = {
       ...courseData,
       description: `本课程是${courseData.subject || ''}学科的${courseData.level}课程，${courseData.brief}`,
       highlights: [
-        { 
-          icon: courseData.level === '初级' ? 'smile-o' : 
-                courseData.level === '中级' ? 'bulb-o' : 'certificate',
+        {
+          icon:
+            courseData.level === '初级'
+              ? 'smile-o'
+              : courseData.level === '中级'
+                ? 'bulb-o'
+                : 'certificate',
           color: courseData.tagColor,
-          text: `${courseData.level}级别` 
+          text: `${courseData.level}级别`,
         },
-        { icon: 'clock-o', color: '#1989fa', text: `${courseData.duration}分钟` },
-        { icon: 'friends-o', color: '#07c160', text: `${courseData.studentsCount || 0}人学习` }
-      ]
+        {
+          icon: 'clock-o',
+          color: '#1989fa',
+          text: `${courseData.duration}分钟`,
+        },
+        {
+          icon: 'friends-o',
+          color: '#07c160',
+          text: `${courseData.studentsCount || 0}人学习`,
+        },
+      ],
     };
   } catch (error) {
     showToast('获取课程数据失败，请重试');

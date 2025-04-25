@@ -25,11 +25,14 @@
             <div class="assistant-info">
               <div class="assistant-name">{{ assistant.name }}</div>
               <div class="assistant-desc-container">
-                <div class="assistant-desc" :class="{ 'truncated': !expanded[assistant.id] }">
+                <div
+                  class="assistant-desc"
+                  :class="{ truncated: !expanded[assistant.id] }"
+                >
                   {{ assistant.description }}
                 </div>
-                <span 
-                  v-if="shouldShowToggle(assistant.description)" 
+                <span
+                  v-if="shouldShowToggle(assistant.description)"
                   class="toggle-truncate"
                   @click.stop="toggleExpand(assistant.id)"
                 >

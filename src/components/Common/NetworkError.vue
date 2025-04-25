@@ -20,15 +20,15 @@ defineEmits(['retry']);
 const props = defineProps({
   message: {
     type: String,
-    default: '加载聊天记录失败，请检查网络连接后重试'
+    default: '加载聊天记录失败，请检查网络连接后重试',
   },
   loading: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 </script>
 
 <style scoped>
 /* 可以在这里添加额外的自定义样式 */
-</style> 
+</style>

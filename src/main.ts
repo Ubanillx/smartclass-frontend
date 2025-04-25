@@ -21,12 +21,12 @@ window.handleBackButton = () => {
   try {
     const currentRoute = router.currentRoute.value;
     const path = currentRoute.path;
-    
+
     console.log('处理返回按钮，当前路径:', path);
-    
+
     // 一级页面列表（底部导航栏页面）
     const mainRoutes = ['/', '/chat', '/circle', '/courses', '/profile'];
-    
+
     if (mainRoutes.includes(path)) {
       if (path !== '/') {
         // 如果在底部导航页面但不是主页，则返回到主页
@@ -59,11 +59,11 @@ const initCapacitor = async () => {
   if (Capacitor.isNativePlatform()) {
     // 隐藏启动页
     await SplashScreen.hide();
-    
+
     // 检查网络状态
     const networkStatus = await capacitor.networkServices.getNetworkStatus();
     console.log('网络状态:', networkStatus);
-    
+
     // 监听网络变化
     capacitor.networkServices.addNetworkListener((status) => {
       console.log('网络状态变化:', status);
@@ -79,7 +79,7 @@ app.use(pinia);
 app.mount('#app');
 
 // 初始化Capacitor (在挂载之后)
-initCapacitor().catch(error => console.error('Capacitor初始化失败:', error));
+initCapacitor().catch((error) => console.error('Capacitor初始化失败:', error));
 
 // 声明全局类型
 declare global {

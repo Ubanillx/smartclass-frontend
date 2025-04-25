@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   iconSize: '20',
   customPath: '',
-  preventDefault: false
+  preventDefault: false,
 });
 
 // 定义点击事件
@@ -32,12 +32,12 @@ const router = useRouter();
 const handleClick = (): void => {
   // 发送点击事件给父组件
   emit('click');
-  
+
   // 如果设置了阻止默认事件，则不执行默认的导航行为
   if (props.preventDefault) {
     return;
   }
-  
+
   // 否则执行默认导航行为
   if (props.customPath) {
     router.push(props.customPath);

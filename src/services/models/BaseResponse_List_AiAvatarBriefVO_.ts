@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { AiAvatarBriefVO } from './AiAvatarBriefVO.ts';
 export type BaseResponse_List_AiAvatarBriefVO_ = {
-    code?: number;
-    data?: Array<AiAvatarBriefVO>;
-    message?: string;
+  code?: number;
+  data?: Array<AiAvatarBriefVO>;
+  message?: string;
 };
-

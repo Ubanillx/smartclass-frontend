@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TextToAudioRequest = {
-    aiAvatarId?: number;
-    messageId?: string;
-    text?: string;
+  aiAvatarId?: number;
+  messageId?: string;
+  text?: string;
 };
-

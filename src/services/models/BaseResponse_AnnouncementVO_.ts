@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { AnnouncementVO } from './AnnouncementVO.ts';
 export type BaseResponse_AnnouncementVO_ = {
-    code?: number;
-    data?: AnnouncementVO;
-    message?: string;
+  code?: number;
+  data?: AnnouncementVO;
+  message?: string;
 };
-

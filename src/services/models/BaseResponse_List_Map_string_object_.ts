@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { Map_string_object_ } from './Map_string_object_.ts';
 export type BaseResponse_List_Map_string_object_ = {
-    code?: number;
-    data?: Array<Map_string_object_>;
-    message?: string;
+  code?: number;
+  data?: Array<Map_string_object_>;
+  message?: string;
 };
-

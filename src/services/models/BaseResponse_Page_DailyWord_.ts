@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { Page_DailyWord_ } from './Page_DailyWord_.ts';
 export type BaseResponse_Page_DailyWord_ = {
-    code?: number;
-    data?: Page_DailyWord_;
-    message?: string;
+  code?: number;
+  data?: Page_DailyWord_;
+  message?: string;
 };
-

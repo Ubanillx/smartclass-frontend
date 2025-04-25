@@ -250,66 +250,68 @@ const clearCache = async (): Promise<void> => {
     showCancelButton: true,
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    closeOnPopstate: true
-  }).then(() => {
-    // 清除localStorage中的数据（保留用户登录相关信息）
-    const keysToKeep = ['isLoggedIn', 'userInfo'];
-    const keysToRemove = [];
-    
-    // 获取所有localStorage的key
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && !keysToKeep.includes(key)) {
-        keysToRemove.push(key);
-      }
-    }
-    
-    // 移除不需要保留的key
-    keysToRemove.forEach(key => {
-      localStorage.removeItem(key);
-    });
-    
-    // 重置各个store（不包括userStore）
-    const settingsStore = useSettingsStore();
-    const searchStore = useSearchStore();
-    const collectedWordsStore = useCollectedWordsStore();
-    
-    // 重置settingsStore中的字体大小为默认值
-    settingsStore.setFontSize('medium');
-    
-    // 清空搜索历史
-    searchStore.clearSearchHistory();
-    
-    // 清空收藏单词
-    // 收藏单词存储使用的是ref数组，直接清空
-    if (collectedWordsStore.collectedWords) {
-      collectedWordsStore.collectedWords.length = 0;
-    }
+    closeOnPopstate: true,
+  })
+    .then(() => {
+      // 清除localStorage中的数据（保留用户登录相关信息）
+      const keysToKeep = ['isLoggedIn', 'userInfo'];
+      const keysToRemove = [];
 
-    // 重置学习设置和通知设置
-    learningSettings.value = {
-      dailyGoal: 30,
-      reminderTime: '09:00',
-      difficulty: '中等',
-    };
-    
-    notificationSettings.value = {
-      push: true,
-      dailyWord: true,
-      progress: true,
-    };
-    
-    showToast({
-      message: '缓存已清除，正在刷新页面...',
-      duration: 1500,
-      onClose: () => {
-        // 刷新页面确保所有组件重新初始化
-        window.location.reload();
+      // 获取所有localStorage的key
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && !keysToKeep.includes(key)) {
+          keysToRemove.push(key);
+        }
       }
+
+      // 移除不需要保留的key
+      keysToRemove.forEach((key) => {
+        localStorage.removeItem(key);
+      });
+
+      // 重置各个store（不包括userStore）
+      const settingsStore = useSettingsStore();
+      const searchStore = useSearchStore();
+      const collectedWordsStore = useCollectedWordsStore();
+
+      // 重置settingsStore中的字体大小为默认值
+      settingsStore.setFontSize('medium');
+
+      // 清空搜索历史
+      searchStore.clearSearchHistory();
+
+      // 清空收藏单词
+      // 收藏单词存储使用的是ref数组，直接清空
+      if (collectedWordsStore.collectedWords) {
+        collectedWordsStore.collectedWords.length = 0;
+      }
+
+      // 重置学习设置和通知设置
+      learningSettings.value = {
+        dailyGoal: 30,
+        reminderTime: '09:00',
+        difficulty: '中等',
+      };
+
+      notificationSettings.value = {
+        push: true,
+        dailyWord: true,
+        progress: true,
+      };
+
+      showToast({
+        message: '缓存已清除，正在刷新页面...',
+        duration: 1500,
+        onClose: () => {
+          // 刷新页面确保所有组件重新初始化
+          window.location.reload();
+        },
+      });
+    })
+    .catch(() => {
+      // 用户取消操作
     });
-  }).catch(() => {
-    // 用户取消操作
-  });
 };
 </script>
 

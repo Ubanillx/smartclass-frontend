@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { DailyWordVO } from './DailyWordVO.ts';
 export type BaseResponse_List_DailyWordVO_ = {
-    code?: number;
-    data?: Array<DailyWordVO>;
-    message?: string;
+  code?: number;
+  data?: Array<DailyWordVO>;
+  message?: string;
 };
-

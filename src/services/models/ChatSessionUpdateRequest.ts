@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ChatSessionUpdateRequest = {
-    sessionId?: string;
-    sessionName?: string;
+  sessionId?: string;
+  sessionName?: string;
 };
-

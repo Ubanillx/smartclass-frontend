@@ -3,8 +3,8 @@
     <div class="section-title">我的内容</div>
     <div class="profile-tabs-container">
       <div class="profile-tabs">
-        <div 
-          v-for="(tab, index) in tabs" 
+        <div
+          v-for="(tab, index) in tabs"
           :key="index"
           :class="['profile-tab', { active: activeTabIndex === index }]"
           @click="switchTab(index)"
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 导航内容展示区域 -->
     <div class="tab-content-area">
       <div v-if="activeTabIndex === 0" class="tab-content-placeholder">
@@ -62,7 +62,7 @@ const tabs = [
   { name: '资料', type: 'resources' },
   { name: '收藏', type: 'favorites' },
   { name: '关注', type: 'following' },
-  { name: '粉丝', type: 'followers' }
+  { name: '粉丝', type: 'followers' },
 ];
 const activeTabIndex = ref(0);
 
@@ -153,4 +153,4 @@ const switchTab = (index: number) => {
   height: 100%;
   min-height: 300px;
 }
-</style> 
+</style>

@@ -62,7 +62,8 @@ export const useUserStore = defineStore('user', () => {
 
       return { success: false, message: response.message || '登录失败' };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '登录失败，请检查网络连接';
+      const errorMessage =
+        error instanceof Error ? error.message : '登录失败，请检查网络连接';
       return {
         success: false,
         message: errorMessage,
@@ -90,7 +91,8 @@ export const useUserStore = defineStore('user', () => {
 
       return { success: false, message: response.message || '登录失败' };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '登录失败，请检查网络连接';
+      const errorMessage =
+        error instanceof Error ? error.message : '登录失败，请检查网络连接';
       return {
         success: false,
         message: errorMessage,

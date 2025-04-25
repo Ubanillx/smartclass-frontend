@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserRegisterByPhoneRequest = {
-    checkPassword?: string;
-    userPassword?: string;
-    userPhone?: string;
+  checkPassword?: string;
+  userPassword?: string;
+  userPhone?: string;
 };
-

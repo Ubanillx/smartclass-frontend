@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { CourseSection } from './CourseSection.ts';
 export type BaseResponse_CourseSection_ = {
-    code?: number;
-    data?: CourseSection;
-    message?: string;
+  code?: number;
+  data?: CourseSection;
+  message?: string;
 };
-

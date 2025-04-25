@@ -124,14 +124,10 @@
   "paths": {
     "/api/": {
       "get": {
-        "tags": [
-          "wx-mp-controller"
-        ],
+        "tags": ["wx-mp-controller"],
         "summary": "check",
         "operationId": "checkUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "echostr",
@@ -200,17 +196,11 @@
         "x-order": "2147483647"
       },
       "post": {
-        "tags": [
-          "wx-mp-controller"
-        ],
+        "tags": ["wx-mp-controller"],
         "summary": "receiveMessage",
         "operationId": "receiveMessageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK"
@@ -251,17 +241,11 @@
     },
     "/api/ai_avatar/add": {
       "post": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "addAiAvatar",
         "operationId": "addAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -322,17 +306,11 @@
     },
     "/api/ai_avatar/delete": {
       "post": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "deleteAiAvatar",
         "operationId": "deleteAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -393,14 +371,10 @@
     },
     "/api/ai_avatar/get": {
       "get": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "getAiAvatarById",
         "operationId": "getAiAvatarByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -453,14 +427,10 @@
     },
     "/api/ai_avatar/list": {
       "get": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "listAiAvatar",
         "operationId": "listAiAvatarUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "abilities",
@@ -634,14 +604,10 @@
     },
     "/api/ai_avatar/list/all": {
       "get": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "listAllAiAvatar",
         "operationId": "listAllAiAvatarUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -684,14 +650,10 @@
     },
     "/api/ai_avatar/list/page": {
       "get": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "listAiAvatarByPage",
         "operationId": "listAiAvatarByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "abilities",
@@ -865,17 +827,11 @@
     },
     "/api/ai_avatar/update": {
       "post": {
-        "tags": [
-          "ai-avatar-controller"
-        ],
+        "tags": ["ai-avatar-controller"],
         "summary": "updateAiAvatar",
         "operationId": "updateAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -936,17 +892,11 @@
     },
     "/api/announcement/add": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "addAnnouncement",
         "operationId": "addAnnouncementUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1007,17 +957,11 @@
     },
     "/api/announcement/delete": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "deleteAnnouncement",
         "operationId": "deleteAnnouncementUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1078,14 +1022,10 @@
     },
     "/api/announcement/get/vo": {
       "get": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "getAnnouncementVOById",
         "operationId": "getAnnouncementVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -1138,14 +1078,10 @@
     },
     "/api/announcement/has-read/{id}": {
       "get": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "hasReadAnnouncement",
         "operationId": "hasReadAnnouncementUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -1198,17 +1134,11 @@
     },
     "/api/announcement/list/page": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "listAnnouncementByPage",
         "operationId": "listAnnouncementByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1269,17 +1199,11 @@
     },
     "/api/announcement/list/page/vo": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "listAnnouncementVOByPage",
         "operationId": "listAnnouncementVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1340,14 +1264,10 @@
     },
     "/api/announcement/list/valid": {
       "get": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "listValidAnnouncements",
         "operationId": "listValidAnnouncementsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "current",
@@ -1410,17 +1330,11 @@
     },
     "/api/announcement/read/{id}": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "readAnnouncement",
         "operationId": "readAnnouncementUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -1479,17 +1393,11 @@
     },
     "/api/announcement/update": {
       "post": {
-        "tags": [
-          "announcement-controller"
-        ],
+        "tags": ["announcement-controller"],
         "summary": "updateAnnouncement",
         "operationId": "updateAnnouncementUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1550,17 +1458,11 @@
     },
     "/api/chat/file/upload": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "uploadFile",
         "operationId": "uploadFileUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -1624,14 +1526,10 @@
     },
     "/api/chat/history": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getChatHistory",
         "operationId": "getChatHistoryUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "sessionId",
@@ -1683,14 +1581,10 @@
     },
     "/api/chat/history/dialogs": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getHistoryDialogsList",
         "operationId": "getHistoryDialogsListUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "limit",
@@ -1753,14 +1647,10 @@
     },
     "/api/chat/history/page": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getChatHistoryByPage",
         "operationId": "getChatHistoryByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -1856,17 +1746,11 @@
     },
     "/api/chat/message/send": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "sendMessage",
         "operationId": "sendMessageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1927,17 +1811,11 @@
     },
     "/api/chat/message/sendWithFiles": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "sendMessageWithFiles",
         "operationId": "sendMessageWithFilesUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -1998,17 +1876,11 @@
     },
     "/api/chat/message/stop": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "stopStreamingResponse",
         "operationId": "stopStreamingResponseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2069,17 +1941,11 @@
     },
     "/api/chat/message/stream": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "sendMessageStream",
         "operationId": "sendMessageStreamUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2140,17 +2006,11 @@
     },
     "/api/chat/message/streamWithFiles": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "sendMessageStreamWithFiles",
         "operationId": "sendMessageStreamWithFilesUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2211,14 +2071,10 @@
     },
     "/api/chat/messages/list": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getUserChatMessages",
         "operationId": "getUserChatMessagesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -2271,17 +2127,11 @@
     },
     "/api/chat/session/create": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "createSession",
         "operationId": "createSessionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -2340,17 +2190,11 @@
     },
     "/api/chat/session/delete": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "deleteSession",
         "operationId": "deleteSessionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "sessionId",
@@ -2408,17 +2252,11 @@
     },
     "/api/chat/session/delete/completely": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "deleteSessionCompletely",
         "operationId": "deleteSessionCompletelyUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "sessionId",
@@ -2476,17 +2314,11 @@
     },
     "/api/chat/session/update": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "updateSessionName",
         "operationId": "updateSessionNameUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2547,14 +2379,10 @@
     },
     "/api/chat/sessions": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getUserSessions",
         "operationId": "getUserSessionsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -2607,14 +2435,10 @@
     },
     "/api/chat/sessions/recent": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getRecentSessions",
         "operationId": "getRecentSessionsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "limit",
@@ -2668,17 +2492,11 @@
     },
     "/api/chat/stream/log": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "toggleStreamingLog",
         "operationId": "toggleStreamingLogUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "enable",
@@ -2737,17 +2555,11 @@
     },
     "/api/chat/text-to-audio": {
       "post": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "textToAudio",
         "operationId": "textToAudioUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2800,14 +2612,10 @@
     },
     "/api/chat/user/history": {
       "get": {
-        "tags": [
-          "ai-avatar-chat-controller"
-        ],
+        "tags": ["ai-avatar-chat-controller"],
         "summary": "getUserHistoryPage",
         "operationId": "getUserHistoryPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -2878,17 +2686,11 @@
     },
     "/api/course/add": {
       "post": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "addCourse",
         "operationId": "addCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -2949,17 +2751,11 @@
     },
     "/api/course/category/add": {
       "post": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "addCategory",
         "operationId": "addCategoryUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3020,17 +2816,11 @@
     },
     "/api/course/category/delete": {
       "post": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "deleteCategory",
         "operationId": "deleteCategoryUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3091,14 +2881,10 @@
     },
     "/api/course/category/get": {
       "get": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "getCategoryById",
         "operationId": "getCategoryByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -3151,14 +2937,10 @@
     },
     "/api/course/category/sub": {
       "get": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "getSubCategories",
         "operationId": "getSubCategoriesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "parentId",
@@ -3211,14 +2993,10 @@
     },
     "/api/course/category/top": {
       "get": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "getTopCategories",
         "operationId": "getTopCategoriesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3261,17 +3039,11 @@
     },
     "/api/course/category/update": {
       "post": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "updateCategory",
         "operationId": "updateCategoryUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3332,14 +3104,10 @@
     },
     "/api/course/category/with-children": {
       "get": {
-        "tags": [
-          "course-category-controller"
-        ],
+        "tags": ["course-category-controller"],
         "summary": "getCategoryWithChildren",
         "operationId": "getCategoryWithChildrenUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "categoryId",
@@ -3392,17 +3160,11 @@
     },
     "/api/course/chapter/add": {
       "post": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "addChapter",
         "operationId": "addChapterUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3463,17 +3225,11 @@
     },
     "/api/course/chapter/delete": {
       "post": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "deleteChapter",
         "operationId": "deleteChapterUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -3532,14 +3288,10 @@
     },
     "/api/course/chapter/get": {
       "get": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "getChapterById",
         "operationId": "getChapterByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -3592,14 +3344,10 @@
     },
     "/api/course/chapter/list": {
       "get": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "listChapters",
         "operationId": "listChaptersUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -3652,14 +3400,10 @@
     },
     "/api/course/chapter/list/page": {
       "get": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "listChaptersByPage",
         "operationId": "listChaptersByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -3730,17 +3474,11 @@
     },
     "/api/course/chapter/update": {
       "post": {
-        "tags": [
-          "course-chapter-controller"
-        ],
+        "tags": ["course-chapter-controller"],
         "summary": "updateChapter",
         "operationId": "updateChapterUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3801,17 +3539,11 @@
     },
     "/api/course/delete": {
       "post": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "deleteCourse",
         "operationId": "deleteCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3872,17 +3604,11 @@
     },
     "/api/course/favourite/add": {
       "post": {
-        "tags": [
-          "course-favourite-controller"
-        ],
+        "tags": ["course-favourite-controller"],
         "summary": "favourCourse",
         "operationId": "favourCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -3943,17 +3669,11 @@
     },
     "/api/course/favourite/cancel": {
       "post": {
-        "tags": [
-          "course-favourite-controller"
-        ],
+        "tags": ["course-favourite-controller"],
         "summary": "unfavourCourse",
         "operationId": "unfavourCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -4012,14 +3732,10 @@
     },
     "/api/course/favourite/check": {
       "get": {
-        "tags": [
-          "course-favourite-controller"
-        ],
+        "tags": ["course-favourite-controller"],
         "summary": "checkFavoured",
         "operationId": "checkFavouredUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -4072,14 +3788,10 @@
     },
     "/api/course/favourite/my/count": {
       "get": {
-        "tags": [
-          "course-favourite-controller"
-        ],
+        "tags": ["course-favourite-controller"],
         "summary": "getMyFavourCount",
         "operationId": "getMyFavourCountUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4122,14 +3834,10 @@
     },
     "/api/course/favourite/my/list": {
       "get": {
-        "tags": [
-          "course-favourite-controller"
-        ],
+        "tags": ["course-favourite-controller"],
         "summary": "getMyFavourList",
         "operationId": "getMyFavourListUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4172,14 +3880,10 @@
     },
     "/api/course/get": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "getCourseById",
         "operationId": "getCourseByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -4232,14 +3936,10 @@
     },
     "/api/course/get/vo": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "getCourseVOById",
         "operationId": "getCourseVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -4292,14 +3992,10 @@
     },
     "/api/course/list": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "listCourse",
         "operationId": "listCourseUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "categoryId",
@@ -4457,14 +4153,10 @@
     },
     "/api/course/list/page/vo": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "listCourseVOByPage",
         "operationId": "listCourseVOByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "categoryId",
@@ -4622,17 +4314,11 @@
     },
     "/api/course/material/add": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "addMaterial",
         "operationId": "addMaterialUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -4693,17 +4379,11 @@
     },
     "/api/course/material/delete": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "deleteMaterial",
         "operationId": "deleteMaterialUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -4764,17 +4444,11 @@
     },
     "/api/course/material/download/count": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "incrementDownloadCount",
         "operationId": "incrementDownloadCountUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "materialId",
@@ -4833,14 +4507,10 @@
     },
     "/api/course/material/get": {
       "get": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "getMaterialById",
         "operationId": "getMaterialByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -4893,14 +4563,10 @@
     },
     "/api/course/material/list": {
       "get": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "listMaterialsByCourse",
         "operationId": "listMaterialsByCourseUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -4953,14 +4619,10 @@
     },
     "/api/course/material/list/page": {
       "get": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "listMaterialsByPage",
         "operationId": "listMaterialsByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -5029,17 +4691,11 @@
     },
     "/api/course/material/update": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "updateMaterial",
         "operationId": "updateMaterialUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -5100,17 +4756,11 @@
     },
     "/api/course/material/update/file": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "updateMaterialFile",
         "operationId": "updateMaterialFileUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -5176,17 +4826,11 @@
     },
     "/api/course/material/upload": {
       "post": {
-        "tags": [
-          "course-material-controller"
-        ],
+        "tags": ["course-material-controller"],
         "summary": "uploadAndAddMaterial",
         "operationId": "uploadAndAddMaterialUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -5266,14 +4910,10 @@
     },
     "/api/course/my/list/page/vo": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "listMyCourseVOByPage",
         "operationId": "listMyCourseVOByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "categoryId",
@@ -5431,17 +5071,11 @@
     },
     "/api/course/rate/{id}": {
       "post": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "rateCourse",
         "operationId": "rateCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -5508,14 +5142,10 @@
     },
     "/api/course/recommend": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "getRecommendCourses",
         "operationId": "getRecommendCoursesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "categoryId",
@@ -5585,17 +5215,11 @@
     },
     "/api/course/review/add": {
       "post": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "addReview",
         "operationId": "addReviewUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -5656,17 +5280,11 @@
     },
     "/api/course/review/admin/reply": {
       "post": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "replyReview",
         "operationId": "replyReviewUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "replyContent",
@@ -5732,17 +5350,11 @@
     },
     "/api/course/review/admin/status": {
       "post": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "updateReviewStatus",
         "operationId": "updateReviewStatusUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "reviewId",
@@ -5809,17 +5421,11 @@
     },
     "/api/course/review/delete": {
       "post": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "deleteReview",
         "operationId": "deleteReviewUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -5878,14 +5484,10 @@
     },
     "/api/course/review/get": {
       "get": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "getReviewById",
         "operationId": "getReviewByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -5938,17 +5540,11 @@
     },
     "/api/course/review/like": {
       "post": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "likeReview",
         "operationId": "likeReviewUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "reviewId",
@@ -6007,14 +5603,10 @@
     },
     "/api/course/review/list/page": {
       "get": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "listReviewsByPage",
         "operationId": "listReviewsByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -6085,14 +5677,10 @@
     },
     "/api/course/review/stats": {
       "get": {
-        "tags": [
-          "course-review-controller"
-        ],
+        "tags": ["course-review-controller"],
         "summary": "getRatingStats",
         "operationId": "getRatingStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -6145,17 +5733,11 @@
     },
     "/api/course/section/add": {
       "post": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "addSection",
         "operationId": "addSectionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -6216,14 +5798,10 @@
     },
     "/api/course/section/count": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "getSectionCount",
         "operationId": "getSectionCountUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -6276,17 +5854,11 @@
     },
     "/api/course/section/delete": {
       "post": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "deleteSection",
         "operationId": "deleteSectionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -6347,14 +5919,10 @@
     },
     "/api/course/section/duration": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "getTotalDuration",
         "operationId": "getTotalDurationUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -6407,14 +5975,10 @@
     },
     "/api/course/section/get": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "getSectionById",
         "operationId": "getSectionByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -6467,14 +6031,10 @@
     },
     "/api/course/section/list/chapter": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "listSectionsByChapterId",
         "operationId": "listSectionsByChapterIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "chapterId",
@@ -6527,14 +6087,10 @@
     },
     "/api/course/section/list/course": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "listSectionsByCourseId",
         "operationId": "listSectionsByCourseIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -6587,14 +6143,10 @@
     },
     "/api/course/section/list/page": {
       "get": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "listSectionsByPage",
         "operationId": "listSectionsByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "chapterId",
@@ -6673,17 +6225,11 @@
     },
     "/api/course/section/update": {
       "post": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "updateSection",
         "operationId": "updateSectionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -6744,17 +6290,11 @@
     },
     "/api/course/section/update/video": {
       "post": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "updateSectionVideo",
         "operationId": "updateSectionVideoUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -6820,17 +6360,11 @@
     },
     "/api/course/section/upload": {
       "post": {
-        "tags": [
-          "course-section-controller"
-        ],
+        "tags": ["course-section-controller"],
         "summary": "uploadVideoAndAddSection",
         "operationId": "uploadVideoAndAddSectionUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "chapterId",
@@ -6928,14 +6462,10 @@
     },
     "/api/course/teacher/{teacherId}": {
       "get": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "getCoursesByTeacher",
         "operationId": "getCoursesByTeacherUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "teacherId",
@@ -6988,17 +6518,11 @@
     },
     "/api/course/update": {
       "post": {
-        "tags": [
-          "course-controller"
-        ],
+        "tags": ["course-controller"],
         "summary": "updateCourse",
         "operationId": "updateCourseUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -7059,14 +6583,10 @@
     },
     "/api/daily/article/thumb/is-thumb/{articleId}": {
       "get": {
-        "tags": [
-          "daily-article-thumb-controller"
-        ],
+        "tags": ["daily-article-thumb-controller"],
         "summary": "isThumbArticle",
         "operationId": "isThumbArticleUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "articleId",
@@ -7119,17 +6639,11 @@
     },
     "/api/daily/article/thumb/{articleId}": {
       "post": {
-        "tags": [
-          "daily-article-thumb-controller"
-        ],
+        "tags": ["daily-article-thumb-controller"],
         "summary": "doArticleThumb",
         "operationId": "doArticleThumbUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "articleId",
@@ -7188,14 +6702,10 @@
     },
     "/api/daily/word/learning/get/{wordId}": {
       "get": {
-        "tags": [
-          "daily-word-learning-controller"
-        ],
+        "tags": ["daily-word-learning-controller"],
         "summary": "getUserDailyWord",
         "operationId": "getUserDailyWordUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -7248,17 +6758,11 @@
     },
     "/api/daily/word/learning/mark-studied/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-learning-controller"
-        ],
+        "tags": ["daily-word-learning-controller"],
         "summary": "markWordAsStudied",
         "operationId": "markWordAsStudiedUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -7317,17 +6821,11 @@
     },
     "/api/daily/word/learning/save-note/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-learning-controller"
-        ],
+        "tags": ["daily-word-learning-controller"],
         "summary": "saveWordNote",
         "operationId": "saveWordNoteUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "noteContent",
@@ -7393,17 +6891,11 @@
     },
     "/api/daily/word/learning/update-mastery/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-learning-controller"
-        ],
+        "tags": ["daily-word-learning-controller"],
         "summary": "updateMasteryLevel",
         "operationId": "updateMasteryLevelUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "masteryLevel",
@@ -7470,14 +6962,10 @@
     },
     "/api/daily/word/thumb/is-thumb/{wordId}": {
       "get": {
-        "tags": [
-          "daily-word-thumb-controller"
-        ],
+        "tags": ["daily-word-thumb-controller"],
         "summary": "isThumbWord",
         "operationId": "isThumbWordUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -7530,17 +7018,11 @@
     },
     "/api/daily/word/thumb/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-thumb-controller"
-        ],
+        "tags": ["daily-word-thumb-controller"],
         "summary": "doWordThumb",
         "operationId": "doWordThumbUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -7599,17 +7081,11 @@
     },
     "/api/dailyArticle/add": {
       "post": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "addDailyArticle",
         "operationId": "addDailyArticleUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -7670,14 +7146,10 @@
     },
     "/api/dailyArticle/date": {
       "get": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "getDailyArticleByDate",
         "operationId": "getDailyArticleByDateUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "date",
@@ -7730,17 +7202,11 @@
     },
     "/api/dailyArticle/delete": {
       "post": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "deleteDailyArticle",
         "operationId": "deleteDailyArticleUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -7801,14 +7267,10 @@
     },
     "/api/dailyArticle/favour/check/{articleId}": {
       "get": {
-        "tags": [
-          "daily-article-favour-controller"
-        ],
+        "tags": ["daily-article-favour-controller"],
         "summary": "isFavourArticle",
         "operationId": "isFavourArticleUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "articleId",
@@ -7861,17 +7323,11 @@
     },
     "/api/dailyArticle/favour/list/page/my": {
       "post": {
-        "tags": [
-          "daily-article-favour-controller"
-        ],
+        "tags": ["daily-article-favour-controller"],
         "summary": "listMyFavourArticleByPage",
         "operationId": "listMyFavourArticleByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -7932,17 +7388,11 @@
     },
     "/api/dailyArticle/favour/{articleId}": {
       "post": {
-        "tags": [
-          "daily-article-favour-controller"
-        ],
+        "tags": ["daily-article-favour-controller"],
         "summary": "doArticleFavour",
         "operationId": "doArticleFavourUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "articleId",
@@ -8001,14 +7451,10 @@
     },
     "/api/dailyArticle/get/vo": {
       "get": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "getDailyArticleVOById",
         "operationId": "getDailyArticleVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -8061,17 +7507,11 @@
     },
     "/api/dailyArticle/list/page": {
       "post": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "listDailyArticleByPage",
         "operationId": "listDailyArticleByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8132,17 +7572,11 @@
     },
     "/api/dailyArticle/list/page/vo": {
       "post": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "listDailyArticleVOByPage",
         "operationId": "listDailyArticleVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8203,14 +7637,10 @@
     },
     "/api/dailyArticle/recommend": {
       "get": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "getRecommendArticles",
         "operationId": "getRecommendArticlesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "category",
@@ -8279,14 +7709,10 @@
     },
     "/api/dailyArticle/today": {
       "get": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "getTodayArticle",
         "operationId": "getTodayArticleUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -8329,17 +7755,11 @@
     },
     "/api/dailyArticle/update": {
       "post": {
-        "tags": [
-          "daily-article-controller"
-        ],
+        "tags": ["daily-article-controller"],
         "summary": "updateDailyArticle",
         "operationId": "updateDailyArticleUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8400,17 +7820,11 @@
     },
     "/api/dailyWord/add": {
       "post": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "addDailyWord",
         "operationId": "addDailyWordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8471,14 +7885,10 @@
     },
     "/api/dailyWord/date": {
       "get": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "getDailyWordByDate",
         "operationId": "getDailyWordByDateUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "date",
@@ -8531,17 +7941,11 @@
     },
     "/api/dailyWord/delete": {
       "post": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "deleteDailyWord",
         "operationId": "deleteDailyWordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8602,14 +8006,10 @@
     },
     "/api/dailyWord/favour/check/{wordId}": {
       "get": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "isFavourWord",
         "operationId": "isFavourWordUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -8662,17 +8062,11 @@
     },
     "/api/dailyWord/favour/list/page/my": {
       "post": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "listMyFavourWordByPage",
         "operationId": "listMyFavourWordByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -8733,17 +8127,11 @@
     },
     "/api/dailyWord/favour/mastery/{wordId}/{masteryLevel}": {
       "post": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "updateMasteryLevel",
         "operationId": "updateMasteryLevelUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "masteryLevel",
@@ -8810,17 +8198,11 @@
     },
     "/api/dailyWord/favour/note/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "saveWordNote",
         "operationId": "saveWordNoteUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "noteContent",
@@ -8886,17 +8268,11 @@
     },
     "/api/dailyWord/favour/study/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "markWordAsStudied",
         "operationId": "markWordAsStudiedUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -8955,17 +8331,11 @@
     },
     "/api/dailyWord/favour/{wordId}": {
       "post": {
-        "tags": [
-          "daily-word-favour-controller"
-        ],
+        "tags": ["daily-word-favour-controller"],
         "summary": "doWordFavour",
         "operationId": "doWordFavourUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "wordId",
@@ -9024,14 +8394,10 @@
     },
     "/api/dailyWord/get/vo": {
       "get": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "getDailyWordVOById",
         "operationId": "getDailyWordVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -9084,17 +8450,11 @@
     },
     "/api/dailyWord/list/page": {
       "post": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "listDailyWordByPage",
         "operationId": "listDailyWordByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9155,17 +8515,11 @@
     },
     "/api/dailyWord/list/page/vo": {
       "post": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "listDailyWordVOByPage",
         "operationId": "listDailyWordVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9226,14 +8580,10 @@
     },
     "/api/dailyWord/random": {
       "get": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "getRandomWord",
         "operationId": "getRandomWordUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "difficulty",
@@ -9286,14 +8636,10 @@
     },
     "/api/dailyWord/today": {
       "get": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "getTodayWord",
         "operationId": "getTodayWordUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -9336,17 +8682,11 @@
     },
     "/api/dailyWord/update": {
       "post": {
-        "tags": [
-          "daily-word-controller"
-        ],
+        "tags": ["daily-word-controller"],
         "summary": "updateDailyWord",
         "operationId": "updateDailyWordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9407,17 +8747,11 @@
     },
     "/api/file/upload": {
       "post": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "summary": "uploadFile",
         "operationId": "uploadFileUsingPOST_1",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "base64Data",
@@ -9499,17 +8833,11 @@
     },
     "/api/file/upload/avatar": {
       "post": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "summary": "uploadAvatar",
         "operationId": "uploadAvatarUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -9567,17 +8895,11 @@
     },
     "/api/file/upload/document": {
       "post": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "summary": "uploadDocument",
         "operationId": "uploadDocumentUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -9635,17 +8957,11 @@
     },
     "/api/file/upload/material": {
       "post": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "summary": "uploadMaterial",
         "operationId": "uploadMaterialUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -9703,17 +9019,11 @@
     },
     "/api/file/upload/video": {
       "post": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "summary": "uploadVideo",
         "operationId": "uploadVideoUsingPOST",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "file",
@@ -9771,17 +9081,11 @@
     },
     "/api/post/add": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "addPost",
         "operationId": "addPostUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9842,17 +9146,11 @@
     },
     "/api/post/delete": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "deletePost",
         "operationId": "deletePostUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9913,17 +9211,11 @@
     },
     "/api/post/edit": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "editPost",
         "operationId": "editPostUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -9984,14 +9276,10 @@
     },
     "/api/post/get/vo": {
       "get": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "getPostVOById",
         "operationId": "getPostVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -10044,17 +9332,11 @@
     },
     "/api/post/list/page": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "listPostByPage",
         "operationId": "listPostByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10115,17 +9397,11 @@
     },
     "/api/post/list/page/vo": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "listPostVOByPage",
         "operationId": "listPostVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10186,17 +9462,11 @@
     },
     "/api/post/my/list/page/vo": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "listMyPostVOByPage",
         "operationId": "listMyPostVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10257,17 +9527,11 @@
     },
     "/api/post/search/page/vo": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "searchPostVOByPage",
         "operationId": "searchPostVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10328,17 +9592,11 @@
     },
     "/api/post/update": {
       "post": {
-        "tags": [
-          "post-controller"
-        ],
+        "tags": ["post-controller"],
         "summary": "updatePost",
         "operationId": "updatePostUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10399,17 +9657,11 @@
     },
     "/api/post_favour/": {
       "post": {
-        "tags": [
-          "post-favour-controller"
-        ],
+        "tags": ["post-favour-controller"],
         "summary": "doPostFavour",
         "operationId": "doPostFavourUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10470,17 +9722,11 @@
     },
     "/api/post_favour/list/page": {
       "post": {
-        "tags": [
-          "post-favour-controller"
-        ],
+        "tags": ["post-favour-controller"],
         "summary": "listFavourPostByPage",
         "operationId": "listFavourPostByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10541,17 +9787,11 @@
     },
     "/api/post_favour/my/list/page": {
       "post": {
-        "tags": [
-          "post-favour-controller"
-        ],
+        "tags": ["post-favour-controller"],
         "summary": "listMyFavourPostByPage",
         "operationId": "listMyFavourPostByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10612,17 +9852,11 @@
     },
     "/api/post_thumb/": {
       "post": {
-        "tags": [
-          "post-thumb-controller"
-        ],
+        "tags": ["post-thumb-controller"],
         "summary": "doThumb",
         "operationId": "doThumbUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10683,14 +9917,10 @@
     },
     "/api/setMenu": {
       "get": {
-        "tags": [
-          "wx-mp-controller"
-        ],
+        "tags": ["wx-mp-controller"],
         "summary": "setMenu",
         "operationId": "setMenuUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -10731,17 +9961,11 @@
     },
     "/api/teacher/add": {
       "post": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "addTeacher",
         "operationId": "addTeacherUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10802,14 +10026,10 @@
     },
     "/api/teacher/courses/{teacherId}": {
       "get": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "getTeacherCourses",
         "operationId": "getTeacherCoursesUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "teacherId",
@@ -10862,17 +10082,11 @@
     },
     "/api/teacher/delete": {
       "post": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "deleteTeacher",
         "operationId": "deleteTeacherUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -10933,14 +10147,10 @@
     },
     "/api/teacher/get": {
       "get": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "getTeacherById",
         "operationId": "getTeacherByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -10993,14 +10203,10 @@
     },
     "/api/teacher/get/vo": {
       "get": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "getTeacherVOById",
         "operationId": "getTeacherVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -11053,17 +10259,11 @@
     },
     "/api/teacher/list/page": {
       "post": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "listTeacherByPage",
         "operationId": "listTeacherByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11124,17 +10324,11 @@
     },
     "/api/teacher/list/page/vo": {
       "post": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "listTeacherVOByPage",
         "operationId": "listTeacherVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11195,14 +10389,10 @@
     },
     "/api/teacher/recommend": {
       "get": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "getRecommendTeachers",
         "operationId": "getRecommendTeachersUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "expertise",
@@ -11254,17 +10444,11 @@
     },
     "/api/teacher/update": {
       "post": {
-        "tags": [
-          "teacher-controller"
-        ],
+        "tags": ["teacher-controller"],
         "summary": "updateTeacher",
         "operationId": "updateTeacherUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11325,17 +10509,11 @@
     },
     "/api/user/add": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "addUser",
         "operationId": "addUserUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11396,17 +10574,11 @@
     },
     "/api/user/delete": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "deleteUser",
         "operationId": "deleteUserUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11467,14 +10639,10 @@
     },
     "/api/user/get": {
       "get": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "getUserById",
         "operationId": "getUserByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -11527,14 +10695,10 @@
     },
     "/api/user/get/login": {
       "get": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "getLoginUser",
         "operationId": "getLoginUserUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -11577,14 +10741,10 @@
     },
     "/api/user/get/vo": {
       "get": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "getUserVOById",
         "operationId": "getUserVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -11637,17 +10797,11 @@
     },
     "/api/user/learning/record/add": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "addUserLearningRecord",
         "operationId": "addUserLearningRecordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11708,17 +10862,11 @@
     },
     "/api/user/learning/record/delete": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "deleteUserLearningRecord",
         "operationId": "deleteUserLearningRecordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11779,14 +10927,10 @@
     },
     "/api/user/learning/record/get": {
       "get": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "getUserLearningRecordById",
         "operationId": "getUserLearningRecordByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -11839,17 +10983,11 @@
     },
     "/api/user/learning/record/list/page": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "listUserLearningRecordByPage",
         "operationId": "listUserLearningRecordByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11910,17 +11048,11 @@
     },
     "/api/user/learning/record/my/list/page": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "listMyUserLearningRecordByPage",
         "operationId": "listMyUserLearningRecordByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -11981,14 +11113,10 @@
     },
     "/api/user/learning/record/my/stats/count": {
       "get": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "getMyLearningCountStats",
         "operationId": "getMyLearningCountStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "endDate",
@@ -12049,14 +11177,10 @@
     },
     "/api/user/learning/record/my/stats/daily": {
       "get": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "getMyDailyLearningStats",
         "operationId": "getMyDailyLearningStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "endDate",
@@ -12117,14 +11241,10 @@
     },
     "/api/user/learning/record/my/stats/duration": {
       "get": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "getMyLearningDurationStats",
         "operationId": "getMyLearningDurationStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "endDate",
@@ -12185,14 +11305,10 @@
     },
     "/api/user/learning/record/my/stats/points": {
       "get": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "getMyPointsAndExperienceStats",
         "operationId": "getMyPointsAndExperienceStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "endDate",
@@ -12253,17 +11369,11 @@
     },
     "/api/user/learning/record/record/course": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "recordCourseStudy",
         "operationId": "recordCourseStudyUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "courseId",
@@ -12346,17 +11456,11 @@
     },
     "/api/user/learning/record/record/listening": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "recordListeningPractice",
         "operationId": "recordListeningPracticeUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "accuracy",
@@ -12431,17 +11535,11 @@
     },
     "/api/user/learning/record/record/reading": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "recordReadingPractice",
         "operationId": "recordReadingPracticeUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "accuracy",
@@ -12516,17 +11614,11 @@
     },
     "/api/user/learning/record/record/word": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "recordWordStudy",
         "operationId": "recordWordStudyUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "accuracy",
@@ -12601,17 +11693,11 @@
     },
     "/api/user/learning/record/update": {
       "post": {
-        "tags": [
-          "user-learning-record-controller"
-        ],
+        "tags": ["user-learning-record-controller"],
         "summary": "updateUserLearningRecord",
         "operationId": "updateUserLearningRecordUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -12672,17 +11758,11 @@
     },
     "/api/user/level/add": {
       "post": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "addUserLevel",
         "operationId": "addUserLevelUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -12743,14 +11823,10 @@
     },
     "/api/user/level/by-experience": {
       "get": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "getUserLevelByExperience",
         "operationId": "getUserLevelByExperienceUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "experience",
@@ -12803,17 +11879,11 @@
     },
     "/api/user/level/delete": {
       "post": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "deleteUserLevel",
         "operationId": "deleteUserLevelUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -12874,14 +11944,10 @@
     },
     "/api/user/level/get": {
       "get": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "getUserLevelById",
         "operationId": "getUserLevelByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -12934,14 +12000,10 @@
     },
     "/api/user/level/get/vo": {
       "get": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "getUserLevelVOById",
         "operationId": "getUserLevelVOByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -12994,14 +12056,10 @@
     },
     "/api/user/level/list": {
       "get": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "getAllUserLevels",
         "operationId": "getAllUserLevelsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -13044,17 +12102,11 @@
     },
     "/api/user/level/list/page": {
       "post": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "listUserLevelByPage",
         "operationId": "listUserLevelByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13115,17 +12167,11 @@
     },
     "/api/user/level/list/page/vo": {
       "post": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "listUserLevelVOByPage",
         "operationId": "listUserLevelVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13186,14 +12232,10 @@
     },
     "/api/user/level/next": {
       "get": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "getNextUserLevel",
         "operationId": "getNextUserLevelUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "currentLevel",
@@ -13246,17 +12288,11 @@
     },
     "/api/user/level/update": {
       "post": {
-        "tags": [
-          "user-level-controller"
-        ],
+        "tags": ["user-level-controller"],
         "summary": "updateUserLevel",
         "operationId": "updateUserLevelUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13317,17 +12353,11 @@
     },
     "/api/user/list/page": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "listUserByPage",
         "operationId": "listUserByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13388,17 +12418,11 @@
     },
     "/api/user/list/page/vo": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "listUserVOByPage",
         "operationId": "listUserVOByPageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13459,17 +12483,11 @@
     },
     "/api/user/login": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userLogin",
         "operationId": "userLoginUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13530,17 +12548,11 @@
     },
     "/api/user/login/phone": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userLoginByPhone",
         "operationId": "userLoginByPhoneUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13601,14 +12613,10 @@
     },
     "/api/user/login/wx_open": {
       "get": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userLoginByWxOpen",
         "operationId": "userLoginByWxOpenUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "code",
@@ -13660,17 +12668,11 @@
     },
     "/api/user/logout": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userLogout",
         "operationId": "userLogoutUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -13719,17 +12721,11 @@
     },
     "/api/user/register": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userRegister",
         "operationId": "userRegisterUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13790,17 +12786,11 @@
     },
     "/api/user/register/phone": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "userRegisterByPhone",
         "operationId": "userRegisterByPhoneUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -13861,17 +12851,11 @@
     },
     "/api/user/stats/admin/add/badge": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "addUserBadgeByAdmin",
         "operationId": "addUserBadgeByAdminUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "count",
@@ -13938,17 +12922,11 @@
     },
     "/api/user/stats/admin/add/experience": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "addUserExperienceByAdmin",
         "operationId": "addUserExperienceByAdminUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "experience",
@@ -14015,17 +12993,11 @@
     },
     "/api/user/stats/admin/add/points": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "addUserPointsByAdmin",
         "operationId": "addUserPointsByAdminUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "points",
@@ -14092,17 +13064,11 @@
     },
     "/api/user/stats/admin/init": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "initUserLearningStatsByAdmin",
         "operationId": "initUserLearningStatsByAdminUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "userId",
@@ -14161,17 +13127,11 @@
     },
     "/api/user/stats/admin/update/level": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "updateUserLevelByAdmin",
         "operationId": "updateUserLevelByAdminUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "newLevel",
@@ -14246,14 +13206,10 @@
     },
     "/api/user/stats/admin/user": {
       "get": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "getUserLearningStatsByAdmin",
         "operationId": "getUserLearningStatsByAdminUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "userId",
@@ -14306,17 +13262,11 @@
     },
     "/api/user/stats/check-in": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "userCheckIn",
         "operationId": "userCheckInUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -14365,14 +13315,10 @@
     },
     "/api/user/stats/my": {
       "get": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "getMyLearningStats",
         "operationId": "getMyLearningStatsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -14415,17 +13361,11 @@
     },
     "/api/user/stats/update/learning-day": {
       "post": {
-        "tags": [
-          "user-learning-stats-controller"
-        ],
+        "tags": ["user-learning-stats-controller"],
         "summary": "updateLearningDay",
         "operationId": "updateLearningDayUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -14474,17 +13414,11 @@
     },
     "/api/user/update": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "updateUser",
         "operationId": "updateUserUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -14545,17 +13479,11 @@
     },
     "/api/user/update/my": {
       "post": {
-        "tags": [
-          "user-controller"
-        ],
+        "tags": ["user-controller"],
         "summary": "updateMyUser",
         "operationId": "updateMyUserUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -14616,17 +13544,11 @@
     },
     "/api/user_ai_avatar/add": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "addUserAiAvatar",
         "operationId": "addUserAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -14687,17 +13609,11 @@
     },
     "/api/user_ai_avatar/delete": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "deleteUserAiAvatar",
         "operationId": "deleteUserAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -14758,17 +13674,11 @@
     },
     "/api/user_ai_avatar/favorite": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "favoriteAiAvatar",
         "operationId": "favoriteAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -14835,14 +13745,10 @@
     },
     "/api/user_ai_avatar/favorite/list": {
       "get": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "listFavoriteAiAvatars",
         "operationId": "listFavoriteAiAvatarsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -14885,14 +13791,10 @@
     },
     "/api/user_ai_avatar/get": {
       "get": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "getUserAiAvatarById",
         "operationId": "getUserAiAvatarByIdUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "id",
@@ -14945,14 +13847,10 @@
     },
     "/api/user_ai_avatar/my/list": {
       "get": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "listMyUserAiAvatars",
         "operationId": "listMyUserAiAvatarsUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "responses": {
           "200": {
             "description": "OK",
@@ -14995,14 +13893,10 @@
     },
     "/api/user_ai_avatar/my/list/page": {
       "get": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "listMyUserAiAvatarsByPage",
         "operationId": "listMyUserAiAvatarsByPageUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -15114,17 +14008,11 @@
     },
     "/api/user_ai_avatar/rate": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "rateAiAvatar",
         "operationId": "rateAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",
@@ -15197,17 +14085,11 @@
     },
     "/api/user_ai_avatar/update": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "updateUserAiAvatar",
         "operationId": "updateUserAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "in": "body",
@@ -15268,17 +14150,11 @@
     },
     "/api/user_ai_avatar/use": {
       "post": {
-        "tags": [
-          "user-ai-avatar-controller"
-        ],
+        "tags": ["user-ai-avatar-controller"],
         "summary": "useAiAvatar",
         "operationId": "useAiAvatarUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
         "parameters": [
           {
             "name": "aiAvatarId",

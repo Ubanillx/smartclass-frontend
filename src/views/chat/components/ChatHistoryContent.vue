@@ -3,47 +3,23 @@
     <div class="history-container">
       <transition-group name="chat-fade" tag="div">
         <!-- 对话记录列表 -->
-        <chat-list 
+        <chat-list
           v-if="!loading && !error && total > 0"
-          :key="'chat-list-' + currentPage" 
-          :chats="transformedChatHistory" 
-          :show-status="false" 
-          @select="handleChatSelect" 
+          :key="'chat-list-' + currentPage"
+          :chats="transformedChatHistory"
+          :show-status="false"
+          @select="handleChatSelect"
           @long-press="handleLongPress"
         />
       </transition-group>
-      
-      <!-- 分页控件 -->
-      <div class="pagination-container" v-if="total > 0 && !loading && !error">
-        <!-- 统一使用大屏幕分页样式 -->
-        <van-pagination 
-          v-model="currentPage" 
-          :total-items="total" 
-          :items-per-page="pageSize" 
-          :show-page-size="5"
-          force-ellipses
-          @change="handlePageChange"
-          class="custom-pagination"
-        >
-          <template #prev-text>
-            <van-icon name="arrow-left" />
-          </template>
-          <template #next-text>
-            <van-icon name="arrow" />
-          </template>
-          <template #page-desc>
-            <span class="page-desc-text">{{ currentPage }}/{{ totalPages }} 页</span>
-          </template>
-        </van-pagination>
-      </div>
-      
+
       <!-- 空状态提示 -->
-      <van-empty 
-        v-if="total === 0 && !loading && !error" 
+      <van-empty
+        v-if="total === 0 && !loading && !error"
         description="暂无对话记录"
         class="empty-state"
       />
-      
+
       <!-- 加载状态 -->
       <div v-if="loading" class="loading-container">
         <van-loading type="spinner" size="32" color="#1989fa" />
@@ -51,14 +27,24 @@
       </div>
 
       <!-- 错误状态 -->
-      <network-error 
-        v-if="error" 
-        :message="error" 
+      <network-error
+        v-if="error"
+        :message="error"
         :loading="retryLoading"
         @retry="retryLoadData"
       />
+
+      <!-- 分页组件（放在列表后面） -->
+      <chat-pagination
+        v-if="total > 0 && !loading && !error"
+        :total-items="total"
+        :page-size="pageSize"
+        :total-pages="totalPages"
+        :initial-page="currentPage"
+        @page-change="handlePageChange"
+      />
     </div>
-    
+
     <!-- 操作菜单 -->
     <van-action-sheet
       v-model:show="showActionSheet"
@@ -85,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { ChatList } from '../../../components/Dialogue';
+import { ChatList, ChatPagination } from '../../../components/Dialogue';
 import { NetworkError } from '../../../components/Common';
 import { AiAvatarChatControllerService } from '../../../services/services/AiAvatarChatControllerService.ts';
 import type { ChatMessageVO } from '../../../services/models/ChatMessageVO.ts';
@@ -131,9 +117,7 @@ const showDeleteConfirm = ref(false);
 const chatToDelete = ref<ChatItemType | null>(null);
 
 // 定义操作菜单选项
-const actionOptions = [
-  { name: '删除对话', color: '#ee0a24' }
-];
+const actionOptions = [{ name: '删除对话', color: '#ee0a24' }];
 
 // 存储从API获取的聊天历史
 const chatMessages = ref<ChatMessageVO[]>([]);
@@ -153,13 +137,13 @@ const transformedChatHistory = computed(() => {
     tags?: string[];
     type: number;
   }> = [];
-  
+
   // 直接使用接口返回的数据，不做筛选
   for (const message of chatMessages.value) {
     const content = message.content || '';
     const messageType = message.messageType || '对话';
     const sessionId = message.sessionId || String(message.id || '0');
-    
+
     result.push({
       id: message.id || 0,
       sessionId: sessionId,
@@ -168,13 +152,15 @@ const transformedChatHistory = computed(() => {
       avatar: message.aiAvatarImgUrl || '/default.jpg',
       lastMessage: content,
       summary: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
-      lastTime: message.createTime ? formatTime(message.createTime) : '未知时间',
+      lastTime: message.createTime
+        ? formatTime(message.createTime)
+        : '未知时间',
       online: false,
       tags: [messageType],
       type: 1,
     });
   }
-  
+
   return result;
 });
 
@@ -189,16 +175,19 @@ const retryLoadData = () => {
 // 格式化时间显示
 const formatTime = (timeStr: string | undefined): string => {
   if (!timeStr) return '未知时间';
-  
+
   try {
     const date = new Date(timeStr);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) {
-      return date.getHours().toString().padStart(2, '0') + ':' + 
-             date.getMinutes().toString().padStart(2, '0');
+      return (
+        date.getHours().toString().padStart(2, '0') +
+        ':' +
+        date.getMinutes().toString().padStart(2, '0')
+      );
     } else if (diffDays === 1) {
       return '昨天';
     } else if (diffDays < 7) {
@@ -217,19 +206,20 @@ const loadChatHistory = async () => {
   loading.value = true;
   error.value = '';
   try {
-    const response = await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
-      undefined,
-      currentPage.value,
-      pageSize.value
-    );
-    
+    const response =
+      await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
+        undefined,
+        currentPage.value,
+        pageSize.value,
+      );
+
     if (response.code === 0 && response.data) {
       // 使用接口返回的分页参数
       total.value = parseInt(String(response.data.total || '0'));
       pageSize.value = parseInt(String(response.data.size || '10'));
       currentPage.value = parseInt(String(response.data.current || '1'));
       totalPages.value = parseInt(String(response.data.pages || '1'));
-      
+
       // 直接使用API返回的记录，不做任何筛选
       chatMessages.value = response.data.records || [];
     } else {
@@ -272,7 +262,7 @@ const handleActionSelect = (action: ActionOption) => {
 // 确认删除对话
 const confirmDelete = async () => {
   if (!chatToDelete.value) return;
-  
+
   loading.value = true;
   error.value = '';
   try {
@@ -285,9 +275,10 @@ const confirmDelete = async () => {
     } else {
       sessionId = String(chatToDelete.value.id);
     }
-    
-    const response = await AiAvatarChatControllerService.deleteSessionUsingPost(sessionId);
-    
+
+    const response =
+      await AiAvatarChatControllerService.deleteSessionUsingPost(sessionId);
+
     if (response.code === 0 && response.data) {
       showSuccessToast('删除成功');
       // 刷新列表
@@ -316,7 +307,7 @@ onMounted(() => {
   width: 100%;
   position: relative;
   min-height: 200px;
-  padding-bottom: 70px; /* 增加底部padding，为固定的分页栏腾出空间 */
+  padding-bottom: 20px; /* 减小底部内边距 */
 }
 
 .history-container {
@@ -366,94 +357,6 @@ onMounted(() => {
 .chat-fade-leave-to {
   opacity: 0;
   transform: translateY(-20px);
-}
-
-.pagination-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 15px;
-  background-color: transparent;
-  box-sizing: border-box;
-  position: fixed;
-  bottom: 50px; /* 调整位置，恰好与底部导航栏接缝 */
-  left: 0;
-  right: 0;
-  z-index: 99;
-  margin: 0;
-  max-width: 100%;
-  box-shadow: none;
-  border-radius: 0;
-}
-
-/* 响应式设计调整 */
-@media (max-width: 480px) {
-  .pagination-container {
-    padding: 8px 12px;
-  }
-}
-
-@media (min-width: 481px) {
-  .pagination-container {
-    max-width: 100%;
-    padding: 10px 15px;
-  }
-}
-
-/* 自定义分页样式 */
-:deep(.custom-pagination) {
-  --van-pagination-height: 40px;
-  --van-pagination-item-width: 40px;
-  --van-pagination-item-margin: 0 5px;
-  --van-pagination-item-default-color: #1989fa;
-  --van-pagination-item-font-size: 15px;
-  --van-pagination-item-border-width: 0;
-  --van-pagination-background-color: transparent;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-}
-
-:deep(.custom-pagination .van-pagination__item) {
-  border-radius: 8px;
-  background-color: #E0F1FE;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.custom-pagination .van-pagination__item--active) {
-  background-color: #1989fa;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(25, 137, 250, 0.3);
-  transform: scale(1.05);
-}
-
-:deep(.custom-pagination .van-pagination__prev),
-:deep(.custom-pagination .van-pagination__next) {
-  background-color: #E0F1FE;
-  color: #666;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.custom-pagination .van-pagination__prev:active),
-:deep(.custom-pagination .van-pagination__next:active),
-:deep(.custom-pagination .van-pagination__item:active) {
-  transform: scale(0.95);
-  opacity: 0.8;
-}
-
-:deep(.custom-pagination .van-pagination__page-desc) {
-  color: #666;
-  font-size: 13px;
-  margin: 0 10px;
-}
-
-.page-desc-text {
-  font-family: 'Noto Sans SC', sans-serif;
-  color: #666;
 }
 
 /* 平滑切换效果 */

@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type StopStreamingRequest = {
-    aiAvatarId?: number;
-    taskId?: string;
+  aiAvatarId?: number;
+  taskId?: string;
 };
-

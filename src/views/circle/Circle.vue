@@ -12,7 +12,7 @@
           <van-icon name="search" class="action-icon" @click="handleSearch" />
         </div>
       </div>
-      
+
       <!-- 导航栏 -->
       <div class="nav-tabs">
         <div
@@ -103,7 +103,7 @@ const handlePublish = () => {
   display: flex;
   flex-direction: column;
   padding-bottom: 66px;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
   position: relative;
 }
@@ -114,7 +114,7 @@ const handlePublish = () => {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   padding: 16px 16px 0;
 }
 
@@ -229,4 +229,4 @@ const handlePublish = () => {
   z-index: 999;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-</style> 
+</style>

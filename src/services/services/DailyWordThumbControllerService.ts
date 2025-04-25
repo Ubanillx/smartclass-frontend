@@ -8,49 +8,49 @@ import type { CancelablePromise } from '../core/CancelablePromise.ts';
 import { OpenAPI } from '../core/OpenAPI.ts';
 import { request as __request } from '../core/request.ts';
 export class DailyWordThumbControllerService {
-    /**
-     * isThumbWord
-     * @param wordId wordId
-     * @returns BaseResponse_boolean_ OK
-     * @throws ApiError
-     */
-    public static isThumbWordUsingGet(
-        wordId: number,
-    ): CancelablePromise<BaseResponse_boolean_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/daily/word/thumb/is-thumb/{wordId}',
-            path: {
-                'wordId': wordId,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * doWordThumb
-     * @param wordId wordId
-     * @returns BaseResponse_int_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static doWordThumbUsingPost(
-        wordId: number,
-    ): CancelablePromise<BaseResponse_int_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/daily/word/thumb/{wordId}',
-            path: {
-                'wordId': wordId,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
+  /**
+   * isThumbWord
+   * @param wordId wordId
+   * @returns BaseResponse_boolean_ OK
+   * @throws ApiError
+   */
+  public static isThumbWordUsingGet(
+    wordId: number,
+  ): CancelablePromise<BaseResponse_boolean_> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/daily/word/thumb/is-thumb/{wordId}',
+      path: {
+        wordId: wordId,
+      },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+  /**
+   * doWordThumb
+   * @param wordId wordId
+   * @returns BaseResponse_int_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static doWordThumbUsingPost(
+    wordId: number,
+  ): CancelablePromise<BaseResponse_int_ | any> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/daily/word/thumb/{wordId}',
+      path: {
+        wordId: wordId,
+      },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
 }

@@ -73,7 +73,11 @@ import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { BackButton } from '../../components/Common';
 import ArticleContent from './components/ArticleContent.vue';
-import { mockArticles, generateMockArticles, type Article } from '../../api/mock';
+import {
+  mockArticles,
+  generateMockArticles,
+  type Article,
+} from '../../api/mock';
 
 const router = useRouter();
 const route = useRoute();
@@ -98,7 +102,9 @@ const filteredArticles = computed(() => {
   if (!category.value) {
     return articles.value;
   }
-  return articles.value.filter((article) => article.category === category.value);
+  return articles.value.filter(
+    (article) => article.category === category.value,
+  );
 });
 
 // 点击文章显示详情

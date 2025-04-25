@@ -3,12 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserLevelAddRequest = {
-    description?: string;
-    iconUrl?: string;
-    level?: number;
-    levelName?: string;
-    maxExperience?: number;
-    minExperience?: number;
-    privileges?: string;
+  description?: string;
+  iconUrl?: string;
+  level?: number;
+  levelName?: string;
+  maxExperience?: number;
+  minExperience?: number;
+  privileges?: string;
 };
-

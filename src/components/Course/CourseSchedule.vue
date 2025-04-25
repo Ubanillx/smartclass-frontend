@@ -20,22 +20,24 @@
       <!-- 每天的课程列 -->
       <div v-for="day in weekdays" :key="day.value" class="day-column">
         <div class="weekday-header">{{ day.text }}</div>
-        
+
         <!-- 课程卡片 -->
         <div class="course-slots">
-          <div 
-            v-for="course in getDayCourses(day.value)" 
-            :key="course.id" 
+          <div
+            v-for="course in getDayCourses(day.value)"
+            :key="course.id"
             class="course-card"
             :style="{
               top: getTopPosition(course),
               height: getHeight(course),
-              backgroundColor: course.color
+              backgroundColor: course.color,
             }"
             @click="showCourseDetails(course)"
           >
             <div class="course-title">{{ course.title }}</div>
-            <div class="course-info">{{ course.startTime }}-{{ course.endTime }}</div>
+            <div class="course-info">
+              {{ course.startTime }}-{{ course.endTime }}
+            </div>
             <div class="course-info">{{ course.classroom }}</div>
           </div>
         </div>
@@ -43,16 +45,27 @@
     </div>
 
     <!-- 课程详情弹出层 -->
-    <van-popup v-model:show="showDetails" round position="bottom" :style="{ height: '40%' }">
+    <van-popup
+      v-model:show="showDetails"
+      round
+      position="bottom"
+      :style="{ height: '40%' }"
+    >
       <div v-if="selectedCourse" class="course-details">
-        <div class="details-header" :style="{ backgroundColor: selectedCourse.color }">
+        <div
+          class="details-header"
+          :style="{ backgroundColor: selectedCourse.color }"
+        >
           <h3>{{ selectedCourse.title }}</h3>
           <p>{{ selectedCourse.subject }}</p>
         </div>
         <div class="details-content">
           <div class="details-item">
             <van-icon name="clock-o" />
-            <span>{{ selectedCourse.startTime }} - {{ selectedCourse.endTime }}</span>
+            <span
+              >{{ selectedCourse.startTime }} -
+              {{ selectedCourse.endTime }}</span
+            >
           </div>
           <div class="details-item">
             <van-icon name="location-o" />
@@ -64,7 +77,9 @@
           </div>
         </div>
         <div class="details-actions">
-          <van-button type="primary" block @click="startLearning">开始学习</van-button>
+          <van-button type="primary" block @click="startLearning"
+            >开始学习</van-button
+          >
         </div>
       </div>
     </van-popup>
@@ -98,7 +113,7 @@ const timeSlots = [
   '14:00',
   '15:00',
   '16:00',
-  '17:00'
+  '17:00',
 ];
 
 // 一周的天数
@@ -107,7 +122,7 @@ const weekdays = [
   { text: '周二', value: 2 },
   { text: '周三', value: 3 },
   { text: '周四', value: 4 },
-  { text: '周五', value: 5 }
+  { text: '周五', value: 5 },
 ];
 
 // 计算当前周文本
@@ -129,7 +144,7 @@ const schedule = computed(() => {
 
 // 获取指定日期的课程
 const getDayCourses = (day: number) => {
-  return schedule.value.filter(course => course.day === day);
+  return schedule.value.filter((course) => course.day === day);
 };
 
 // 计算课程卡片的顶部位置
@@ -137,12 +152,12 @@ const getTopPosition = (course: ScheduleCourse) => {
   // 假设每小时高度为100px，8:00为起始时间
   const startHour = parseInt(course.startTime);
   const startMinute = parseInt(course.startTime.substring(3));
-  
+
   // 计算相对于08:00的分钟数
   const minutesFromStart = (startHour - 8) * 60 + startMinute;
-  
+
   // 转化为像素位置 (每分钟的高度 = 100px/60min)
-  return `${minutesFromStart * (100/60)}px`;
+  return `${minutesFromStart * (100 / 60)}px`;
 };
 
 // 计算课程卡片的高度
@@ -152,12 +167,13 @@ const getHeight = (course: ScheduleCourse) => {
   const startMinute = parseInt(course.startTime.substring(3, 5));
   const endHour = parseInt(course.endTime.substring(0, 2));
   const endMinute = parseInt(course.endTime.substring(3, 5));
-  
+
   // 计算总分钟数
-  const durationMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-  
+  const durationMinutes =
+    (endHour - startHour) * 60 + (endMinute - startMinute);
+
   // 转化为像素高度
-  return `${durationMinutes * (100/60)}px`;
+  return `${durationMinutes * (100 / 60)}px`;
 };
 
 // 上一周
@@ -353,4 +369,4 @@ const startLearning = () => {
   padding: 16px;
   border-top: 1px solid #f2f2f2;
 }
-</style> 
+</style>

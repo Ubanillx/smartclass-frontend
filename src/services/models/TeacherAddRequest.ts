@@ -3,11 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TeacherAddRequest = {
-    avatar?: string;
-    expertise?: string;
-    introduction?: string;
-    name?: string;
-    title?: string;
-    userId?: number;
+  avatar?: string;
+  expertise?: string;
+  introduction?: string;
+  name?: string;
+  title?: string;
+  userId?: number;
 };
-

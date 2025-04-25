@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { ChatMessageVO } from './ChatMessageVO.ts';
 export type BaseResponse_ChatMessageVO_ = {
-    code?: number;
-    data?: ChatMessageVO;
-    message?: string;
+  code?: number;
+  data?: ChatMessageVO;
+  message?: string;
 };
-

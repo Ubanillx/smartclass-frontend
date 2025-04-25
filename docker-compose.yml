@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: smartclass-frontend
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       - API_BASE_URL=http://backend.smartclass.ubanillx.cn/api
     restart: always
@@ -16,4 +16,4 @@ services:
 
 networks:
   smartclass-network:
-    driver: bridge 
+    driver: bridge

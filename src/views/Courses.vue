@@ -9,11 +9,19 @@
           <span>课程</span>
         </div>
         <div class="header-actions">
-          <van-icon name="calendar-o" class="action-icon" @click="handleShowSchedule" />
-          <van-icon name="todo-list-o" class="action-icon" @click="handleShowTasks" />
+          <van-icon
+            name="calendar-o"
+            class="action-icon"
+            @click="handleShowSchedule"
+          />
+          <van-icon
+            name="todo-list-o"
+            class="action-icon"
+            @click="handleShowTasks"
+          />
         </div>
       </div>
-      
+
       <!-- 课程分类 -->
       <course-categories
         :categories="categories"
@@ -48,7 +56,9 @@
                 v-for="option in gradeOptions"
                 :key="option.value"
                 class="dropdown-option"
-                :class="{ 'dropdown-option-active': gradeValue === option.value }"
+                :class="{
+                  'dropdown-option-active': gradeValue === option.value,
+                }"
                 @click="selectGrade(option.value)"
               >
                 {{ option.text }}
@@ -89,7 +99,7 @@ import { showToast } from 'vant';
 import {
   CourseCategories,
   CourseList,
-  CourseDetail
+  CourseDetail,
 } from '../components/Course';
 import { BackButton } from '../components/Common';
 import { Course as CourseType } from '../api/mock';
@@ -265,15 +275,15 @@ const recommendedCourses = ref<EnhancedCourse[]>([
     id: 1,
     title: '填空选择秒选大招合集',
     brief: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
-    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/f8b3549a57984426bd563291f081f9bf.png',
+    cover:
+      'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/f8b3549a57984426bd563291f081f9bf.png',
     tag: '数学',
     tagColor: '#1989fa',
     grade: '高一',
     level: '中级',
     duration: 30,
     studentsCount: 1234,
-    description:
-      '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
+    description: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
     highlights: [
       { icon: 'smile-o', color: '#ff976a', text: '趣味教学' },
       { icon: 'music-o', color: '#07c160', text: '互动练习' },
@@ -284,7 +294,8 @@ const recommendedCourses = ref<EnhancedCourse[]>([
     id: 2,
     title: '典型实验大题解答合集',
     brief: '本课程通过有趣的动画和游戏互动，帮助同学们掌握...',
-    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/65e2cbeb958c47c4be3dcf06aa00057a.png',
+    cover:
+      'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/65e2cbeb958c47c4be3dcf06aa00057a.png',
     tag: '物理',
     tagColor: '#07c160',
     grade: '初三',
@@ -297,7 +308,8 @@ const recommendedCourses = ref<EnhancedCourse[]>([
     id: 3,
     title: '科学实验室探索',
     brief: '动手做实验，探索科学奥秘',
-    cover: 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/88e4f754e8d2413ea55a0c1c7d7f7b46.png',
+    cover:
+      'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/88e4f754e8d2413ea55a0c1c7d7f7b46.png',
     tag: '科学',
     tagColor: '#7232dd',
     grade: '初三',
@@ -387,7 +399,7 @@ const startLearning = () => {
   display: flex;
   flex-direction: column;
   padding-bottom: 66px;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
   position: relative;
 }
@@ -398,7 +410,7 @@ const startLearning = () => {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   padding: 16px 16px 0;
 }
 

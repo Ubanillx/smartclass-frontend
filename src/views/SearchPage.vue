@@ -1,14 +1,14 @@
 <template>
   <div class="search-page">
     <div class="header-container">
-      <van-icon 
+      <van-icon
         name="arrow-left"
         class="back-btn"
-        @click.stop="handleBack"  
+        @click.stop="handleBack"
         aria-label="返回按钮"
       />
-      
-      <van-search 
+
+      <van-search
         v-model="searchValue"
         :placeholder="placeholder"
         shape="round"
@@ -20,11 +20,7 @@
         class="search-input"
       >
         <template #left-icon>
-          <van-icon 
-            name="search" 
-            size="18" 
-            class="search-icon"
-          />
+          <van-icon name="search" size="18" class="search-icon" />
         </template>
       </van-search>
     </div>
@@ -36,8 +32,8 @@
         <div class="hot-search">
           <h3 class="section-title">热门搜索</h3>
           <div class="recommendations">
-            <span 
-              v-for="(tag, index) in randomHotWords" 
+            <span
+              v-for="(tag, index) in randomHotWords"
               :key="index"
               class="recommend-tag"
               @click="handleTagClick(tag)"
@@ -48,13 +44,16 @@
             </span>
           </div>
         </div>
-        
+
         <!-- 搜索建议，输入文字时显示 -->
-        <div v-if="filteredRecommendations.length && searchValue" class="search-suggestions">
+        <div
+          v-if="filteredRecommendations.length && searchValue"
+          class="search-suggestions"
+        >
           <h3 class="section-title">搜索建议</h3>
           <div class="recommendations">
-            <span 
-              v-for="(tag, index) in filteredRecommendations" 
+            <span
+              v-for="(tag, index) in filteredRecommendations"
               :key="index"
               class="recommend-tag"
               @click="handleTagClick(tag)"
@@ -65,11 +64,14 @@
             </span>
           </div>
         </div>
-        
+
         <!-- 历史记录显示 -->
-        <div v-if="searchStore.searchHistory.length && !searchValue" class="history-records">
+        <div
+          v-if="searchStore.searchHistory.length && !searchValue"
+          class="history-records"
+        >
           <h3 class="section-title">搜索历史</h3>
-          <div 
+          <div
             v-for="(record, index) in processedHistory"
             :key="index"
             class="record-item"
@@ -79,10 +81,10 @@
           >
             <van-icon name="clock" class="history-icon" />
             <span class="text">{{ record }}</span>
-            <van-icon 
-              name="cross" 
+            <van-icon
+              name="cross"
               class="delete-icon"
-              @click.stop="deleteRecord(index)" 
+              @click.stop="deleteRecord(index)"
             />
           </div>
         </div>
@@ -91,9 +93,9 @@
       <!-- 搜索结果列表 -->
       <div ref="container" class="search-results">
         <ul ref="list">
-          <li 
-            v-for="(item, index) in searchList" 
-            :key="index" 
+          <li
+            v-for="(item, index) in searchList"
+            :key="index"
             @click.stop="handleSearchList(item)"
             class="result-item"
           >
@@ -101,9 +103,7 @@
           </li>
           <li v-if="loading" class="loading-item">加载中...</li>
           <!-- 没有搜索到结果时显示 -->
-          <li v-show="searchResult" class="no-results">
-            暂无搜索结果
-          </li>
+          <li v-show="searchResult" class="no-results">暂无搜索结果</li>
         </ul>
       </div>
     </div>
@@ -143,7 +143,7 @@ onMounted(() => {
 const generateRandomHotWords = () => {
   // 复制原数组，避免修改原数据
   const shuffled = [...mockRecommendations];
-  
+
   // 使用Fisher-Yates洗牌算法
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -151,15 +151,15 @@ const generateRandomHotWords = () => {
     shuffled[i] = shuffled[j] as string;
     shuffled[j] = temp;
   }
-  
+
   // 取前8个
   randomHotWords.value = shuffled.slice(0, 8);
 };
 
 // 使用从 mock.ts 文件中导入的 mock 数据
 const filteredRecommendations = computed(() => {
-  return mockRecommendations.filter(item => 
-    item.toLowerCase().includes(searchValue.value.toLowerCase())
+  return mockRecommendations.filter((item) =>
+    item.toLowerCase().includes(searchValue.value.toLowerCase()),
   );
 });
 
@@ -192,7 +192,7 @@ const handleSearch = (): void => {
 // 清空搜索框内容
 const handleClear = () => {
   searchValue.value = '';
-  searchList.value = [];  // 清空搜索结果
+  searchList.value = []; // 清空搜索结果
   searchResult.value = false; // 清除"暂无搜索结果"
 };
 
@@ -226,7 +226,7 @@ const handleBack = () => {
 // 搜索框输入绑定
 watch(searchValue, (newVal) => {
   emit('update:modelValue', newVal);
-  
+
   searchResult.value = false;
 });
 
@@ -239,7 +239,7 @@ const handleSearchList = (item: string) => {
 
 <style scoped>
 .search-page {
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -252,7 +252,7 @@ const handleSearchList = (item: string) => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
 }
 
 .back-btn {
@@ -442,7 +442,7 @@ const handleSearchList = (item: string) => {
 }
 
 .recommend-tag:before {
-  content: "";
+  content: '';
   position: absolute;
   top: -2px;
   left: -2px;
@@ -451,7 +451,9 @@ const handleSearchList = (item: string) => {
   background-color: rgba(25, 137, 250, 0.1);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.5s, height 0.5s;
+  transition:
+    width 0.5s,
+    height 0.5s;
 }
 
 .recommend-tag:hover:before {
@@ -469,7 +471,7 @@ const handleSearchList = (item: string) => {
 }
 
 .section-title:before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 50%;
@@ -520,8 +522,3 @@ const handleSearchList = (item: string) => {
   font-size: 15px;
 }
 </style>
-  
-  
-  
-  
-  

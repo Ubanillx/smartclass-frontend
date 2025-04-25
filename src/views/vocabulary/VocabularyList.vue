@@ -6,7 +6,11 @@
     <!-- 主要内容区域 -->
     <div class="content-container">
       <!-- 词汇分类标签页 -->
-      <van-tabs v-model:active="activeCategory" sticky @change="handleCategoryChange">
+      <van-tabs
+        v-model:active="activeCategory"
+        sticky
+        @change="handleCategoryChange"
+      >
         <van-tab
           v-for="category in categories"
           :key="category.id"
@@ -125,11 +129,11 @@
 import { ref, onMounted } from 'vue';
 import { showToast } from 'vant';
 import { BackButton } from '../../components/Common';
-import { 
-  vocabularyCategories, 
-  generateMockWords, 
+import {
+  vocabularyCategories,
+  generateMockWords,
   Word,
-  VocabularyCategory
+  VocabularyCategory,
 } from '../../api/mock';
 
 // 状态变量
@@ -152,7 +156,7 @@ const handleCategoryChange = (index: number) => {
   words.value = [];
   loading.value = false;
   finished.value = false;
-  
+
   // 加载新分类的数据
   onLoad();
 };

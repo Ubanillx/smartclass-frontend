@@ -12,7 +12,7 @@ export {
   CourseItem,
   CourseDetail,
   CourseStudy,
-  CourseSchedule
+  CourseSchedule,
 };
 
 export default {
@@ -21,5 +21,5 @@ export default {
   CourseList,
   CourseDetail,
   CourseStudy,
-  CourseSchedule
+  CourseSchedule,
 };

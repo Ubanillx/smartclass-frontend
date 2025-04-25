@@ -15,5 +15,5 @@ export {
   RecentLearning,
   LearningHistory,
   LogoutButton,
-  ContentTabs
+  ContentTabs,
 };

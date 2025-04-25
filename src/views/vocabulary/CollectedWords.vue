@@ -314,7 +314,10 @@ import { showToast, showSuccessToast } from 'vant';
 import { BackButton } from '../../components/Common';
 import SearchBar from '../../components/SearchBar.vue';
 import { useRouter } from 'vue-router';
-import { useCollectedWordsStore, CollectedWord } from '../../stores/collectedWordsStore';
+import {
+  useCollectedWordsStore,
+  CollectedWord,
+} from '../../stores/collectedWordsStore';
 
 const router = useRouter();
 const collectedWordsStore = useCollectedWordsStore();
@@ -342,7 +345,7 @@ const filteredWords = computed(() => {
   return collectedWordsStore.getFilteredWords(
     searchText.value,
     selectedDifficulty.value,
-    sortOption.value
+    sortOption.value,
   );
 });
 
@@ -483,7 +486,7 @@ onMounted(() => {
       lastViewTime: new Date().toISOString(),
       difficulty: '中级',
     };
-    
+
     collectedWordsStore.collectWord(mockWord);
   }
 });

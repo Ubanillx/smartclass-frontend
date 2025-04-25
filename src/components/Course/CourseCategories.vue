@@ -129,7 +129,8 @@ const getIconName = (iconName: string) => {
 }
 
 @keyframes swipeHint {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-2px);
     opacity: 0.5;
   }

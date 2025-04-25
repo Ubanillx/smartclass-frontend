@@ -51,7 +51,7 @@ import {
   courseCategories,
   getCoursesByCategory,
   fetchMockPopularCourses,
-  fetchCourseCategories
+  fetchCourseCategories,
 } from '../api/mock';
 
 // 定义类型
@@ -104,7 +104,9 @@ const displayedCourses = computed(() => {
   } else {
     const category = categories.value[activeCategory.value - 1];
     if (category) {
-      return allCourses.value.filter((course) => course.subject === category.name);
+      return allCourses.value.filter(
+        (course) => course.subject === category.name,
+      );
     }
     return allCourses.value;
   }
@@ -129,18 +131,28 @@ const enhanceCourse = (course: BaseCourse): EnhancedCourse => {
   return {
     ...course,
     // 如果没有描述，则创建一个标准描述
-    description: course.description || `本课程是${course.subject || ''}学科的${course.level}课程，${course.brief}`,
+    description:
+      course.description ||
+      `本课程是${course.subject || ''}学科的${course.level}课程，${course.brief}`,
     // 如果没有亮点，则根据课程信息创建标准亮点
     highlights: course.highlights || [
       {
-        icon: course.level === '初级' ? 'smile-o' :
-              course.level === '中级' ? 'bulb-o' : 'certificate',
+        icon:
+          course.level === '初级'
+            ? 'smile-o'
+            : course.level === '中级'
+              ? 'bulb-o'
+              : 'certificate',
         color: course.tagColor,
-        text: `${course.level}级别`
+        text: `${course.level}级别`,
       },
       { icon: 'clock-o', color: '#1989fa', text: `${course.duration}分钟` },
-      { icon: 'friends-o', color: '#07c160', text: `${course.studentsCount}人学习` }
-    ]
+      {
+        icon: 'friends-o',
+        color: '#07c160',
+        text: `${course.studentsCount}人学习`,
+      },
+    ],
   };
 };
 
@@ -152,26 +164,25 @@ const loadCourses = async () => {
     // 获取课程数据和分类数据
     const [coursesData, categoriesData] = await Promise.all([
       fetchMockPopularCourses(),
-      fetchCourseCategories()
+      fetchCourseCategories(),
     ]);
-    
+
     // 增强课程数据
     allCourses.value = coursesData.map(enhanceCourse);
-    
+
     // 转换分类数据为组件需要的格式
-    categories.value = categoriesData.map(category => ({
+    categories.value = categoriesData.map((category) => ({
       id: category.id,
       name: category.name,
-      icon: category.icon
+      icon: category.icon,
     }));
-    
   } catch (error) {
     console.error('加载课程数据失败:', error);
     showToast('数据加载失败，请重试');
   } finally {
     loading.value = false;
   }
-  
+
   // 返回一个Promise以便后续链式操作
   return Promise.resolve();
 };
@@ -183,10 +194,10 @@ onMounted(() => {
     const searchParams = new URLSearchParams(location.search);
     const showDetail = searchParams.get('showDetail');
     const courseId = searchParams.get('courseId');
-    
+
     if (showDetail === 'true' && courseId) {
       const courseIdNum = parseInt(courseId, 10);
-      const course = allCourses.value.find(c => c.id === courseIdNum);
+      const course = allCourses.value.find((c) => c.id === courseIdNum);
       if (course) {
         showCourseDetail(course);
       }

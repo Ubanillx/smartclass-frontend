@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { UserLearningRecordVO } from './UserLearningRecordVO.ts';
 export type BaseResponse_UserLearningRecordVO_ = {
-    code?: number;
-    data?: UserLearningRecordVO;
-    message?: string;
+  code?: number;
+  data?: UserLearningRecordVO;
+  message?: string;
 };
-

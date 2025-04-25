@@ -2,7 +2,7 @@
   <div class="history-page">
     <!-- 返回按钮 -->
     <back-button title="学习历史" />
-    
+
     <!-- 统计信息 -->
     <div class="stats-card">
       <div class="stats-item">
@@ -26,21 +26,28 @@
         <van-tab title="按类型" name="category"></van-tab>
       </van-tabs>
     </div>
-    
+
     <div class="history-list">
       <!-- 日期分组 -->
-      <div v-for="(group, groupIndex) in groupedHistoryItems" :key="groupIndex" class="history-group">
+      <div
+        v-for="(group, groupIndex) in groupedHistoryItems"
+        :key="groupIndex"
+        class="history-group"
+      >
         <div class="date-header">{{ group.date }}</div>
-        
+
         <!-- 分组内的历史记录项 -->
-        <div 
-          v-for="item in group.items" 
-          :key="item.id" 
-          class="history-item"
-        >
+        <div v-for="item in group.items" :key="item.id" class="history-item">
           <div class="history-content">
-            <div class="icon-wrapper" :style="{ backgroundColor: getIconBgColor(item.icon) }">
-              <van-icon :name="item.icon" class="history-icon" :color="getIconColor(item.icon)" />
+            <div
+              class="icon-wrapper"
+              :style="{ backgroundColor: getIconBgColor(item.icon) }"
+            >
+              <van-icon
+                :name="item.icon"
+                class="history-icon"
+                :color="getIconColor(item.icon)"
+              />
             </div>
             <div class="history-info">
               <div class="history-title">{{ item.title }}</div>
@@ -50,11 +57,19 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 加载更多 -->
       <div class="load-more">
         <van-loading v-if="loading" type="spinner" size="24px" />
-        <van-button v-else @click="loadMoreHistory" size="small" plain type="primary" block>加载更多</van-button>
+        <van-button
+          v-else
+          @click="loadMoreHistory"
+          size="small"
+          plain
+          type="primary"
+          block
+          >加载更多</van-button
+        >
       </div>
     </div>
   </div>
@@ -187,88 +202,88 @@ const historyItems = ref<HistoryItem[]>([
 // 按日期分组
 const groupedHistoryItems = computed<GroupedHistory[]>(() => {
   const groups: Record<string, HistoryItem[]> = {};
-  
+
   // 根据标签页过滤
   let filteredItems = [...historyItems.value];
   if (activeTab.value === 'category') {
     // 此处可以添加按类型过滤的逻辑
   }
-  
+
   // 按日期分组
-  filteredItems.forEach(item => {
+  filteredItems.forEach((item) => {
     if (!groups[item.date]) {
       groups[item.date] = [];
     }
     groups[item.date].push(item);
   });
-  
+
   // 转换为数组格式并排序
-  return Object.keys(groups).map(date => ({
+  return Object.keys(groups).map((date) => ({
     date,
-    items: groups[date]
+    items: groups[date],
   }));
 });
 
 // 获取图标背景色
 const getIconBgColor = (icon: string) => {
   const colorMap: Record<string, string> = {
-    'records': 'rgba(25, 137, 250, 0.1)',
+    records: 'rgba(25, 137, 250, 0.1)',
     'play-circle-o': 'rgba(255, 151, 106, 0.1)',
     'music-o': 'rgba(7, 193, 96, 0.1)',
-    'edit': 'rgba(114, 50, 221, 0.1)',
-    'bookmark': 'rgba(238, 10, 36, 0.1)',
+    edit: 'rgba(114, 50, 221, 0.1)',
+    bookmark: 'rgba(238, 10, 36, 0.1)',
     'smile-o': 'rgba(255, 205, 50, 0.1)',
     'user-o': 'rgba(0, 206, 209, 0.1)',
     'chart-trending-o': 'rgba(255, 105, 180, 0.1)',
     'label-o': 'rgba(118, 199, 83, 0.1)',
-    'certificate': 'rgba(156, 39, 176, 0.1)',
+    certificate: 'rgba(156, 39, 176, 0.1)',
   };
-  
+
   return colorMap[icon] || 'rgba(25, 137, 250, 0.1)';
 };
 
 // 获取图标颜色
 const getIconColor = (icon: string) => {
   const colorMap: Record<string, string> = {
-    'records': '#1989fa',
+    records: '#1989fa',
     'play-circle-o': '#ff976a',
     'music-o': '#07c160',
-    'edit': '#7232dd',
-    'bookmark': '#ee0a24',
+    edit: '#7232dd',
+    bookmark: '#ee0a24',
     'smile-o': '#ffcd32',
     'user-o': '#00ced1',
     'chart-trending-o': '#ff69b4',
     'label-o': '#76c753',
-    'certificate': '#9c27b0',
+    certificate: '#9c27b0',
   };
-  
+
   return colorMap[icon] || '#1989fa';
 };
 
 // 加载更多历史记录
 const loadMoreHistory = async () => {
   if (!hasMore.value) return;
-  
+
   loading.value = true;
-  
+
   try {
     // 模拟API请求延迟
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     // 增加页码
     page.value++;
-    
+
     // 模拟加载更多数据
     // 这里只是简单地复制前10条记录并修改id
-    const moreItems = historyItems.value.slice(0, 5).map(item => ({
+    const moreItems = historyItems.value.slice(0, 5).map((item) => ({
       ...item,
       id: item.id + historyItems.value.length,
       date: '2023-10-10', // 更早的日期
     }));
-    
+
     // 添加到列表中
     historyItems.value.push(...moreItems);
-    
+
     // 模拟没有更多数据的情况
     if (page.value >= 3) {
       hasMore.value = false;
@@ -289,7 +304,7 @@ onMounted(() => {
 <style scoped>
 .history-page {
   padding: 0 0 16px 0;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
 }
 
@@ -407,4 +422,4 @@ onMounted(() => {
   justify-content: center;
   padding: 16px 0;
 }
-</style> 
+</style>

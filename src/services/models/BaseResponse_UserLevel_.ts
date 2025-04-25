@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { UserLevel } from './UserLevel.ts';
 export type BaseResponse_UserLevel_ = {
-    code?: number;
-    data?: UserLevel;
-    message?: string;
+  code?: number;
+  data?: UserLevel;
+  message?: string;
 };
-

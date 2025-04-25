@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { UserLevelVO } from './UserLevelVO.ts';
 export type BaseResponse_List_UserLevelVO_ = {
-    code?: number;
-    data?: Array<UserLevelVO>;
-    message?: string;
+  code?: number;
+  data?: Array<UserLevelVO>;
+  message?: string;
 };
-

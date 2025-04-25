@@ -9,8 +9,12 @@
         <p class="phone">手机号：{{ formatPhone(userInfo.phone) }}</p>
         <div class="level-info">
           <van-tag type="primary">等级 {{ userInfo.level }}</van-tag>
-          <span class="id-text" v-if="userInfo.userId">ID: {{ userInfo.userId }}</span>
-          <span class="exp-text">距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span>
+          <span class="id-text" v-if="userInfo.userId"
+            >ID: {{ userInfo.userId }}</span
+          >
+          <span class="exp-text"
+            >距离下一级还需 {{ userInfo.nextLevelExp }} 经验</span
+          >
         </div>
       </div>
       <div class="settings-container">

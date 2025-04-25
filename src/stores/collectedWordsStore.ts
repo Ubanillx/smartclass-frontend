@@ -26,7 +26,7 @@ export interface CollectedWord {
 export const useCollectedWordsStore = defineStore('collectedWords', () => {
   // 状态
   const collectedWords = ref<CollectedWord[]>([]);
-  
+
   // 计算属性：已掌握单词数量
   const masteredCount = computed(() => {
     return collectedWords.value.filter((word) => word.mastered).length;
@@ -51,14 +51,19 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
 
   // 保存数据到localStorage
   const saveToStorage = () => {
-    localStorage.setItem('collectedWords', JSON.stringify(collectedWords.value));
+    localStorage.setItem(
+      'collectedWords',
+      JSON.stringify(collectedWords.value),
+    );
   };
 
   // 收藏单词
-  const collectWord = (word: Omit<CollectedWord, 'collectedTime' | 'mastered'>) => {
+  const collectWord = (
+    word: Omit<CollectedWord, 'collectedTime' | 'mastered'>,
+  ) => {
     // 检查单词是否已收藏
     const existingIndex = collectedWords.value.findIndex(
-      (w) => w.text.toLowerCase() === word.text.toLowerCase()
+      (w) => w.text.toLowerCase() === word.text.toLowerCase(),
     );
 
     if (existingIndex !== -1) {
@@ -111,7 +116,7 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
   // 判断单词是否已收藏
   const isWordCollected = (wordText: string) => {
     return collectedWords.value.some(
-      (w) => w.text.toLowerCase() === wordText.toLowerCase()
+      (w) => w.text.toLowerCase() === wordText.toLowerCase(),
     );
   };
 
@@ -121,7 +126,11 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
   };
 
   // 获取筛选和排序后的单词列表
-  const getFilteredWords = (searchText = '', difficulty = '', sortOption = 'time-desc') => {
+  const getFilteredWords = (
+    searchText = '',
+    difficulty = '',
+    sortOption = 'time-desc',
+  ) => {
     // 先筛选
     let result = collectedWords.value.filter((word) => {
       // 搜索文本筛选
@@ -132,8 +141,7 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
 
       // 难度筛选
       const matchesDifficulty =
-        difficulty === '' ||
-        word.difficulty === difficulty;
+        difficulty === '' || word.difficulty === difficulty;
 
       return matchesSearch && matchesDifficulty;
     });
@@ -166,9 +174,13 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
   };
 
   // 监听状态变化，保存到localStorage
-  watch(collectedWords, () => {
-    saveToStorage();
-  }, { deep: true });
+  watch(
+    collectedWords,
+    () => {
+      saveToStorage();
+    },
+    { deep: true },
+  );
 
   // 初始化
   initFromStorage();
@@ -185,4 +197,4 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
     getCollectedWords,
     getFilteredWords,
   };
-}); 
+});

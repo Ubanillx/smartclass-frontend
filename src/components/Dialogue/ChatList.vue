@@ -12,7 +12,11 @@
     >
       <div class="chat-avatar">
         <van-image :src="chat.avatar" round width="50" height="50" />
-        <div v-if="showStatus" class="online-status" :class="{ online: chat.online }"></div>
+        <div
+          v-if="showStatus"
+          class="online-status"
+          :class="{ online: chat.online }"
+        ></div>
       </div>
       <div class="chat-info">
         <div class="chat-header">
@@ -20,7 +24,10 @@
           <span class="chat-time">{{ chat.lastTime }}</span>
         </div>
         <div v-if="chat.summary" class="chat-summary">{{ chat.summary }}</div>
-        <div v-if="showStatus && chat.tags && chat.tags.length > 0" class="chat-tags">
+        <div
+          v-if="showStatus && chat.tags && chat.tags.length > 0"
+          class="chat-tags"
+        >
           <span v-for="tag in chat.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
       </div>
@@ -46,12 +53,15 @@ interface Chat {
 }
 
 // 定义props并设置默认值
-const props = withDefaults(defineProps<{
-  chats: Chat[];
-  showStatus?: boolean;
-}>(), {
-  showStatus: true
-});
+const props = withDefaults(
+  defineProps<{
+    chats: Chat[];
+    showStatus?: boolean;
+  }>(),
+  {
+    showStatus: true,
+  },
+);
 
 // 定义事件
 const emit = defineEmits<{
@@ -67,12 +77,12 @@ const longPressDuration = 600; // 长按判定时间（毫秒）
 // 触摸开始事件
 const startTouch = (chat: Chat) => {
   touchedChat.value = chat;
-  
+
   // 清除可能存在的旧定时器
   if (touchTimeout.value !== null) {
     clearTimeout(touchTimeout.value);
   }
-  
+
   // 设置新的定时器
   touchTimeout.value = window.setTimeout(() => {
     if (touchedChat.value) {

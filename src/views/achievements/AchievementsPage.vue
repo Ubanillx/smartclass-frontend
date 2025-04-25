@@ -2,7 +2,7 @@
   <div class="achievements-page">
     <!-- 返回按钮 -->
     <back-button title="我的成就" />
-    
+
     <!-- 成就统计信息 -->
     <div class="stats-card">
       <div class="stats-item">
@@ -29,9 +29,9 @@
 
     <!-- 成就列表 -->
     <div class="achievement-grid">
-      <div 
-        v-for="badge in filteredBadges" 
-        :key="badge.id" 
+      <div
+        v-for="badge in filteredBadges"
+        :key="badge.id"
         class="achievement-item"
         @click="showBadgeDetail(badge)"
       >
@@ -55,24 +55,32 @@
     >
       <div class="badge-detail-popup" v-if="selectedBadge">
         <div class="popup-header">
-          <van-icon name="cross" @click="showDetail = false" class="close-icon" />
+          <van-icon
+            name="cross"
+            @click="showDetail = false"
+            class="close-icon"
+          />
           <h3 class="popup-title">成就详情</h3>
         </div>
-        
+
         <div class="badge-detail-content">
           <div class="badge-icon-large" :class="selectedBadge.bgClass">
-            <van-icon :name="selectedBadge.icon" :color="selectedBadge.color" size="64" />
+            <van-icon
+              :name="selectedBadge.icon"
+              :color="selectedBadge.color"
+              size="64"
+            />
           </div>
-          
+
           <h2 class="badge-title">{{ selectedBadge.name }}</h2>
           <p class="badge-full-description">{{ selectedBadge.description }}</p>
           <p class="badge-earn-date">获得于 {{ selectedBadge.date }}</p>
-          
+
           <div class="badge-criteria">
             <h4>获得条件</h4>
             <p>{{ selectedBadge.criteria }}</p>
           </div>
-          
+
           <div class="share-button">
             <van-button type="primary" block>分享成就</van-button>
           </div>
@@ -204,7 +212,7 @@ const badges = ref<BadgeDetail[]>([
 // 根据筛选条件过滤徽章
 const filteredBadges = computed(() => {
   let result = [...badges.value];
-  
+
   // 根据标签页过滤
   if (activeTab.value === 'recent') {
     // 最近获得，按日期排序获取最近5个
@@ -212,7 +220,7 @@ const filteredBadges = computed(() => {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 5);
   }
-  
+
   return result;
 });
 
@@ -226,7 +234,7 @@ const showBadgeDetail = (badge: BadgeDetail) => {
 <style scoped>
 .achievements-page {
   padding: 0 0 16px 0;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   min-height: 100vh;
 }
 
@@ -442,4 +450,4 @@ const showBadgeDetail = (badge: BadgeDetail) => {
 .bg-pink {
   background-color: rgba(255, 105, 180, 0.1);
 }
-</style> 
+</style>

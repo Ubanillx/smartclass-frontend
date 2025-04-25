@@ -2,9 +2,7 @@
   <div class="app">
     <div class="router-view-container">
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
+        <component :is="Component" />
       </router-view>
     </div>
     <van-tabbar v-model="active" v-if="showTabbar" route>
@@ -186,7 +184,11 @@ body {
 
 .app {
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgba(232, 242, 252, 0.8), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 242, 252, 0.8),
+    rgba(255, 255, 255, 0.9)
+  );
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -200,7 +202,11 @@ body {
 /* 统一的页面容器样式 */
 .page-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgba(232, 242, 252, 0.8), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 242, 252, 0.8),
+    rgba(255, 255, 255, 0.9)
+  );
   padding-bottom: 60px;
 }
 
@@ -288,17 +294,6 @@ body {
 .icon.active-icon {
   transform: scale(1.2);
   color: var(--van-tabbar-item-active-color, #1989fa);
-}
-
-/* 页面切换动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 
 /* 组件标题样式 */
@@ -510,7 +505,10 @@ p {
 }
 
 /* 统一所有图标居中显示 */
-.icon, .van-icon, .svg-icon, [class*="icon-"] {
+.icon,
+.van-icon,
+.svg-icon,
+[class*='icon-'] {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -518,7 +516,9 @@ p {
 }
 
 /* 确保所有图标容器都居中显示内容 */
-.icon-container, [class*="-icon-container"], [class$="-icon"] {
+.icon-container,
+[class*='-icon-container'],
+[class$='-icon'] {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;

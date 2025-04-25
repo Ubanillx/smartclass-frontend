@@ -4,13 +4,13 @@
       <van-icon :name="icon" size="48" :color="iconColor" class="error-icon" />
       <div class="error-title">{{ title }}</div>
       <div class="error-message">{{ message }}</div>
-      <van-button 
-        v-if="showRetry" 
-        type="primary" 
-        size="small" 
-        round 
+      <van-button
+        v-if="showRetry"
+        type="primary"
+        size="small"
+        round
         :loading="loading"
-        class="retry-button" 
+        class="retry-button"
         @click="$emit('retry')"
       >
         {{ retryText }}
@@ -27,32 +27,32 @@ defineEmits(['retry']);
 const props = defineProps({
   title: {
     type: String,
-    default: '加载失败'
+    default: '加载失败',
   },
   message: {
     type: String,
-    default: '网络连接出错，请检查网络后重试'
+    default: '网络连接出错，请检查网络后重试',
   },
   icon: {
     type: String,
-    default: 'warning-o'
+    default: 'warning-o',
   },
   iconColor: {
     type: String,
-    default: '#ff976a' // 橙色警告
+    default: '#ff976a', // 橙色警告
   },
   showRetry: {
     type: Boolean,
-    default: true
+    default: true,
   },
   retryText: {
     type: String,
-    default: '重试'
+    default: '重试',
   },
   loading: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 </script>
 
@@ -98,4 +98,4 @@ const props = defineProps({
   min-width: 120px;
   font-weight: 500;
 }
-</style> 
+</style>

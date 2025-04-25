@@ -67,8 +67,8 @@ import {
   DailyWordCard,
   ArticleList,
 } from '../components/Home';
-import { 
-  mockPopularCourses, 
+import {
+  mockPopularCourses,
   vocabularyCategories,
   dailyWords,
   getRandomArticles,
@@ -76,14 +76,14 @@ import {
   type Course,
   type Word,
   type Notice,
-  type Article
+  type Article,
 } from '../api/mock';
 import { useCollectedWordsStore } from '../stores/collectedWordsStore';
-import { 
-  AiAvatarControllerService, 
-  DailyWordControllerService, 
+import {
+  AiAvatarControllerService,
+  DailyWordControllerService,
   DailyWordFavourControllerService,
-  DailyArticleControllerService
+  DailyArticleControllerService,
 } from '../services';
 import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
 import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
@@ -123,7 +123,9 @@ const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
     id: announcement.id || 0,
     title: announcement.title || '未命名公告',
     content: announcement.content || '',
-    date: announcement.createTime ? new Date(announcement.createTime).toLocaleDateString() : ''
+    date: announcement.createTime
+      ? new Date(announcement.createTime).toLocaleDateString()
+      : '',
   };
 };
 
@@ -133,15 +135,23 @@ const fetchNotices = async () => {
     // 创建请求参数，按创建时间倒序排列
     const queryRequest: AnnouncementQueryRequest = {
       current: 1,
-      pageSize: 3,  // 只获取3条
+      pageSize: 3, // 只获取3条
       sortField: 'createTime',
-      sortOrder: 'desc'  // 按时间倒序，最新的在前面
+      sortOrder: 'desc', // 按时间倒序，最新的在前面
     };
-    
+
     // 调用list/page/vo接口
-    const response = await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(queryRequest);
-    
-    if (response.code === 0 && response.data && response.data.records && response.data.records.length > 0) {
+    const response =
+      await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(
+        queryRequest,
+      );
+
+    if (
+      response.code === 0 &&
+      response.data &&
+      response.data.records &&
+      response.data.records.length > 0
+    ) {
       // 直接使用返回的记录转换为Notice格式
       notices.value = response.data.records.map(convertAnnouncementToNotice);
     } else {
@@ -160,20 +170,24 @@ const popularCourses = ref<Course[]>(mockPopularCourses);
 // 筛选热门课程（选取每个学科中最热门的课程）
 const filteredPopularCourses = computed(() => {
   // 获取不同的学科
-  const subjects = [...new Set(popularCourses.value.map(course => course.subject).filter(Boolean))];
-  
+  const subjects = [
+    ...new Set(
+      popularCourses.value.map((course) => course.subject).filter(Boolean),
+    ),
+  ];
+
   // 从每个学科中选择一个课程（按studentsCount排序）
   const topCourses = subjects
-    .map(subject => {
+    .map((subject) => {
       const subjectCourses = popularCourses.value
-        .filter(course => course.subject === subject)
+        .filter((course) => course.subject === subject)
         .sort((a, b) => b.studentsCount - a.studentsCount);
-      
+
       return subjectCourses[0]; // 返回该学科中最热门的课程
     })
     .filter(Boolean)
     .slice(0, 3); // 最多展示3个
-  
+
   return topCourses;
 });
 
@@ -184,20 +198,20 @@ const dailyWord = ref(getRandomWord());
 const fetchDailyWord = async () => {
   try {
     const response = await DailyWordControllerService.getTodayWordUsingGet();
-    
+
     if (response.code === 0 && response.data && response.data.length > 0) {
       // 使用API返回的第一个单词作为今日单词
       const todayWord = response.data[0];
-      
+
       if (todayWord) {
         // 转换API返回的DailyWordVO格式为组件使用的Word格式
         // 扩展现有的Word类型
         const mockWord = getRandomWord(); // 获取一个模板
 
         // 示例单词：big
-        const defaultExample = "The elephant is a big animal.";
-        const defaultExampleTranslation = "大象是一种大型动物。";
-        
+        const defaultExample = 'The elephant is a big animal.';
+        const defaultExampleTranslation = '大象是一种大型动物。';
+
         const word = {
           ...mockWord, // 保留原有字段
           id: todayWord.id || 0,
@@ -223,25 +237,28 @@ const fetchDailyWord = async () => {
           // 保存额外信息到Word对象
           audioUrl: todayWord.audioUrl,
           // 确保正确处理例句翻译
-          exampleTranslation: todayWord.exampleTranslation || defaultExampleTranslation,
+          exampleTranslation:
+            todayWord.exampleTranslation || defaultExampleTranslation,
           notes: todayWord.notes,
           likeCount: (todayWord as any).likeCount || 0, // 同时保存原始likeCount数据
         };
-        
+
         dailyWord.value = word;
         checkCollectedStatus();
       } else {
         // 如果API返回数据为空，使用模拟数据
         dailyWord.value = getRandomWord();
         // 确保模拟数据有例句翻译
-        dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+        dailyWord.value.exampleTranslation =
+          dailyWord.value.exampleTranslation || '大象是一种大型动物。';
         checkCollectedStatus();
       }
     } else {
       // 如果API请求失败，使用模拟数据
       dailyWord.value = getRandomWord();
       // 确保模拟数据有例句翻译
-      dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+      dailyWord.value.exampleTranslation =
+        dailyWord.value.exampleTranslation || '大象是一种大型动物。';
       checkCollectedStatus();
     }
   } catch (error) {
@@ -249,7 +266,8 @@ const fetchDailyWord = async () => {
     // 使用模拟数据
     dailyWord.value = getRandomWord();
     // 确保模拟数据有例句翻译
-    dailyWord.value.exampleTranslation = dailyWord.value.exampleTranslation || "大象是一种大型动物。";
+    dailyWord.value.exampleTranslation =
+      dailyWord.value.exampleTranslation || '大象是一种大型动物。';
     checkCollectedStatus();
   }
 };
@@ -257,12 +275,16 @@ const fetchDailyWord = async () => {
 // 将数字难度转换为文本描述
 const convertDifficultyToText = (difficulty?: number): string => {
   if (!difficulty) return '中级';
-  
+
   switch (difficulty) {
-    case 1: return '初级';
-    case 2: return '中级';
-    case 3: return '高级';
-    default: return '中级';
+    case 1:
+      return '初级';
+    case 2:
+      return '中级';
+    case 3:
+      return '高级';
+    default:
+      return '中级';
   }
 };
 
@@ -270,21 +292,24 @@ const convertDifficultyToText = (difficulty?: number): string => {
 const checkCollectedStatus = async () => {
   if (!dailyWord.value.id) {
     // 如果没有单词ID（可能是mock数据），使用本地存储检查
-    const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
+    const isCollected = collectedWordsStore.isWordCollected(
+      dailyWord.value.text,
+    );
     dailyWord.value.isCollected = isCollected;
     return;
   }
-  
+
   try {
     // 使用API检查单词是否已收藏
-    const response = await DailyWordFavourControllerService.isFavourWordUsingGet(
-      dailyWord.value.id as number
-    );
-    
+    const response =
+      await DailyWordFavourControllerService.isFavourWordUsingGet(
+        dailyWord.value.id as number,
+      );
+
     if (response.code === 0 && response.data !== undefined) {
       // 更新单词收藏状态
       dailyWord.value.isCollected = response.data;
-      
+
       // 同步本地存储状态
       if (response.data) {
         // 如果服务器显示已收藏但本地未收藏，添加到本地
@@ -300,15 +325,17 @@ const checkCollectedStatus = async () => {
             lastViewTime: new Date().toISOString(),
             difficulty: dailyWord.value.difficulty || '中级',
           };
-          
+
           collectedWordsStore.collectWord(wordToCollect);
         }
       } else {
         // 如果服务器显示未收藏但本地已收藏，从本地移除
         if (collectedWordsStore.isWordCollected(dailyWord.value.text)) {
           const collectedWords = collectedWordsStore.getCollectedWords();
-          const wordToRemove = collectedWords.find(w => w.text.toLowerCase() === dailyWord.value.text.toLowerCase());
-          
+          const wordToRemove = collectedWords.find(
+            (w) => w.text.toLowerCase() === dailyWord.value.text.toLowerCase(),
+          );
+
           if (wordToRemove) {
             collectedWordsStore.removeWord(wordToRemove.id);
           }
@@ -318,7 +345,9 @@ const checkCollectedStatus = async () => {
   } catch (error) {
     console.error('检查单词收藏状态失败', error);
     // 发生错误时，回退到使用本地存储
-    const isCollected = collectedWordsStore.isWordCollected(dailyWord.value.text);
+    const isCollected = collectedWordsStore.isWordCollected(
+      dailyWord.value.text,
+    );
     dailyWord.value.isCollected = isCollected;
   }
 };
@@ -329,20 +358,29 @@ const articles = ref<Article[]>([]);
 // 获取今日美文数据
 const fetchTodayArticles = async () => {
   try {
-    const response = await DailyArticleControllerService.getTodayArticleUsingGet();
-    
+    const response =
+      await DailyArticleControllerService.getTodayArticleUsingGet();
+
     if (response.code === 0) {
-      if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+      if (
+        response.data &&
+        Array.isArray(response.data) &&
+        response.data.length > 0
+      ) {
         // 数组形式的响应
-        articles.value = response.data.map(article => {
+        articles.value = response.data.map((article) => {
           // 处理标签字符串，将逗号分隔的标签转换为数组
-          const tagsList = article.tags ? article.tags.split(',').map(tag => tag.trim()) : [];
-          
+          const tagsList = article.tags
+            ? article.tags.split(',').map((tag) => tag.trim())
+            : [];
+
           return {
             id: article.id || 0,
             title: article.title || '未命名文章',
             brief: article.summary || '暂无简介',
-            cover: article.coverImage || 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
+            cover:
+              article.coverImage ||
+              'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
             category: article.category || '文化',
             readTime: article.readTime || 5,
             difficulty: convertDifficultyToText(article.difficulty),
@@ -352,30 +390,36 @@ const fetchTodayArticles = async () => {
             likeCount: article.likeCount || 0,
             tags: tagsList, // 添加标签数组
             author: article.author || '', // 添加作者信息
-            source: article.source || '' // 添加来源信息
+            source: article.source || '', // 添加来源信息
           };
         });
       } else if (response.data && typeof response.data === 'object') {
         // 单个对象形式的响应
         const article = response.data;
-        const tagsList = article.tags ? article.tags.split(',').map(tag => tag.trim()) : [];
-        
-        articles.value = [{
-          id: article.id || 0,
-          title: article.title || '未命名文章',
-          brief: article.summary || '暂无简介',
-          cover: article.coverImage || 'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
-          category: article.category || '文化',
-          readTime: article.readTime || 5,
-          difficulty: convertDifficultyToText(article.difficulty),
-          content: article.content || '暂无内容',
-          publishDate: article.publishDate || '',
-          viewCount: article.viewCount || 0,
-          likeCount: article.likeCount || 0,
-          tags: tagsList, // 添加标签数组
-          author: article.author || '', // 添加作者信息
-          source: article.source || '' // 添加来源信息
-        }];
+        const tagsList = article.tags
+          ? article.tags.split(',').map((tag) => tag.trim())
+          : [];
+
+        articles.value = [
+          {
+            id: article.id || 0,
+            title: article.title || '未命名文章',
+            brief: article.summary || '暂无简介',
+            cover:
+              article.coverImage ||
+              'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
+            category: article.category || '文化',
+            readTime: article.readTime || 5,
+            difficulty: convertDifficultyToText(article.difficulty),
+            content: article.content || '暂无内容',
+            publishDate: article.publishDate || '',
+            viewCount: article.viewCount || 0,
+            likeCount: article.likeCount || 0,
+            tags: tagsList, // 添加标签数组
+            author: article.author || '', // 添加作者信息
+            source: article.source || '', // 添加来源信息
+          },
+        ];
       } else {
         // 如果API数据为空，使用mock数据作为备用
         articles.value = getRandomArticles(4);
@@ -397,9 +441,9 @@ const wordCategories = ref(vocabularyCategories);
 // 添加生词本分类（如果不存在）
 const ensureCollectedCategory = () => {
   const collectedCategory = wordCategories.value.find(
-    (category) => category.path === '/vocabulary/collected'
+    (category) => category.path === '/vocabulary/collected',
   );
-  
+
   if (!collectedCategory) {
     wordCategories.value.push({
       id: wordCategories.value.length,
@@ -417,10 +461,10 @@ const aiAssistants = ref<Assistant[]>([]);
 const fetchAiAssistants = async () => {
   try {
     const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
-    
+
     if (response.code === 0 && response.data) {
       // 将后端数据转换为前端需要的格式
-      aiAssistants.value = response.data.map(avatar => ({
+      aiAssistants.value = response.data.map((avatar) => ({
         id: avatar.id || 0,
         name: avatar.name || '未命名智慧体',
         description: avatar.description || '',
@@ -482,7 +526,7 @@ const startChat = (assistant: Assistant) => {
 const viewCourseDetail = (course: any) => {
   router.push({
     path: '/popular-courses',
-    query: { showDetail: 'true', courseId: course.id }
+    query: { showDetail: 'true', courseId: course.id },
   });
 };
 
@@ -509,10 +553,10 @@ const onRefresh = async () => {
   try {
     // 依次刷新所有数据，避免 Promise.all 的错误
     await fetchAiAssistants();
-    await fetchNotices();  // 刷新公告数据
+    await fetchNotices(); // 刷新公告数据
     await fetchDailyWord(); // 刷新今日单词数据
     await fetchTodayArticles(); // 刷新今日美文数据
-    
+
     showToast('刷新成功');
   } catch (error) {
     showToast('刷新失败');
@@ -536,7 +580,7 @@ onMounted(() => {
 .home {
   padding: 16px;
   padding-bottom: 66px;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
 }
 
 .search-bar {

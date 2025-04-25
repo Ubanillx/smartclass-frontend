@@ -3,15 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DailyWordAddRequest = {
-    audioUrl?: string;
-    category?: string;
-    difficulty?: number;
-    example?: string;
-    exampleTranslation?: string;
-    notes?: string;
-    pronunciation?: string;
-    publishDate?: string;
-    translation?: string;
-    word?: string;
+  audioUrl?: string;
+  category?: string;
+  difficulty?: number;
+  example?: string;
+  exampleTranslation?: string;
+  notes?: string;
+  pronunciation?: string;
+  publishDate?: string;
+  translation?: string;
+  word?: string;
 };
-

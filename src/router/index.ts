@@ -11,12 +11,7 @@ import Profile from '../views/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
 import Circle from '../views/circle/Circle.vue';
-import {
-  ChatHistory,
-  ChatDetail,
-  IntelligenceCenter,
-  ChatContainer,
-} from '../views/chat';
+import { ChatDetail, ChatContainer } from '../views/chat';
 import AvatarCropper from '../views/settings/AvatarCropper.vue';
 import NoticeList from '../views/NoticeList.vue';
 
@@ -245,6 +240,14 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      // 在路由切换时立即滚动到顶部，没有平滑滚动效果
+      return { top: 0, behavior: 'auto' };
+    }
+  },
 });
 
 // 路由守卫
@@ -257,11 +260,13 @@ router.beforeEach(
     // 导入userStore
     const { useUserStore } = await import('../stores/userStore');
     const userStore = useUserStore();
-    
+
     // 检查localStorage中是否有用户信息来判断登录状态
     const userInfo = localStorage.getItem('userInfo');
     // 使用userStore中提供的方法或属性判断登录状态
-    const isLoggedIn = userInfo !== null || userStore.getUserAvatar() !== userStore.DEFAULT_USER_AVATAR;
+    const isLoggedIn =
+      userInfo !== null ||
+      userStore.getUserAvatar() !== userStore.DEFAULT_USER_AVATAR;
 
     if (to.meta.requiresAuth && !isLoggedIn) {
       // 需要登录但未登录，重定向到登录页

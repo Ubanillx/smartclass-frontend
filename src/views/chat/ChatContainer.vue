@@ -12,7 +12,7 @@
           <van-icon name="search" class="action-icon" @click="handleSearch" />
         </div>
       </div>
-      
+
       <!-- 导航栏 -->
       <div class="nav-tabs">
         <div
@@ -37,16 +37,12 @@
         <div class="tab-content">
           <!-- 历史对话内容 -->
           <div v-show="activeTab === 'history'" class="tab-pane">
-            <chat-history-content
-              @select="handleChatSelect"
-            />
+            <chat-history-content @select="handleChatSelect" />
           </div>
 
           <!-- 智慧体中心内容 -->
           <div v-show="activeTab === 'intelligence'" class="tab-pane">
-            <intelligence-center-content
-              @select="handleAssistantSelect"
-            />
+            <intelligence-center-content @select="handleAssistantSelect" />
           </div>
         </div>
       </van-pull-refresh>
@@ -140,8 +136,8 @@ const handleAssistantSelect = (assistantId: number) => {
 .chat-container {
   display: flex;
   flex-direction: column;
-  padding-bottom: 66px;
-  background-color: #F2F7FD;
+  padding-bottom: 116px; /* 增加底部间距，确保内容不会被分页栏和底部导航栏遮挡 */
+  background-color: #f2f7fd;
   min-height: 100vh;
   position: relative;
 }
@@ -152,7 +148,7 @@ const handleAssistantSelect = (assistantId: number) => {
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: #F2F7FD;
+  background-color: #f2f7fd;
   padding: 16px 16px 0;
 }
 

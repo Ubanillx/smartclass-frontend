@@ -3,20 +3,19 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DailyWord = {
-    adminId?: number;
-    audioUrl?: string;
-    category?: string;
-    createTime?: string;
-    difficulty?: number;
-    example?: string;
-    exampleTranslation?: string;
-    id?: number;
-    isDelete?: number;
-    notes?: string;
-    pronunciation?: string;
-    publishDate?: string;
-    translation?: string;
-    updateTime?: string;
-    word?: string;
+  adminId?: number;
+  audioUrl?: string;
+  category?: string;
+  createTime?: string;
+  difficulty?: number;
+  example?: string;
+  exampleTranslation?: string;
+  id?: number;
+  isDelete?: number;
+  notes?: string;
+  pronunciation?: string;
+  publishDate?: string;
+  translation?: string;
+  updateTime?: string;
+  word?: string;
 };
-

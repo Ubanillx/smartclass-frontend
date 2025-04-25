@@ -104,13 +104,19 @@ const onSubmit = async () => {
   loading.value = true;
   try {
     let result;
-    
+
     if (loginType.value === 'account') {
       // 用户名登录
-      result = await userStore.login(formData.value.userAccount, formData.value.password);
+      result = await userStore.login(
+        formData.value.userAccount,
+        formData.value.password,
+      );
     } else {
       // 手机号登录
-      result = await userStore.loginByPhone(formData.value.userPhone, formData.value.password);
+      result = await userStore.loginByPhone(
+        formData.value.userPhone,
+        formData.value.password,
+      );
     }
 
     if (result.success) {

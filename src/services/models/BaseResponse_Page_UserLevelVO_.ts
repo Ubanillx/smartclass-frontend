@@ -4,8 +4,7 @@
 /* eslint-disable */
 import type { Page_UserLevelVO_ } from './Page_UserLevelVO_.ts';
 export type BaseResponse_Page_UserLevelVO_ = {
-    code?: number;
-    data?: Page_UserLevelVO_;
-    message?: string;
+  code?: number;
+  data?: Page_UserLevelVO_;
+  message?: string;
 };
-

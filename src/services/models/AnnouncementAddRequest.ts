@@ -3,12 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AnnouncementAddRequest = {
-    content?: string;
-    coverImage?: string;
-    endTime?: string;
-    priority?: number;
-    startTime?: string;
-    status?: number;
-    title?: string;
+  content?: string;
+  coverImage?: string;
+  endTime?: string;
+  priority?: number;
+  startTime?: string;
+  status?: number;
+  title?: string;
 };
-

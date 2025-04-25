@@ -4,7 +4,10 @@
       <h3 class="section-title">今日学习目标</h3>
       <div class="add-goal-button" @click="showAddGoalPopup">
         <svg class="add-icon" viewBox="0 0 24 24" width="22" height="22">
-          <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+          <path
+            fill="currentColor"
+            d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+          />
         </svg>
       </div>
     </div>

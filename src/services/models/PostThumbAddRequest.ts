@@ -3,6 +3,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PostThumbAddRequest = {
-    postId?: number;
+  postId?: number;
 };
-

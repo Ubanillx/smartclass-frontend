@@ -3,13 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ChatSessionVO = {
-    aiAvatarId?: number;
-    aiAvatarImgUrl?: string;
-    aiAvatarName?: string;
-    lastMessage?: string;
-    lastMessageTime?: string;
-    messageCount?: number;
-    sessionId?: string;
-    sessionName?: string;
+  aiAvatarId?: number;
+  aiAvatarImgUrl?: string;
+  aiAvatarName?: string;
+  lastMessage?: string;
+  lastMessageTime?: string;
+  messageCount?: number;
+  sessionId?: string;
+  sessionName?: string;
 };
-
