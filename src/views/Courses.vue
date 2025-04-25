@@ -393,8 +393,10 @@ const startLearning = () => {
 }
 
 .fixed-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   background-color: #F2F7FD;
   padding: 16px 16px 0;
@@ -404,6 +406,7 @@ const startLearning = () => {
   flex: 1;
   overflow-y: auto;
   padding: 0 16px;
+  margin-top: 140px; /* 添加顶部边距，为固定导航腾出空间 */
 }
 
 .header {
