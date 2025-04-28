@@ -61,19 +61,18 @@ const handlePageChange = (page: number) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 0;
-  box-sizing: border-box;
   width: 100%;
-  margin: 5px 0 15px;
+  padding: 5px 0;
+  box-sizing: border-box;
 }
 
 /* 自定义分页样式 */
 :deep(.custom-pagination) {
-  --van-pagination-height: 40px;
-  --van-pagination-item-width: 40px;
-  --van-pagination-item-margin: 0 5px;
+  --van-pagination-height: 36px;
+  --van-pagination-item-width: 36px;
+  --van-pagination-item-margin: 0 3px;
   --van-pagination-item-default-color: #1989fa;
-  --van-pagination-item-font-size: 15px;
+  --van-pagination-item-font-size: 14px;
   --van-pagination-item-border-width: 0;
   --van-pagination-background-color: transparent;
   width: 100%;
@@ -85,16 +84,15 @@ const handlePageChange = (page: number) => {
 :deep(.custom-pagination .van-pagination__item) {
   border-radius: 8px;
   background-color: #e0f1fe;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 :deep(.custom-pagination .van-pagination__item--active) {
   background-color: #1989fa;
   color: white;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(25, 137, 250, 0.3);
-  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(25, 137, 250, 0.3);
 }
 
 :deep(.custom-pagination .van-pagination__prev),
@@ -102,7 +100,13 @@ const handlePageChange = (page: number) => {
   background-color: #e0f1fe;
   color: #666;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+:deep(.custom-pagination .van-pagination__prev:disabled),
+:deep(.custom-pagination .van-pagination__next:disabled) {
+  opacity: 0.5;
+  background-color: #f5f5f5;
 }
 
 :deep(.custom-pagination .van-pagination__prev:active),
@@ -114,8 +118,8 @@ const handlePageChange = (page: number) => {
 
 :deep(.custom-pagination .van-pagination__page-desc) {
   color: #666;
-  font-size: 13px;
-  margin: 0 10px;
+  font-size: 12px;
+  margin: 0 6px;
 }
 
 .page-desc-text {

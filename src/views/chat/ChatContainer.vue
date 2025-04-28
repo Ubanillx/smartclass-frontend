@@ -125,10 +125,11 @@ const handleAssistantSelect = (assistantId: number) => {
 .chat-container {
   display: flex;
   flex-direction: column;
-  padding-bottom: 116px; /* 增加底部间距，确保内容不会被分页栏和底部导航栏遮挡 */
+  padding-bottom: 130px; /* 减小底部间距，避免过多空白 */
   background-color: #f2f7fd;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden; /* 防止水平滚动条出现 */
 }
 
 .fixed-header {
@@ -145,7 +146,28 @@ const handleAssistantSelect = (assistantId: number) => {
   flex: 1;
   overflow-y: auto;
   padding: 0 16px;
-  margin-top: 150px; /* 再次增加顶部边距，确保内容不会与导航栏重叠 */
+  margin-top: 150px; /* 顶部边距，确保内容不会与导航栏重叠 */
+  padding-bottom: 100px; /* 增加底部内边距，确保分页组件有足够空间 */
+  position: relative;
+  will-change: transform; /* 优化滚动性能 */
+  overflow-x: hidden; /* 防止水平滚动条 */
+  height: calc(100vh - 150px); /* 设置固定高度 */
+  box-sizing: border-box;
+}
+
+.tab-content {
+  min-height: 300px; /* 调整为更合理的高度 */
+  position: relative;
+  display: flex; 
+  flex-direction: column;
+}
+
+.tab-pane {
+  width: 100%;
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -236,7 +258,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .new-chat-btn {
   position: fixed;
   right: 16px;
-  bottom: 120px; /* 将按钮向上移动，避开分页栏和导航栏 */
-  z-index: 999;
+  bottom: 130px; /* 将按钮显示在分页组件上方 */
+  z-index: 99;
 }
 </style>

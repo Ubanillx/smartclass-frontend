@@ -1,42 +1,44 @@
 <template>
   <div class="chat-history-content">
     <div class="history-container">
-      <transition-group name="chat-fade" tag="div">
+      <!-- 内容容器 -->
+      <div class="content-wrapper">
         <!-- 对话记录列表 -->
-        <chat-list
-          v-if="!loading && !error && total > 0"
-          :key="'chat-list-' + currentPage"
-          :chats="transformedChatHistory"
-          :show-status="false"
-          @select="handleChatSelect"
-          @long-press="handleLongPress"
+        <div v-show="!loading && !error && total > 0" class="chat-list-container">
+          <chat-list
+            :chats="transformedChatHistory"
+            :show-status="false"
+            @select="handleChatSelect"
+            @long-press="handleLongPress"
+          />
+        </div>
+
+        <!-- 空状态提示 -->
+        <van-empty
+          v-show="total === 0 && !loading && !error"
+          description="暂无对话记录"
+          class="empty-state"
         />
-      </transition-group>
 
-      <!-- 空状态提示 -->
-      <van-empty
-        v-if="total === 0 && !loading && !error"
-        description="暂无对话记录"
-        class="empty-state"
-      />
+        <!-- 加载状态 -->
+        <div v-show="loading" class="loading-container">
+          <van-loading type="spinner" size="32" color="#1989fa" />
+          <p>正在加载对话记录，可能需要一段时间...</p>
+        </div>
 
-      <!-- 加载状态 -->
-      <div v-if="loading" class="loading-container">
-        <van-loading type="spinner" size="32" color="#1989fa" />
-        <p>正在加载对话记录，可能需要一段时间...</p>
+        <!-- 错误状态 -->
+        <network-error
+          v-show="error"
+          :message="error"
+          :loading="retryLoading"
+          @retry="retryLoadData"
+        />
       </div>
+    </div>
 
-      <!-- 错误状态 -->
-      <network-error
-        v-if="error"
-        :message="error"
-        :loading="retryLoading"
-        @retry="retryLoadData"
-      />
-
-      <!-- 分页组件（放在列表后面） -->
+    <!-- 固定在底部的分页组件 -->
+    <div class="fixed-pagination" v-show="total > 0 && !loading && !error">
       <chat-pagination
-        v-if="total > 0 && !loading && !error"
         :total-items="total"
         :page-size="pageSize"
         :total-pages="totalPages"
@@ -236,8 +238,41 @@ const loadChatHistory = async () => {
 
 // 处理页码变化
 const handlePageChange = (page: number) => {
-  currentPage.value = page;
-  loadChatHistory();
+  // 避免重复加载当前页
+  if (page === currentPage.value) return;
+  
+  // 先设置loading状态，但不清空现有数据
+  loading.value = true;
+  error.value = '';
+  
+  // 异步加载新页面数据
+  AiAvatarChatControllerService.getUserHistoryPageUsingGet(
+    undefined,
+    page,
+    pageSize.value
+  )
+    .then(response => {
+      if (response.code === 0 && response.data) {
+        // 更新分页参数
+        total.value = parseInt(String(response.data.total || '0'));
+        pageSize.value = parseInt(String(response.data.size || '10'));
+        totalPages.value = parseInt(String(response.data.pages || '1'));
+        
+        // 先更新数据，再更新页码，保证视觉连续性
+        chatMessages.value = response.data.records || [];
+        currentPage.value = page;
+      } else {
+        error.value = '获取聊天历史失败，请检查网络连接';
+        showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
+      }
+    })
+    .catch(err => {
+      error.value = '网络连接失败，请检查网络设置后重试';
+      showToast('加载聊天历史出错');
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 // 处理对话选择
@@ -306,8 +341,8 @@ onMounted(() => {
 .chat-history-content {
   width: 100%;
   position: relative;
-  min-height: 200px;
-  padding-bottom: 20px; /* 减小底部内边距 */
+  min-height: calc(100vh - 250px);
+  padding-bottom: 80px; /* 为固定在底部的分页组件留出空间 */
 }
 
 .history-container {
@@ -316,11 +351,40 @@ onMounted(() => {
   width: 100%;
   padding: 0 8px;
   box-sizing: border-box;
+  position: relative;
+}
+
+/* 内容容器 */
+.content-wrapper {
+  position: relative;
+  min-height: 200px;
+  padding-bottom: 20px;
+}
+
+.chat-list-container {
+  width: 100%;
+}
+
+/* 固定在底部的分页组件 */
+.fixed-pagination {
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(242, 247, 253, 0.95);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 90;
+  padding: 10px 0;
 }
 
 @media (max-width: 768px) {
   .history-container {
     padding: 0 4px;
+  }
+  
+  .fixed-pagination {
+    bottom: 65px;
   }
 }
 
@@ -330,6 +394,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 40px 0;
+  width: 100%;
 }
 
 .loading-container p {
@@ -341,32 +406,5 @@ onMounted(() => {
 
 .empty-state {
   padding: 40px 0;
-}
-
-/* 列表切换动画 */
-.chat-fade-enter-active,
-.chat-fade-leave-active {
-  transition: all 0.5s ease;
-}
-
-.chat-fade-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.chat-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-/* 平滑切换效果 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>
