@@ -31,6 +31,7 @@
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.4",
     "express-http-proxy": "^2.1.1",
+    "highlight.js": "^11.11.1",
     "marked": "^15.0.7",
     "node-fetch": "^3.3.2",
     "okhttp": "^1.1.0",
