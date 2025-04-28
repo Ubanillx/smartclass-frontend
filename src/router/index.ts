@@ -14,6 +14,7 @@ import Circle from '../views/circle/Circle.vue';
 import { ChatDetail, ChatContainer } from '../views/chat';
 import AvatarCropper from '../views/settings/AvatarCropper.vue';
 import NoticeList from '../views/NoticeList.vue';
+import PostDetail from '../views/circle/PostDetail.vue';
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -231,6 +232,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/circle',
     name: 'Circle',
     component: Circle,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/circle/post/:id',
+    name: 'PostDetail',
+    component: PostDetail,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/circle/post/create',
+    name: 'PostCreate',
+    component: () => import('../views/circle/PostCreate.vue'),
     meta: {
       requiresAuth: true,
     },
