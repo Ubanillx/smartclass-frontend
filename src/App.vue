@@ -32,7 +32,7 @@
             </svg>
           </div>
         </template>
-        <span :class="{ 'active-text': active === 1 }">对话</span>
+        <span :class="{ 'active-text': active === 1 }">智慧体</span>
       </van-tabbar-item>
       <van-tabbar-item to="/circle">
         <template #icon="props">

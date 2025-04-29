@@ -460,7 +460,7 @@ const aiAssistants = ref<Assistant[]>([]);
 // 从后端获取智慧体数据
 const fetchAiAssistants = async () => {
   try {
-    const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
+    const response = await AiAvatarControllerService.listAiAvatarUsingGet();
 
     if (response.code === 0 && response.data) {
       // 将后端数据转换为前端需要的格式

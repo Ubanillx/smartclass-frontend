@@ -78,7 +78,7 @@ const loadAiAvatars = async () => {
 
   try {
     // 获取所有AI分身信息
-    const response = await AiAvatarControllerService.listAllAiAvatarUsingGet();
+    const response = await AiAvatarControllerService.listAiAvatarUsingGet();
 
     if (response.code === 0 && response.data) {
       // 将AI分身信息转换为智能助手格式
