@@ -9,6 +9,7 @@ dist/
 dist.zip
 
 # IDE
-.vscode/*
+.vscode
 !.vscode/extensions.json
 .idea
+.cursor
