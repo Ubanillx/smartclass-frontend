@@ -127,11 +127,11 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast, showDialog } from 'vant';
-import { useSettingsStore } from '../stores/settingsStore';
-import { useSearchStore } from '../stores/searchStore';
-import { useCollectedWordsStore } from '../stores/collectedWordsStore';
-import { useUserStore } from '../stores/userStore';
-import { BackButton } from '../components/Common';
+import { useSettingsStore } from '../../../stores/settingsStore.ts';
+import { useSearchStore } from '../../../stores/searchStore.ts';
+import { useCollectedWordsStore } from '../../../stores/collectedWordsStore.ts';
+import { useUserStore } from '../../../stores/userStore.ts';
+import { BackButton } from '../../../components/Common';
 
 const router = useRouter();
 const settingsStore = useSettingsStore();

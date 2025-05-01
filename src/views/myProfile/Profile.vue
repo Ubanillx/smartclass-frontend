@@ -59,9 +59,9 @@ import {
   LearningHistory,
   LogoutButton,
   ContentTabs,
-} from '../components/Profile';
-import { useUserStore } from '../stores/userStore';
-import { UserControllerService } from '../services';
+} from '../../components/Profile';
+import { useUserStore } from '../../stores/userStore.ts';
+import { UserControllerService } from '../../services';
 
 // 组件引用
 const UserInfoCardRaw = markRaw(UserInfoCard);

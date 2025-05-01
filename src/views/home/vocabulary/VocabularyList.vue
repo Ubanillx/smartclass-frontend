@@ -128,13 +128,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { showToast } from 'vant';
-import { BackButton } from '../../components/Common';
+import { BackButton } from '../../../components/Common';
 import {
   vocabularyCategories,
   generateMockWords,
   Word,
   VocabularyCategory,
-} from '../../api/mock';
+} from '../../../api/mock.ts';
 
 // 状态变量
 const activeCategory = ref(0);

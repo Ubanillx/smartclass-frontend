@@ -59,14 +59,14 @@
 import { ref, markRaw, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import SearchBar from '../components/SearchBar.vue';
+import SearchBar from '../../components/Common/SearchBar.vue';
 import {
   NoticeCard,
   AiAssistantList,
   PopularCourses,
   DailyWordCard,
   ArticleList,
-} from '../components/Home';
+} from '../../components/Home';
 import {
   mockPopularCourses,
   vocabularyCategories,
@@ -77,18 +77,18 @@ import {
   type Word,
   type Notice,
   type Article,
-} from '../api/mock';
-import { useCollectedWordsStore } from '../stores/collectedWordsStore';
+} from '../../api/mock.ts';
+import { useCollectedWordsStore } from '../../stores/collectedWordsStore.ts';
 import {
   AiAvatarControllerService,
   DailyWordControllerService,
   DailyWordFavourControllerService,
   DailyArticleControllerService,
-} from '../services';
-import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
-import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
-import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
-import { useUserStore } from '../stores/userStore';
+} from '../../services';
+import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
+import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
+import { AnnouncementQueryRequest } from '../../services/models/AnnouncementQueryRequest.ts';
+import { useUserStore } from '../../stores/userStore.ts';
 
 // 定义类型
 interface Assistant {

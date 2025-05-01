@@ -37,10 +37,10 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
-import { BackButton } from '../../components/Common';
+import { BackButton } from '../../../components/Common';
 import { Cropper, CircleStencil } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
-import { FileControllerService } from '../../services/services/FileControllerService';
+import { FileControllerService } from '../../../services/services/FileControllerService.ts';
 
 const router = useRouter();
 const route = useRoute();

@@ -187,11 +187,11 @@ import {
 } from 'vant';
 import type { UploaderFileListItem } from 'vant';
 import { areaList } from '@vant/area-data';
-import { BackButton } from '../../components/Common';
-import { UserControllerService } from '../../services/services/UserControllerService';
-import { User } from '../../services/models/User';
-import { UserUpdateMyRequest } from '../../services/models/UserUpdateMyRequest';
-import { useUserStore } from '../../stores/userStore';
+import { BackButton } from '../../../components/Common';
+import { UserControllerService } from '../../../services/services/UserControllerService.ts';
+import { User } from '../../../services/models/User.ts';
+import { UserUpdateMyRequest } from '../../../services/models/UserUpdateMyRequest.ts';
+import { useUserStore } from '../../../stores/userStore.ts';
 
 interface FormData {
   id?: number;

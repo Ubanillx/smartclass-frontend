@@ -98,9 +98,9 @@ import {
   CourseCategories,
   CourseList,
   CourseDetail,
-} from '../components/Course';
-import { BackButton } from '../components/Common';
-import { Course as CourseType } from '../api/mock';
+} from '../../components/Course';
+import { BackButton } from '../../components/Common';
+import { Course as CourseType } from '../../api/mock.ts';
 
 // 定义类型
 interface CourseHighlight {

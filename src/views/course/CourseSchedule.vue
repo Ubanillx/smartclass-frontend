@@ -96,8 +96,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import { ScheduleCourse, getWeekSchedule } from '../api/mock';
-import { BackButton } from '../components/Common';
+import { ScheduleCourse, getWeekSchedule } from '../../api/mock.ts';
+import { BackButton } from '../../components/Common';
 
 const router = useRouter();
 const currentWeek = ref(0); // 0表示当前周

@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import SearchBar from '../../components/SearchBar.vue';
+import SearchBar from '../../components/Common/SearchBar.vue';
 import { ChatList } from '../../components/Dialogue';
 
 interface ChatItem {

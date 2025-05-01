@@ -44,15 +44,15 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import { CourseList, CourseDetail } from '../components/Course';
-import { BackButton } from '../components/Common';
+import { CourseList, CourseDetail } from '../../components/Course';
+import { BackButton } from '../../components/Common';
 import {
   mockPopularCourses,
   courseCategories,
   getCoursesByCategory,
   fetchMockPopularCourses,
   fetchCourseCategories,
-} from '../api/mock';
+} from '../../api/mock.ts';
 
 // 定义类型
 interface CourseHighlight {

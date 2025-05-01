@@ -96,11 +96,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { BackButton } from '../components/Common';
-import { Notice } from '../api/mock';
-import { AnnouncementControllerService } from '../services/services/AnnouncementControllerService.ts';
-import { AnnouncementVO } from '../services/models/AnnouncementVO.ts';
-import { AnnouncementQueryRequest } from '../services/models/AnnouncementQueryRequest.ts';
+import { BackButton } from '../../components/Common';
+import { Notice } from '../../api/mock.ts';
+import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
+import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
+import { AnnouncementQueryRequest } from '../../services/models/AnnouncementQueryRequest.ts';
 import { showToast } from 'vant';
 
 // 扩展Notice接口，添加viewCount和hasRead字段

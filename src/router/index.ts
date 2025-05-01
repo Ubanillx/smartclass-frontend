@@ -5,15 +5,15 @@ import {
   NavigationGuardNext,
   RouteLocationNormalized,
 } from 'vue-router';
-import Home from '../views/Home.vue';
-import Courses from '../views/Courses.vue';
-import Profile from '../views/Profile.vue';
+import Home from '../views/home/Home.vue';
+import Courses from '../views/course/Courses.vue';
+import Profile from '../views/myProfile/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
 import Circle from '../views/circle/Circle.vue';
 import { ChatDetail, ChatContainer } from '../views/chat';
-import AvatarCropper from '../views/settings/AvatarCropper.vue';
-import NoticeList from '../views/NoticeList.vue';
+import AvatarCropper from '../views/myProfile/settings/AvatarCropper.vue';
+import NoticeList from '../views/home/NoticeList.vue';
 import PostDetail from '../views/circle/PostDetail.vue';
 
 declare module 'vue-router' {
@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/search',
     name: 'SearchPage',
-    component: () => import('../views/SearchPage.vue'),
+    component: () => import('../views/common/SearchPage.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -66,7 +66,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/course-schedule',
     name: 'CourseSchedule',
-    component: () => import('../views/CourseSchedule.vue'),
+    component: () => import('../views/course/CourseSchedule.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -74,7 +74,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/task-plans',
     name: 'TaskPlans',
-    component: () => import('../views/TaskPlans.vue'),
+    component: () => import('../views/course/TaskPlans.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -98,7 +98,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import('../views/Settings.vue'),
+    component: () => import('../views/myProfile/settings/Settings.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -106,7 +106,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings/profile',
     name: 'SettingsProfile',
-    component: () => import('../views/settings/SettingsProfile.vue'),
+    component: () => import('../views/myProfile/settings/SettingsProfile.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -114,7 +114,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings/about',
     name: 'SettingsAbout',
-    component: () => import('../views/settings/SettingsAbout.vue'),
+    component: () => import('../views/myProfile/settings/SettingsAbout.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -122,7 +122,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings/terms',
     name: 'SettingsTerms',
-    component: () => import('../views/settings/SettingsTerms.vue'),
+    component: () => import('../views/myProfile/settings/SettingsTerms.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -130,7 +130,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings/privacy',
     name: 'SettingsPrivacy',
-    component: () => import('../views/settings/SettingsPrivacy.vue'),
+    component: () => import('../views/myProfile/settings/SettingsPrivacy.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -163,7 +163,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/course-study/:id',
     name: 'CourseStudy',
-    component: () => import('../views/CourseStudy.vue'),
+    component: () => import('../views/course/CourseStudy.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -183,7 +183,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/vocabulary',
     name: 'VocabularyList',
-    component: () => import('../views/vocabulary/VocabularyList.vue'),
+    component: () => import('../views/home/vocabulary/VocabularyList.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -191,7 +191,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/vocabulary/collected',
     name: 'CollectedWords',
-    component: () => import('../views/vocabulary/CollectedWords.vue'),
+    component: () => import('../views/home/vocabulary/CollectedWords.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -199,7 +199,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/articles',
     name: 'ArticlesList',
-    component: () => import('../views/articles/ArticlesList.vue'),
+    component: () => import('../views/home/articles/ArticlesList.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -207,7 +207,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/popular-courses',
     name: 'PopularCourses',
-    component: () => import('../views/PopularCourses.vue'),
+    component: () => import('../views/course/PopularCourses.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -215,7 +215,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/achievements',
     name: 'Achievements',
-    component: () => import('../views/achievements/AchievementsPage.vue'),
+    component: () => import('../views/myProfile/achievements/AchievementsPage.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -223,7 +223,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/history',
     name: 'History',
-    component: () => import('../views/history/HistoryPage.vue'),
+    component: () => import('../views/course/HistoryPage.vue'),
     meta: {
       requiresAuth: true,
     },

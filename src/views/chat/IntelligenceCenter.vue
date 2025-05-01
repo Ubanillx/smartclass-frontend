@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import SearchBar from '../../components/SearchBar.vue';
+import SearchBar from '../../components/Common/SearchBar.vue';
 import IntelligenceCenterContent from './components/IntelligenceCenterContent.vue';
 
 const router = useRouter();

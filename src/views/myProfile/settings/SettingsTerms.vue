@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { BackButton } from '../../components/Common';
+import { BackButton } from '../../../components/Common';
 </script>
 
 <style scoped>

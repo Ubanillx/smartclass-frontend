@@ -311,13 +311,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { showToast, showSuccessToast } from 'vant';
-import { BackButton } from '../../components/Common';
-import SearchBar from '../../components/SearchBar.vue';
+import { BackButton } from '../../../components/Common';
+import SearchBar from '../../../components/Common/SearchBar.vue';
 import { useRouter } from 'vue-router';
 import {
   useCollectedWordsStore,
   CollectedWord,
-} from '../../stores/collectedWordsStore';
+} from '../../../stores/collectedWordsStore.ts';
 
 const router = useRouter();
 const collectedWordsStore = useCollectedWordsStore();

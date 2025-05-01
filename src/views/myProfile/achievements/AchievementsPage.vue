@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { BackButton } from '../../components/Common';
+import { BackButton } from '../../../components/Common';
 
 interface BadgeDetail {
   id: number;

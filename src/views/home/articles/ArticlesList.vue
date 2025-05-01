@@ -71,13 +71,13 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import { BackButton } from '../../components/Common';
+import { BackButton } from '../../../components/Common';
 import ArticleContent from './components/ArticleContent.vue';
 import {
   mockArticles,
   generateMockArticles,
   type Article,
-} from '../../api/mock';
+} from '../../../api/mock.ts';
 
 const router = useRouter();
 const route = useRoute();

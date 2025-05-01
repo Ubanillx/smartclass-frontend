@@ -113,8 +113,8 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { mockRecommendations, mockSearchResults } from '../api/mock'; // 导入 mock 数据
-import { useSearchStore } from '../stores/searchStore'; // 导入搜索历史存储
+import { mockRecommendations, mockSearchResults } from '../../api/mock.ts'; // 导入 mock 数据
+import { useSearchStore } from '../../stores/searchStore.ts'; // 导入搜索历史存储
 
 const router = useRouter();
 const searchStore = useSearchStore(); // 使用搜索历史存储

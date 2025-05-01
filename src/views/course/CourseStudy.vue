@@ -11,9 +11,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import { CourseStudy } from '../components/Course';
-import { BackButton } from '../components/Common';
-import { fetchCourseDetail, Course as CourseType } from '../api/mock';
+import { CourseStudy } from '../../components/Course';
+import { BackButton } from '../../components/Common';
+import { fetchCourseDetail, Course as CourseType } from '../../api/mock.ts';
 
 interface CourseHighlight {
   icon: string;

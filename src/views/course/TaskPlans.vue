@@ -288,8 +288,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
-import { BackButton } from '../components/Common';
-import { TaskPlan, getAllTaskPlans, mockPopularCourses } from '../api/mock';
+import { BackButton } from '../../components/Common';
+import { TaskPlan, getAllTaskPlans, mockPopularCourses } from '../../api/mock.ts';
 import dayjs from 'dayjs';
 
 const router = useRouter();
