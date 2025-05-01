@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PostUpdateRequest = {
-  content?: string;
-  id?: number;
-  tags?: Array<string>;
-  title?: string;
+    content?: string;
+    id?: number;
+    tags?: Array<string>;
+    title?: string;
 };
+

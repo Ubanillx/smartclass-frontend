@@ -3,15 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserLevelQueryRequest = {
-  current?: number;
-  id?: number;
-  level?: number;
-  levelName?: string;
-  maxExperienceEnd?: number;
-  maxExperienceStart?: number;
-  minExperienceEnd?: number;
-  minExperienceStart?: number;
-  pageSize?: number;
-  sortField?: string;
-  sortOrder?: string;
+    current?: number;
+    id?: number;
+    level?: number;
+    levelName?: string;
+    maxExperienceEnd?: number;
+    maxExperienceStart?: number;
+    minExperienceEnd?: number;
+    minExperienceStart?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
 };
+

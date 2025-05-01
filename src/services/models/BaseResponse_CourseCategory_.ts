@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CourseCategory } from './CourseCategory.ts';
+import type { CourseCategory } from './CourseCategory';
 export type BaseResponse_CourseCategory_ = {
-  code?: number;
-  data?: CourseCategory;
-  message?: string;
+    code?: number;
+    data?: CourseCategory;
+    message?: string;
 };
+

@@ -3,15 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Teacher = {
-  adminId?: number;
-  avatar?: string;
-  createTime?: string;
-  expertise?: string;
-  id?: number;
-  introduction?: string;
-  isDelete?: number;
-  name?: string;
-  title?: string;
-  updateTime?: string;
-  userId?: number;
+    adminId?: number;
+    avatar?: string;
+    createTime?: string;
+    expertise?: string;
+    id?: number;
+    introduction?: string;
+    isDelete?: number;
+    name?: string;
+    title?: string;
+    updateTime?: string;
+    userId?: number;
 };
+

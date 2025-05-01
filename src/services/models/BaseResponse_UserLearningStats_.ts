@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserLearningStats } from './UserLearningStats.ts';
+import type { UserLearningStats } from './UserLearningStats';
 export type BaseResponse_UserLearningStats_ = {
-  code?: number;
-  data?: UserLearningStats;
-  message?: string;
+    code?: number;
+    data?: UserLearningStats;
+    message?: string;
 };
+

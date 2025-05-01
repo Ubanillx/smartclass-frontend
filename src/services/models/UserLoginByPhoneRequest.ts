@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserLoginByPhoneRequest = {
-  userPassword?: string;
-  userPhone?: string;
+    userPassword?: string;
+    userPhone?: string;
 };
+

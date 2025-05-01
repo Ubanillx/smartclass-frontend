@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DailyArticleVO } from './DailyArticleVO.ts';
+import type { DailyArticleVO } from './DailyArticleVO';
 export type BaseResponse_DailyArticleVO_ = {
-  code?: number;
-  data?: DailyArticleVO;
-  message?: string;
+    code?: number;
+    data?: DailyArticleVO;
+    message?: string;
 };
+

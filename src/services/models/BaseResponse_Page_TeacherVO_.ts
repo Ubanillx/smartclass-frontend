@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_TeacherVO_ } from './Page_TeacherVO_.ts';
+import type { Page_TeacherVO_ } from './Page_TeacherVO_';
 export type BaseResponse_Page_TeacherVO_ = {
-  code?: number;
-  data?: Page_TeacherVO_;
-  message?: string;
+    code?: number;
+    data?: Page_TeacherVO_;
+    message?: string;
 };
+

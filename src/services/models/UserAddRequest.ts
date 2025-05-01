@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserAddRequest = {
-  userAccount?: string;
-  userName?: string;
-  userRole?: string;
+    userAccount?: string;
+    userName?: string;
+    userRole?: string;
 };
+

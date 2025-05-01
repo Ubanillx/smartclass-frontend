@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Teacher } from './Teacher.ts';
+import type { Teacher } from './Teacher';
 export type BaseResponse_Teacher_ = {
-  code?: number;
-  data?: Teacher;
-  message?: string;
+    code?: number;
+    data?: Teacher;
+    message?: string;
 };
+

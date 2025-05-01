@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AnnouncementVO } from './AnnouncementVO.ts';
+import type { AnnouncementVO } from './AnnouncementVO';
 export type BaseResponse_AnnouncementVO_ = {
-  code?: number;
-  data?: AnnouncementVO;
-  message?: string;
+    code?: number;
+    data?: AnnouncementVO;
+    message?: string;
 };
+

@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserDailyWord } from './UserDailyWord.ts';
+import type { UserDailyWord } from './UserDailyWord';
 export type BaseResponse_UserDailyWord_ = {
-  code?: number;
-  data?: UserDailyWord;
-  message?: string;
+    code?: number;
+    data?: UserDailyWord;
+    message?: string;
 };
+

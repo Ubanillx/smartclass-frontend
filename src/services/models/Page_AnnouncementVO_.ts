@@ -2,17 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AnnouncementVO } from './AnnouncementVO.ts';
-import type { OrderItem } from './OrderItem.ts';
+import type { AnnouncementVO } from './AnnouncementVO';
+import type { OrderItem } from './OrderItem';
 export type Page_AnnouncementVO_ = {
-  countId?: string;
-  current?: number;
-  maxLimit?: number;
-  optimizeCountSql?: boolean;
-  orders?: Array<OrderItem>;
-  pages?: number;
-  records?: Array<AnnouncementVO>;
-  searchCount?: boolean;
-  size?: number;
-  total?: number;
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: Array<OrderItem>;
+    pages?: number;
+    records?: Array<AnnouncementVO>;
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
 };
+

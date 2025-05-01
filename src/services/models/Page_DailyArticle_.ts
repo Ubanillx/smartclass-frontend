@@ -2,17 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DailyArticle } from './DailyArticle.ts';
-import type { OrderItem } from './OrderItem.ts';
+import type { DailyArticle } from './DailyArticle';
+import type { OrderItem } from './OrderItem';
 export type Page_DailyArticle_ = {
-  countId?: string;
-  current?: number;
-  maxLimit?: number;
-  optimizeCountSql?: boolean;
-  orders?: Array<OrderItem>;
-  pages?: number;
-  records?: Array<DailyArticle>;
-  searchCount?: boolean;
-  size?: number;
-  total?: number;
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: Array<OrderItem>;
+    pages?: number;
+    records?: Array<DailyArticle>;
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
 };
+

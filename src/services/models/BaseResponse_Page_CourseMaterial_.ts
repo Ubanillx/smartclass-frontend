@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_CourseMaterial_ } from './Page_CourseMaterial_.ts';
+import type { Page_CourseMaterial_ } from './Page_CourseMaterial_';
 export type BaseResponse_Page_CourseMaterial_ = {
-  code?: number;
-  data?: Page_CourseMaterial_;
-  message?: string;
+    code?: number;
+    data?: Page_CourseMaterial_;
+    message?: string;
 };
+

@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserAiAvatarVO } from './UserAiAvatarVO.ts';
+import type { UserAiAvatarVO } from './UserAiAvatarVO';
 export type BaseResponse_UserAiAvatarVO_ = {
-  code?: number;
-  data?: UserAiAvatarVO;
-  message?: string;
+    code?: number;
+    data?: UserAiAvatarVO;
+    message?: string;
 };
+

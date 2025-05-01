@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PostAddRequest = {
-  content?: string;
-  tags?: Array<string>;
-  title?: string;
+    content?: string;
+    tags?: Array<string>;
+    title?: string;
 };
+

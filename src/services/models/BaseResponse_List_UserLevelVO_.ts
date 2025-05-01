@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserLevelVO } from './UserLevelVO.ts';
+import type { UserLevelVO } from './UserLevelVO';
 export type BaseResponse_List_UserLevelVO_ = {
-  code?: number;
-  data?: Array<UserLevelVO>;
-  message?: string;
+    code?: number;
+    data?: Array<UserLevelVO>;
+    message?: string;
 };
+

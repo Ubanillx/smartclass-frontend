@@ -2,17 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CourseChapter } from './CourseChapter.ts';
-import type { OrderItem } from './OrderItem.ts';
+import type { CourseChapter } from './CourseChapter';
+import type { OrderItem } from './OrderItem';
 export type Page_CourseChapter_ = {
-  countId?: string;
-  current?: number;
-  maxLimit?: number;
-  optimizeCountSql?: boolean;
-  orders?: Array<OrderItem>;
-  pages?: number;
-  records?: Array<CourseChapter>;
-  searchCount?: boolean;
-  size?: number;
-  total?: number;
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: Array<OrderItem>;
+    pages?: number;
+    records?: Array<CourseChapter>;
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
 };
+

@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DailyWordVO } from './DailyWordVO.ts';
+import type { DailyWordVO } from './DailyWordVO';
 export type BaseResponse_DailyWordVO_ = {
-  code?: number;
-  data?: DailyWordVO;
-  message?: string;
+    code?: number;
+    data?: DailyWordVO;
+    message?: string;
 };
+

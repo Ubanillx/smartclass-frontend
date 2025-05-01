@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TextToAudioRequest = {
-  aiAvatarId?: number;
-  messageId?: string;
-  text?: string;
+export type UserWordBookAddRequest = {
+    difficulty?: number;
+    wordId?: number;
 };
+

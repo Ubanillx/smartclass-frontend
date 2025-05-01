@@ -3,5 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DeleteRequest_1 = {
-  id?: number;
+    id?: number;
 };
+

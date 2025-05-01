@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ChatMessageVO } from './ChatMessageVO.ts';
+import type { ChatMessageVO } from './ChatMessageVO';
 export type BaseResponse_ChatMessageVO_ = {
-  code?: number;
-  data?: ChatMessageVO;
-  message?: string;
+    code?: number;
+    data?: ChatMessageVO;
+    message?: string;
 };
+

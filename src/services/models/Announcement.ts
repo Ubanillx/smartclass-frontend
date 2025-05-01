@@ -3,17 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Announcement = {
-  adminId?: number;
-  content?: string;
-  coverImage?: string;
-  createTime?: string;
-  endTime?: string;
-  id?: number;
-  isDelete?: number;
-  priority?: number;
-  startTime?: string;
-  status?: number;
-  title?: string;
-  updateTime?: string;
-  viewCount?: number;
+    adminId?: number;
+    content?: string;
+    coverImage?: string;
+    createTime?: string;
+    endTime?: string;
+    id?: number;
+    isDelete?: number;
+    priority?: number;
+    startTime?: string;
+    status?: number;
+    title?: string;
+    updateTime?: string;
+    viewCount?: number;
 };
+

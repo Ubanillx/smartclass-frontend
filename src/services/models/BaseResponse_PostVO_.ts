@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PostVO } from './PostVO.ts';
+import type { PostVO } from './PostVO';
 export type BaseResponse_PostVO_ = {
-  code?: number;
-  data?: PostVO;
-  message?: string;
+    code?: number;
+    data?: PostVO;
+    message?: string;
 };
+

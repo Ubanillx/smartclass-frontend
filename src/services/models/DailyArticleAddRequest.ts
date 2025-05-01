@@ -3,16 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DailyArticleAddRequest = {
-  author?: string;
-  category?: string;
-  content?: string;
-  coverImage?: string;
-  difficulty?: number;
-  publishDate?: string;
-  readTime?: number;
-  source?: string;
-  sourceUrl?: string;
-  summary?: string;
-  tags?: string;
-  title?: string;
+    author?: string;
+    category?: string;
+    content?: string;
+    coverImage?: string;
+    difficulty?: number;
+    publishDate?: string;
+    readTime?: number;
+    source?: string;
+    sourceUrl?: string;
+    summary?: string;
+    tags?: string;
+    title?: string;
 };
+

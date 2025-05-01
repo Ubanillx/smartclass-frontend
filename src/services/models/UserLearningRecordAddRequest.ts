@@ -3,15 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserLearningRecordAddRequest = {
-  accuracy?: number;
-  count?: number;
-  duration?: number;
-  experience?: number;
-  lessonNumber?: number;
-  points?: number;
-  recordDate?: string;
-  recordType?: string;
-  relatedId?: number;
-  remark?: string;
-  status?: string;
+    accuracy?: number;
+    count?: number;
+    duration?: number;
+    experience?: number;
+    lessonNumber?: number;
+    points?: number;
+    recordDate?: string;
+    recordType?: string;
+    relatedId?: number;
+    remark?: string;
+    status?: string;
 };
+

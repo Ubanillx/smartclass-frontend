@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_AnnouncementVO_ } from './Page_AnnouncementVO_.ts';
+import type { Page_AnnouncementVO_ } from './Page_AnnouncementVO_';
 export type BaseResponse_Page_AnnouncementVO_ = {
-  code?: number;
-  data?: Page_AnnouncementVO_;
-  message?: string;
+    code?: number;
+    data?: Page_AnnouncementVO_;
+    message?: string;
 };
+

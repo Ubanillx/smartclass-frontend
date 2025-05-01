@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CourseVO } from './CourseVO.ts';
+import type { CourseVO } from './CourseVO';
 export type BaseResponse_List_CourseVO_ = {
-  code?: number;
-  data?: Array<CourseVO>;
-  message?: string;
+    code?: number;
+    data?: Array<CourseVO>;
+    message?: string;
 };
+

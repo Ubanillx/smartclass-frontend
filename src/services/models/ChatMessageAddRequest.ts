@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ChatMessageAddRequest = {
-  aiAvatarId?: number;
-  content?: string;
-  endChat?: boolean;
-  fileIds?: Array<string>;
-  messageType?: string;
-  sessionId?: string;
+    aiAvatarId?: number;
+    content?: string;
+    endChat?: boolean;
+    fileIds?: Array<string>;
+    messageType?: string;
+    sessionId?: string;
 };
+

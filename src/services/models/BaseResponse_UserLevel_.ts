@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserLevel } from './UserLevel.ts';
+import type { UserLevel } from './UserLevel';
 export type BaseResponse_UserLevel_ = {
-  code?: number;
-  data?: UserLevel;
-  message?: string;
+    code?: number;
+    data?: UserLevel;
+    message?: string;
 };
+

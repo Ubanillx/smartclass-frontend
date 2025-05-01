@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_UserAiAvatarVO_ } from './Page_UserAiAvatarVO_.ts';
+import type { Page_UserAiAvatarVO_ } from './Page_UserAiAvatarVO_';
 export type BaseResponse_Page_UserAiAvatarVO_ = {
-  code?: number;
-  data?: Page_UserAiAvatarVO_;
-  message?: string;
+    code?: number;
+    data?: Page_UserAiAvatarVO_;
+    message?: string;
 };
+

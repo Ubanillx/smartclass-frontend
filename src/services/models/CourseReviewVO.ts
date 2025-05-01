@@ -3,19 +3,20 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CourseReviewVO = {
-  adminReply?: string;
-  adminReplyTime?: string;
-  content?: string;
-  courseId?: number;
-  courseTitle?: string;
-  createTime?: string;
-  id?: number;
-  likeCount?: number;
-  rating?: number;
-  replyCount?: number;
-  status?: number;
-  updateTime?: string;
-  userAvatar?: string;
-  userId?: number;
-  userName?: string;
+    adminReply?: string;
+    adminReplyTime?: string;
+    content?: string;
+    courseId?: number;
+    courseTitle?: string;
+    createTime?: string;
+    id?: number;
+    likeCount?: number;
+    rating?: number;
+    replyCount?: number;
+    status?: number;
+    updateTime?: string;
+    userAvatar?: string;
+    userId?: number;
+    userName?: string;
 };
+

@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserAiAvatarUpdateRequest = {
-  customSettings?: string;
-  id?: number;
-  isFavorite?: number;
-  userFeedback?: string;
-  userRating?: number;
+    customSettings?: string;
+    id?: number;
+    isFavorite?: number;
+    userFeedback?: string;
+    userRating?: number;
 };
+

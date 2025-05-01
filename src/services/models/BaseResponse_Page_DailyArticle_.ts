@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Page_DailyArticle_ } from './Page_DailyArticle_.ts';
+import type { Page_DailyArticle_ } from './Page_DailyArticle_';
 export type BaseResponse_Page_DailyArticle_ = {
-  code?: number;
-  data?: Page_DailyArticle_;
-  message?: string;
+    code?: number;
+    data?: Page_DailyArticle_;
+    message?: string;
 };
+

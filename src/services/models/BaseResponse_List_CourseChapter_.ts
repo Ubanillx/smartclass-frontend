@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CourseChapter } from './CourseChapter.ts';
+import type { CourseChapter } from './CourseChapter';
 export type BaseResponse_List_CourseChapter_ = {
-  code?: number;
-  data?: Array<CourseChapter>;
-  message?: string;
+    code?: number;
+    data?: Array<CourseChapter>;
+    message?: string;
 };
+

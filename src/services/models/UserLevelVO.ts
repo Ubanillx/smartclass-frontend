@@ -3,14 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserLevelVO = {
-  createTime?: string;
-  description?: string;
-  iconUrl?: string;
-  id?: number;
-  level?: number;
-  levelName?: string;
-  maxExperience?: number;
-  minExperience?: number;
-  privileges?: string;
-  updateTime?: string;
+    createTime?: string;
+    description?: string;
+    iconUrl?: string;
+    id?: number;
+    level?: number;
+    levelName?: string;
+    maxExperience?: number;
+    minExperience?: number;
+    privileges?: string;
+    updateTime?: string;
 };
+

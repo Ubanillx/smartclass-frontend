@@ -3,16 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 export type DailyWordVO = {
-  audioUrl?: string;
-  category?: string;
-  createTime?: string;
-  difficulty?: number;
-  example?: string;
-  exampleTranslation?: string;
-  id?: number;
-  notes?: string;
-  pronunciation?: string;
-  publishDate?: string;
-  translation?: string;
-  word?: string;
+    audioUrl?: string;
+    category?: string;
+    createTime?: string;
+    difficulty?: number;
+    example?: string;
+    exampleTranslation?: string;
+    id?: number;
+    likeCount?: number;
+    notes?: string;
+    pronunciation?: string;
+    publishDate?: string;
+    translation?: string;
+    word?: string;
 };
+

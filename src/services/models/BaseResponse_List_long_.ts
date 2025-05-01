@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type BaseResponse_List_long_ = {
-  code?: number;
-  data?: Array<number>;
-  message?: string;
+    code?: number;
+    data?: Array<number>;
+    message?: string;
 };
+
