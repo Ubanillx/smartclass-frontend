@@ -212,7 +212,7 @@ const loadChatHistory = async () => {
       await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
         undefined,
         currentPage.value,
-        pageSize.value,
+        undefined
       );
 
     if (response.code === 0 && response.data) {
@@ -249,7 +249,7 @@ const handlePageChange = (page: number) => {
   AiAvatarChatControllerService.getUserHistoryPageUsingGet(
     undefined,
     page,
-    pageSize.value
+    undefined
   )
     .then(response => {
       if (response.code === 0 && response.data) {
