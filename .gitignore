@@ -6,6 +6,7 @@
 # Dist
 node_modules
 dist/
+dist.zip
 
 # IDE
 .vscode/*
