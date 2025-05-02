@@ -154,7 +154,7 @@ const shouldShowToggle = (description: string) => {
 
 .toggle-truncate {
   color: #1989fa;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   padding-left: 4px;
   user-select: none;

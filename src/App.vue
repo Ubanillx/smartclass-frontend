@@ -377,6 +377,14 @@ h4 {
 }
 
 /* 全局字体大小控制 */
+.font-x-small {
+  --font-size-base: 10px;
+  --font-size-sm: 8px;
+  --font-size-md: 10px;
+  --font-size-lg: 12px;
+  --font-size-xl: 14px;
+}
+
 .font-small {
   --font-size-base: 12px;
   --font-size-sm: 10px;
@@ -399,6 +407,14 @@ h4 {
   --font-size-md: 16px;
   --font-size-lg: 18px;
   --font-size-xl: 20px;
+}
+
+.font-x-large {
+  --font-size-base: 18px;
+  --font-size-sm: 16px;
+  --font-size-md: 18px;
+  --font-size-lg: 20px;
+  --font-size-xl: 22px;
 }
 
 /* 应用字体大小变量 */

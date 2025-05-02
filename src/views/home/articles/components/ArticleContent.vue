@@ -47,9 +47,9 @@
               </div>
               <div
                 class="meta-item difficulty-tag"
-                :class="getDifficultyClass(article.difficulty)"
+                :class="getDifficultyClass(convertDifficultyToText(article.difficulty))"
               >
-                {{ article.difficulty }}
+                {{ convertDifficultyToText(article.difficulty) }}
               </div>
             </div>
           </div>
@@ -69,11 +69,14 @@ interface Article {
   cover: string;
   category: string;
   readTime: number;
-  difficulty: string;
+  difficulty: number | string;
   content: string;
-  publishDate: string;
-  viewCount: number;
-  likeCount: number;
+  publishDate?: string;
+  viewCount?: number;
+  likeCount?: number;
+  tags?: string[];
+  author?: string;
+  source?: string;
 }
 
 // 定义props
@@ -123,6 +126,18 @@ const getTagStyle = (category: string): Record<string, string> => {
   return styles;
 };
 
+// 将数字难度转换为文本
+const convertDifficultyToText = (difficulty: number | string | undefined): string => {
+  if (typeof difficulty === 'string') return difficulty;
+  
+  switch (difficulty) {
+    case 1: return '初级';
+    case 2: return '中级';
+    case 3: return '高级';
+    default: return '未知';
+  }
+};
+
 // 根据难度返回不同的样式类
 const getDifficultyClass = (difficulty: string): string => {
   switch (difficulty) {
@@ -151,6 +166,12 @@ const getDifficultyClass = (difficulty: string): string => {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.article-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .article-cover {

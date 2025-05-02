@@ -181,7 +181,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .page-title {
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
@@ -190,7 +190,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .title-icon {
   margin-right: 6px;
   color: #1989fa;
-  font-size: 22px;
+  font-size: var(--font-size-xl);
 }
 
 .header-actions {
@@ -229,13 +229,12 @@ const handleAssistantSelect = (assistantId: number) => {
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 14px 0;
-  font-size: var(--font-size-md, 16px);
-  font-weight: 700;
-  color: #646566;
+  padding: 12px 0;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: #969799;
   position: relative;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .nav-tab.active {

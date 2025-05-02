@@ -99,6 +99,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import css from 'highlight.js/lib/languages/css';
 import markdown from 'highlight.js/lib/languages/markdown';
 import { BackButton } from '../../components/Common';
+import { useSettingsStore } from '../../stores/settingsStore';
 
 // 注册常用的语言
 hljs.registerLanguage('javascript', javascript);
@@ -108,6 +109,7 @@ hljs.registerLanguage('css', css);
 hljs.registerLanguage('markdown', markdown);
 
 const router = useRouter();
+const settingsStore = useSettingsStore(); // 初始化settingsStore
 
 // 表单数据
 const postForm = ref({
@@ -313,7 +315,7 @@ const renderedContent = computed(() => {
 }
 
 .title-input :deep(.van-field__control) {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
 }
 
@@ -324,7 +326,7 @@ const renderedContent = computed(() => {
 }
 
 .content-input :deep(.van-field__control) {
-  font-size: 15px;
+  font-size: var(--font-size-md);
   line-height: 1.6;
 }
 
@@ -344,7 +346,7 @@ const renderedContent = computed(() => {
 
 .section-title {
   margin-bottom: 12px;
-  font-size: 15px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #323233;
 }
@@ -357,7 +359,7 @@ const renderedContent = computed(() => {
 
 .tag-item {
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
 }
 
@@ -372,7 +374,7 @@ const renderedContent = computed(() => {
 }
 
 .switch-label {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   color: #666;
 }
 
@@ -384,13 +386,13 @@ const renderedContent = computed(() => {
 
 .preview-title {
   margin-bottom: 12px;
-  font-size: 15px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #323233;
 }
 
 .markdown-preview {
-  font-size: 15px;
+  font-size: var(--font-size-md);
   line-height: 1.6;
   color: #333;
 }
@@ -499,7 +501,7 @@ const renderedContent = computed(() => {
 }
 
 .submit-btn {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   padding: 12px 0;
   border-radius: 8px;

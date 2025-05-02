@@ -168,6 +168,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { ActionSheet } from 'vant';
+import { useSettingsStore } from '../../stores/settingsStore';
 
 interface Comment {
   id: string;
@@ -193,6 +194,7 @@ interface Post {
 }
 
 const router = useRouter();
+const settingsStore = useSettingsStore(); // 初始化settingsStore
 const activeTab = ref('recommend'); // 默认显示推荐
 const refreshing = ref(false);
 const showComments = ref(false);
@@ -445,7 +447,7 @@ onMounted(() => {
 .page-title {
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
@@ -454,7 +456,7 @@ onMounted(() => {
 .title-icon {
   margin-right: 6px;
   color: #1989fa;
-  font-size: 22px;
+  font-size: var(--font-size-xl);
 }
 
 .header-actions {
@@ -500,7 +502,7 @@ onMounted(() => {
 .nav-tab {
   flex-shrink: 0;
   padding: 12px 16px;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #646566;
   position: relative;
@@ -596,7 +598,7 @@ onMounted(() => {
 }
 
 .username {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 600;
   color: #323233;
   display: flex;
@@ -617,20 +619,20 @@ onMounted(() => {
 }
 
 .post-time {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #969799;
   margin-top: 2px;
 }
 
 .post-title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: bold;
   color: #323233;
   margin-bottom: 8px;
 }
 
 .post-content {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   color: #323233;
   line-height: 1.5;
   margin-bottom: 12px;
@@ -661,7 +663,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-right: 20px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
 }
 
@@ -723,21 +725,21 @@ onMounted(() => {
 }
 
 .comment-user {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #323233;
   margin-bottom: 4px;
 }
 
 .comment-text {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   color: #323233;
   margin-bottom: 4px;
   line-height: 1.4;
 }
 
 .comment-time {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #969799;
 }
 

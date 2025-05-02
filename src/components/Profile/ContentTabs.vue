@@ -87,7 +87,7 @@ const switchTab = (index: number) => {
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: bold;
   color: #323233;
   padding: 16px;
@@ -117,7 +117,7 @@ const switchTab = (index: number) => {
 .profile-tab {
   position: relative;
   padding: 14px 20px;
-  font-size: 15px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #646566;
   cursor: pointer;

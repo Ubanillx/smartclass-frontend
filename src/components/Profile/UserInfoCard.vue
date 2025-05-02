@@ -104,7 +104,7 @@ const formatPhone = (phone: string): string => {
 }
 
 .id-text {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #909399;
   background-color: rgba(240, 240, 245, 0.8);
   padding: 2px 6px;

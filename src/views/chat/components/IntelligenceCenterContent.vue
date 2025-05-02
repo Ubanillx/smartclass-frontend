@@ -141,7 +141,7 @@ onMounted(() => {
 .loading-container p {
   margin-top: 12px;
   color: #666;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-family: 'Noto Sans SC', sans-serif;
 }
 

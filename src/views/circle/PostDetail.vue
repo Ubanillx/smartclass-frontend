@@ -188,6 +188,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { showToast, showImagePreview } from 'vant';
 import { ActionSheet } from 'vant';
 import BackButton from '../../components/Common/BackButton.vue';
+import { useSettingsStore } from '../../stores/settingsStore';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
@@ -269,6 +270,7 @@ interface Gift {
 
 const route = useRoute();
 const router = useRouter();
+const settingsStore = useSettingsStore(); // 初始化settingsStore
 const commentText = ref('');
 const sortType = ref('recommend');
 const showEmoji = ref(false);
@@ -901,7 +903,7 @@ onUnmounted(() => {
 }
 
 .username {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   font-weight: 700;
   color: #323233;
   display: flex;
@@ -922,7 +924,7 @@ onUnmounted(() => {
 }
 
 .post-time {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #b0b0b0;
   margin-top: 4px;
 }
@@ -940,7 +942,7 @@ onUnmounted(() => {
 }
 
 .post-title {
-  font-size: 18px;
+  font-size: var(--font-size-xl);
   font-weight: bold;
   color: #323233;
   margin: 0 0 8px;
@@ -948,7 +950,7 @@ onUnmounted(() => {
 }
 
 .post-text {
-  font-size: 15px;
+  font-size: var(--font-size-md);
   color: #323233;
   line-height: 1.6;
   margin: 0 0 12px;
@@ -1005,7 +1007,7 @@ onUnmounted(() => {
 }
 
 .comment-title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: #323233;
 }
@@ -1016,7 +1018,7 @@ onUnmounted(() => {
 }
 
 .sort-option {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   color: #969799;
   cursor: pointer;
 }
@@ -1047,14 +1049,14 @@ onUnmounted(() => {
 }
 
 .comment-user {
-  font-size: 15px;
+  font-size: var(--font-size-md);
   font-weight: 600;
   color: #323233;
   margin-bottom: 4px;
 }
 
 .comment-text {
-  font-size: 15px;
+  font-size: var(--font-size-md);
   color: #323233;
   line-height: 1.5;
   margin-bottom: 8px;
@@ -1063,7 +1065,7 @@ onUnmounted(() => {
 .comment-meta {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #b0b0b0;
   margin-bottom: 8px;
 }
@@ -1113,14 +1115,14 @@ onUnmounted(() => {
 }
 
 .reply-user {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: #323233;
   margin-bottom: 2px;
 }
 
 .reply-text {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: #323233;
   line-height: 1.4;
 }
@@ -1132,7 +1134,7 @@ onUnmounted(() => {
 }
 
 .more-replies {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: #1989fa;
   cursor: pointer;
   padding: 4px 0;
