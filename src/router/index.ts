@@ -136,6 +136,14 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: '/settings/feedback',
+    name: 'SettingsFeedback',
+    component: () => import('../views/myProfile/settings/SettingsFeedback.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/settings/avatar-cropper',
     name: 'AvatarCropper',
     component: AvatarCropper,
