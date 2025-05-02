@@ -60,6 +60,11 @@
     <van-cell-group inset class="setting-group">
       <van-cell title="清除缓存" is-link @click="clearCache" />
       <van-cell
+        title="用户反馈"
+        is-link
+        @click="router.push('/settings/feedback')"
+      />
+      <van-cell
         title="关于我们"
         is-link
         @click="router.push('/settings/about')"
@@ -168,9 +173,11 @@ const difficultyOptions = ['初级', '中等', '高级'].map((difficulty) => ({
 
 // 字体大小选项
 const fontSizeOptions = [
+  { text: '超级小', value: 'x-small' },
   { text: '小', value: 'small' },
   { text: '中', value: 'medium' },
   { text: '大', value: 'large' },
+  { text: '超级大', value: 'x-large' },
 ];
 
 // 获取字体大小显示标签
