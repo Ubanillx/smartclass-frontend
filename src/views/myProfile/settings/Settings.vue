@@ -8,7 +8,7 @@
       <van-cell
         title="个人资料"
         is-link
-        @click="router.push('/settings/profile')"
+        @click="router.push('/profile/settings/info')"
       >
       </van-cell>
     </van-cell-group>
@@ -62,24 +62,35 @@
       <van-cell
         title="用户反馈"
         is-link
-        @click="router.push('/settings/feedback')"
+        @click="router.push('/profile/settings/feedback')"
       />
       <van-cell
         title="关于我们"
         is-link
-        @click="router.push('/settings/about')"
+        @click="router.push('/profile/settings/about')"
       />
       <van-cell
         title="用户协议"
         is-link
-        @click="router.push('/settings/terms')"
+        @click="router.push('/profile/settings/terms')"
       />
       <van-cell
         title="隐私政策"
         is-link
-        @click="router.push('/settings/privacy')"
+        @click="router.push('/profile/settings/privacy')"
       />
     </van-cell-group>
+    
+    <!-- 退出登录按钮 -->
+    <div class="logout-button-container">
+      <van-button 
+        block 
+        class="logout-btn" 
+        @click="showLogoutConfirm"
+      >
+        退出登录
+      </van-button>
+    </div>
 
     <!-- 学习目标选择器 -->
     <van-popup v-model:show="showGoalPicker" position="bottom">
@@ -125,13 +136,25 @@
         title="设置字体大小"
       />
     </van-popup>
+    
+    <!-- 退出登录确认对话框 -->
+    <van-dialog
+      v-model:show="showLogoutDialog"
+      title="退出登录"
+      show-cancel-button
+      confirm-button-color="#ee0a24"
+      cancel-button-color="#646566"
+      @confirm="handleLogout"
+    >
+      <div class="logout-dialog-content">确定要退出登录吗？</div>
+    </van-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { showToast, showDialog } from 'vant';
+import { showToast, showDialog, showSuccessToast } from 'vant';
 import { useSettingsStore } from '../../../stores/settingsStore.ts';
 import { useSearchStore } from '../../../stores/searchStore.ts';
 import { useCollectedWordsStore } from '../../../stores/collectedWordsStore.ts';
@@ -140,6 +163,10 @@ import { BackButton } from '../../../components/Common';
 
 const router = useRouter();
 const settingsStore = useSettingsStore();
+const userStore = useUserStore();
+
+// 退出登录相关
+const showLogoutDialog = ref(false);
 
 // 学习设置
 const learningSettings = ref({
@@ -160,6 +187,22 @@ const showGoalPicker = ref(false);
 const showReminderPicker = ref(false);
 const showDifficultyPicker = ref(false);
 const showFontSizePicker = ref(false);
+
+// 退出登录处理
+const showLogoutConfirm = () => {
+  showLogoutDialog.value = true;
+};
+
+const handleLogout = async () => {
+  try {
+    await userStore.logout();
+    showSuccessToast('退出登录成功');
+    router.push('/login');
+  } catch (error) {
+    console.error('退出登录失败:', error);
+    showToast('退出登录失败，请重试');
+  }
+};
 
 // 选项数据
 const goalOptions = [15, 30, 45, 60, 90, 120].map((min) => ({
@@ -344,5 +387,32 @@ const clearCache = async (): Promise<void> => {
 
 :deep(.van-switch) {
   margin-left: 8px;
+}
+
+.logout-button-container {
+  margin: 24px 16px;
+}
+
+.logout-btn {
+  height: 40px;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: #ee0a24;
+  background: white;
+  border: 1px solid rgba(238, 10, 36, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(238, 10, 36, 0.08);
+  transition: all 0.3s ease;
+}
+
+.logout-btn:active {
+  background-color: rgba(238, 10, 36, 0.05);
+}
+
+.logout-dialog-content {
+  padding: 8px 16px 16px;
+  text-align: center;
+  color: #323233;
+  font-size: var(--font-size-md);
 }
 </style>
