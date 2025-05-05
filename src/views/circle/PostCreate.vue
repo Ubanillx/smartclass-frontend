@@ -27,6 +27,22 @@
         show-word-limit
       />
 
+      <!-- Markdown 预览切换 -->
+      <div class="preview-switch">
+        <van-switch
+          v-model="showPreview"
+          size="24px"
+          active-color="#1989fa"
+        />
+        <span class="switch-label">预览模式</span>
+      </div>
+
+      <!-- Markdown 预览区域 -->
+      <div v-if="showPreview" class="preview-section">
+        <div class="preview-title">预览</div>
+        <div class="markdown-preview markdown-body" v-html="renderedContent"></div>
+      </div>
+
       <!-- 图片上传 -->
       <div class="upload-section">
         <van-uploader
@@ -54,22 +70,6 @@
           </van-tag>
         </div>
       </div>
-
-      <!-- Markdown 预览切换 -->
-      <div class="preview-switch">
-        <van-switch
-          v-model="showPreview"
-          size="24px"
-          active-color="#1989fa"
-        />
-        <span class="switch-label">预览模式</span>
-      </div>
-
-      <!-- Markdown 预览区域 -->
-      <div v-if="showPreview" class="preview-section">
-        <div class="preview-title">预览</div>
-        <div class="markdown-preview markdown-body" v-html="renderedContent"></div>
-      </div>
       
       <!-- 发布按钮 -->
       <div class="submit-section">
@@ -77,9 +77,11 @@
           class="submit-btn" 
           type="primary" 
           block
+          :loading="submitting"
+          :disabled="submitting"
           @click="onSubmit"
         >
-          发布
+          {{ submitting ? '发布中...' : '发布' }}
         </van-button>
       </div>
     </div>
@@ -100,6 +102,10 @@ import css from 'highlight.js/lib/languages/css';
 import markdown from 'highlight.js/lib/languages/markdown';
 import { BackButton } from '../../components/Common';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { PostControllerService } from '../../services/services/PostControllerService';
+import { FileControllerService } from '../../services/services/FileControllerService';
+import type { PostAddRequest } from '../../services/models/PostAddRequest';
+import { getClientIPWithRetry } from '../../utils/ipUtils';
 
 // 注册常用的语言
 hljs.registerLanguage('javascript', javascript);
@@ -110,13 +116,14 @@ hljs.registerLanguage('markdown', markdown);
 
 const router = useRouter();
 const settingsStore = useSettingsStore(); // 初始化settingsStore
+const submitting = ref(false); // 提交状态
 
 // 表单数据
 const postForm = ref({
   title: '',
   content: '',
-  images: [],
-  tags: [] as number[]
+  images: [] as { url: string, file?: File, uploaded?: boolean, fileUrl?: string }[],
+  tags: [] as string[]
 });
 
 // 预览开关
@@ -133,18 +140,18 @@ const availableTags = [
 ];
 
 // 检查标签是否被选中
-const isTagSelected = (tag: { id: number }) => {
-  return postForm.value.tags.includes(tag.id);
+const isTagSelected = (tag: { id: number, name: string }) => {
+  return postForm.value.tags.includes(tag.name);
 };
 
 // 切换标签选择状态
-const toggleTag = (tag: { id: number }) => {
-  const index = postForm.value.tags.indexOf(tag.id);
+const toggleTag = (tag: { id: number, name: string }) => {
+  const index = postForm.value.tags.indexOf(tag.name);
   if (index > -1) {
     postForm.value.tags.splice(index, 1);
   } else {
     if (postForm.value.tags.length < 3) {
-      postForm.value.tags.push(tag.id);
+      postForm.value.tags.push(tag.name);
     } else {
       showToast('最多选择3个标签');
     }
@@ -169,7 +176,7 @@ const onClickLeft = () => {
 };
 
 // 图片上传前检查
-const beforeRead = (file: File) => {
+const beforeRead = (file: any) => {
   // 检查文件类型
   const isImage = ['image/jpeg', 'image/png', 'image/gif'].includes(file.type);
   if (!isImage) {
@@ -186,23 +193,43 @@ const beforeRead = (file: File) => {
 
 // 图片上传后处理
 const afterRead = async (file: any) => {
-  // 这里应该调用后端API上传图片
-  // 示例代码，实际使用时需要改为真实的上传逻辑
   try {
-    showToast.loading({
+    showToast({
       message: '上传中...',
       forbidClick: true,
+      duration: 0
     });
     
-    // 模拟上传延迟
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // TODO: 实现实际的图片上传逻辑
+    // 临时显示本地预览
     file.url = URL.createObjectURL(file.file);
+    file.uploaded = false;
     
-    showToast.success('上传成功');
+    // 调用后端API上传图片
+    const response = await FileControllerService.uploadFileUsingPost(
+      file.file,
+      '帖子图片',
+      file.file.name
+    );
+    
+    if (response.code === 0 && response.data) {
+      file.fileUrl = response.data; // 保存服务器返回的文件URL
+      file.uploaded = true;
+      showToast({
+        type: 'success',
+        message: '上传成功'
+      });
+    } else {
+      showToast({
+        type: 'fail',
+        message: response.message || '上传失败'
+      });
+      console.error('图片上传失败:', response);
+    }
   } catch (error) {
-    showToast.fail('上传失败');
+    showToast({
+      type: 'fail',
+      message: '上传失败'
+    });
     console.error('图片上传失败:', error);
   }
 };
@@ -236,45 +263,75 @@ const onSubmit = async () => {
     return;
   }
 
+  // 检查所有图片是否已上传完成
+  const unuploadedImages = postForm.value.images.filter(img => !img.uploaded);
+  if (unuploadedImages.length > 0) {
+    showToast('请等待所有图片上传完成');
+    return;
+  }
+
   try {
-    showToast.loading({
+    submitting.value = true;
+    showToast({
       message: '发布中...',
       forbidClick: true,
+      duration: 0
     });
 
-    // TODO: 实现实际的发布逻辑
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // 处理图片链接，将图片标记添加到内容中
+    let contentWithImages = postForm.value.content;
+    if (postForm.value.images.length > 0) {
+      contentWithImages += '\n\n';
+      postForm.value.images.forEach(img => {
+        if (img.fileUrl) {
+          contentWithImages += `![图片](${img.fileUrl})\n`;
+        }
+      });
+    }
 
-    showToast.success('发布成功');
-    router.back();
+    // 获取客户端IP地址
+    const clientIp = await getClientIPWithRetry();
+    
+    // 调用后端API发布帖子
+    const postData: PostAddRequest = {
+      title: postForm.value.title.trim(),
+      content: contentWithImages.trim(),
+      tags: postForm.value.tags,
+      clientIp: clientIp // 添加IP地址
+    };
+
+    const response = await PostControllerService.addPostUsingPost(postData);
+    
+    if (response.code === 0) {
+      showToast({
+        type: 'success',
+        message: '发布成功'
+      });
+      router.back();
+    } else {
+      showToast({
+        type: 'fail',
+        message: response.message || '发布失败'
+      });
+      console.error('发布失败:', response);
+    }
   } catch (error) {
-    showToast.fail('发布失败');
+    showToast({
+      type: 'fail',
+      message: '发布失败'
+    });
     console.error('发布失败:', error);
+  } finally {
+    submitting.value = false;
   }
 };
 
 // 渲染 Markdown 内容
 const renderedContent = computed(() => {
   try {
-    const rawHtml = marked(postForm.value.content, {
-      gfm: true,
-      breaks: true,
-      highlight: function(code, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return hljs.highlight(code, { language: lang }).value;
-          } catch (error) {
-            console.error('Highlight error:', error);
-          }
-        }
-        return hljs.highlight(code, { language: 'plaintext' }).value;
-      }
-    });
-
-    return DOMPurify.sanitize(rawHtml, {
-      ADD_ATTR: ['target', 'class'],
-      ADD_TAGS: ['iframe']
-    });
+    // 简化的Markdown渲染
+    const rawHtml = marked(postForm.value.content);
+    return DOMPurify.sanitize(rawHtml);
   } catch (error) {
     console.error('Markdown渲染错误:', error);
     return '';
@@ -320,7 +377,7 @@ const renderedContent = computed(() => {
 }
 
 .content-input {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   background: #fff;
   border-radius: 8px;
 }
@@ -330,8 +387,41 @@ const renderedContent = computed(() => {
   line-height: 1.6;
 }
 
+.preview-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  border-radius: 8px;
+  margin-top: -2px; /* 使其与内容输入框更紧密 */
+}
+
+.switch-label {
+  font-size: var(--font-size-md);
+  color: #666;
+}
+
+.preview-section {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  margin-top: -2px; /* 使其与预览切换更紧密 */
+  border-top: 1px solid #f2f2f2;
+}
+
+.preview-title {
+  margin-bottom: 12px;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: #323233;
+}
+
 .upload-section {
   margin-bottom: 20px;
+  margin-top: 16px;
   padding: 16px;
   background: #fff;
   border-radius: 8px;
@@ -361,34 +451,6 @@ const renderedContent = computed(() => {
   padding: 6px 12px;
   font-size: var(--font-size-sm);
   cursor: pointer;
-}
-
-.preview-switch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  padding: 12px 16px;
-  background: #fff;
-  border-radius: 8px;
-}
-
-.switch-label {
-  font-size: var(--font-size-md);
-  color: #666;
-}
-
-.preview-section {
-  padding: 16px;
-  background: #fff;
-  border-radius: 8px;
-}
-
-.preview-title {
-  margin-bottom: 12px;
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  color: #323233;
 }
 
 .markdown-preview {
