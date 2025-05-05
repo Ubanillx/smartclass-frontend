@@ -4,7 +4,10 @@
 /* eslint-disable */
 import type { UserVO } from './UserVO';
 export type PostVO = {
+    city?: string;
+    commentNum?: number;
     content?: string;
+    country?: string;
     createTime?: string;
     favourNum?: number;
     hasFavour?: boolean;

@@ -2,23 +2,23 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { BaseResponse_Page_PostVO_ } from '../models/BaseResponse_Page_PostVO_';
 import type { PostFavourAddRequest } from '../models/PostFavourAddRequest';
-import type { PostFavourQueryRequest } from '../models/PostFavourQueryRequest';
 import type { PostQueryRequest } from '../models/PostQueryRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class PostFavourControllerService {
     /**
-     * doPostFavour
+     * doFavour
      * @param postFavourAddRequest postFavourAddRequest
      * @returns BaseResponse_int_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static doPostFavourUsingPost(
+    public static doFavourUsingPost(
         postFavourAddRequest: PostFavourAddRequest,
     ): CancelablePromise<BaseResponse_int_ | any> {
         return __request(OpenAPI, {
@@ -33,19 +33,20 @@ export class PostFavourControllerService {
         });
     }
     /**
-     * listFavourPostByPage
-     * @param postFavourQueryRequest postFavourQueryRequest
-     * @returns BaseResponse_Page_PostVO_ OK
-     * @returns any Created
+     * hasFavour
+     * @param postId postId
+     * @returns BaseResponse_boolean_ OK
      * @throws ApiError
      */
-    public static listFavourPostByPageUsingPost(
-        postFavourQueryRequest: PostFavourQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PostVO_ | any> {
+    public static hasFavourUsingGet(
+        postId: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_favour/list/page',
-            body: postFavourQueryRequest,
+            method: 'GET',
+            url: '/api/post_favour/has_favour',
+            query: {
+                'postId': postId,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

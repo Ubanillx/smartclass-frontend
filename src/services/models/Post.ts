@@ -3,7 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Post = {
+    city?: string;
+    commentNum?: number;
     content?: string;
+    country?: string;
     createTime?: string;
     favourNum?: number;
     id?: number;
@@ -11,6 +14,7 @@ export type Post = {
     tags?: string;
     thumbNum?: number;
     title?: string;
+    type?: string;
     updateTime?: string;
     userId?: number;
 };

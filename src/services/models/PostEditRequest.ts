@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PostEditRequest = {
+    clientIp?: string;
     content?: string;
     id?: number;
     tags?: Array<string>;
