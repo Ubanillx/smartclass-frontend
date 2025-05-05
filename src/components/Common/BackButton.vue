@@ -1,6 +1,8 @@
 <template>
-  <div class="back-button" @click="handleClick">
-    <van-icon name="arrow-left" :size="iconSize" />
+  <div class="back-button">
+    <div class="icon-wrapper" @click="handleClick">
+      <van-icon name="arrow-left" :size="iconSize" />
+    </div>
     <span v-if="title" class="page-title">{{ title }}</span>
   </div>
 </template>
@@ -65,6 +67,11 @@ const handleClick = (): void => {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+.icon-wrapper {
+  display: inline-flex;
+  cursor: pointer;
+}
+
 .back-button .van-icon {
   color: #323233;
   padding: 6px;
@@ -73,7 +80,7 @@ const handleClick = (): void => {
   transition: all 0.2s ease;
 }
 
-.back-button:active .van-icon {
+.icon-wrapper:active .van-icon {
   background-color: rgba(0, 0, 0, 0.08);
   transform: scale(0.95);
 }
