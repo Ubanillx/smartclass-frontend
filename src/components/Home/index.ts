@@ -3,6 +3,7 @@ import AiAssistantList from './AiAssistantList.vue';
 import DailyWordCard from './DailyWordCard.vue';
 import ArticleList from './ArticleList.vue';
 import PopularCourses from './PopularCourses.vue';
+import ArticleContent from './Articles/ArticleContent.vue';
 
 export {
   NoticeCard,
@@ -10,4 +11,5 @@ export {
   PopularCourses,
   DailyWordCard,
   ArticleList,
+  ArticleContent,
 };
