@@ -13,12 +13,20 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 从本地存储加载字体大小设置，默认为中等
   const fontSize = ref(localStorage.getItem('fontSize') || 'medium');
+  
+  // 从本地存储加载位置信息，默认为未知
+  const location = ref(localStorage.getItem('userLocation') || '未知');
 
   // 监听字体大小变化，保存到本地存储
   watch(fontSize, (newValue) => {
     localStorage.setItem('fontSize', newValue);
     // 更新根元素的字体大小类名
     updateFontSizeClass(newValue);
+  });
+  
+  // 监听位置信息变化，保存到本地存储
+  watch(location, (newValue) => {
+    localStorage.setItem('userLocation', newValue);
   });
 
   // 更新根元素的字体大小类名
@@ -44,10 +52,17 @@ export const useSettingsStore = defineStore('settings', () => {
       fontSize.value = size;
     }
   };
+  
+  // 设置位置信息
+  const setLocation = (newLocation: string) => {
+    location.value = newLocation || '未知';
+  };
 
   return {
     fontSize,
     fontSizeOptions,
     setFontSize,
+    location,
+    setLocation,
   };
 });
