@@ -23,7 +23,7 @@
         :is="PopularCoursesRaw"
         :courses="filteredPopularCourses"
         @select="viewCourseDetail"
-        @more="router.push('/popular-courses')"
+        @more="router.push('/courses/popular')"
       />
 
       <!-- 每日单词模块 -->
@@ -436,13 +436,13 @@ const onSearch = (text: string) => {
 
 // 开始对话
 const startChat = (assistant: Assistant) => {
-  router.push(`/chat-detail/${assistant.id}`);
+  router.push(`/chat/detail/${assistant.id}`);
 };
 
 // 查看课程详情
 const viewCourseDetail = (course: any) => {
   router.push({
-    path: '/popular-courses',
+    path: '/courses/popular',
     query: { showDetail: 'true', courseId: course.id },
   });
 };
@@ -451,10 +451,10 @@ const viewCourseDetail = (course: any) => {
 const onActionSelect = (action: Action) => {
   switch (action.name) {
     case '添加生词':
-      router.push('/vocabulary/add');
+      router.push('/vocabulary');
       break;
     case '上传笔记':
-      router.push('/notes/add');
+      showToast('笔记功能开发中');
       break;
     case '发起对话':
       router.push('/chat?tab=intelligence');
