@@ -103,7 +103,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
 import { BackButton } from '../../../components/Common';
-import ArticleContent from './components/ArticleContent.vue';
+import { ArticleContent } from '../../../components/Home';
 import { marked } from 'marked';
 import { DailyArticleControllerService, DailyArticleFavourControllerService, DailyArticleThumbControllerService } from '../../../services';
 
@@ -312,7 +312,12 @@ const toggleFavorite = async (): Promise<void> => {
 // 渲染Markdown内容
 const renderMarkdown = (content: string): string => {
   if (!content) return '';
-  return marked(content);
+  try {
+    return marked.parse(content) as string;
+  } catch (error) {
+    console.error('Markdown渲染失败:', error);
+    return content;
+  }
 };
 
 // 根据文章类别返回不同的样式
