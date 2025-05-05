@@ -10,8 +10,6 @@ export class FileControllerService {
     /**
      * uploadFile
      * @param file file
-     * @param base64Data
-     * @param biz
      * @param description
      * @param filename
      * @returns BaseResponse_string_ OK
@@ -20,8 +18,6 @@ export class FileControllerService {
      */
     public static uploadFileUsingPost(
         file: Blob,
-        base64Data?: string,
-        biz?: string,
         description?: string,
         filename?: string,
     ): CancelablePromise<BaseResponse_string_ | any> {
@@ -29,8 +25,6 @@ export class FileControllerService {
             method: 'POST',
             url: '/api/file/upload',
             query: {
-                'base64Data': base64Data,
-                'biz': biz,
                 'description': description,
                 'filename': filename,
             },
