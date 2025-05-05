@@ -12,9 +12,11 @@ import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
 import Circle from '../views/circle/Circle.vue';
 import { ChatDetail, ChatContainer } from '../views/chat';
+import UserChatDetail from '../views/userChat/UserChatDetail.vue';
 import AvatarCropper from '../views/myProfile/settings/AvatarCropper.vue';
 import NoticeList from '../views/home/NoticeList.vue';
 import PostDetail from '../views/circle/PostDetail.vue';
+import UserProfile from '../views/user/UserProfile.vue';
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -23,17 +25,28 @@ declare module 'vue-router' {
 }
 
 const routes: Array<RouteRecordRaw> = [
+  // 认证相关路由
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
     meta: {
       requiresAuth: false,
     },
   },
   {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  
+  // 主页相关路由
+  {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
     meta: {
       requiresAuth: true,
@@ -41,156 +54,207 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/search',
-    name: 'SearchPage',
-    component: () => import('../views/common/SearchPage.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/chat',
-    name: 'Chat',
-    component: ChatContainer,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/courses',
-    name: 'Courses',
-    component: Courses,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/course-schedule',
-    name: 'CourseSchedule',
-    component: () => import('../views/course/CourseSchedule.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/task-plans',
-    name: 'TaskPlans',
-    component: () => import('../views/course/TaskPlans.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: Profile,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: () => import('../views/myProfile/settings/Settings.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/profile',
-    name: 'SettingsProfile',
-    component: () => import('../views/myProfile/settings/SettingsProfile.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/about',
-    name: 'SettingsAbout',
-    component: () => import('../views/myProfile/settings/SettingsAbout.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/terms',
-    name: 'SettingsTerms',
-    component: () => import('../views/myProfile/settings/SettingsTerms.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/privacy',
-    name: 'SettingsPrivacy',
-    component: () => import('../views/myProfile/settings/SettingsPrivacy.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/feedback',
-    name: 'SettingsFeedback',
-    component: () => import('../views/myProfile/settings/SettingsFeedback.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/settings/avatar-cropper',
-    name: 'AvatarCropper',
-    component: AvatarCropper,
-    meta: {
-      requiresAuth: true,
-      title: '裁剪头像',
-    },
-  },
-  {
-    path: '/chat-detail',
-    name: 'ChatDetail',
-    component: ChatDetail,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/chat-detail/:assistantId',
-    name: 'ChatDetailWithAssistant',
-    component: ChatDetail,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/course-study/:id',
-    name: 'CourseStudy',
-    component: () => import('../views/course/CourseStudy.vue'),
+    name: 'search',
+    component: () => import('../views/common').then(m => m.SearchPage),
     meta: {
       requiresAuth: true,
     },
   },
   {
     path: '/notices',
-    name: 'NoticeList',
+    name: 'notices',
     component: NoticeList,
     meta: {
       requiresAuth: true,
     },
   },
+  
+  // 聊天相关路由
+  {
+    path: '/chat',
+    name: 'chat',
+    component: ChatContainer,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/chat/detail',
+    name: 'chat-detail',
+    component: ChatDetail,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/chat/detail/:assistantId',
+    name: 'chat-detail-with-assistant',
+    component: ChatDetail,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/userchat/:userId',
+    name: 'user-chat-detail',
+    component: UserChatDetail,
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
+  },
   {
     path: '/chat-history',
     redirect: '/chat',
   },
+  
+  // 好友相关路由
+  {
+    path: '/friends/requests',
+    name: 'friend-requests',
+    component: () => import('../views/friends/FriendRequests.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/friends/add',
+    name: 'add-friend',
+    component: () => import('../views/friends/AddFriend.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  
+  // 课程相关路由
+  {
+    path: '/courses',
+    name: 'courses',
+    component: Courses,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/courses/schedule',
+    name: 'course-schedule',
+    component: () => import('../views/course/CourseSchedule.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/courses/popular',
+    name: 'popular-courses',
+    component: () => import('../views/course/PopularCourses.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/courses/task-plans',
+    name: 'task-plans',
+    component: () => import('../views/course/TaskPlans.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/courses/study/:id',
+    name: 'course-study',
+    component: () => import('../views/course/CourseStudy.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/courses/history',
+    name: 'course-history',
+    component: () => import('../views/course/HistoryPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  
+  // 个人中心相关路由
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/achievements',
+    name: 'achievements',
+    component: () => import('../views/myProfile/achievements/AchievementsPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings',
+    name: 'settings',
+    component: () => import('../views/myProfile/settings/Settings.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/info',
+    name: 'settings-profile',
+    component: () => import('../views/myProfile/settings/SettingsProfile.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/about',
+    name: 'settings-about',
+    component: () => import('../views/myProfile/settings/SettingsAbout.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/terms',
+    name: 'settings-terms',
+    component: () => import('../views/myProfile/settings/SettingsTerms.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/privacy',
+    name: 'settings-privacy',
+    component: () => import('../views/myProfile/settings/SettingsPrivacy.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/feedback',
+    name: 'settings-feedback',
+    component: () => import('../views/myProfile/settings/SettingsFeedback.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/profile/settings/avatar-cropper',
+    name: 'avatar-cropper',
+    component: AvatarCropper,
+    meta: {
+      requiresAuth: true,
+      title: '裁剪头像',
+    },
+  },
+  
+  // 词汇相关路由
   {
     path: '/vocabulary',
-    name: 'VocabularyList',
+    name: 'vocabulary',
     component: () => import('../views/home/vocabulary/VocabularyList.vue'),
     meta: {
       requiresAuth: true,
@@ -198,47 +262,27 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/vocabulary/collected',
-    name: 'CollectedWords',
+    name: 'collected-words',
     component: () => import('../views/home/vocabulary/CollectedWords.vue'),
     meta: {
       requiresAuth: true,
     },
   },
+  
+  // 文章相关路由
   {
     path: '/articles',
-    name: 'ArticlesList',
+    name: 'articles',
     component: () => import('../views/home/articles/ArticlesList.vue'),
     meta: {
       requiresAuth: true,
     },
   },
-  {
-    path: '/popular-courses',
-    name: 'PopularCourses',
-    component: () => import('../views/course/PopularCourses.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/achievements',
-    name: 'Achievements',
-    component: () => import('../views/myProfile/achievements/AchievementsPage.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/history',
-    name: 'History',
-    component: () => import('../views/course/HistoryPage.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
+  
+  // 圈子相关路由
   {
     path: '/circle',
-    name: 'Circle',
+    name: 'circle',
     component: Circle,
     meta: {
       requiresAuth: true,
@@ -246,7 +290,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/circle/post/:id',
-    name: 'PostDetail',
+    name: 'post-detail',
     component: PostDetail,
     meta: {
       requiresAuth: true,
@@ -254,10 +298,31 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/circle/post/create',
-    name: 'PostCreate',
+    name: 'post-create',
     component: () => import('../views/circle/PostCreate.vue'),
     meta: {
       requiresAuth: true,
+    },
+  },
+  
+  // 用户相关路由
+  {
+    path: '/users/:id',
+    name: 'user-profile',
+    component: UserProfile,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  
+  // 404页面 - 放在最后匹配所有未找到的路由
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('../views/common/NotFound.vue'),
+    meta: {
+      requiresAuth: false,
+      title: '页面未找到',
     },
   },
 ];
