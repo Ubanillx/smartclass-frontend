@@ -9,6 +9,7 @@ import FullscreenInput from './FullscreenInput.vue';
 import StopResponseButton from './StopResponseButton.vue';
 import ChatInputArea from './ChatInputArea.vue';
 import FriendMessageList from './FriendMessageList.vue';
+import MessageReadStatus from './MessageReadStatus.vue';
 import { useChatMessages } from './ChatMessageHandler';
 
 export {
@@ -23,5 +24,6 @@ export {
   StopResponseButton,
   ChatInputArea,
   FriendMessageList,
+  MessageReadStatus,
   useChatMessages,
 };
