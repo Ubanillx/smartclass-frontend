@@ -5,36 +5,43 @@
 import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { BaseResponse_List_PrivateChatSessionVO_ } from '../models/BaseResponse_List_PrivateChatSessionVO_';
-import type { BaseResponse_List_PrivateMessageVO_ } from '../models/BaseResponse_List_PrivateMessageVO_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
-import type { BaseResponse_Page_PrivateChatSession_ } from '../models/BaseResponse_Page_PrivateChatSession_';
-import type { BaseResponse_Page_PrivateChatSessionVO_ } from '../models/BaseResponse_Page_PrivateChatSessionVO_';
-import type { BaseResponse_Page_PrivateMessage_ } from '../models/BaseResponse_Page_PrivateMessage_';
+import type { BaseResponse_Map_string_object_ } from '../models/BaseResponse_Map_string_object_';
 import type { BaseResponse_Page_PrivateMessageVO_ } from '../models/BaseResponse_Page_PrivateMessageVO_';
 import type { BaseResponse_PrivateChatSessionVO_ } from '../models/BaseResponse_PrivateChatSessionVO_';
-import type { BaseResponse_WebSocketConfigVO_ } from '../models/BaseResponse_WebSocketConfigVO_';
 import type { PrivateChatSessionAddRequest } from '../models/PrivateChatSessionAddRequest';
-import type { PrivateChatSessionQueryRequest } from '../models/PrivateChatSessionQueryRequest';
 import type { PrivateMessageAddRequest } from '../models/PrivateMessageAddRequest';
-import type { PrivateMessageQueryRequest } from '../models/PrivateMessageQueryRequest';
+import type { SseEmitter } from '../models/SseEmitter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ChatControllerService {
     /**
-     * sendMessage
-     * @param messageRequest messageRequest
-     * @returns BaseResponse_long_ OK
+     * connect
+     * @returns SseEmitter OK
+     * @throws ApiError
+     */
+    public static connectUsingGet(): CancelablePromise<SseEmitter> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/private-chat/connect',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * disconnect
+     * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static sendMessageUsingPost1(
-        messageRequest: PrivateMessageAddRequest,
-    ): CancelablePromise<BaseResponse_long_ | any> {
+    public static disconnectUsingPost(): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/chat/messages',
-            body: messageRequest,
+            url: '/api/private-chat/disconnect',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -45,65 +52,34 @@ export class ChatControllerService {
     /**
      * markMessagesAsRead
      * @param messageIds messageIds
+     * @param sessionId sessionId
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
     public static markMessagesAsReadUsingPost(
         messageIds: Array<number>,
+        sessionId?: string,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/chat/messages/batch/read',
-            body: messageIds,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listMessagesByPage
-     * @param messageQueryRequest messageQueryRequest
-     * @returns BaseResponse_Page_PrivateMessage_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listMessagesByPageUsingPost(
-        messageQueryRequest: PrivateMessageQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PrivateMessage_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/chat/messages/page',
-            body: messageQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listMessageVOsByPage
-     * @param messageQueryRequest messageQueryRequest
-     * @returns BaseResponse_Page_PrivateMessageVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listMessageVOsByPageUsingPost(
-        messageQueryRequest: PrivateMessageQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PrivateMessageVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/chat/messages/page/vo',
-            body: messageQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
+        console.log(`API调用: 批量标记消息已读, messageIds=${messageIds.join(',')}, sessionId=${sessionId}`);
+        try {
+            return __request(OpenAPI, {
+                method: 'POST',
+                url: '/api/private-chat/messages/batch/read',
+                query: {
+                    'sessionId': sessionId,
+                },
+                body: messageIds,
+                errors: {
+                    401: `Unauthorized`,
+                    403: `Forbidden`,
+                    404: `Not Found`,
+                },
+            });
+        } catch (error) {
+            console.error(`批量标记消息已读API错误: messageIds=${messageIds.join(',')}, sessionId=${sessionId}`, error);
+            throw error;
+        }
     }
     /**
      * markAllMessagesAsRead
@@ -114,78 +90,7 @@ export class ChatControllerService {
     public static markAllMessagesAsReadUsingPost(): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/chat/messages/read/all',
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getRecentMessages
-     * @returns BaseResponse_List_PrivateMessageVO_ OK
-     * @throws ApiError
-     */
-    public static getRecentMessagesUsingGet(): CancelablePromise<BaseResponse_List_PrivateMessageVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/chat/messages/recent',
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getUnreadMessages
-     * @param current current
-     * @param size size
-     * @returns BaseResponse_Page_PrivateMessageVO_ OK
-     * @throws ApiError
-     */
-    public static getUnreadMessagesUsingGet(
-        current: number = 1,
-        size: number = 20,
-    ): CancelablePromise<BaseResponse_Page_PrivateMessageVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/chat/messages/unread',
-            query: {
-                'current': current,
-                'size': size,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getMessagesBetweenUsers
-     * @param userId userId
-     * @param current current
-     * @param size size
-     * @returns BaseResponse_Page_PrivateMessageVO_ OK
-     * @throws ApiError
-     */
-    public static getMessagesBetweenUsersUsingGet(
-        userId: number,
-        current: number = 1,
-        size: number = 20,
-    ): CancelablePromise<BaseResponse_Page_PrivateMessageVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/chat/messages/users/{userId}',
-            path: {
-                'userId': userId,
-            },
-            query: {
-                'current': current,
-                'size': size,
-            },
+            url: '/api/private-chat/messages/read/all',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -196,18 +101,58 @@ export class ChatControllerService {
     /**
      * markMessageAsRead
      * @param messageId messageId
+     * @param sessionId sessionId
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
     public static markMessageAsReadUsingPost(
         messageId: number,
+        sessionId?: string,
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
+        console.log(`API调用: 标记消息已读, messageId=${messageId}, sessionId=${sessionId}`);
+        try {
+            return __request(OpenAPI, {
+                method: 'POST',
+                url: '/api/private-chat/messages/{messageId}/read',
+                path: {
+                    'messageId': messageId,
+                },
+                query: {
+                    'sessionId': sessionId,
+                },
+                errors: {
+                    401: `Unauthorized`,
+                    403: `Forbidden`,
+                    404: `Not Found`,
+                },
+            });
+        } catch (error) {
+            console.error(`标记消息已读API错误: messageId=${messageId}, sessionId=${sessionId}`, error);
+            throw error;
+        }
+    }
+    /**
+     * sendSystemNotification
+     * @param content content
+     * @param data data
+     * @param userId userId
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static sendSystemNotificationUsingPost(
+        content: string,
+        data?: any,
+        userId?: number,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/chat/messages/{messageId}/read',
-            path: {
-                'messageId': messageId,
+            url: '/api/private-chat/notify',
+            query: {
+                'content': content,
+                'data': data,
+                'userId': userId,
             },
             errors: {
                 401: `Unauthorized`,
@@ -217,20 +162,19 @@ export class ChatControllerService {
         });
     }
     /**
-     * listUserSessions
-     * @param userId userId
-     * @returns BaseResponse_List_PrivateChatSessionVO_ OK
+     * sendMessage
+     * @param privateMessageAddRequest privateMessageAddRequest
+     * @returns BaseResponse_long_ OK
+     * @returns any Created
      * @throws ApiError
      */
-    public static listUserSessionsUsingGet(
-        userId?: number,
-    ): CancelablePromise<BaseResponse_List_PrivateChatSessionVO_> {
+    public static sendMessageUsingPost1(
+        privateMessageAddRequest: PrivateMessageAddRequest,
+    ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/chat/private-sessions',
-            query: {
-                'userId': userId,
-            },
+            method: 'POST',
+            url: '/api/private-chat/send',
+            body: privateMessageAddRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -250,7 +194,7 @@ export class ChatControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/chat/sessions',
+            url: '/api/private-chat/sessions',
             body: request,
             errors: {
                 401: `Unauthorized`,
@@ -260,40 +204,20 @@ export class ChatControllerService {
         });
     }
     /**
-     * listSessionsByPage
-     * @param request request
-     * @returns BaseResponse_Page_PrivateChatSession_ OK
-     * @returns any Created
+     * listUserSessions
+     * @param userId userId
+     * @returns BaseResponse_List_PrivateChatSessionVO_ OK
      * @throws ApiError
      */
-    public static listSessionsByPageUsingPost(
-        request: PrivateChatSessionQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PrivateChatSession_ | any> {
+    public static listUserSessionsUsingGet(
+        userId?: number,
+    ): CancelablePromise<BaseResponse_List_PrivateChatSessionVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/chat/sessions/page',
-            body: request,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
+            method: 'GET',
+            url: '/api/private-chat/sessions/list',
+            query: {
+                'userId': userId,
             },
-        });
-    }
-    /**
-     * listSessionVOsByPage
-     * @param request request
-     * @returns BaseResponse_Page_PrivateChatSessionVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listSessionVOsByPageUsingPost(
-        request: PrivateChatSessionQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PrivateChatSessionVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/chat/sessions/page/vo',
-            body: request,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -312,7 +236,7 @@ export class ChatControllerService {
     ): CancelablePromise<BaseResponse_PrivateChatSessionVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/chat/sessions/users/{targetUserId}',
+            url: '/api/private-chat/sessions/users/{targetUserId}',
             path: {
                 'targetUserId': targetUserId,
             },
@@ -338,7 +262,7 @@ export class ChatControllerService {
     ): CancelablePromise<BaseResponse_Page_PrivateMessageVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/chat/sessions/{sessionId}/messages',
+            url: '/api/private-chat/sessions/{sessionId}/messages',
             path: {
                 'sessionId': sessionId,
             },
@@ -365,7 +289,7 @@ export class ChatControllerService {
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/chat/sessions/{sessionId}/read/all',
+            url: '/api/private-chat/sessions/{sessionId}/read/all',
             path: {
                 'sessionId': sessionId,
             },
@@ -387,10 +311,26 @@ export class ChatControllerService {
     ): CancelablePromise<BaseResponse_int_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/chat/sessions/{sessionId}/unread/count',
+            url: '/api/private-chat/sessions/{sessionId}/unread/count',
             path: {
                 'sessionId': sessionId,
             },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * getChatStatus
+     * @returns BaseResponse_Map_string_object_ OK
+     * @throws ApiError
+     */
+    public static getChatStatusUsingGet(): CancelablePromise<BaseResponse_Map_string_object_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/private-chat/status',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -406,23 +346,7 @@ export class ChatControllerService {
     public static getTotalUnreadCountUsingGet(): CancelablePromise<BaseResponse_int_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/chat/unread/count',
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getWebSocketConfig
-     * @returns BaseResponse_WebSocketConfigVO_ OK
-     * @throws ApiError
-     */
-    public static getWebSocketConfigUsingGet(): CancelablePromise<BaseResponse_WebSocketConfigVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/chat/websocket/config',
+            url: '/api/private-chat/unread/count',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
