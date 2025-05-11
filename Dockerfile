@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # 创建生产环境变量文件（如果在容器构建期间需要覆盖环境变量）
-RUN echo "VITE_APP_API_BASE_URL=${API_BASE_URL:-http://backend.smartclass.ubanillx.cn/api}" > .env.production
+RUN echo "VITE_APP_API_BASE_URL=${API_BASE_URL:-http://backend.smartclass.ubanillx.cn:8081/api}" > .env.production
 
 # 构建应用
 RUN npm run build
