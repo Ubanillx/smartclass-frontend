@@ -1,5 +1,5 @@
 # 构建阶段: 使用Node.js环境
-FROM node:16-alpine as build-stage
+FROM node:18-alpine as build-stage
 
 # 设置工作目录
 WORKDIR /app

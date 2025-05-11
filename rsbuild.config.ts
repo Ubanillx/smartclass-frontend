@@ -19,6 +19,7 @@ export default defineConfig({
         target: 'http://10.16.62.100:12345',
         changeOrigin: true,
         secure: false,
+        pathRewrite: { '^/api': '' },
       },
     },
   },
