@@ -12,10 +12,11 @@
           <div class="right-actions">
             <div
               class="vocabulary-btn"
-              @click.stop="$emit('category-click', vocabularyCategory)"
+              @click.stop="showWordBookStats"
             >
               <van-icon name="bookmark-o" class="vocabulary-icon" />
               <span class="vocabulary-text">生词本</span>
+              <span v-if="wordBookStats.length > 0" class="vocabulary-count">{{ wordBookStats[0] }}</span>
             </div>
             <span class="more-link" @click="$emit('more')">更多</span>
           </div>
@@ -280,6 +281,7 @@ import { useCollectedWordsStore } from '../../stores/collectedWordsStore';
 import {
   DailyWordFavourControllerService,
   DailyWordThumbControllerService,
+  UserWordBookControllerService
 } from '../../services';
 
 interface WordMeaning {
@@ -308,6 +310,13 @@ interface Word {
   audioUrl?: string;
   exampleTranslation?: string;
   notes?: string;
+  // UserWordBook相关属性
+  learningStatus?: number;  // 学习状态
+  isCollectedNumber?: number; // 后端返回的收藏状态（0或1）
+  difficultyNumber?: number; // 后端返回的难度（数字）
+  wordId?: number; // 单词ID
+  pronunciation?: string; // 发音URL
+  collectedTime?: string; // 收藏时间
 }
 
 interface Category {
@@ -345,6 +354,40 @@ const isThumbUping = ref(false);
 const masteryLevel = ref(1);
 const isMarkingStudied = ref(false);
 
+// 生词本统计数据
+const wordBookStats = ref<number[]>([]);
+
+// 获取生词本统计信息
+const getWordBookStats = async (): Promise<void> => {
+  try {
+    const response = await UserWordBookControllerService.getUserWordBookStatisticsUsingGet();
+    if (response.code === 0 && response.data) {
+      wordBookStats.value = response.data;
+    }
+  } catch (error) {
+    console.error('获取生词本统计失败', error);
+  }
+};
+
+// 显示生词本统计信息并跳转
+const showWordBookStats = (): void => {
+  // 如果有统计数据，显示提示
+  if (wordBookStats.value.length > 0) {
+    const totalWords = wordBookStats.value[0] || 0;
+    const studiedWords = wordBookStats.value[1] || 0;
+    const collectedWords = wordBookStats.value[2] || 0;
+    
+    showToast({
+      message: `词汇量：${totalWords}，已学习：${studiedWords}，收藏：${collectedWords}`,
+      position: 'bottom',
+      duration: 2000,
+    });
+  }
+  
+  // 跳转到生词本页面
+  emit('category-click', vocabularyCategory.value);
+};
+
 // 获取生词本分类
 const vocabularyCategory = computed(() => {
   return (
@@ -369,10 +412,8 @@ const checkWordFavourStatus = async (): Promise<void> => {
   if (!props.word.id) return;
 
   try {
-    const response =
-      await DailyWordFavourControllerService.isFavourWordUsingGet(
-        props.word.id,
-      );
+    // 使用UserWordBookControllerService检查单词是否在生词本中
+    const response = await UserWordBookControllerService.isWordInUserBookUsingGet(props.word.id);
 
     if (response.code === 0 && response.data !== undefined) {
       // 如果当前收藏状态与后端不一致，更新本地状态
@@ -452,10 +493,22 @@ const toggleCollect = async (): Promise<void> => {
 
   try {
     // 调用后端API进行收藏或取消收藏
-    const response =
-      await DailyWordFavourControllerService.doWordFavourUsingPost(
-        props.word.id,
-      );
+    let response;
+    if (!props.word.isCollected) {
+      // 添加到生词本
+      const addRequest = {
+        wordId: props.word.id,
+        word: props.word.text,
+        phonetic: props.word.phonetic,
+        translation: props.word.translation,
+        example: props.word.example,
+        exampleTranslation: props.word.exampleTranslation || ''
+      };
+      response = await UserWordBookControllerService.addToWordBookUsingPost(addRequest);
+    } else {
+      // 从生词本移除
+      response = await UserWordBookControllerService.removeFromWordBookUsingPost(props.word.id);
+    }
 
     if (response.code === 0) {
       // API调用成功，更新本地状态
@@ -468,33 +521,8 @@ const toggleCollect = async (): Promise<void> => {
       // 通过事件更新父组件中的数据
       emit('update:word', updatedWord);
 
-      // 同步更新本地存储
-      if (newCollectedStatus) {
-        // 如果是收藏操作，添加到本地生词本
-        const wordToCollect = {
-          id: props.word.id || Date.now(), // 使用后端ID或临时ID
-          text: updatedWord.text,
-          phonetic: updatedWord.phonetic,
-          translation: updatedWord.translation,
-          example: updatedWord.example,
-          meanings: updatedWord.meanings,
-          viewCount: 1,
-          lastViewTime: new Date().toISOString(),
-          difficulty: getDifficulty(updatedWord),
-        };
-
-        collectedWordsStore.collectWord(wordToCollect);
-      } else {
-        // 如果是取消收藏，从本地生词本中移除
-        const collectedWords = collectedWordsStore.getCollectedWords();
-        const wordToRemove = collectedWords.find(
-          (w) => w.text.toLowerCase() === updatedWord.text.toLowerCase(),
-        );
-
-        if (wordToRemove) {
-          collectedWordsStore.removeWord(wordToRemove.id);
-        }
-      }
+      // 更新生词本统计数据
+      getWordBookStats();
 
       showToast({
         message: newCollectedStatus ? '已添加到生词本' : '已取消收藏',
@@ -625,11 +653,12 @@ const updateMasteryLevel = async (): Promise<void> => {
   if (!props.word.id) return;
 
   try {
-    const response =
-      await DailyWordFavourControllerService.updateMasteryLevelUsingPost(
-        masteryLevel.value,
-        props.word.id,
-      );
+    // 更新单词的难度
+    const difficultyRequest = {
+      wordId: props.word.id,
+      difficulty: masteryLevel.value,
+    };
+    const response = await UserWordBookControllerService.updateDifficultyUsingPost(difficultyRequest);
 
     if (response.code === 0 && response.data) {
       showToast('掌握程度已更新');
@@ -657,17 +686,20 @@ const markAsStudied = async (): Promise<void> => {
 
     // 切换学习状态
     const newStudiedStatus = !isCurrentlyStudied;
-
-    const response =
-      await DailyWordFavourControllerService.markWordAsStudiedUsingPost(
-        props.word.id,
-      );
+    
+    // 更新学习状态
+    const updateStatusRequest = {
+      wordId: props.word.id,
+      learningStatus: newStudiedStatus ? 1 : 0,
+    };
+    const response = await UserWordBookControllerService.updateLearningStatusUsingPost(updateStatusRequest);
 
     if (response.code === 0 && response.data) {
       // 更新本地状态
       const updatedWord: Word = {
         ...props.word,
         isStudied: newStudiedStatus,
+        learningStatus: newStudiedStatus ? 1 : 0,
       };
       emit('update:word', updatedWord);
 
@@ -714,6 +746,9 @@ onMounted(() => {
     // 初始化默认掌握程度
     masteryLevel.value = 1;
   }
+  
+  // 获取生词本统计
+  getWordBookStats();
 });
 
 // 在props变化时也检查状态
@@ -1053,6 +1088,7 @@ const playAudio = (): void => {
   border-radius: 16px;
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .vocabulary-btn:hover {
@@ -1274,5 +1310,21 @@ const playAudio = (): void => {
 .empty-word {
   padding: 30px 0;
   text-align: center;
+}
+
+.vocabulary-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #ee0a24;
+  color: #fff;
+  font-size: 10px;
+  border-radius: 10px;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  padding: 0 4px;
+  font-weight: bold;
 }
 </style>

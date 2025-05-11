@@ -6,7 +6,7 @@
     <!-- 主要内容区域 -->
     <div class="content-container">
       <!-- 分类标签页 -->
-      <van-tabs v-model:active="activeTab" sticky swipeable>
+      <van-tabs v-model:active="activeTab" sticky swipeable @change="handleTabChange">
         <van-tab title="全部">
           <article-content
             :articles="filteredArticles"
@@ -57,10 +57,41 @@
               >{{ selectedArticle.category }}</span
             >
             <span>{{ selectedArticle.readTime }}分钟</span>
-            <span>{{ selectedArticle.difficulty }}</span>
+            <span>{{ convertDifficultyToText(selectedArticle.difficulty) }}</span>
+            <span v-if="selectedArticle.author">作者: {{ selectedArticle.author }}</span>
+          </div>
+          <div class="article-actions">
+            <van-button 
+              icon="like-o" 
+              :class="{ 'active': isLiked }"
+              plain 
+              hairline 
+              round 
+              size="small" 
+              @click="toggleLike"
+            >
+              {{ isLiked ? '已点赞' : '点赞' }} ({{ selectedArticle.likeCount || 0 }})
+            </van-button>
+            <van-button 
+              icon="star-o" 
+              :class="{ 'active': isFavorite }"
+              plain 
+              hairline 
+              round 
+              size="small" 
+              @click="toggleFavorite"
+            >
+              {{ isFavorite ? '已收藏' : '收藏' }}
+            </van-button>
           </div>
           <van-image :src="selectedArticle.cover" fit="cover" width="100%" />
-          <div class="article-text" v-html="selectedArticle.content"></div>
+          <div class="article-text markdown-body" v-html="renderMarkdown(selectedArticle.content)"></div>
+          <div class="article-footer" v-if="selectedArticle.source">
+            <div class="source-info">
+              <div>来源: {{ selectedArticle.source }}</div>
+              <div v-if="selectedArticle.publishDate">发布时间: {{ formatDate(selectedArticle.publishDate) }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </van-popup>
@@ -68,16 +99,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { showToast } from 'vant';
+import { showToast, showSuccessToast, showLoadingToast } from 'vant';
 import { BackButton } from '../../../components/Common';
-import ArticleContent from './components/ArticleContent.vue';
-import {
-  mockArticles,
-  generateMockArticles,
-  type Article,
-} from '../../../api/mock.ts';
+import { ArticleContent } from '../../../components/Home';
+import { marked } from 'marked';
+import { DailyArticleControllerService, DailyArticleFavourControllerService, DailyArticleThumbControllerService } from '../../../services';
+
+interface Article {
+  id: number;
+  title: string;
+  brief: string;
+  cover: string;
+  category: string;
+  readTime: number;
+  difficulty: number | string;
+  content: string;
+  tags?: string[];
+  author?: string;
+  source?: string;
+  publishDate?: string;
+  viewCount?: number;
+  likeCount?: number;
+}
 
 const router = useRouter();
 const route = useRoute();
@@ -93,29 +138,94 @@ const articles = ref<Article[]>([]);
 const activeTab = ref(0);
 const showPopup = ref(false);
 const selectedArticle = ref<Article | null>(null);
+const currentPage = ref(1);
+const pageSize = ref(10);
+const total = ref(0);
+const isLiked = ref(false);
+const isFavorite = ref(false);
 
 // 文章分类
 const categories = ref<string[]>(['励志', '历史', '科技', '文化', '旅行']);
 
+// 当前选中的分类
+const selectedCategory = ref('');
+
 // 根据分类筛选文章
 const filteredArticles = computed(() => {
-  if (!category.value) {
-    return articles.value;
-  }
-  return articles.value.filter(
-    (article) => article.category === category.value,
-  );
+  return articles.value;
 });
 
+// 处理标签页切换
+const handleTabChange = (index: number) => {
+  if (index === 0) {
+    selectedCategory.value = '';
+  } else {
+    selectedCategory.value = categories.value[index - 1];
+  }
+  
+  // 重置分页和文章列表
+  currentPage.value = 1;
+  articles.value = [];
+  finished.value = false;
+  
+  // 重新加载文章
+  loadArticles();
+};
+
 // 点击文章显示详情
-const showArticleDetail = (article: Article): void => {
-  // 更新文章数据，模拟阅读量+1
-  const updatedArticle = {
-    ...article,
-    viewCount: (article.viewCount || 0) + 1,
-  };
-  selectedArticle.value = updatedArticle;
-  showPopup.value = true;
+const showArticleDetail = async (article: Article): Promise<void> => {
+  const loadingToast = showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+  });
+  
+  try {
+    // 获取完整文章详情
+    const response = await DailyArticleControllerService.getDailyArticleVoByIdUsingGet(article.id);
+    
+    if (response.code === 0 && response.data) {
+      const fullArticle = mapToArticle(response.data);
+      selectedArticle.value = fullArticle;
+      showPopup.value = true;
+      
+      // 检查是否已点赞
+      checkIsLiked(article.id);
+      
+      // 检查是否已收藏
+      checkIsFavorite(article.id);
+    } else {
+      showToast('获取文章详情失败');
+    }
+  } catch (error) {
+    console.error('获取文章详情失败:', error);
+    showToast('获取文章详情失败，请稍后再试');
+  } finally {
+    loadingToast.close();
+  }
+};
+
+// 检查是否已点赞
+const checkIsLiked = async (articleId: number) => {
+  try {
+    const response = await DailyArticleThumbControllerService.isThumbArticleUsingGet(articleId);
+    if (response.code === 0) {
+      isLiked.value = response.data || false;
+    }
+  } catch (error) {
+    console.error('检查点赞状态失败:', error);
+  }
+};
+
+// 检查是否已收藏
+const checkIsFavorite = async (articleId: number) => {
+  try {
+    const response = await DailyArticleFavourControllerService.isFavourArticleUsingGet(articleId);
+    if (response.code === 0) {
+      isFavorite.value = response.data || false;
+    }
+  } catch (error) {
+    console.error('检查收藏状态失败:', error);
+  }
 };
 
 // 关闭弹窗
@@ -123,31 +233,91 @@ const closePopup = (): void => {
   showPopup.value = false;
   setTimeout(() => {
     selectedArticle.value = null;
+    isLiked.value = false;
+    isFavorite.value = false;
   }, 300);
 };
 
-// 点赞文章
-const likeArticle = (): void => {
+// 切换点赞状态
+const toggleLike = async (): Promise<void> => {
   if (!selectedArticle.value) return;
-
-  // 更新文章数据，模拟点赞+1
-  selectedArticle.value = {
-    ...selectedArticle.value,
-    likeCount: (selectedArticle.value.likeCount || 0) + 1,
-  };
-
-  showToast({
-    message: '点赞成功',
-    icon: 'like-o',
+  
+  const loadingToast = showLoadingToast({
+    message: isLiked.value ? '取消点赞中...' : '点赞中...',
+    forbidClick: true,
   });
+  
+  try {
+    const articleId = selectedArticle.value.id;
+    const response = await DailyArticleThumbControllerService.doArticleThumbUsingPost(articleId);
+    
+    if (response.code === 0) {
+      isLiked.value = !isLiked.value;
+      
+      // 更新点赞数量
+      if (selectedArticle.value) {
+        const newLikeCount = response.data || selectedArticle.value.likeCount || 0;
+        selectedArticle.value = {
+          ...selectedArticle.value,
+          likeCount: newLikeCount
+        };
+      }
+      
+      showToast({
+        message: isLiked.value ? '点赞成功' : '已取消点赞',
+        icon: isLiked.value ? 'like' : 'cross',
+      });
+    } else {
+      showToast(`操作失败: ${response.message || '未知错误'}`);
+    }
+  } catch (error) {
+    console.error('点赞操作失败:', error);
+    showToast('操作失败，请稍后再试');
+  } finally {
+    loadingToast.close();
+  }
 };
 
-// 收藏文章
-const collectArticle = (): void => {
-  showToast({
-    message: '收藏成功',
-    icon: 'star-o',
+// 切换收藏状态
+const toggleFavorite = async (): Promise<void> => {
+  if (!selectedArticle.value) return;
+  
+  const loadingToast = showLoadingToast({
+    message: isFavorite.value ? '取消收藏中...' : '收藏中...',
+    forbidClick: true,
   });
+  
+  try {
+    const articleId = selectedArticle.value.id;
+    const response = await DailyArticleFavourControllerService.doArticleFavourUsingPost(articleId);
+    
+    if (response.code === 0) {
+      isFavorite.value = !isFavorite.value;
+      
+      showToast({
+        message: isFavorite.value ? '收藏成功' : '已取消收藏',
+        icon: isFavorite.value ? 'star' : 'cross',
+      });
+    } else {
+      showToast(`操作失败: ${response.message || '未知错误'}`);
+    }
+  } catch (error) {
+    console.error('收藏操作失败:', error);
+    showToast('操作失败，请稍后再试');
+  } finally {
+    loadingToast.close();
+  }
+};
+
+// 渲染Markdown内容
+const renderMarkdown = (content: string): string => {
+  if (!content) return '';
+  try {
+    return marked.parse(content) as string;
+  } catch (error) {
+    console.error('Markdown渲染失败:', error);
+    return content;
+  }
 };
 
 // 根据文章类别返回不同的样式
@@ -177,37 +347,143 @@ const getTagStyle = (category: string): Record<string, string> => {
   return styles;
 };
 
+// 将数字难度转换为文本
+const convertDifficultyToText = (difficulty: number | undefined | string): string => {
+  if (typeof difficulty === 'string') return difficulty;
+  
+  switch (difficulty) {
+    case 1: return '初级';
+    case 2: return '中级';
+    case 3: return '高级';
+    default: return '未知';
+  }
+};
+
+// 将后端数据映射为前端文章格式
+const mapToArticle = (item: any): Article => {
+  // 处理标签字符串，将逗号分隔的标签转换为数组
+  const tagsList = item.tags
+    ? item.tags.split(',').map((tag: string) => tag.trim())
+    : [];
+    
+  return {
+    id: item.id || 0,
+    title: item.title || '未命名文章',
+    brief: item.summary || '暂无简介',
+    cover: item.coverImage ||
+          'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
+    category: item.category || '文化',
+    readTime: item.readTime || 5,
+    difficulty: item.difficulty,
+    content: item.content || '暂无内容',
+    publishDate: item.publishDate || '',
+    viewCount: item.viewCount || 0,
+    likeCount: item.likeCount || 0,
+    tags: tagsList,
+    author: item.author || '', 
+    source: item.source || '',
+  };
+};
+
+// 格式化日期
+const formatDate = (dateString: string): string => {
+  if (!dateString) return '未知';
+  
+  const date = new Date(dateString);
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+};
+
 // 加载文章数据
-const loadArticles = () => {
+const loadArticles = async () => {
+  if (loading.value) return;
+  
   loading.value = true;
-
-  // 模拟异步加载
-  setTimeout(() => {
-    const newArticles = generateMockArticles(10);
-    articles.value = [...articles.value, ...newArticles];
-
-    loading.value = false;
-
-    // 判断是否已加载完所有数据
-    if (articles.value.length >= 30) {
+  
+  try {
+    const queryParams = {
+      current: currentPage.value,
+      pageSize: pageSize.value,
+      category: selectedCategory.value || undefined,
+      sortField: 'publishDate',
+      sortOrder: 'desc',
+    };
+    
+    const response = await DailyArticleControllerService.listDailyArticleVoByPageUsingPost(queryParams);
+    
+    if (response.code === 0 && response.data) {
+      const { records, total: totalCount } = response.data;
+      total.value = totalCount || 0;
+      
+      const newArticles = (records || []).map(mapToArticle);
+      
+      if (currentPage.value === 1) {
+        // 第一页，替换数据
+        articles.value = newArticles;
+      } else {
+        // 后续页，追加数据
+        articles.value = [...articles.value, ...newArticles];
+      }
+      
+      // 判断是否加载完所有数据
+      finished.value = !records || records.length < pageSize.value || articles.value.length >= total.value;
+      
+      // 增加页码，为下次加载做准备
+      currentPage.value++;
+    } else {
+      showToast('获取文章数据失败');
       finished.value = true;
     }
-  }, 1000);
+  } catch (error) {
+    console.error('获取文章列表失败:', error);
+    showToast('获取数据失败，请稍后再试');
+    finished.value = true;
+  } finally {
+    loading.value = false;
+  }
 };
 
 // 下拉刷新
-const onRefresh = () => {
-  finished.value = false;
-  articles.value = [];
-  loadArticles();
-  refreshing.value = false;
+const onRefresh = async () => {
+  try {
+    currentPage.value = 1;
+    finished.value = false;
+    await loadArticles();
+    showToast('刷新成功');
+  } catch (error) {
+    console.error('刷新失败:', error);
+    showToast('刷新失败，请稍后再试');
+  } finally {
+    refreshing.value = false;
+  }
 };
 
 // 组件挂载时加载初始数据
 onMounted(() => {
-  // 初始化时添加一些基础文章
-  articles.value = [...mockArticles];
-  // 加载更多文章
+  loadArticles();
+});
+
+// 监听分类变化
+watch(() => route.query.category, (newCategory) => {
+  if (newCategory) {
+    const categoryIndex = categories.value.findIndex(c => c === newCategory);
+    if (categoryIndex !== -1) {
+      activeTab.value = categoryIndex + 1;
+      selectedCategory.value = newCategory as string;
+    } else {
+      activeTab.value = 0;
+      selectedCategory.value = '';
+    }
+  } else {
+    activeTab.value = 0;
+    selectedCategory.value = '';
+  }
+  
+  // 重置分页和文章列表
+  currentPage.value = 1;
+  articles.value = [];
+  finished.value = false;
+  
+  // 重新加载文章
   loadArticles();
 });
 </script>
@@ -264,6 +540,23 @@ onMounted(() => {
   font-size: var(--font-size-sm, 12px);
   color: #969799;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.article-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.article-actions .van-button {
+  border-color: #dcdee0;
+  color: #646566;
+}
+
+.article-actions .van-button.active {
+  color: #1989fa;
+  border-color: #1989fa;
 }
 
 .detail-tag {
@@ -285,5 +578,19 @@ onMounted(() => {
 
 .article-text p {
   margin: 12px 0;
+}
+
+.article-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #ebedf0;
+  font-size: var(--font-size-sm, 12px);
+  color: #969799;
+}
+
+.source-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 </style>

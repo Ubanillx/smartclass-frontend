@@ -17,11 +17,11 @@
 
     <!-- 导航内容展示区域 -->
     <div class="tab-content-area">
-      <div v-if="activeTabIndex === 0" class="tab-content-placeholder">
-        <van-empty description="暂无帖子内容" />
+      <div v-if="activeTabIndex === 0" class="tab-content">
+        <UserPostList />
       </div>
-      <div v-else-if="activeTabIndex === 1" class="tab-content-placeholder">
-        <van-empty description="暂无评论内容" />
+      <div v-else-if="activeTabIndex === 1" class="tab-content">
+        <UserCommentList />
       </div>
       <div v-else-if="activeTabIndex === 2" class="tab-content-placeholder">
         <van-empty description="暂无笔记内容" />
@@ -51,6 +51,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { showToast } from 'vant';
+import UserPostList from './UserPostList.vue';
+import UserCommentList from './UserCommentList.vue';
 
 // 导航栏选项
 const tabs = [
@@ -70,7 +72,7 @@ const activeTabIndex = ref(0);
 const switchTab = (index: number) => {
   activeTabIndex.value = index;
   // 这里可以加载对应标签的数据
-  if (tabs && tabs[index]) {
+  if (index > 1 && tabs && tabs[index]) {
     showToast(`${tabs[index].name}功能开发中`);
   }
 };
@@ -82,12 +84,12 @@ const switchTab = (index: number) => {
   margin: 16px 0;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: bold;
   color: #323233;
   padding: 16px;
@@ -99,6 +101,9 @@ const switchTab = (index: number) => {
   background-color: #ffffff;
   width: 100%;
   border-bottom: 1px solid #ebedf0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .profile-tabs {
@@ -107,6 +112,7 @@ const switchTab = (index: number) => {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   white-space: nowrap;
+  padding: 0 4px;
 }
 
 /* 隐藏滚动条 */
@@ -116,8 +122,8 @@ const switchTab = (index: number) => {
 
 .profile-tab {
   position: relative;
-  padding: 14px 20px;
-  font-size: 15px;
+  padding: 14px 18px;
+  font-size: var(--font-size-md);
   font-weight: 500;
   color: #646566;
   cursor: pointer;
@@ -143,14 +149,16 @@ const switchTab = (index: number) => {
 /* 导航内容区域 */
 .tab-content-area {
   min-height: 40vh;
-  padding: 16px;
+}
+
+.tab-content {
+  background-color: #ffffff;
 }
 
 .tab-content-placeholder {
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100%;
-  min-height: 300px;
+  align-items: center;
+  min-height: 40vh;
 }
 </style>

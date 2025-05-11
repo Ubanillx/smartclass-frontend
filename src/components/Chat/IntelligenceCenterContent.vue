@@ -34,11 +34,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, defineEmits } from 'vue';
-import { ChatList } from '../../../components/Dialogue';
-import { NetworkError } from '../../../components/Common';
+import { ChatList } from '../Dialogue';
+import { NetworkError } from '../Common';
 import { showToast } from 'vant';
-import { AiAvatarControllerService } from '../../../services';
-import type { AiAvatarBriefVO } from '../../../services/models/AiAvatarBriefVO';
+import { AiAvatarControllerService } from '../../services';
+import type { AiAvatarVO } from '../../services/models/AiAvatarVO';
 
 interface Assistant {
   id: number;
@@ -82,10 +82,10 @@ const loadAiAvatars = async () => {
 
     if (response.code === 0 && response.data) {
       // 将AI分身信息转换为智能助手格式
-      assistants.value = response.data.map((avatar: AiAvatarBriefVO) => {
+      assistants.value = response.data.map((avatar: AiAvatarVO) => {
         // 将tags字符串转换为数组
         const tagsList = avatar.tags
-          ? avatar.tags.split(',').map((tag) => tag.trim())
+          ? avatar.tags.split(',').map((tag: string) => tag.trim())
           : [];
 
         return {
@@ -128,6 +128,7 @@ onMounted(() => {
 .intelligence-center-content {
   width: 100%;
   position: relative;
+  min-height: 200px;
 }
 
 .loading-container {
@@ -136,12 +137,13 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 40px 0;
+  margin-top: 20px;
 }
 
 .loading-container p {
   margin-top: 12px;
   color: #666;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-family: 'Noto Sans SC', sans-serif;
 }
 
@@ -151,5 +153,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 }
 </style>

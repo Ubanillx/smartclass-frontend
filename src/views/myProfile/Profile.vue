@@ -5,7 +5,7 @@
       <component
         :is="UserInfoCardRaw"
         :user-info="userInfo"
-        @settings="router.push('/settings')"
+        @settings="router.push('/profile/settings')"
       />
 
       <!-- 学习数据展示 -->
@@ -24,7 +24,7 @@
       <component
         :is="AchievementWallRaw"
         :badges="recentBadges"
-        @view-all="router.push('/achievements')"
+        @view-all="router.push('/profile/achievements')"
       />
 
       <!-- 最近学习 -->
@@ -34,14 +34,11 @@
       <component
         :is="LearningHistoryRaw"
         :history-items="learningHistory"
-        @view-all="router.push('/history')"
+        @view-all="router.push('/courses/history')"
       />
 
       <!-- 内容导航栏组件 -->
       <component :is="ContentTabsRaw" />
-
-      <!-- 退出登录按钮 -->
-      <component :is="LogoutButtonRaw" @logout="handleLogout" />
     </van-pull-refresh>
   </div>
 </template>
@@ -57,7 +54,6 @@ import {
   AchievementWall,
   RecentLearning,
   LearningHistory,
-  LogoutButton,
   ContentTabs,
 } from '../../components/Profile';
 import { useUserStore } from '../../stores/userStore.ts';
@@ -70,7 +66,6 @@ const TodayGoalsRaw = markRaw(TodayGoals);
 const AchievementWallRaw = markRaw(AchievementWall);
 const RecentLearningRaw = markRaw(RecentLearning);
 const LearningHistoryRaw = markRaw(LearningHistory);
-const LogoutButtonRaw = markRaw(LogoutButton);
 const ContentTabsRaw = markRaw(ContentTabs);
 
 const router = useRouter();
@@ -285,17 +280,6 @@ const updateProgress = () => {
 
   const completedGoals = todayGoals.value.filter((g) => g.completed).length;
   todayProgress.value = Math.round((completedGoals / totalGoals) * 100);
-};
-
-const handleLogout = async () => {
-  try {
-    await userStore.logout();
-    showSuccessToast('退出登录成功');
-    router.push('/login');
-  } catch (error) {
-    console.error('退出登录失败:', error);
-    showToast('退出登录失败，请重试');
-  }
 };
 
 // 生命周期

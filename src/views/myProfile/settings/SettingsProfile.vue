@@ -416,7 +416,7 @@ const onAvatarSelected = (
     const URL = window.URL || window.webkitURL;
     const imageUrl = URL.createObjectURL(file.file);
     router.push({
-      path: '/settings/avatar-cropper',
+      path: '/profile/settings/avatar-cropper',
       query: {
         imageUrl: encodeURIComponent(imageUrl),
       },

@@ -2,7 +2,14 @@
   <div class="user-card">
     <div class="user-card-content">
       <div class="avatar-container">
-        <van-image round width="4rem" height="4rem" :src="userInfo.avatar" />
+        <van-image 
+          round 
+          width="4rem" 
+          height="4rem" 
+          :src="userInfo.avatar" 
+          class="avatar-image"
+          @click="goToUserProfile"
+        />
       </div>
       <div class="user-info">
         <h3 class="nickname">{{ userInfo.nickname }}</h3>
@@ -30,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+
 interface UserInfo {
   avatar: string;
   nickname: string;
@@ -39,7 +48,7 @@ interface UserInfo {
   userId?: string | number;
 }
 
-defineProps<{
+const props = defineProps<{
   userInfo: UserInfo;
 }>();
 
@@ -47,8 +56,16 @@ const emit = defineEmits<{
   (e: 'settings'): void;
 }>();
 
+const router = useRouter();
+
 const goToSettings = (): void => {
   emit('settings');
+};
+
+const goToUserProfile = (): void => {
+  if (props.userInfo.userId) {
+    router.push(`/users/${props.userInfo.userId}`);
+  }
 };
 
 // 格式化手机号，中间4位显示为*
@@ -73,6 +90,15 @@ const formatPhone = (phone: string): string => {
 .avatar-container {
   flex-shrink: 0;
   margin-right: 12px;
+}
+
+.avatar-image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.avatar-image:active {
+  transform: scale(0.95);
 }
 
 .user-info {
@@ -104,7 +130,7 @@ const formatPhone = (phone: string): string => {
 }
 
 .id-text {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: #909399;
   background-color: rgba(240, 240, 245, 0.8);
   padding: 2px 6px;

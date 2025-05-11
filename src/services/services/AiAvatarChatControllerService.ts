@@ -242,7 +242,6 @@ export class AiAvatarChatControllerService {
      * @throws ApiError
      */
     public static getUserHistoryPageUsingGet(
-        aiAvatarId?: number,
         current: number = 1,
         pageSize: number = 10,
     ): CancelablePromise<BaseResponse_Page_ChatMessageVO_> {
@@ -250,7 +249,6 @@ export class AiAvatarChatControllerService {
             method: 'GET',
             url: '/api/chat/user/history',
             query: {
-                'aiAvatarId': aiAvatarId,
                 'current': current,
                 'pageSize': pageSize,
             },

@@ -134,12 +134,12 @@ const showDropdown = ref(false);
 
 // 课程表功能
 const handleShowSchedule = () => {
-  router.push('/course-schedule');
+  router.push('/courses/schedule');
 };
 
 // 任务功能
 const handleShowTasks = () => {
-  router.push('/task-plans');
+  router.push('/courses/task-plans');
 };
 
 // 年级选项
@@ -377,7 +377,7 @@ const showCourseDetail = (course: EnhancedCourse) => {
 const startLearning = () => {
   showDetailPopup.value = false;
   if (selectedCourse.value) {
-    router.push(`/course-study/${selectedCourse.value.id}`);
+    router.push(`/courses/study/${selectedCourse.value.id}`);
   }
 };
 </script>

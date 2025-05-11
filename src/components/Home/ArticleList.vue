@@ -49,7 +49,7 @@
             </div>
             <div class="article-meta">
               <span>{{ article.readTime }}分钟</span>
-              <span>{{ article.difficulty }}</span>
+              <span>{{ convertDifficultyToText(article.difficulty) }}</span>
               <span v-if="article.author">作者: {{ article.author }}</span>
             </div>
           </div>
@@ -92,7 +92,7 @@
               >{{ selectedArticle.category }}</span
             >
             <span class="time-tag">{{ selectedArticle.readTime }}分钟</span>
-            <span class="difficulty-tag">{{ selectedArticle.difficulty }}</span>
+            <span class="difficulty-tag">{{ convertDifficultyToText(selectedArticle.difficulty) }}</span>
           </div>
 
           <!-- 标签显示 -->
@@ -141,7 +141,7 @@ interface Article {
   cover: string;
   category: string;
   readTime: number;
-  difficulty: string;
+  difficulty: number | string;
   content: string;
   tags?: string[];
   author?: string;
@@ -207,6 +207,18 @@ const getTagStyle = (category: string): Record<string, string> => {
   }
 
   return styles;
+};
+
+// 将数字难度转换为文本
+const convertDifficultyToText = (difficulty: number | string | undefined): string => {
+  if (typeof difficulty === 'string') return difficulty;
+  
+  switch (difficulty) {
+    case 1: return '初级';
+    case 2: return '中级';
+    case 3: return '高级';
+    default: return '未知';
+  }
 };
 
 // 将 Markdown 转换为 HTML

@@ -107,13 +107,13 @@ const goToSearchPage = (): void => {
 
 :deep(.van-field__control) {
   color: #323233;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 :deep(.van-field__control::placeholder) {
   color: #969799;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   text-align: center;
 }
 

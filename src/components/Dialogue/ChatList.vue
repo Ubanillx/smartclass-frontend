@@ -13,19 +13,32 @@
       <div class="chat-avatar">
         <van-image :src="chat.avatar" round width="50" height="50" />
         <div
-          v-if="showStatus"
+          v-if="showStatus && chat.online !== undefined"
           class="online-status"
           :class="{ online: chat.online }"
         ></div>
+        <van-badge
+          v-if="chat.unreadCount && chat.unreadCount > 0"
+          :content="chat.unreadCount"
+          :max="99"
+          class="unread-badge"
+        />
       </div>
       <div class="chat-info">
         <div class="chat-header">
           <span class="assistant-name">{{ chat.assistantName }}</span>
           <span class="chat-time">{{ chat.lastTime }}</span>
         </div>
-        <div v-if="chat.summary" class="chat-summary">{{ chat.summary }}</div>
+        <div 
+          v-if="chat.lastMessage" 
+          class="chat-last-message"
+          :class="{ 'unread': chat.isLastMessageUnread }"
+        >
+          {{ chat.lastMessage }}
+        </div>
+        <div v-else-if="chat.summary" class="chat-summary">{{ chat.summary }}</div>
         <div
-          v-if="showStatus && chat.tags && chat.tags.length > 0"
+          v-if="chat.tags && chat.tags.length > 0"
           class="chat-tags"
         >
           <span v-for="tag in chat.tags" :key="tag" class="tag">{{ tag }}</span>
@@ -50,6 +63,8 @@ interface Chat {
   online?: boolean;
   tags?: string[];
   type: number;
+  unreadCount?: number;
+  isLastMessageUnread?: boolean;
 }
 
 // 定义props并设置默认值
@@ -109,8 +124,10 @@ const cancelTouch = () => {
 
 <style scoped>
 .chat-list {
-  margin: 8px 0 16px;
+  margin: 0;
   background-color: transparent;
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 
 .chat-item {
@@ -161,6 +178,12 @@ const cancelTouch = () => {
   background-color: #07c160;
 }
 
+.unread-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
 .chat-info {
   flex: 1;
   overflow: hidden;
@@ -183,6 +206,21 @@ const cancelTouch = () => {
   font-size: var(--font-size-sm, 12px);
   color: #969799;
   font-family: 'Noto Sans SC', sans-serif;
+}
+
+.chat-last-message {
+  font-size: var(--font-size-sm, 12px);
+  color: #646566;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.chat-last-message.unread {
+  font-weight: 700;
+  color: #323233;
 }
 
 .chat-summary {

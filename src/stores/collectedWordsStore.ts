@@ -11,6 +11,7 @@ export interface WordMeaning {
 // 收藏单词接口
 export interface CollectedWord {
   id: number;
+  wordId?: number;           // 添加wordId字段，后端的单词ID
   text: string;
   phonetic: string;
   translation: string;
@@ -21,6 +22,10 @@ export interface CollectedWord {
   lastViewTime: string;
   difficulty: string;
   mastered: boolean;
+  learningStatus?: number;   // 添加学习状态字段，0未学习，1已学习
+  difficultyNumber?: number; // 添加难度数字，1初级，2中级，3高级
+  isCollected?: number;      // 添加收藏状态，0未收藏，1已收藏
+  exampleTranslation?: string; // 添加例句翻译
 }
 
 export const useCollectedWordsStore = defineStore('collectedWords', () => {

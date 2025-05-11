@@ -73,10 +73,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { ChatList, ChatPagination } from '../../../components/Dialogue';
-import { NetworkError } from '../../../components/Common';
-import { AiAvatarChatControllerService } from '../../../services/services/AiAvatarChatControllerService.ts';
-import type { ChatMessageVO } from '../../../services/models/ChatMessageVO.ts';
+import { ChatList, ChatPagination } from '../Dialogue';
+import { NetworkError } from '../Common';
+import { AiAvatarChatControllerService } from '../../services/services/AiAvatarChatControllerService.ts';
+import type { ChatMessageVO } from '../../services/models/ChatMessageVO.ts';
 import { showToast, showSuccessToast } from 'vant';
 
 // 定义聊天项类型
@@ -210,9 +210,8 @@ const loadChatHistory = async () => {
   try {
     const response =
       await AiAvatarChatControllerService.getUserHistoryPageUsingGet(
-        undefined,
         currentPage.value,
-        undefined
+        pageSize.value
       );
 
     if (response.code === 0 && response.data) {
@@ -247,9 +246,8 @@ const handlePageChange = (page: number) => {
   
   // 异步加载新页面数据
   AiAvatarChatControllerService.getUserHistoryPageUsingGet(
-    undefined,
     page,
-    undefined
+    pageSize.value
   )
     .then(response => {
       if (response.code === 0 && response.data) {

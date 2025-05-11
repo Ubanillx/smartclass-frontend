@@ -6,9 +6,12 @@
       <div class="header">
         <div class="page-title">
           <van-icon name="chat-o" class="title-icon" />
-          <span>对话</span>
+          <span>聊天</span>
         </div>
         <div class="header-actions">
+          <van-badge dot :content="friendRequestCount > 0 ? friendRequestCount : ''" :max="99">
+            <van-icon name="friends-o" class="action-icon" @click="handleFriendRequests" />
+          </van-badge>
           <van-icon name="search" class="action-icon" @click="handleSearch" />
         </div>
       </div>
@@ -20,6 +23,13 @@
           @click="switchTab('history')"
         >
           历史对话
+        </div>
+        <div
+          :class="['nav-tab', { active: activeTab === 'friends' }]"
+          @click="switchTab('friends')"
+        >
+          好友
+          <van-badge v-if="totalUnreadCount > 0" :content="totalUnreadCount" :max="99" class="nav-badge" />
         </div>
         <div
           :class="['nav-tab', { active: activeTab === 'intelligence' }]"
@@ -38,10 +48,30 @@
         <div v-show="activeTab === 'history'" class="tab-pane">
           <chat-history-content @select="handleChatSelect" />
         </div>
+        
+        <!-- 好友内容 -->
+        <div v-show="activeTab === 'friends'" class="tab-pane">
+          <div class="friend-list-container">
+            <div class="content-wrapper">
+              <van-loading v-if="friendsLoading" type="spinner" color="#1989fa" />
+              <chat-list 
+                v-else-if="friends.length > 0" 
+                :chats="friends" 
+                :show-status="true" 
+                @select="handleFriendSelect" 
+              />
+              <van-empty v-else description="暂无好友数据" />
+            </div>
+          </div>
+        </div>
 
         <!-- 智慧体中心内容 -->
         <div v-show="activeTab === 'intelligence'" class="tab-pane">
-          <intelligence-center-content @select="handleAssistantSelect" />
+          <div class="intelligence-container">
+            <div class="content-wrapper">
+              <intelligence-center-content @select="handleAssistantSelect" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,19 +87,182 @@
     >
       新建对话
     </van-button>
+
+    <!-- 添加好友按钮 -->
+    <van-button
+      v-show="activeTab === 'friends'"
+      class="new-chat-btn"
+      type="primary"
+      round
+      icon="plus"
+      @click="handleAddFriend"
+    >
+      添加好友
+    </van-button>
+
+    <!-- 添加智慧体按钮 -->
+    <van-button
+      v-show="activeTab === 'intelligence'"
+      class="new-chat-btn"
+      type="primary"
+      round
+      icon="plus"
+      @click="handleAddIntelligence"
+    >
+      添加智慧体
+    </van-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { showToast } from 'vant';
-import ChatHistoryContent from './components/ChatHistoryContent.vue';
-import IntelligenceCenterContent from './components/IntelligenceCenterContent.vue';
+import { showToast, showLoadingToast, closeToast } from 'vant';
+import { ChatHistoryContent, IntelligenceCenterContent } from '../../components/Chat';
+import { ChatList } from '../../components/Dialogue';
+import { FriendRelationshipControllerService } from '../../services/services/FriendRelationshipControllerService';
+import { ChatControllerService } from '../../services/services/ChatControllerService';
+import { FriendRelationshipVO } from '../../services/models/FriendRelationshipVO';
+import { PrivateMessageVO } from '../../services/models/PrivateMessageVO';
+import { formatTimeAgo } from '../../utils/timeUtils';
 
 const router = useRouter();
 const route = useRoute();
 const activeTab = ref('history'); // 默认显示历史对话
+const friendRequestCount = ref(0); // 好友请求数量，后续从API获取
+const friendsLoading = ref(false);
+const recentMessagesLoading = ref(false);
+const friendRelationships = ref<FriendRelationshipVO[]>([]);
+const recentMessages = ref<PrivateMessageVO[]>([]);
+const totalUnreadCount = ref(0); // 添加总未读消息数量
+
+// 好友列表数据
+const friends = ref<any[]>([]);
+
+// 获取好友列表
+const fetchFriends = async () => {
+  friendsLoading.value = true;
+  try {
+    const response = await FriendRelationshipControllerService.listMyFriendsUsingGet();
+    
+    if (response.code === 0 && response.data) {
+      friendRelationships.value = response.data;
+      await fetchRecentMessages();
+    } else {
+      showToast('获取好友列表失败：' + (response.message || '未知错误'));
+    }
+  } catch (error) {
+    console.error('获取好友列表出错：', error);
+    showToast('获取好友列表出错');
+  } finally {
+    friendsLoading.value = false;
+  }
+};
+
+// 获取最新消息
+const fetchRecentMessages = async () => {
+  recentMessagesLoading.value = true;
+  try {
+    const response = await ChatControllerService.listUserSessionsUsingGet();
+    
+    if (response.code === 0 && response.data) {
+      // 存储完整的会话数据，以便后续使用
+      const chatSessions = response.data;
+      const recentMessageList = chatSessions.map(session => session.lastMessage || {});
+      recentMessages.value = recentMessageList;
+      
+      // 计算总未读消息数量
+      let unreadMessages = 0;
+      chatSessions.forEach(session => {
+        if (session.unreadCount) {
+          unreadMessages += session.unreadCount;
+        }
+      });
+      totalUnreadCount.value = unreadMessages;
+      
+      // 显示未读消息数量小红点
+      if (totalUnreadCount.value > 0) {
+        document.title = `(${totalUnreadCount.value}) 智云星课`;
+      } else {
+        document.title = '智云星课';
+      }
+      
+      // 处理数据
+      processFriendsAndMessages(chatSessions);
+    } else {
+      showToast('获取最新消息失败：' + (response.message || '未知错误'));
+    }
+  } catch (error) {
+    console.error('获取最新消息出错：', error);
+    showToast('获取最新消息出错');
+  } finally {
+    recentMessagesLoading.value = false;
+  }
+};
+
+// 处理好友和消息数据
+const processFriendsAndMessages = (chatSessions: any[] = []) => {
+  if (!friendRelationships.value.length) return;
+  
+  // 将好友关系和最新消息整合到一起
+  const friendsList = friendRelationships.value.map(relationship => {
+    // 确保friendUser存在
+    if (!relationship.friendUser) return null;
+    
+    // 查找与该好友相关的最新消息
+    const lastMessage = recentMessages.value.find(
+      msg => 
+        (msg.senderId === relationship.friendUser?.id && msg.receiverId === relationship.userId1) || 
+        (msg.receiverId === relationship.friendUser?.id && msg.senderId === relationship.userId1)
+    );
+    
+    // 设置中文标签
+    const userRoleTags = [];
+    if (relationship.friendUser.userRole) {
+      const roleMap: Record<string, string> = {
+        'STUDENT': '学生',
+        'TEACHER': '老师',
+        'ADMIN': '管理员',
+        'USER': '普通用户'
+      };
+      userRoleTags.push(roleMap[relationship.friendUser.userRole] || relationship.friendUser.userRole);
+    }
+    
+    // 查找当前会话信息，获取未读消息数量
+    const session = chatSessions.find(
+      session => 
+        (session.userId1 === relationship.userId1 && session.userId2 === relationship.friendUser?.id) ||
+        (session.userId2 === relationship.userId1 && session.userId1 === relationship.friendUser?.id)
+    );
+    
+    const unreadCount = session?.unreadCount || 0;
+    
+    return {
+      id: relationship.id,
+      assistantId: relationship.friendUser.id,
+      assistantName: relationship.friendUser.userName || '未命名用户',
+      avatar: relationship.friendUser.userAvatar || 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+      // 使用最新消息或默认文本
+      lastMessage: lastMessage?.content || '暂无消息',
+      // 格式化消息时间
+      lastTime: lastMessage?.createTime ? formatTimeAgo(new Date(lastMessage.createTime)) : '',
+      // 去掉在线状态
+      tags: userRoleTags,
+      type: 1, // 好友类型
+      unreadCount: unreadCount, // 添加未读消息数量
+      isLastMessageUnread: lastMessage?.senderId === relationship.friendUser?.id && lastMessage?.isRead === 0, // 最后一条消息是否未读
+    };
+  }).filter(Boolean) as any[];
+  
+  friends.value = friendsList;
+};
+
+// 监听标签页变化，当切换到好友标签时加载数据
+watch(activeTab, (newTab) => {
+  if (newTab === 'friends' && friends.value.length === 0) {
+    fetchFriends();
+  }
+});
 
 // 搜索功能
 const handleSearch = () => {
@@ -81,11 +274,39 @@ const handleMore = () => {
   showToast('更多功能开发中');
 };
 
+// 处理好友选择
+const handleFriendSelect = (chat: any) => {
+  router.push({
+    name: 'user-chat-detail',
+    params: {
+      userId: chat.assistantId
+    }
+  });
+};
+
+// 处理添加好友
+const handleAddFriend = () => {
+  router.push('/friends/add');
+};
+
+// 处理好友请求
+const handleFriendRequests = () => {
+  router.push('/friends/requests');
+};
+
+// 处理添加智慧体
+const handleAddIntelligence = () => {
+  showToast('添加智慧体功能开发中');
+};
+
 // 检查URL参数，决定默认显示哪个标签页
 onMounted(() => {
   const tab = route.query.tab as string;
-  if (tab === 'intelligence' || tab === 'history') {
+  if (tab === 'intelligence' || tab === 'history' || tab === 'friends') {
     activeTab.value = tab;
+    if (tab === 'friends') {
+      fetchFriends();
+    }
   } else {
     // 如果URL没有有效的tab参数，设置为默认标签并更新URL
     activeTab.value = 'history';
@@ -100,6 +321,11 @@ onMounted(() => {
 const switchTab = (tab: string) => {
   activeTab.value = tab;
 
+  // 如果切换到好友标签，加载好友数据
+  if (tab === 'friends' && friends.value.length === 0) {
+    fetchFriends();
+  }
+
   // 更新URL参数，但不触发页面刷新
   const query = { ...route.query };
   query.tab = tab; // 设置tab参数为当前标签页
@@ -112,12 +338,12 @@ const switchTab = (tab: string) => {
 
 // 处理对话选择
 const handleChatSelect = (messageId: string, assistantId: number) => {
-  router.push(`/chat-detail/${assistantId}?sessionId=${messageId}`);
+  router.push(`/chat/detail/${assistantId}?sessionId=${messageId}`);
 };
 
 // 处理智能助手选择
 const handleAssistantSelect = (assistantId: number) => {
-  router.push(`/chat-detail/${assistantId}`);
+  router.push(`/chat/detail/${assistantId}`);
 };
 </script>
 
@@ -181,7 +407,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .page-title {
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: #323233;
   font-family: 'Noto Sans SC', sans-serif;
@@ -190,7 +416,7 @@ const handleAssistantSelect = (assistantId: number) => {
 .title-icon {
   margin-right: 6px;
   color: #1989fa;
-  font-size: 22px;
+  font-size: var(--font-size-xl);
 }
 
 .header-actions {
@@ -229,13 +455,19 @@ const handleAssistantSelect = (assistantId: number) => {
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 14px 0;
-  font-size: var(--font-size-md, 16px);
-  font-weight: 700;
-  color: #646566;
+  padding: 12px 0;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: #969799;
   position: relative;
   cursor: pointer;
-  transition: all 0.3s ease;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 5px;
+  right: 15%;
+  transform: translateX(50%);
 }
 
 .nav-tab.active {
@@ -260,5 +492,29 @@ const handleAssistantSelect = (assistantId: number) => {
   right: 16px;
   bottom: 130px; /* 将按钮显示在分页组件上方 */
   z-index: 99;
+}
+
+.friend-list-container {
+  width: 100%;
+  position: relative;
+  min-height: calc(100vh - 250px);
+  padding-bottom: 40px;
+}
+
+.intelligence-container {
+  width: 100%;
+  position: relative;
+  min-height: calc(100vh - 250px);
+  padding-bottom: 40px;
+}
+
+.content-wrapper {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 </style>

@@ -131,7 +131,7 @@ const onSave = async (): Promise<void> => {
 
         // 将图片URL传回个人资料页面
         router.replace({
-          path: '/settings/profile',
+          path: '/profile/settings/info',
           query: {
             avatarUrl: imageUrl,
           },

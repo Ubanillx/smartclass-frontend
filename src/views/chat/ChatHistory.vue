@@ -16,6 +16,12 @@
         历史对话
       </div>
       <div
+        :class="['nav-tab', { active: $route.path === '/chat/friends' }]"
+        @click="router.push('/chat/friends')"
+      >
+        好友
+      </div>
+      <div
         :class="[
           'nav-tab',
           { active: $route.path === '/chat/intelligence-center' },
@@ -120,7 +126,7 @@ const filteredChatHistory = computed(() => {
 
 // 处理对话选择
 const handleChatSelect = (chat: ChatItem) => {
-  router.push(`/chat-detail?assistantId=${chat.assistantId}`);
+  router.push(`/chat/detail?assistantId=${chat.assistantId}`);
 };
 
 // 搜索处理

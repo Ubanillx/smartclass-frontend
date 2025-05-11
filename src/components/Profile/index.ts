@@ -6,6 +6,8 @@ import RecentLearning from './RecentLearning.vue';
 import LearningHistory from './LearningHistory.vue';
 import LogoutButton from './LogoutButton.vue';
 import ContentTabs from './ContentTabs.vue';
+import UserPostList from './UserPostList.vue';
+import UserCommentList from './UserCommentList.vue';
 
 export {
   UserInfoCard,
@@ -16,4 +18,6 @@ export {
   LearningHistory,
   LogoutButton,
   ContentTabs,
+  UserPostList,
+  UserCommentList,
 };

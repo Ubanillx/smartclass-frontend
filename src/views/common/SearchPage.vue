@@ -332,13 +332,13 @@ const handleSearchList = (item: string) => {
 
 :deep(.van-field__control) {
   color: #323233;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 :deep(.van-field__control::placeholder) {
   color: #969799;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   text-align: center;
 }
 
@@ -375,9 +375,10 @@ const handleSearchList = (item: string) => {
 .record-item {
   display: flex;
   align-items: center;
-  padding: 14px 16px;
-  border-bottom: 1px solid #f5f5f5;
-  transition: all 0.2s;
+  font-size: var(--font-size-md);
+  color: #323233;
+  padding: 12px 0;
+  border-bottom: 1px solid #ebedf0;
 }
 
 .record-item:last-child {
@@ -396,7 +397,7 @@ const handleSearchList = (item: string) => {
 .text {
   flex: 1;
   color: #323233;
-  font-size: 14px;
+  font-size: var(--font-size-md);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -420,19 +421,17 @@ const handleSearchList = (item: string) => {
 }
 
 .recommend-tag {
-  padding: 8px 16px;
-  background: #fff;
-  border-radius: 18px;
-  font-size: 14px;
-  color: #323233;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  margin-bottom: 8px;
-  font-weight: 500;
+  display: inline-block;
+  margin: 0 8px 8px 0;
+  padding: 6px 12px;
+  font-size: var(--font-size-sm);
+  color: #646566;
+  background: #f7f8fa;
+  border-radius: 14px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(25, 137, 250, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .recommend-tag:active {
@@ -441,33 +440,30 @@ const handleSearchList = (item: string) => {
   transform: scale(0.96);
 }
 
-.recommend-tag:before {
+.recommend-tag::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
+  top: 50%;
+  left: 50%;
   width: 0;
   height: 0;
   background-color: rgba(25, 137, 250, 0.1);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition:
-    width 0.5s,
-    height 0.5s;
+  transition: width 0.5s, height 0.5s;
+  z-index: 0;
 }
 
-.recommend-tag:hover:before {
+.recommend-tag:hover::before {
   width: 200%;
   height: 200%;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: var(--font-size-md);
   font-weight: 600;
+  margin-bottom: 10px;
   color: #323233;
-  margin: 16px 0 10px;
-  position: relative;
-  padding-left: 12px;
 }
 
 .section-title:before {
@@ -502,23 +498,18 @@ const handleSearchList = (item: string) => {
 }
 
 .result-item {
-  background: #fff;
-  padding: 14px 16px;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 12px 16px;
+  font-size: var(--font-size-md);
+  color: #323233;
+  border-bottom: 1px solid #ebedf0;
+  cursor: pointer;
 }
 
-.loading-item {
-  text-align: center;
-  padding: 16px;
-  color: #969799;
-}
-
+.loading-item,
 .no-results {
+  padding: 16px;
   text-align: center;
-  padding: 24px 0;
+  font-size: var(--font-size-md);
   color: #969799;
-  font-size: 15px;
 }
 </style>

@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PostAddRequest = {
+    clientIp?: string;
     content?: string;
     tags?: Array<string>;
     title?: string;

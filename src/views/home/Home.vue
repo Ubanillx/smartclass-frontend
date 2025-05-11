@@ -23,7 +23,7 @@
         :is="PopularCoursesRaw"
         :courses="filteredPopularCourses"
         @select="viewCourseDetail"
-        @more="router.push('/popular-courses')"
+        @more="router.push('/courses/popular')"
       />
 
       <!-- 每日单词模块 -->
@@ -70,9 +70,6 @@ import {
 import {
   mockPopularCourses,
   vocabularyCategories,
-  dailyWords,
-  getRandomArticles,
-  getRandomWord,
   type Course,
   type Word,
   type Notice,
@@ -84,6 +81,7 @@ import {
   DailyWordControllerService,
   DailyWordFavourControllerService,
   DailyArticleControllerService,
+  UserWordBookControllerService,
 } from '../../services';
 import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
 import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
@@ -191,84 +189,80 @@ const filteredPopularCourses = computed(() => {
   return topCourses;
 });
 
-// 设置每日单词数据（从后端API获取）
-const dailyWord = ref(getRandomWord());
+// 构建一个空的单词对象作为初始值
+const emptyWord = {
+  id: 0,
+  text: '',
+  phonetic: '',
+  translation: '',
+  example: '',
+  isCollected: false,
+  isThumbUp: false,
+  thumbCount: 0,
+  likeCount: 0,
+  meanings: [],
+  viewCount: 0,
+  collectCount: 0,
+  lastViewTime: new Date().toISOString(),
+  difficulty: '中级',
+  category: '日常用语'
+};
+
+const dailyWord = ref(emptyWord);
 
 // 从后端获取今日单词
 const fetchDailyWord = async () => {
   try {
     const response = await DailyWordControllerService.getTodayWordUsingGet();
 
-    if (response.code === 0 && response.data && response.data.length > 0) {
-      // 使用API返回的第一个单词作为今日单词
-      const todayWord = response.data[0];
+    if (response.code === 0 && response.data) {
+      // 使用API返回的单词
+      const todayWord = response.data;
 
       if (todayWord) {
         // 转换API返回的DailyWordVO格式为组件使用的Word格式
-        // 扩展现有的Word类型
-        const mockWord = getRandomWord(); // 获取一个模板
-
-        // 示例单词：big
-        const defaultExample = 'The elephant is a big animal.';
-        const defaultExampleTranslation = '大象是一种大型动物。';
-
         const word = {
-          ...mockWord, // 保留原有字段
           id: todayWord.id || 0,
-          text: todayWord.word || 'big',
-          phonetic: todayWord.pronunciation || 'bɪɡ',
-          translation: todayWord.translation || '大的',
-          example: todayWord.example || defaultExample, // 使用默认值确保例句显示
+          text: todayWord.word || '',
+          phonetic: todayWord.pronunciation || '',
+          translation: todayWord.translation || '',
+          example: todayWord.example || '',
           isCollected: false, // 默认未收藏，将在checkCollectedStatus中检查
           isThumbUp: false, // 默认未点赞，将在后续API中检查
-          thumbCount: (todayWord as any).likeCount || 0, // 使用类型断言处理可能不存在的字段
+          thumbCount: todayWord.likeCount || 0,
+          likeCount: todayWord.likeCount || 0,
           meanings: [
             {
-              partOfSpeech: todayWord.category || 'adj.',
-              definition: todayWord.translation || '大的',
-              example: todayWord.example || defaultExample,
+              partOfSpeech: todayWord.category || '',
+              definition: todayWord.translation || '',
+              example: todayWord.example || '',
             },
           ],
-          viewCount: mockWord.viewCount,
-          collectCount: mockWord.collectCount,
+          viewCount: todayWord.viewCount || 0,
+          collectCount: 0,
           lastViewTime: new Date().toISOString(),
           difficulty: convertDifficultyToText(todayWord.difficulty),
           category: todayWord.category || '日常用语',
-          // 保存额外信息到Word对象
           audioUrl: todayWord.audioUrl,
-          // 确保正确处理例句翻译
-          exampleTranslation:
-            todayWord.exampleTranslation || defaultExampleTranslation,
+          exampleTranslation: todayWord.exampleTranslation || '',
           notes: todayWord.notes,
-          likeCount: (todayWord as any).likeCount || 0, // 同时保存原始likeCount数据
         };
 
         dailyWord.value = word;
         checkCollectedStatus();
       } else {
-        // 如果API返回数据为空，使用模拟数据
-        dailyWord.value = getRandomWord();
-        // 确保模拟数据有例句翻译
-        dailyWord.value.exampleTranslation =
-          dailyWord.value.exampleTranslation || '大象是一种大型动物。';
-        checkCollectedStatus();
+        console.error('后端返回的今日单词数据为空');
+        // 显示错误信息给用户
+        showToast('无法获取今日单词，请稍后再试');
       }
     } else {
-      // 如果API请求失败，使用模拟数据
-      dailyWord.value = getRandomWord();
-      // 确保模拟数据有例句翻译
-      dailyWord.value.exampleTranslation =
-        dailyWord.value.exampleTranslation || '大象是一种大型动物。';
-      checkCollectedStatus();
+      console.error('获取今日单词API调用失败', response);
+      // 显示错误信息给用户
+      showToast('获取单词数据失败，请稍后再试');
     }
   } catch (error) {
     console.error('获取今日单词数据失败', error);
-    // 使用模拟数据
-    dailyWord.value = getRandomWord();
-    // 确保模拟数据有例句翻译
-    dailyWord.value.exampleTranslation =
-      dailyWord.value.exampleTranslation || '大象是一种大型动物。';
-    checkCollectedStatus();
+    showToast('获取单词数据失败，请稍后再试');
   }
 };
 
@@ -291,64 +285,21 @@ const convertDifficultyToText = (difficulty?: number): string => {
 // 检查单词是否已收藏
 const checkCollectedStatus = async () => {
   if (!dailyWord.value.id) {
-    // 如果没有单词ID（可能是mock数据），使用本地存储检查
-    const isCollected = collectedWordsStore.isWordCollected(
-      dailyWord.value.text,
-    );
-    dailyWord.value.isCollected = isCollected;
-    return;
+    return; // 如果没有单词ID，无法进行检查
   }
 
   try {
-    // 使用API检查单词是否已收藏
-    const response =
-      await DailyWordFavourControllerService.isFavourWordUsingGet(
-        dailyWord.value.id as number,
-      );
+    // 使用UserWordBookControllerService检查单词是否在生词本中
+    const response = await UserWordBookControllerService.isWordInUserBookUsingGet(
+      dailyWord.value.id
+    );
 
     if (response.code === 0 && response.data !== undefined) {
       // 更新单词收藏状态
       dailyWord.value.isCollected = response.data;
-
-      // 同步本地存储状态
-      if (response.data) {
-        // 如果服务器显示已收藏但本地未收藏，添加到本地
-        if (!collectedWordsStore.isWordCollected(dailyWord.value.text)) {
-          const wordToCollect = {
-            id: dailyWord.value.id as number,
-            text: dailyWord.value.text,
-            phonetic: dailyWord.value.phonetic,
-            translation: dailyWord.value.translation,
-            example: dailyWord.value.example,
-            meanings: dailyWord.value.meanings,
-            viewCount: 1,
-            lastViewTime: new Date().toISOString(),
-            difficulty: dailyWord.value.difficulty || '中级',
-          };
-
-          collectedWordsStore.collectWord(wordToCollect);
-        }
-      } else {
-        // 如果服务器显示未收藏但本地已收藏，从本地移除
-        if (collectedWordsStore.isWordCollected(dailyWord.value.text)) {
-          const collectedWords = collectedWordsStore.getCollectedWords();
-          const wordToRemove = collectedWords.find(
-            (w) => w.text.toLowerCase() === dailyWord.value.text.toLowerCase(),
-          );
-
-          if (wordToRemove) {
-            collectedWordsStore.removeWord(wordToRemove.id);
-          }
-        }
-      }
     }
   } catch (error) {
     console.error('检查单词收藏状态失败', error);
-    // 发生错误时，回退到使用本地存储
-    const isCollected = collectedWordsStore.isWordCollected(
-      dailyWord.value.text,
-    );
-    dailyWord.value.isCollected = isCollected;
   }
 };
 
@@ -358,80 +309,46 @@ const articles = ref<Article[]>([]);
 // 获取今日美文数据
 const fetchTodayArticles = async () => {
   try {
-    const response =
-      await DailyArticleControllerService.getTodayArticleUsingGet();
+    const response = await DailyArticleControllerService.getTodayArticleUsingGet();
 
-    if (response.code === 0) {
-      if (
-        response.data &&
-        Array.isArray(response.data) &&
-        response.data.length > 0
-      ) {
-        // 数组形式的响应
-        articles.value = response.data.map((article) => {
-          // 处理标签字符串，将逗号分隔的标签转换为数组
-          const tagsList = article.tags
-            ? article.tags.split(',').map((tag) => tag.trim())
-            : [];
+    if (response.code === 0 && response.data) {
+      // 将后端数据转换为前端所需格式
+      const article = response.data;
+      
+      // 处理标签字符串，将逗号分隔的标签转换为数组
+      const tagsList = article.tags
+        ? article.tags.split(',').map((tag) => tag.trim())
+        : [];
 
-          return {
-            id: article.id || 0,
-            title: article.title || '未命名文章',
-            brief: article.summary || '暂无简介',
-            cover:
-              article.coverImage ||
+      const formattedArticle = {
+        id: article.id || 0,
+        title: article.title || '未命名文章',
+        brief: article.summary || '暂无简介',
+        cover: article.coverImage ||
               'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
-            category: article.category || '文化',
-            readTime: article.readTime || 5,
-            difficulty: convertDifficultyToText(article.difficulty),
-            content: article.content || '暂无内容',
-            publishDate: article.publishDate || '',
-            viewCount: article.viewCount || 0,
-            likeCount: article.likeCount || 0,
-            tags: tagsList, // 添加标签数组
-            author: article.author || '', // 添加作者信息
-            source: article.source || '', // 添加来源信息
-          };
-        });
-      } else if (response.data && typeof response.data === 'object') {
-        // 单个对象形式的响应
-        const article = response.data;
-        const tagsList = article.tags
-          ? article.tags.split(',').map((tag) => tag.trim())
-          : [];
+        category: article.category || '文化',
+        readTime: article.readTime || 5,
+        difficulty: article.difficulty,
+        content: article.content || '暂无内容',
+        publishDate: article.publishDate || '',
+        viewCount: article.viewCount || 0,
+        likeCount: article.likeCount || 0,
+        tags: tagsList,
+        author: article.author || '', 
+        source: article.source || '',
+      };
 
-        articles.value = [
-          {
-            id: article.id || 0,
-            title: article.title || '未命名文章',
-            brief: article.summary || '暂无简介',
-            cover:
-              article.coverImage ||
-              'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
-            category: article.category || '文化',
-            readTime: article.readTime || 5,
-            difficulty: convertDifficultyToText(article.difficulty),
-            content: article.content || '暂无内容',
-            publishDate: article.publishDate || '',
-            viewCount: article.viewCount || 0,
-            likeCount: article.likeCount || 0,
-            tags: tagsList, // 添加标签数组
-            author: article.author || '', // 添加作者信息
-            source: article.source || '', // 添加来源信息
-          },
-        ];
-      } else {
-        // 如果API数据为空，使用mock数据作为备用
-        articles.value = getRandomArticles(4);
-      }
+      // 放入数组中以便组件渲染
+      articles.value = [formattedArticle];
     } else {
-      // 如果API请求失败，使用mock数据作为备用
-      articles.value = getRandomArticles(4);
+      console.error('获取今日美文数据失败', response);
+      articles.value = [];
+      showToast('获取美文数据失败');
     }
   } catch (error) {
     console.error('获取今日美文数据失败', error);
-    // 使用模拟数据作为备用
-    articles.value = getRandomArticles(4);
+    articles.value = [];
+    showToast('获取美文数据失败');
   }
 };
 
@@ -519,13 +436,13 @@ const onSearch = (text: string) => {
 
 // 开始对话
 const startChat = (assistant: Assistant) => {
-  router.push(`/chat-detail/${assistant.id}`);
+  router.push(`/chat/detail/${assistant.id}`);
 };
 
 // 查看课程详情
 const viewCourseDetail = (course: any) => {
   router.push({
-    path: '/popular-courses',
+    path: '/courses/popular',
     query: { showDetail: 'true', courseId: course.id },
   });
 };
@@ -534,10 +451,10 @@ const viewCourseDetail = (course: any) => {
 const onActionSelect = (action: Action) => {
   switch (action.name) {
     case '添加生词':
-      router.push('/vocabulary/add');
+      router.push('/vocabulary');
       break;
     case '上传笔记':
-      router.push('/notes/add');
+      showToast('笔记功能开发中');
       break;
     case '发起对话':
       router.push('/chat?tab=intelligence');
