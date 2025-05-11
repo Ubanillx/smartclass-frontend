@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # 前端服务
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartclass-frontend
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      # 可选：挂载日志目录
+      - ./logs:/var/log/nginx
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+  # 开发服务（可选）
+  dev:
+    image: node:18-alpine
+    container_name: smartclass-frontend-dev
+    working_dir: /app
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+networks:
+  app-network:
+    driver: bridge 
