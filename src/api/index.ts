@@ -9,7 +9,7 @@ import axios, {
 const isDevelopment = import.meta.env.MODE === 'development';
 const API_BASE = isDevelopment
   ? '/' // 使用相对路径，会被代理到后端服务器
-  : 'http://backend.smartclass.ubanillx.cn:8081/';
+  : 'http://backend.smartclass.ubanillx.cn:8081';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE,

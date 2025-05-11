@@ -9,7 +9,7 @@ services:
     ports:
       - '80:80'
     environment:
-      - API_BASE_URL=http://backend.smartclass.ubanillx.cn/api
+      - API_BASE_URL=http://backend.smartclass.ubanillx.cn:8081/api
     restart: always
     networks:
       - smartclass-network
