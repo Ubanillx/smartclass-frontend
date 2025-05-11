@@ -21,9 +21,10 @@ export type OpenAPIConfig = {
 
 // 根据当前环境确定API基础URL
 const isDevelopment = import.meta.env.MODE === 'development';
+// 在开发环境中使用/api作为前缀，在生产环境中不使用前缀，因为OpenAPI生成的服务路径已经包含/api前缀
 const API_BASE = isDevelopment
-  ? '/' // 开发环境使用相对路径，会被代理到后端服务器
-  : import.meta.env.VITE_APP_PROD_API_BASE_URL || 'http://backend.smartclass.ubanillx.cn:8081';
+  ? '/api' // 开发环境使用/api前缀，会被代理到后端服务器
+  : (import.meta.env.VITE_APP_PROD_API_BASE_URL || 'http://backend.smartclass.ubanillx.cn:8081');
 
 // 只在开发环境中输出调试信息
 if (isDevelopment) {

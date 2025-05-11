@@ -8,8 +8,8 @@ import axios, {
 // 根据当前环境判断使用哪个API基础URL
 const isDevelopment = import.meta.env.MODE === 'development';
 const API_BASE = isDevelopment
-  ? '/' // 使用相对路径，会被代理到后端服务器
-  : import.meta.env.VITE_APP_PROD_API_BASE_URL || 'http://backend.smartclass.ubanillx.cn:8081';
+  ? '/api' // 使用/api前缀，将被代理到后端服务器
+  : (import.meta.env.VITE_APP_PROD_API_BASE_URL || 'http://backend.smartclass.ubanillx.cn:8081');
 
 // 只在开发环境中输出调试信息
 if (isDevelopment) {
