@@ -1,38 +1,32 @@
-# 构建阶段: 使用Node.js环境
-FROM node:18-alpine as build-stage
+# 构建阶段
+FROM node:18-alpine AS build
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制package.json和package-lock.json
+# 复制项目文件
 COPY package.json package-lock.json ./
 
 # 安装依赖
 RUN npm ci
 
-# 复制源代码
+# 复制所有文件
 COPY . .
 
-# 创建生产环境变量文件
-RUN echo "VITE_APP_PROD_API_BASE_URL=http://backend.smartclass.ubanillx.cn:8081" > .env.production
-
-# 构建应用
+# 构建项目
 RUN npm run build
 
-# 生产阶段: 使用Nginx部署静态文件
-FROM nginx:stable-alpine as production-stage
+# 生产阶段
+FROM nginx:alpine AS production
 
-# 设置工作目录
-WORKDIR /usr/share/nginx/html
+# 从构建阶段复制构建好的文件到nginx目录
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# 从构建阶段复制构建文件
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-# 复制自定义Nginx配置（如果需要）
+# 复制nginx配置文件(如果需要)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 暴露80端口
 EXPOSE 80
 
-# 启动Nginx
+# 启动nginx
 CMD ["nginx", "-g", "daemon off;"] 

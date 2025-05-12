@@ -30,7 +30,6 @@ window.handleBackButton = () => {
     if (mainRoutes.includes(path)) {
       if (path !== '/') {
         // 如果在底部导航页面但不是主页，则返回到主页
-        console.log('在其他一级页面上，返回到主页');
         router.push('/');
         return true;
       }
@@ -38,12 +37,10 @@ window.handleBackButton = () => {
       return false;
     } else {
       // 如果不在一级页面，执行路由返回
-      console.log('在二级页面上，执行路由返回');
       router.back();
       return true;
     }
   } catch (error) {
-    console.error('返回按钮处理出错:', error);
     return false;
   }
 };
@@ -62,11 +59,9 @@ const initCapacitor = async () => {
 
     // 检查网络状态
     const networkStatus = await capacitor.networkServices.getNetworkStatus();
-    console.log('网络状态:', networkStatus);
 
     // 监听网络变化
     capacitor.networkServices.addNetworkListener((status) => {
-      console.log('网络状态变化:', status);
     });
   }
 };
