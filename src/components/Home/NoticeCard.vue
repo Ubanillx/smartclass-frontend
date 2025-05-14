@@ -99,19 +99,88 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { Notice } from '../../api/mock';
+import { showToast } from 'vant';
+import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
+import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
 
-// 定义props
+// 定义Notice类型
+interface Notice {
+  id: number;
+  title: string;
+  date: string;
+  content: string;
+}
+
+// 定义props，可以接收外部传入的公告数据
 const props = defineProps<{
-  notices: Notice[];
+  notices?: Notice[];
 }>();
 
 const router = useRouter();
 const showDetail = ref(false);
 const selectedNotice = ref<Notice | null>(null);
 const expanded = ref(false); // 控制是否展开显示更多公告
+const localNotices = ref<Notice[]>([]); // 本地存储公告数据
+
+// 计算最终使用的公告数据，优先使用props传入的数据，如果没有则使用本地数据
+const notices = computed(() => {
+  return props.notices || localNotices.value;
+});
+
+// 将后端公告数据转换为组件使用的格式
+const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
+  return {
+    id: announcement.id || 0,
+    title: announcement.title || '未命名公告',
+    content: announcement.content || '',
+    date: announcement.createTime
+      ? new Date(announcement.createTime).toLocaleDateString()
+      : '',
+  };
+};
+
+// 获取公告数据
+const fetchNotices = async () => {
+  try {
+    // 调用list/page/vo接口，只传入必要的参数
+    const response =
+      await AnnouncementControllerService.listAnnouncementVoByPageUsingGet(
+        undefined, // adminId
+        undefined, // content
+        undefined, // coverImage
+        undefined, // createTime
+        1, // current
+        undefined, // endTime
+        undefined, // id
+        undefined, // isValid
+        3, // pageSize
+        undefined, // priority
+        'createTime', // sortField
+        'desc', // sortOrder
+        undefined, // startTime
+        undefined, // status
+        undefined // title
+      );
+
+    if (
+      response.code === 0 &&
+      response.data &&
+      response.data.records &&
+      response.data.records.length > 0
+    ) {
+      // 直接使用返回的记录转换为Notice格式
+      localNotices.value = response.data.records.map(convertAnnouncementToNotice);
+    } else {
+      // 如果API请求失败，使用空数组
+      localNotices.value = [];
+    }
+  } catch (error) {
+    showToast('获取公告数据失败');
+    localNotices.value = [];
+  }
+};
 
 // 跳转到公告列表页面
 const goToNoticeList = (): void => {
@@ -122,7 +191,27 @@ const goToNoticeList = (): void => {
 const showNoticeDetail = (notice: Notice): void => {
   selectedNotice.value = notice;
   showDetail.value = true;
+
+  // 如果需要，可以在这里调用标记公告为已读的API
+  if (notice.id) {
+    markNoticeAsRead(notice.id);
+  }
 };
+
+// 标记公告为已读
+const markNoticeAsRead = async (id: number) => {
+  try {
+    await AnnouncementControllerService.readAnnouncementUsingPost(id);
+  } catch (error) {
+  }
+};
+
+// 组件挂载时，如果没有传入notices，则自动获取数据
+onMounted(() => {
+  if (!props.notices) {
+    fetchNotices();
+  }
+});
 </script>
 
 <style scoped>
@@ -165,6 +254,7 @@ const showNoticeDetail = (notice: Notice): void => {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2; /* 限制显示两行 */
+  line-clamp: 2; /* 添加标准属性以提高兼容性 */
 }
 
 .notice-footer {
