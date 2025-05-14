@@ -6,10 +6,8 @@ import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_UserFeedback_ } from '../models/BaseResponse_Page_UserFeedback_';
 import type { BaseResponse_UserFeedback_ } from '../models/BaseResponse_UserFeedback_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
 import type { UserFeedbackAddRequest } from '../models/UserFeedbackAddRequest';
 import type { UserFeedbackProcessRequest } from '../models/UserFeedbackProcessRequest';
-import type { UserFeedbackQueryRequest } from '../models/UserFeedbackQueryRequest';
 import type { UserFeedbackReplyAddRequest } from '../models/UserFeedbackReplyAddRequest';
 import type { UserFeedbackUpdateRequest } from '../models/UserFeedbackUpdateRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -28,7 +26,7 @@ export class UserFeedbackControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user/feedback/add',
+            url: '/api/user-feedbacks',
             body: userFeedbackAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -38,104 +36,41 @@ export class UserFeedbackControllerService {
         });
     }
     /**
-     * deleteUserFeedback
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * listUserFeedbackByPage
+     * @param current
+     * @param feedbackType
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     * @param status
+     * @param title
+     * @param userId
+     * @returns BaseResponse_Page_UserFeedback_ OK
      * @throws ApiError
      */
-    public static deleteUserFeedbackUsingPost(
-        deleteRequest: DeleteRequest_1,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/user/feedback/delete',
-            body: deleteRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getUserFeedbackById
-     * @param id id
-     * @returns BaseResponse_UserFeedback_ OK
-     * @throws ApiError
-     */
-    public static getUserFeedbackByIdUsingGet(
-        id?: number,
-    ): CancelablePromise<BaseResponse_UserFeedback_> {
+    public static listUserFeedbackByPageUsingGet(
+        current?: number,
+        feedbackType?: string,
+        pageSize?: number,
+        sortField?: string,
+        sortOrder?: string,
+        status?: number,
+        title?: string,
+        userId?: number,
+    ): CancelablePromise<BaseResponse_Page_UserFeedback_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/user/feedback/get',
+            url: '/api/user-feedbacks/page',
             query: {
-                'id': id,
+                'current': current,
+                'feedbackType': feedbackType,
+                'pageSize': pageSize,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'status': status,
+                'title': title,
+                'userId': userId,
             },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listUserFeedbackByPage
-     * @param userFeedbackQueryRequest userFeedbackQueryRequest
-     * @returns BaseResponse_Page_UserFeedback_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listUserFeedbackByPageUsingPost(
-        userFeedbackQueryRequest: UserFeedbackQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_UserFeedback_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/user/feedback/list/page',
-            body: userFeedbackQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * processUserFeedback
-     * @param userFeedbackProcessRequest userFeedbackProcessRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static processUserFeedbackUsingPost(
-        userFeedbackProcessRequest: UserFeedbackProcessRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/user/feedback/process',
-            body: userFeedbackProcessRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * processAndReply
-     * @param userFeedbackReplyAddRequest userFeedbackReplyAddRequest
-     * @returns BaseResponse_long_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static processAndReplyUsingPost(
-        userFeedbackReplyAddRequest: UserFeedbackReplyAddRequest,
-    ): CancelablePromise<BaseResponse_long_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/user/feedback/process/reply',
-            body: userFeedbackReplyAddRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -151,7 +86,29 @@ export class UserFeedbackControllerService {
     public static getUnreadCountUsingGet(): CancelablePromise<BaseResponse_long_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/user/feedback/unread/count',
+            url: '/api/user-feedbacks/unread-count',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * getUserFeedbackById
+     * @param id id
+     * @returns BaseResponse_UserFeedback_ OK
+     * @throws ApiError
+     */
+    public static getUserFeedbackByIdUsingGet(
+        id: number,
+    ): CancelablePromise<BaseResponse_UserFeedback_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/user-feedbacks/{id}',
+            path: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -161,18 +118,96 @@ export class UserFeedbackControllerService {
     }
     /**
      * updateUserFeedback
+     * @param id id
      * @param userFeedbackUpdateRequest userFeedbackUpdateRequest
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static updateUserFeedbackUsingPost(
+    public static updateUserFeedbackUsingPut(
+        id: number,
         userFeedbackUpdateRequest: UserFeedbackUpdateRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/user/feedback/update',
+            method: 'PUT',
+            url: '/api/user-feedbacks/{id}',
+            path: {
+                'id': id,
+            },
             body: userFeedbackUpdateRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * deleteUserFeedback
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static deleteUserFeedbackUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/user-feedbacks/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+            },
+        });
+    }
+    /**
+     * processUserFeedback
+     * @param id id
+     * @param userFeedbackProcessRequest userFeedbackProcessRequest
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static processUserFeedbackUsingPut(
+        id: number,
+        userFeedbackProcessRequest: UserFeedbackProcessRequest,
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/user-feedbacks/{id}/process',
+            path: {
+                'id': id,
+            },
+            body: userFeedbackProcessRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * processAndReply
+     * @param id id
+     * @param userFeedbackReplyAddRequest userFeedbackReplyAddRequest
+     * @returns BaseResponse_long_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static processAndReplyUsingPost(
+        id: number,
+        userFeedbackReplyAddRequest: UserFeedbackReplyAddRequest,
+    ): CancelablePromise<BaseResponse_long_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/user-feedbacks/{id}/reply',
+            path: {
+                'id': id,
+            },
+            body: userFeedbackReplyAddRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

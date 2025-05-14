@@ -9,7 +9,6 @@ import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_List_AiAvatarVO_ } from '../models/BaseResponse_List_AiAvatarVO_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_AiAvatarVO_ } from '../models/BaseResponse_Page_AiAvatarVO_';
-import type { DeleteRequest } from '../models/DeleteRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -26,51 +25,8 @@ export class AiAvatarControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/ai_avatar/add',
+            url: '/api/ai-avatars',
             body: aiAvatarAddRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * deleteAiAvatar
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static deleteAiAvatarUsingPost(
-        deleteRequest: DeleteRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/ai_avatar/delete',
-            body: deleteRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getAiAvatarById
-     * @param id id
-     * @returns BaseResponse_AiAvatarVO_ OK
-     * @throws ApiError
-     */
-    public static getAiAvatarByIdUsingGet(
-        id?: number,
-    ): CancelablePromise<BaseResponse_AiAvatarVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/ai_avatar/get',
-            query: {
-                'id': id,
-            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -127,7 +83,7 @@ export class AiAvatarControllerService {
     ): CancelablePromise<BaseResponse_List_AiAvatarVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/ai_avatar/list',
+            url: '/api/ai-avatars/admin',
             query: {
                 'abilities': abilities,
                 'adminId': adminId,
@@ -206,7 +162,7 @@ export class AiAvatarControllerService {
     ): CancelablePromise<BaseResponse_Page_AiAvatarVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/ai_avatar/list/page',
+            url: '/api/ai-avatars/page',
             query: {
                 'abilities': abilities,
                 'adminId': adminId,
@@ -237,23 +193,71 @@ export class AiAvatarControllerService {
         });
     }
     /**
+     * getAiAvatarById
+     * @param id id
+     * @returns BaseResponse_AiAvatarVO_ OK
+     * @throws ApiError
+     */
+    public static getAiAvatarByIdUsingGet(
+        id: number,
+    ): CancelablePromise<BaseResponse_AiAvatarVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/ai-avatars/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
      * updateAiAvatar
      * @param aiAvatarUpdateRequest aiAvatarUpdateRequest
+     * @param id id
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static updateAiAvatarUsingPost(
+    public static updateAiAvatarUsingPut(
         aiAvatarUpdateRequest: AiAvatarUpdateRequest,
+        id: number,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/ai_avatar/update',
+            method: 'PUT',
+            url: '/api/ai-avatars/{id}',
+            path: {
+                'id': id,
+            },
             body: aiAvatarUpdateRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
                 404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * deleteAiAvatar
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static deleteAiAvatarUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/ai-avatars/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
             },
         });
     }

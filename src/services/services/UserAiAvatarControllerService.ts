@@ -7,7 +7,7 @@ import type { BaseResponse_List_UserAiAvatarVO_ } from '../models/BaseResponse_L
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_UserAiAvatarVO_ } from '../models/BaseResponse_Page_UserAiAvatarVO_';
 import type { BaseResponse_UserAiAvatarVO_ } from '../models/BaseResponse_UserAiAvatarVO_';
-import type { DeleteRequest } from '../models/DeleteRequest';
+import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
 import type { UserAiAvatarAddRequest } from '../models/UserAiAvatarAddRequest';
 import type { UserAiAvatarUpdateRequest } from '../models/UserAiAvatarUpdateRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -43,7 +43,7 @@ export class UserAiAvatarControllerService {
      * @throws ApiError
      */
     public static deleteUserAiAvatarUsingPost(
-        deleteRequest: DeleteRequest,
+        deleteRequest: DeleteRequest_1,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

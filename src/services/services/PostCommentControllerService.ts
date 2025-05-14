@@ -6,9 +6,7 @@ import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_PostCommentVO_ } from '../models/BaseResponse_Page_PostCommentVO_';
 import type { BaseResponse_PostCommentVO_ } from '../models/BaseResponse_PostCommentVO_';
-import type { DeleteRequest } from '../models/DeleteRequest';
 import type { PostCommentAddRequest } from '../models/PostCommentAddRequest';
-import type { PostCommentQueryRequest } from '../models/PostCommentQueryRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -25,7 +23,7 @@ export class PostCommentControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/post_comment/add',
+            url: '/api/post-comments',
             body: postCommentAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -35,40 +33,38 @@ export class PostCommentControllerService {
         });
     }
     /**
-     * adminDeletePostComment
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * listPostCommentByPage
+     * @param content
+     * @param current
+     * @param pageSize
+     * @param postId
+     * @param sortField
+     * @param sortOrder
+     * @param userId
+     * @returns BaseResponse_Page_PostCommentVO_ OK
      * @throws ApiError
      */
-    public static adminDeletePostCommentUsingPost(
-        deleteRequest: DeleteRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
+    public static listPostCommentByPageUsingGet(
+        content?: string,
+        current?: number,
+        pageSize?: number,
+        postId?: number,
+        sortField?: string,
+        sortOrder?: string,
+        userId?: number,
+    ): CancelablePromise<BaseResponse_Page_PostCommentVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment/admin/delete',
-            body: deleteRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
+            method: 'GET',
+            url: '/api/post-comments/page',
+            query: {
+                'content': content,
+                'current': current,
+                'pageSize': pageSize,
+                'postId': postId,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'userId': userId,
             },
-        });
-    }
-    /**
-     * deletePostComment
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static deletePostCommentUsingPost(
-        deleteRequest: DeleteRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment/delete',
-            body: deleteRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -83,12 +79,12 @@ export class PostCommentControllerService {
      * @throws ApiError
      */
     public static getPostCommentByIdUsingGet(
-        id?: number,
+        id: number,
     ): CancelablePromise<BaseResponse_PostCommentVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/post_comment/get',
-            query: {
+            url: '/api/post-comments/{id}',
+            path: {
                 'id': id,
             },
             errors: {
@@ -99,23 +95,44 @@ export class PostCommentControllerService {
         });
     }
     /**
-     * listPostCommentByPage
-     * @param postCommentQueryRequest postCommentQueryRequest
-     * @returns BaseResponse_Page_PostCommentVO_ OK
-     * @returns any Created
+     * deletePostComment
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
      * @throws ApiError
      */
-    public static listPostCommentByPageUsingPost(
-        postCommentQueryRequest: PostCommentQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PostCommentVO_ | any> {
+    public static deletePostCommentUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment/list/page',
-            body: postCommentQueryRequest,
+            method: 'DELETE',
+            url: '/api/post-comments/{id}',
+            path: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * adminDeletePostComment
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static adminDeletePostCommentUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/post-comments/{id}/admin',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
             },
         });
     }

@@ -61,25 +61,19 @@ export class ChatControllerService {
         messageIds: Array<number>,
         sessionId?: string,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
-        console.log(`API调用: 批量标记消息已读, messageIds=${messageIds.join(',')}, sessionId=${sessionId}`);
-        try {
-            return __request(OpenAPI, {
-                method: 'POST',
-                url: '/api/private-chat/messages/batch/read',
-                query: {
-                    'sessionId': sessionId,
-                },
-                body: messageIds,
-                errors: {
-                    401: `Unauthorized`,
-                    403: `Forbidden`,
-                    404: `Not Found`,
-                },
-            });
-        } catch (error) {
-            console.error(`批量标记消息已读API错误: messageIds=${messageIds.join(',')}, sessionId=${sessionId}`, error);
-            throw error;
-        }
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/private-chat/messages/batch/read',
+            query: {
+                'sessionId': sessionId,
+            },
+            body: messageIds,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
     }
     /**
      * markAllMessagesAsRead
@@ -110,27 +104,21 @@ export class ChatControllerService {
         messageId: number,
         sessionId?: string,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
-        console.log(`API调用: 标记消息已读, messageId=${messageId}, sessionId=${sessionId}`);
-        try {
-            return __request(OpenAPI, {
-                method: 'POST',
-                url: '/api/private-chat/messages/{messageId}/read',
-                path: {
-                    'messageId': messageId,
-                },
-                query: {
-                    'sessionId': sessionId,
-                },
-                errors: {
-                    401: `Unauthorized`,
-                    403: `Forbidden`,
-                    404: `Not Found`,
-                },
-            });
-        } catch (error) {
-            console.error(`标记消息已读API错误: messageId=${messageId}, sessionId=${sessionId}`, error);
-            throw error;
-        }
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/private-chat/messages/{messageId}/read',
+            path: {
+                'messageId': messageId,
+            },
+            query: {
+                'sessionId': sessionId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
     }
     /**
      * sendSystemNotification

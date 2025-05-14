@@ -10,7 +10,7 @@ import type { BaseResponse_Page_Teacher_ } from '../models/BaseResponse_Page_Tea
 import type { BaseResponse_Page_TeacherVO_ } from '../models/BaseResponse_Page_TeacherVO_';
 import type { BaseResponse_Teacher_ } from '../models/BaseResponse_Teacher_';
 import type { BaseResponse_TeacherVO_ } from '../models/BaseResponse_TeacherVO_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { TeacherAddRequest } from '../models/TeacherAddRequest';
 import type { TeacherQueryRequest } from '../models/TeacherQueryRequest';
 import type { TeacherUpdateRequest } from '../models/TeacherUpdateRequest';
@@ -69,7 +69,7 @@ export class TeacherControllerService {
      * @throws ApiError
      */
     public static deleteTeacherUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

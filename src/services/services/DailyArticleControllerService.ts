@@ -8,9 +8,7 @@ import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_DailyArticle_ } from '../models/BaseResponse_Page_DailyArticle_';
 import type { BaseResponse_Page_DailyArticleVO_ } from '../models/BaseResponse_Page_DailyArticleVO_';
 import type { DailyArticleAddRequest } from '../models/DailyArticleAddRequest';
-import type { DailyArticleQueryRequest } from '../models/DailyArticleQueryRequest';
 import type { DailyArticleUpdateRequest } from '../models/DailyArticleUpdateRequest';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -27,7 +25,7 @@ export class DailyArticleControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/dailyArticle/add',
+            url: '/api/daily-articles',
             body: dailyArticleAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -37,78 +35,77 @@ export class DailyArticleControllerService {
         });
     }
     /**
-     * deleteDailyArticle
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static deleteDailyArticleUsingPost(
-        deleteRequest: DeleteRequest_1,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/delete',
-            body: deleteRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * testEsIndex
-     * @returns BaseResponse_boolean_ OK
-     * @throws ApiError
-     */
-    public static testEsIndexUsingGet(): CancelablePromise<BaseResponse_boolean_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/dailyArticle/es/test',
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getDailyArticleVOById
-     * @param id id
-     * @returns BaseResponse_DailyArticleVO_ OK
-     * @throws ApiError
-     */
-    public static getDailyArticleVoByIdUsingGet(
-        id?: number,
-    ): CancelablePromise<BaseResponse_DailyArticleVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/dailyArticle/get/vo',
-            query: {
-                'id': id,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
      * listDailyArticleByPage
-     * @param dailyArticleQueryRequest dailyArticleQueryRequest
+     * @param adminId
+     * @param author
+     * @param category
+     * @param content
+     * @param createTime
+     * @param current
+     * @param difficulty
+     * @param id
+     * @param maxReadTime
+     * @param minReadTime
+     * @param minViewCount
+     * @param pageSize
+     * @param publishDateEnd
+     * @param publishDateStart
+     * @param sortField
+     * @param sortOrder
+     * @param source
+     * @param summary
+     * @param tags
+     * @param title
      * @returns BaseResponse_Page_DailyArticle_ OK
-     * @returns any Created
      * @throws ApiError
      */
-    public static listDailyArticleByPageUsingPost(
-        dailyArticleQueryRequest: DailyArticleQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyArticle_ | any> {
+    public static listDailyArticleByPageUsingGet(
+        adminId?: number,
+        author?: string,
+        category?: string,
+        content?: string,
+        createTime?: string,
+        current?: number,
+        difficulty?: number,
+        id?: number,
+        maxReadTime?: number,
+        minReadTime?: number,
+        minViewCount?: number,
+        pageSize?: number,
+        publishDateEnd?: string,
+        publishDateStart?: string,
+        sortField?: string,
+        sortOrder?: string,
+        source?: string,
+        summary?: string,
+        tags?: string,
+        title?: string,
+    ): CancelablePromise<BaseResponse_Page_DailyArticle_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/list/page',
-            body: dailyArticleQueryRequest,
+            method: 'GET',
+            url: '/api/daily-articles/admin/page',
+            query: {
+                'adminId': adminId,
+                'author': author,
+                'category': category,
+                'content': content,
+                'createTime': createTime,
+                'current': current,
+                'difficulty': difficulty,
+                'id': id,
+                'maxReadTime': maxReadTime,
+                'minReadTime': minReadTime,
+                'minViewCount': minViewCount,
+                'pageSize': pageSize,
+                'publishDateEnd': publishDateEnd,
+                'publishDateStart': publishDateStart,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'source': source,
+                'summary': summary,
+                'tags': tags,
+                'title': title,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -118,18 +115,76 @@ export class DailyArticleControllerService {
     }
     /**
      * listDailyArticleVOByPage
-     * @param dailyArticleQueryRequest dailyArticleQueryRequest
+     * @param adminId
+     * @param author
+     * @param category
+     * @param content
+     * @param createTime
+     * @param current
+     * @param difficulty
+     * @param id
+     * @param maxReadTime
+     * @param minReadTime
+     * @param minViewCount
+     * @param pageSize
+     * @param publishDateEnd
+     * @param publishDateStart
+     * @param sortField
+     * @param sortOrder
+     * @param source
+     * @param summary
+     * @param tags
+     * @param title
      * @returns BaseResponse_Page_DailyArticleVO_ OK
-     * @returns any Created
      * @throws ApiError
      */
-    public static listDailyArticleVoByPageUsingPost(
-        dailyArticleQueryRequest: DailyArticleQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_ | any> {
+    public static listDailyArticleVoByPageUsingGet(
+        adminId?: number,
+        author?: string,
+        category?: string,
+        content?: string,
+        createTime?: string,
+        current?: number,
+        difficulty?: number,
+        id?: number,
+        maxReadTime?: number,
+        minReadTime?: number,
+        minViewCount?: number,
+        pageSize?: number,
+        publishDateEnd?: string,
+        publishDateStart?: string,
+        sortField?: string,
+        sortOrder?: string,
+        source?: string,
+        summary?: string,
+        tags?: string,
+        title?: string,
+    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/list/page/vo',
-            body: dailyArticleQueryRequest,
+            method: 'GET',
+            url: '/api/daily-articles/page',
+            query: {
+                'adminId': adminId,
+                'author': author,
+                'category': category,
+                'content': content,
+                'createTime': createTime,
+                'current': current,
+                'difficulty': difficulty,
+                'id': id,
+                'maxReadTime': maxReadTime,
+                'minReadTime': minReadTime,
+                'minViewCount': minViewCount,
+                'pageSize': pageSize,
+                'publishDateEnd': publishDateEnd,
+                'publishDateStart': publishDateStart,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'source': source,
+                'summary': summary,
+                'tags': tags,
+                'title': title,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -139,18 +194,19 @@ export class DailyArticleControllerService {
     }
     /**
      * searchDailyArticle
-     * @param dailyArticleQueryRequest dailyArticleQueryRequest
+     * @param searchText searchText
      * @returns BaseResponse_Page_DailyArticleVO_ OK
-     * @returns any Created
      * @throws ApiError
      */
-    public static searchDailyArticleUsingPost(
-        dailyArticleQueryRequest: DailyArticleQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_ | any> {
+    public static searchDailyArticleUsingGet(
+        searchText: string,
+    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/search/es',
-            body: dailyArticleQueryRequest,
+            method: 'GET',
+            url: '/api/daily-articles/search',
+            query: {
+                'searchText': searchText,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -166,7 +222,29 @@ export class DailyArticleControllerService {
     public static getTodayArticleUsingGet(): CancelablePromise<BaseResponse_DailyArticleVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/dailyArticle/today',
+            url: '/api/daily-articles/today',
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * getDailyArticleVOById
+     * @param id id
+     * @returns BaseResponse_DailyArticleVO_ OK
+     * @throws ApiError
+     */
+    public static getDailyArticleVoByIdUsingGet(
+        id: number,
+    ): CancelablePromise<BaseResponse_DailyArticleVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/daily-articles/{id}',
+            path: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -177,21 +255,47 @@ export class DailyArticleControllerService {
     /**
      * updateDailyArticle
      * @param dailyArticleUpdateRequest dailyArticleUpdateRequest
+     * @param id id
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static updateDailyArticleUsingPost(
+    public static updateDailyArticleUsingPut(
         dailyArticleUpdateRequest: DailyArticleUpdateRequest,
+        id: number,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/update',
+            method: 'PUT',
+            url: '/api/daily-articles/{id}',
+            path: {
+                'id': id,
+            },
             body: dailyArticleUpdateRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
                 404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * deleteDailyArticle
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static deleteDailyArticleUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/daily-articles/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
             },
         });
     }

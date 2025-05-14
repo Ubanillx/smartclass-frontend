@@ -8,7 +8,7 @@ import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Map_string_object_ } from '../models/BaseResponse_Map_string_object_';
 import type { BaseResponse_Page_UserLearningRecordVO_ } from '../models/BaseResponse_Page_UserLearningRecordVO_';
 import type { BaseResponse_UserLearningRecordVO_ } from '../models/BaseResponse_UserLearningRecordVO_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { UserLearningRecordAddRequest } from '../models/UserLearningRecordAddRequest';
 import type { UserLearningRecordQueryRequest } from '../models/UserLearningRecordQueryRequest';
 import type { UserLearningRecordUpdateRequest } from '../models/UserLearningRecordUpdateRequest';
@@ -45,7 +45,7 @@ export class UserLearningRecordControllerService {
      * @throws ApiError
      */
     public static deleteUserLearningRecordUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

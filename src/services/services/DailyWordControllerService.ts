@@ -8,9 +8,7 @@ import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_DailyWord_ } from '../models/BaseResponse_Page_DailyWord_';
 import type { BaseResponse_Page_DailyWordVO_ } from '../models/BaseResponse_Page_DailyWordVO_';
 import type { DailyWordAddRequest } from '../models/DailyWordAddRequest';
-import type { DailyWordQueryRequest } from '../models/DailyWordQueryRequest';
 import type { DailyWordUpdateRequest } from '../models/DailyWordUpdateRequest';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -27,7 +25,7 @@ export class DailyWordControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/dailyWord/add',
+            url: '/api/daily-words',
             body: dailyWordAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -37,19 +35,56 @@ export class DailyWordControllerService {
         });
     }
     /**
-     * deleteDailyWord
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * listDailyWordByPage
+     * @param adminId
+     * @param category
+     * @param createTime
+     * @param current
+     * @param difficulty
+     * @param id
+     * @param pageSize
+     * @param publishDateEnd
+     * @param publishDateStart
+     * @param sortField
+     * @param sortOrder
+     * @param translation
+     * @param word
+     * @returns BaseResponse_Page_DailyWord_ OK
      * @throws ApiError
      */
-    public static deleteDailyWordUsingPost(
-        deleteRequest: DeleteRequest_1,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
+    public static listDailyWordByPageUsingGet(
+        adminId?: number,
+        category?: string,
+        createTime?: string,
+        current?: number,
+        difficulty?: number,
+        id?: number,
+        pageSize?: number,
+        publishDateEnd?: string,
+        publishDateStart?: string,
+        sortField?: string,
+        sortOrder?: string,
+        translation?: string,
+        word?: string,
+    ): CancelablePromise<BaseResponse_Page_DailyWord_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyWord/delete',
-            body: deleteRequest,
+            method: 'GET',
+            url: '/api/daily-words/admin/page',
+            query: {
+                'adminId': adminId,
+                'category': category,
+                'createTime': createTime,
+                'current': current,
+                'difficulty': difficulty,
+                'id': id,
+                'pageSize': pageSize,
+                'publishDateEnd': publishDateEnd,
+                'publishDateStart': publishDateStart,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'translation': translation,
+                'word': word,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -58,14 +93,100 @@ export class DailyWordControllerService {
         });
     }
     /**
-     * testEsIndex
-     * @returns BaseResponse_boolean_ OK
+     * listDailyWordVOByPage
+     * @param adminId
+     * @param category
+     * @param createTime
+     * @param current
+     * @param difficulty
+     * @param id
+     * @param pageSize
+     * @param publishDateEnd
+     * @param publishDateStart
+     * @param sortField
+     * @param sortOrder
+     * @param translation
+     * @param word
+     * @returns BaseResponse_Page_DailyWordVO_ OK
      * @throws ApiError
      */
-    public static testEsIndexUsingGet1(): CancelablePromise<BaseResponse_boolean_> {
+    public static listDailyWordVoByPageUsingGet(
+        adminId?: number,
+        category?: string,
+        createTime?: string,
+        current?: number,
+        difficulty?: number,
+        id?: number,
+        pageSize?: number,
+        publishDateEnd?: string,
+        publishDateStart?: string,
+        sortField?: string,
+        sortOrder?: string,
+        translation?: string,
+        word?: string,
+    ): CancelablePromise<BaseResponse_Page_DailyWordVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/dailyWord/es/test',
+            url: '/api/daily-words/page',
+            query: {
+                'adminId': adminId,
+                'category': category,
+                'createTime': createTime,
+                'current': current,
+                'difficulty': difficulty,
+                'id': id,
+                'pageSize': pageSize,
+                'publishDateEnd': publishDateEnd,
+                'publishDateStart': publishDateStart,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'translation': translation,
+                'word': word,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * searchDailyWord
+     * @param searchText searchText
+     * @returns BaseResponse_Page_DailyWordVO_ OK
+     * @throws ApiError
+     */
+    public static searchDailyWordUsingGet(
+        searchText: string,
+    ): CancelablePromise<BaseResponse_Page_DailyWordVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/daily-words/search',
+            query: {
+                'searchText': searchText,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * getTodayWord
+     * @param difficulty difficulty
+     * @returns BaseResponse_DailyWordVO_ OK
+     * @throws ApiError
+     */
+    public static getTodayWordUsingGet(
+        difficulty?: number,
+    ): CancelablePromise<BaseResponse_DailyWordVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/daily-words/today',
+            query: {
+                'difficulty': difficulty,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -80,12 +201,12 @@ export class DailyWordControllerService {
      * @throws ApiError
      */
     public static getDailyWordVoByIdUsingGet(
-        id?: number,
+        id: number,
     ): CancelablePromise<BaseResponse_DailyWordVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/dailyWord/get/vo',
-            query: {
+            url: '/api/daily-words/{id}',
+            path: {
                 'id': id,
             },
             errors: {
@@ -96,119 +217,44 @@ export class DailyWordControllerService {
         });
     }
     /**
-     * listDailyWordByPage
-     * @param dailyWordQueryRequest dailyWordQueryRequest
-     * @returns BaseResponse_Page_DailyWord_ OK
-     * @returns any Created
+     * deleteDailyWord
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
      * @throws ApiError
      */
-    public static listDailyWordByPageUsingPost(
-        dailyWordQueryRequest: DailyWordQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyWord_ | any> {
+    public static deleteDailyWordUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyWord/list/page',
-            body: dailyWordQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listDailyWordVOByPage
-     * @param dailyWordQueryRequest dailyWordQueryRequest
-     * @returns BaseResponse_Page_DailyWordVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listDailyWordVoByPageUsingPost(
-        dailyWordQueryRequest: DailyWordQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyWordVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyWord/list/page/vo',
-            body: dailyWordQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getRandomWord
-     * @param difficulty difficulty
-     * @returns BaseResponse_DailyWordVO_ OK
-     * @throws ApiError
-     */
-    public static getRandomWordUsingGet(
-        difficulty?: number,
-    ): CancelablePromise<BaseResponse_DailyWordVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/dailyWord/random',
-            query: {
-                'difficulty': difficulty,
+            method: 'DELETE',
+            url: '/api/daily-words/{id}',
+            path: {
+                'id': id,
             },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * searchDailyWord
-     * @param dailyWordQueryRequest dailyWordQueryRequest
-     * @returns BaseResponse_Page_DailyWordVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static searchDailyWordUsingPost(
-        dailyWordQueryRequest: DailyWordQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyWordVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyWord/search/es',
-            body: dailyWordQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * getTodayWord
-     * @returns BaseResponse_DailyWordVO_ OK
-     * @throws ApiError
-     */
-    public static getTodayWordUsingGet(): CancelablePromise<BaseResponse_DailyWordVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/dailyWord/today',
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
             },
         });
     }
     /**
      * updateDailyWord
      * @param dailyWordUpdateRequest dailyWordUpdateRequest
+     * @param id id
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static updateDailyWordUsingPost(
+    public static updateDailyWordUsingPut(
         dailyWordUpdateRequest: DailyWordUpdateRequest,
+        id: number,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyWord/update',
+            method: 'PUT',
+            url: '/api/daily-words/{id}/admin',
+            path: {
+                'id': id,
+            },
             body: dailyWordUpdateRequest,
             errors: {
                 401: `Unauthorized`,

@@ -19,60 +19,9 @@ export class DailyWordLearningControllerService {
     ): CancelablePromise<BaseResponse_UserDailyWord_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/daily/word/learning/get/{wordId}',
+            url: '/api/daily/word/learning/{wordId}',
             path: {
                 'wordId': wordId,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * markWordAsStudied
-     * @param wordId wordId
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static markWordAsStudiedUsingPost1(
-        wordId: number,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/daily/word/learning/mark-studied/{wordId}',
-            path: {
-                'wordId': wordId,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * saveWordNote
-     * @param noteContent noteContent
-     * @param wordId wordId
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static saveWordNoteUsingPost1(
-        noteContent: string,
-        wordId: number,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/daily/word/learning/save-note/{wordId}',
-            path: {
-                'wordId': wordId,
-            },
-            query: {
-                'noteContent': noteContent,
             },
             errors: {
                 401: `Unauthorized`,
@@ -89,13 +38,13 @@ export class DailyWordLearningControllerService {
      * @returns any Created
      * @throws ApiError
      */
-    public static updateMasteryLevelUsingPost1(
+    public static updateMasteryLevelUsingPost(
         masteryLevel: number,
         wordId: number,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/daily/word/learning/update-mastery/{wordId}',
+            url: '/api/daily/word/learning/{wordId}/mastery',
             path: {
                 'wordId': wordId,
             },
@@ -106,6 +55,78 @@ export class DailyWordLearningControllerService {
                 401: `Unauthorized`,
                 403: `Forbidden`,
                 404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * saveWordNote
+     * @param noteContent noteContent
+     * @param wordId wordId
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static saveWordNoteUsingPost(
+        noteContent: string,
+        wordId: number,
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/daily/word/learning/{wordId}/note',
+            path: {
+                'wordId': wordId,
+            },
+            query: {
+                'noteContent': noteContent,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * markWordAsStudied
+     * @param wordId wordId
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static markWordAsStudiedUsingPost(
+        wordId: number,
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/daily/word/learning/{wordId}/study-status',
+            path: {
+                'wordId': wordId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * cancelWordStudied
+     * @param wordId wordId
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static cancelWordStudiedUsingDelete(
+        wordId: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/daily/word/learning/{wordId}/study-status',
+            path: {
+                'wordId': wordId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
             },
         });
     }

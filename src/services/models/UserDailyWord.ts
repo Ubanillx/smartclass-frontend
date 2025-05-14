@@ -3,10 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserDailyWord = {
-    collectTime?: string;
     createTime?: string;
     id?: number;
-    isCollected?: number;
     isLiked?: number;
     isStudied?: number;
     likeTime?: string;

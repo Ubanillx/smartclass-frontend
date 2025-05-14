@@ -11,40 +11,17 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class DailyArticleFavourControllerService {
     /**
-     * isFavourArticle
-     * @param articleId articleId
-     * @returns BaseResponse_boolean_ OK
-     * @throws ApiError
-     */
-    public static isFavourArticleUsingGet(
-        articleId: number,
-    ): CancelablePromise<BaseResponse_boolean_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/dailyArticle/favour/check/{articleId}',
-            path: {
-                'articleId': articleId,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
      * listMyFavourArticleByPage
      * @param dailyArticleQueryRequest dailyArticleQueryRequest
      * @returns BaseResponse_Page_DailyArticleVO_ OK
-     * @returns any Created
      * @throws ApiError
      */
-    public static listMyFavourArticleByPageUsingPost(
+    public static listMyFavourArticleByPageUsingGet(
         dailyArticleQueryRequest: DailyArticleQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_ | any> {
+    ): CancelablePromise<BaseResponse_Page_DailyArticleVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/dailyArticle/favour/list/page/my',
+            method: 'GET',
+            url: '/api/daily-articles/favourites/me/page',
             body: dailyArticleQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -65,7 +42,50 @@ export class DailyArticleFavourControllerService {
     ): CancelablePromise<BaseResponse_int_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/dailyArticle/favour/{articleId}',
+            url: '/api/daily-articles/favourites/{articleId}',
+            path: {
+                'articleId': articleId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * cancelArticleFavour
+     * @param articleId articleId
+     * @returns BaseResponse_int_ OK
+     * @throws ApiError
+     */
+    public static cancelArticleFavourUsingDelete(
+        articleId: number,
+    ): CancelablePromise<BaseResponse_int_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/daily-articles/favourites/{articleId}',
+            path: {
+                'articleId': articleId,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+            },
+        });
+    }
+    /**
+     * isFavourArticle
+     * @param articleId articleId
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static isFavourArticleUsingGet(
+        articleId: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/daily-articles/favourites/{articleId}/status',
             path: {
                 'articleId': articleId,
             },

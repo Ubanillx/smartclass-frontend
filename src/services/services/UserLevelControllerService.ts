@@ -9,7 +9,7 @@ import type { BaseResponse_Page_UserLevel_ } from '../models/BaseResponse_Page_U
 import type { BaseResponse_Page_UserLevelVO_ } from '../models/BaseResponse_Page_UserLevelVO_';
 import type { BaseResponse_UserLevel_ } from '../models/BaseResponse_UserLevel_';
 import type { BaseResponse_UserLevelVO_ } from '../models/BaseResponse_UserLevelVO_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { UserLevelAddRequest } from '../models/UserLevelAddRequest';
 import type { UserLevelQueryRequest } from '../models/UserLevelQueryRequest';
 import type { UserLevelUpdateRequest } from '../models/UserLevelUpdateRequest';
@@ -68,7 +68,7 @@ export class UserLevelControllerService {
      * @throws ApiError
      */
     public static deleteUserLevelUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

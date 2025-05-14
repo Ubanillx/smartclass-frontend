@@ -9,7 +9,7 @@ import type { BaseResponse_Page_User_ } from '../models/BaseResponse_Page_User_'
 import type { BaseResponse_Page_UserVO_ } from '../models/BaseResponse_Page_UserVO_';
 import type { BaseResponse_User_ } from '../models/BaseResponse_User_';
 import type { BaseResponse_UserVO_ } from '../models/BaseResponse_UserVO_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { UserAddRequest } from '../models/UserAddRequest';
 import type { UserLoginByPhoneRequest } from '../models/UserLoginByPhoneRequest';
 import type { UserLoginRequest } from '../models/UserLoginRequest';
@@ -51,7 +51,7 @@ export class UserControllerService {
      * @throws ApiError
      */
     public static deleteUserUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

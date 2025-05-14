@@ -3,28 +3,84 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
-import type { BaseResponse_int_ } from '../models/BaseResponse_int_';
 import type { BaseResponse_Page_PostVO_ } from '../models/BaseResponse_Page_PostVO_';
 import type { PostFavourAddRequest } from '../models/PostFavourAddRequest';
-import type { PostQueryRequest } from '../models/PostQueryRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class PostFavourControllerService {
     /**
-     * doFavour
+     * addFavour
      * @param postFavourAddRequest postFavourAddRequest
-     * @returns BaseResponse_int_ OK
+     * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
-    public static doFavourUsingPost(
+    public static addFavourUsingPost(
         postFavourAddRequest: PostFavourAddRequest,
-    ): CancelablePromise<BaseResponse_int_ | any> {
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/post_favour/',
+            url: '/api/post-favours',
             body: postFavourAddRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * listMyFavourPostByPage
+     * @param content
+     * @param current
+     * @param favourUserId
+     * @param id
+     * @param notId
+     * @param orTags
+     * @param pageSize
+     * @param searchText
+     * @param sortField
+     * @param sortOrder
+     * @param tags
+     * @param title
+     * @param userId
+     * @returns BaseResponse_Page_PostVO_ OK
+     * @throws ApiError
+     */
+    public static listMyFavourPostByPageUsingGet(
+        content?: string,
+        current?: number,
+        favourUserId?: number,
+        id?: number,
+        notId?: number,
+        orTags?: Array<string>,
+        pageSize?: number,
+        searchText?: string,
+        sortField?: string,
+        sortOrder?: string,
+        tags?: Array<string>,
+        title?: string,
+        userId?: number,
+    ): CancelablePromise<BaseResponse_Page_PostVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/post-favours/me/page',
+            query: {
+                'content': content,
+                'current': current,
+                'favourUserId': favourUserId,
+                'id': id,
+                'notId': notId,
+                'orTags': orTags,
+                'pageSize': pageSize,
+                'searchText': searchText,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'tags': tags,
+                'title': title,
+                'userId': userId,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -43,8 +99,8 @@ export class PostFavourControllerService {
     ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/post_favour/has_favour',
-            query: {
+            url: '/api/post-favours/{postId}',
+            path: {
                 'postId': postId,
             },
             errors: {
@@ -55,23 +111,23 @@ export class PostFavourControllerService {
         });
     }
     /**
-     * listMyFavourPostByPage
-     * @param postQueryRequest postQueryRequest
-     * @returns BaseResponse_Page_PostVO_ OK
-     * @returns any Created
+     * cancelFavour
+     * @param postId postId
+     * @returns BaseResponse_boolean_ OK
      * @throws ApiError
      */
-    public static listMyFavourPostByPageUsingPost(
-        postQueryRequest: PostQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PostVO_ | any> {
+    public static cancelFavourUsingDelete(
+        postId: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_favour/my/list/page',
-            body: postQueryRequest,
+            method: 'DELETE',
+            url: '/api/post-favours/{postId}',
+            path: {
+                'postId': postId,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not Found`,
             },
         });
     }
