@@ -38,9 +38,7 @@
                 <span
                   class="thumb-number"
                   :class="{ thumbed: word.isThumbUp }"
-                  v-if="word.thumbCount"
-                  >{{ word.thumbCount }}</span
-                >
+                >{{ word.likeCount || 0 }}</span>
               </div>
               <div
                 class="collect-action"
@@ -131,9 +129,7 @@
                 <span
                   class="thumb-number"
                   :class="{ thumbed: word.isThumbUp }"
-                  v-if="word.thumbCount"
-                  >{{ word.thumbCount }}</span
-                >
+                >{{ word.likeCount || 0 }}</span>
               </div>
               <div
                 class="collect-action"
@@ -275,11 +271,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { showToast } from 'vant';
-import { useCollectedWordsStore } from '../../stores/collectedWordsStore';
 import {
-  DailyWordFavourControllerService,
+  DailyWordLearningControllerService,
   DailyWordThumbControllerService,
   UserWordBookControllerService
 } from '../../services';
@@ -291,22 +286,21 @@ interface WordMeaning {
 }
 
 interface Word {
-  id?: number;
+  id: number;
   text: string;
   phonetic: string;
   translation: string;
   example: string;
   isCollected: boolean;
-  isThumbUp?: boolean;
-  isStudied?: boolean;
-  thumbCount?: number;
-  likeCount?: number;
+  isThumbUp: boolean;
+  thumbCount: number;
+  likeCount: number;
   meanings: WordMeaning[];
-  viewCount?: number;
-  collectCount?: number;
-  lastViewTime?: string;
-  difficulty?: string;
-  category?: string;
+  viewCount: number;
+  collectCount: number;
+  lastViewTime: string;
+  difficulty: string;
+  category: string;
   audioUrl?: string;
   exampleTranslation?: string;
   notes?: string;
@@ -317,30 +311,21 @@ interface Word {
   wordId?: number; // 单词ID
   pronunciation?: string; // 发音URL
   collectedTime?: string; // 收藏时间
-}
-
-interface Category {
-  id: number;
-  name: string;
-  icon: string;
-  path: string;
+  isStudied?: boolean; // 是否已学习
 }
 
 // 定义props
 const props = defineProps<{
   word: Word;
-  categories: Category[];
 }>();
 
 // 定义事件
 const emit = defineEmits<{
   (e: 'update:word', word: Word): void;
   (e: 'more'): void;
-  (e: 'category-click', category: Category): void;
 }>();
 
 const showWordPopup = ref(false);
-const collectedWordsStore = useCollectedWordsStore();
 
 // 笔记编辑状态
 const isEditingNote = ref(false);
@@ -384,23 +369,9 @@ const showWordBookStats = (): void => {
     });
   }
   
-  // 跳转到生词本页面
-  emit('category-click', vocabularyCategory.value);
+  // 直接跳转到生词本页面
+  emit('more');
 };
-
-// 获取生词本分类
-const vocabularyCategory = computed(() => {
-  return (
-    props.categories.find(
-      (category) => category.path === '/vocabulary/collected',
-    ) || {
-      id: 4,
-      name: '生词本',
-      icon: 'bookmark-o',
-      path: '/vocabulary/collected',
-    }
-  );
-});
 
 // 显示单词详情
 const showWordDetail = (): void => {
@@ -445,8 +416,8 @@ const checkWordThumbStatus = async (): Promise<void> => {
         const updatedWord: Word = {
           ...props.word,
           isThumbUp: response.data,
-          // 使用原有的likeCount或thumbCount
-          thumbCount: props.word.likeCount || props.word.thumbCount,
+          // 保持原有的likeCount
+          likeCount: props.word.likeCount || 0,
         };
         emit('update:word', updatedWord);
       }
@@ -507,7 +478,7 @@ const toggleCollect = async (): Promise<void> => {
       response = await UserWordBookControllerService.addToWordBookUsingPost(addRequest);
     } else {
       // 从生词本移除
-      response = await UserWordBookControllerService.removeFromWordBookUsingPost(props.word.id);
+      response = await UserWordBookControllerService.removeFromWordBookUsingDelete(props.word.id);
     }
 
     if (response.code === 0) {
@@ -560,24 +531,28 @@ const toggleThumbUp = async (): Promise<void> => {
   isThumbUping.value = true;
 
   try {
-    // 调用后端API进行点赞或取消点赞
-    const response = await DailyWordThumbControllerService.doWordThumbUsingPost(
-      props.word.id,
-    );
+    let response;
+    if (props.word.isThumbUp) {
+      // 已点赞，执行取消点赞
+      response = await DailyWordThumbControllerService.cancelThumbWordUsingDelete(props.word.id);
+    } else {
+      // 未点赞，执行点赞
+      response = await DailyWordThumbControllerService.thumbWordUsingPost(props.word.id);
+    }
 
-    if (response.code === 0) {
+    if (response && response.code === 0) {
       // API调用成功，更新本地状态
       const newThumbStatus = !props.word.isThumbUp;
       // 根据点赞状态计算新的点赞数
-      const currentCount = props.word.likeCount || props.word.thumbCount || 0;
-      const newThumbCount = newThumbStatus
+      const currentCount = props.word.likeCount || 0;
+      const newLikeCount = newThumbStatus
         ? currentCount + 1
         : Math.max(currentCount - 1, 0);
 
       const updatedWord: Word = {
         ...props.word,
         isThumbUp: newThumbStatus,
-        thumbCount: newThumbCount,
+        likeCount: newLikeCount,
       };
 
       // 通过事件更新父组件中的数据
@@ -587,7 +562,7 @@ const toggleThumbUp = async (): Promise<void> => {
         message: newThumbStatus ? '点赞成功' : '已取消点赞',
         position: 'bottom',
       });
-    } else {
+    } else if (response) {
       // API调用失败
       showToast({
         message: `操作失败: ${response.message || '未知错误'}`,
@@ -614,7 +589,10 @@ const startEditingNote = (): void => {
 // 保存单词笔记
 const saveWordNote = async (): Promise<void> => {
   if (!props.word.id) {
-    showToast('单词ID不存在，无法保存笔记');
+    showToast({
+      message: '单词ID不存在，无法保存笔记',
+      position: 'bottom',
+    });
     return;
   }
 
@@ -622,7 +600,7 @@ const saveWordNote = async (): Promise<void> => {
 
   try {
     const response =
-      await DailyWordFavourControllerService.saveWordNoteUsingPost(
+      await DailyWordLearningControllerService.saveWordNoteUsingPost(
         noteContent.value,
         props.word.id,
       );
@@ -636,13 +614,22 @@ const saveWordNote = async (): Promise<void> => {
 
       emit('update:word', updatedWord);
       isEditingNote.value = false;
-      showToast('笔记保存成功');
+      showToast({
+        message: '笔记保存成功',
+        position: 'bottom',
+      });
     } else {
-      showToast(`保存失败: ${response.message || '未知错误'}`);
+      showToast({
+        message: `保存失败: ${response.message || '未知错误'}`,
+        position: 'bottom',
+      });
     }
   } catch (error) {
     console.error('保存单词笔记失败', error);
-    showToast('保存失败，请稍后再试');
+    showToast({
+      message: '保存失败，请稍后再试',
+      position: 'bottom',
+    });
   } finally {
     isSavingNote.value = false;
   }
@@ -658,16 +645,25 @@ const updateMasteryLevel = async (): Promise<void> => {
       wordId: props.word.id,
       difficulty: masteryLevel.value,
     };
-    const response = await UserWordBookControllerService.updateDifficultyUsingPost(difficultyRequest);
+    const response = await UserWordBookControllerService.updateDifficultyUsingPut(difficultyRequest, props.word.id);
 
     if (response.code === 0 && response.data) {
-      showToast('掌握程度已更新');
+      showToast({
+        message: '掌握程度已更新',
+        position: 'bottom',
+      });
     } else {
-      showToast(`更新失败: ${response.message || '未知错误'}`);
+      showToast({
+        message: `更新失败: ${response.message || '未知错误'}`,
+        position: 'bottom',
+      });
     }
   } catch (error) {
     console.error('更新单词掌握程度失败', error);
-    showToast('更新失败，请稍后再试');
+    showToast({
+      message: '更新失败，请稍后再试',
+      position: 'bottom',
+    });
   }
 };
 
@@ -678,23 +674,21 @@ const markAsStudied = async (): Promise<void> => {
   isMarkingStudied.value = true;
 
   try {
-    // 检查当前状态
-    const studiedWords = JSON.parse(
-      localStorage.getItem('studiedWords') || '{}',
-    );
-    const isCurrentlyStudied = studiedWords[props.word.id] === true;
-
-    // 切换学习状态
-    const newStudiedStatus = !isCurrentlyStudied;
+    const newStudiedStatus = !props.word.isStudied;
     
     // 更新学习状态
     const updateStatusRequest = {
       wordId: props.word.id,
       learningStatus: newStudiedStatus ? 1 : 0,
     };
-    const response = await UserWordBookControllerService.updateLearningStatusUsingPost(updateStatusRequest);
+    
+    // 更新学习状态
+    const response = await UserWordBookControllerService.updateLearningStatusUsingPut(
+      updateStatusRequest,
+      props.word.id
+    );
 
-    if (response.code === 0 && response.data) {
+    if (response.code === 0) {
       // 更新本地状态
       const updatedWord: Word = {
         ...props.word,
@@ -705,19 +699,31 @@ const markAsStudied = async (): Promise<void> => {
 
       // 更新本地存储
       try {
+        const studiedWords = JSON.parse(
+          localStorage.getItem('studiedWords') || '{}'
+        );
         studiedWords[props.word.id as number] = newStudiedStatus;
         localStorage.setItem('studiedWords', JSON.stringify(studiedWords));
       } catch (error) {
         console.error('保存学习状态到本地存储失败', error);
       }
 
-      showToast(newStudiedStatus ? '已标记为学习完成' : '已取消学习标记');
+      showToast({
+        message: newStudiedStatus ? '已标记为学习完成' : '已取消学习标记',
+        position: 'bottom',
+      });
     } else {
-      showToast(`操作失败: ${response.message || '未知错误'}`);
+      showToast({
+        message: `操作失败: ${response.message || '未知错误'}`,
+        position: 'bottom',
+      });
     }
   } catch (error) {
     console.error('标记单词为已学习失败', error);
-    showToast('操作失败，请稍后再试');
+    showToast({
+      message: '操作失败，请稍后再试',
+      position: 'bottom',
+    });
   } finally {
     isMarkingStudied.value = false;
   }
@@ -726,18 +732,6 @@ const markAsStudied = async (): Promise<void> => {
 // 组件挂载时检查单词收藏状态与初始化数据
 onMounted(() => {
   if (props.word.id) {
-    // 如果有likeCount数据，使用它初始化thumbCount
-    if (
-      props.word.likeCount !== undefined &&
-      props.word.thumbCount === undefined
-    ) {
-      const updatedWord: Word = {
-        ...props.word,
-        thumbCount: props.word.likeCount,
-      };
-      emit('update:word', updatedWord);
-    }
-
     checkWordFavourStatus();
     checkWordThumbStatus();
     checkWordStudiedStatus();
@@ -762,18 +756,6 @@ watch(
     }
   },
 );
-
-// 根据单词信息估计难度
-const getDifficulty = (word: Word): string => {
-  // 简单根据单词长度估计难度，实际应用中可能需要更复杂的逻辑
-  if (word.text.length <= 5) {
-    return '初级';
-  } else if (word.text.length <= 8) {
-    return '中级';
-  } else {
-    return '高级';
-  }
-};
 
 // 播放单词发音
 const playAudio = (): void => {

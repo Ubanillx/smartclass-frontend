@@ -48,7 +48,7 @@
 import { Course } from '../../api/mock';
 
 // 定义props
-const props = defineProps<{
+defineProps<{
   courses: Course[];
 }>();
 
@@ -161,6 +161,7 @@ defineEmits<{
   color: #ff9a9e;
   background: linear-gradient(135deg, #1989fa, #39b9fa);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 22px;
 }
@@ -175,6 +176,7 @@ defineEmits<{
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 
@@ -187,6 +189,7 @@ defineEmits<{
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
