@@ -4,7 +4,7 @@
     class="stop-response-btn"
     size="small"
     type="default"
-    @click="$emit('stop')"
+    @click="handleStop"
   >
     <van-icon name="pause-circle-o" style="margin-right: 4px; vertical-align: -2px;" />
     停止响应
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 // 定义props
-const props = defineProps<{
+defineProps<{
   show: boolean;
 }>();
 
@@ -21,6 +21,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'stop'): void;
 }>();
+
+// 处理停止按钮点击
+const handleStop = () => {
+  emit('stop');
+};
 </script>
 
 <style scoped>

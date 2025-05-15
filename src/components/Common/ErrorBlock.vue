@@ -24,7 +24,7 @@ import { defineProps, defineEmits } from 'vue';
 
 defineEmits(['retry']);
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     default: '加载失败',

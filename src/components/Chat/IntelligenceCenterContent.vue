@@ -77,12 +77,33 @@ const loadAiAvatars = async () => {
   error.value = '';
 
   try {
-    // 获取所有AI分身信息
-    const response = await AiAvatarControllerService.listAiAvatarUsingGet();
+    // 使用普通用户接口获取AI分身列表，替换管理员接口
+    const response = await AiAvatarControllerService.listAiAvatarByPageUsingGet(
+      undefined, // abilities
+      undefined, // adminId
+      undefined, // avatarUrl
+      undefined, // category
+      undefined, // createTime
+      undefined, // creatorId
+      1, // current - 默认第一页
+      undefined, // description
+      undefined, // id
+      1, // isPublic - 只获取公开的智慧体
+      undefined, // modelType
+      undefined, // name
+      20, // pageSize - 默认每页20条
+      undefined, // personality
+      undefined, // rating
+      undefined, // sortField
+      undefined, // sortOrder
+      1, // status - 只获取正常状态的智慧体
+      undefined, // tags
+      undefined  // usageCount
+    );
 
-    if (response.code === 0 && response.data) {
+    if (response.code === 0 && response.data && response.data.records) {
       // 将AI分身信息转换为智能助手格式
-      assistants.value = response.data.map((avatar: AiAvatarVO) => {
+      assistants.value = response.data.records.map((avatar: AiAvatarVO) => {
         // 将tags字符串转换为数组
         const tagsList = avatar.tags
           ? avatar.tags.split(',').map((tag: string) => tag.trim())

@@ -4,7 +4,7 @@
       <!-- 内容容器 -->
       <div class="content-wrapper">
         <!-- 对话记录列表 -->
-        <div v-show="!loading && !error && total > 0" class="chat-list-container">
+        <div class="chat-list-container" v-if="!loading && !error && transformedChatHistory.length > 0">
           <chat-list
             :chats="transformedChatHistory"
             :show-status="false"
@@ -15,20 +15,20 @@
 
         <!-- 空状态提示 -->
         <van-empty
-          v-show="total === 0 && !loading && !error"
+          v-if="transformedChatHistory.length === 0 && !loading && !error"
           description="暂无对话记录"
           class="empty-state"
         />
 
         <!-- 加载状态 -->
-        <div v-show="loading" class="loading-container">
+        <div v-if="loading" class="loading-container">
           <van-loading type="spinner" size="32" color="#1989fa" />
           <p>正在加载对话记录，可能需要一段时间...</p>
         </div>
 
         <!-- 错误状态 -->
         <network-error
-          v-show="error"
+          v-if="error"
           :message="error"
           :loading="retryLoading"
           @retry="retryLoadData"
@@ -37,7 +37,7 @@
     </div>
 
     <!-- 固定在底部的分页组件 -->
-    <div class="fixed-pagination" v-show="total > 0 && !loading && !error">
+    <div class="fixed-pagination" v-if="transformedChatHistory.length > 0 && !loading && !error">
       <chat-pagination
         :total-items="total"
         :page-size="pageSize"
@@ -227,7 +227,7 @@ const loadChatHistory = async () => {
       error.value = '获取聊天历史失败，请检查网络连接';
       showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
     }
-  } catch (err) {
+  } catch (_) {
     error.value = '网络连接失败，请检查网络设置后重试';
     showToast('加载聊天历史出错');
   } finally {
@@ -264,7 +264,7 @@ const handlePageChange = (page: number) => {
         showToast('获取聊天历史失败: ' + (response.message || '未知错误'));
       }
     })
-    .catch(err => {
+    .catch(_ => {
       error.value = '网络连接失败，请检查网络设置后重试';
       showToast('加载聊天历史出错');
     })
@@ -350,6 +350,7 @@ onMounted(() => {
   padding: 0 8px;
   box-sizing: border-box;
   position: relative;
+  z-index: 1; /* 确保内容在其他元素上方 */
 }
 
 /* 内容容器 */
@@ -357,10 +358,14 @@ onMounted(() => {
   position: relative;
   min-height: 200px;
   padding-bottom: 20px;
+  background-color: transparent;
 }
 
 .chat-list-container {
   width: 100%;
+  position: relative;
+  z-index: 2; /* 确保列表在其他元素上方 */
+  display: block;
 }
 
 /* 固定在底部的分页组件 */

@@ -68,7 +68,7 @@ interface Chat {
 }
 
 // 定义props并设置默认值
-const props = withDefaults(
+const { chats, showStatus = true } = withDefaults(
   defineProps<{
     chats: Chat[];
     showStatus?: boolean;
@@ -128,6 +128,10 @@ const cancelTouch = () => {
   background-color: transparent;
   padding: 0 4px;
   box-sizing: border-box;
+  display: block;
+  width: 100%;
+  position: relative;
+  min-height: 50px;
 }
 
 .chat-item {
@@ -136,12 +140,15 @@ const cancelTouch = () => {
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(235, 237, 240, 0.5);
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: #ffffff;
   border-radius: 12px;
   transition: all 0.3s ease;
   -webkit-tap-highlight-color: transparent; /* 避免移动端点击出现蓝色背景 */
   user-select: none; /* 防止选中文本 */
   touch-action: pan-y; /* 允许垂直滚动，但阻止其他默认行为 */
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .chat-item:active {

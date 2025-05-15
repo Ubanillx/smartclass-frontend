@@ -46,9 +46,12 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
 
-const props = defineProps<{
+// 使用withDefaults定义props，并在模板中使用
+withDefaults(defineProps<{
   submitting?: boolean;
-}>();
+}>(), {
+  submitting: false
+});
 
 const emit = defineEmits<{
   (e: 'submit', text: string): void;
