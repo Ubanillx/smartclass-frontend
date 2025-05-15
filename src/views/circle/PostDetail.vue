@@ -21,9 +21,9 @@
       
       <!-- 帖子内容卡片 -->
       <PostContent 
-        :title="post.title"
-        :content="post.content"
-        :images="post.images"
+        :title="post.title || ''"
+        :content="post.content || ''"
+        :images="post.images || []"
         @image-preview="previewImage"
       />
 
@@ -32,7 +32,7 @@
         :comments="comments"
         :loading="commentLoading"
         :finished="commentFinished"
-        :sort-type="sortType"
+        :sort-type="sortType as 'recommend' | 'newest'"
         @change-sort="changeSort"
         @load-more="loadMoreComments"
         @reply="handleReplyComment"
@@ -65,9 +65,7 @@ import type { PostVO } from '../../services/models/PostVO';
 import type { PostCommentVO } from '../../services/models/PostCommentVO';
 import type { PostCommentReplyVO } from '../../services/models/PostCommentReplyVO';
 import type { PostCommentAddRequest } from '../../services/models/PostCommentAddRequest';
-import type { PostCommentQueryRequest } from '../../services/models/PostCommentQueryRequest';
 import type { PostCommentReplyAddRequest } from '../../services/models/PostCommentReplyAddRequest';
-import type { PostCommentReplyQueryRequest } from '../../services/models/PostCommentReplyQueryRequest';
 import type { PostThumbAddRequest } from '../../services/models/PostThumbAddRequest';
 import { getClientIPWithRetry } from '../../utils/ipUtils';
 import { 
@@ -224,7 +222,7 @@ const toggleLike = async () => {
     };
     
     // 发送点赞/取消点赞请求
-    const response = await PostThumbControllerService.doThumbUsingPost(thumbRequest);
+    const response = await PostThumbControllerService.addThumbUsingPost(thumbRequest);
     
     if (response.code === 0) {
       // 更新本地状态
@@ -477,18 +475,17 @@ const fetchCommentReplies = async (comment: Comment) => {
   if (!comment.id) return;
   
   try {
-    // 查询评论回复参数
-    const queryRequest: PostCommentReplyQueryRequest = {
-      postId: post.value.id,
-      commentId: Number(comment.id),
-      current: 1,
-      pageSize: 10,
-      sortField: 'createTime',
-      sortOrder: 'desc'
-    };
-    
-    // 获取评论回复列表
-    const response = await PostCommentReplyControllerService.listPostCommentReplyByPageUsingPost(queryRequest);
+    // 使用GET方法获取评论回复
+    const response = await PostCommentReplyControllerService.listPostCommentReplyByPageUsingGet(
+      Number(comment.id),  // commentId
+      undefined,           // content
+      1,                   // current
+      10,                  // pageSize
+      post.value.id,       // postId
+      'createTime',        // sortField
+      'desc',              // sortOrder
+      undefined            // userId
+    );
     
     if (response.code === 0 && response.data) {
       // 转换回复格式
@@ -620,15 +617,16 @@ const fetchComments = async (isRefresh = false) => {
   
   commentLoading.value = true;
   try {
-    const queryRequest: PostCommentQueryRequest = {
-      postId: post.value.id,
-      current: commentCurrent.value,
-      pageSize: commentPageSize.value,
-      sortField: sortType.value === 'newest' ? 'createTime' : '',
-      sortOrder: sortType.value === 'newest' ? 'desc' : ''
-    };
-    
-    const response = await PostCommentControllerService.listPostCommentByPageUsingPost(queryRequest);
+    // 使用GET方法获取评论列表
+    const response = await PostCommentControllerService.listPostCommentByPageUsingGet(
+      undefined,                                                // content
+      commentCurrent.value,                                     // current
+      commentPageSize.value,                                    // pageSize
+      post.value.id,                                            // postId
+      sortType.value === 'newest' ? 'createTime' : undefined,   // sortField
+      sortType.value === 'newest' ? 'desc' : undefined,         // sortOrder
+      undefined                                                 // userId
+    );
     
     if (response.code === 0 && response.data) {
       // 修复类型错误，明确指定类型

@@ -194,7 +194,7 @@ const fetchUserData = async () => {
     if (userStore.userInfo) {
       if (userStore.userInfo.id) {
         // 尝试从API获取最新的用户数据
-        const response = await UserControllerService.getUserVoByIdUsingGet(
+        const response = await UserControllerService.getUserByIdUsingGet(
           userStore.userInfo.id,
         );
 

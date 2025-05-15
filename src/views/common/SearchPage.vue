@@ -90,31 +90,134 @@
         </div>
       </div>
 
+      <!-- 分类选择器 -->
+      <div v-if="searchExecuted && !loading" class="category-selector">
+        <van-tabs v-model:active="activeTab" swipeable animated>
+          <van-tab title="全部"></van-tab>
+          <van-tab title="帖子"></van-tab>
+          <van-tab title="文章"></van-tab>
+          <van-tab title="单词"></van-tab>
+        </van-tabs>
+      </div>
+
       <!-- 搜索结果列表 -->
       <div ref="container" class="search-results">
-        <ul ref="list">
-          <li
-            v-for="(item, index) in searchList"
-            :key="index"
-            @click.stop="handleSearchList(item)"
-            class="result-item"
-          >
-            {{ item }}
-          </li>
-          <li v-if="loading" class="loading-item">加载中...</li>
-          <!-- 没有搜索到结果时显示 -->
-          <li v-show="searchResult" class="no-results">暂无搜索结果</li>
-        </ul>
+        <!-- 搜索中显示加载提示 -->
+        <div v-if="loading" class="loading-container">
+          <van-loading type="spinner" color="#1989fa" />
+          <p class="loading-text">搜索中...</p>
+        </div>
+
+        <!-- 无搜索结果时显示提示 -->
+        <div 
+          v-if="!loading && searchExecuted && getTotalResults === 0" 
+          class="empty-result"
+        >
+          <van-empty description="暂无搜索结果" />
+        </div>
+
+        <!-- 全部搜索结果 -->
+        <div v-if="!loading && searchExecuted && activeTab === 0 && getTotalResults > 0">
+          <!-- 帖子结果预览 -->
+          <div v-if="postResults.list?.length" class="result-section">
+            <div class="section-header">
+              <h3>帖子</h3>
+              <span class="view-more" @click="activeTab = 1">查看更多</span>
+            </div>
+            <post-result-item 
+              v-for="item in postResults.list.slice(0, 2)" 
+              :key="'post-' + item.id" 
+              :post="item"
+              @click="navigateToPost(item.id)" 
+            />
+          </div>
+          
+          <!-- 文章结果预览 -->
+          <div v-if="articleResults.list?.length" class="result-section">
+            <div class="section-header">
+              <h3>文章</h3>
+              <span class="view-more" @click="activeTab = 2">查看更多</span>
+            </div>
+            <article-result-item 
+              v-for="item in articleResults.list.slice(0, 2)" 
+              :key="'article-' + item.id" 
+              :article="item"
+            />
+          </div>
+          
+          <!-- 单词结果预览 -->
+          <div v-if="wordResults.list?.length" class="result-section">
+            <div class="section-header">
+              <h3>单词</h3>
+              <span class="view-more" @click="activeTab = 3">查看更多</span>
+            </div>
+            <word-result-item 
+              v-for="item in wordResults.list.slice(0, 2)" 
+              :key="'word-' + item.id" 
+              :word="item"
+              @click="showWordDetail(item)" 
+              ref="wordResultRefs"
+            />
+          </div>
+        </div>
+
+        <!-- 帖子搜索结果 -->
+        <div v-if="!loading && searchExecuted && activeTab === 1">
+          <div v-if="postResults.list?.length">
+            <post-result-item 
+              v-for="item in postResults.list" 
+              :key="'post-' + item.id" 
+              :post="item"
+              @click="navigateToPost(item.id)" 
+            />
+          </div>
+          <van-empty v-else description="暂无帖子搜索结果" />
+        </div>
+
+        <!-- 文章搜索结果 -->
+        <div v-if="!loading && searchExecuted && activeTab === 2">
+          <div v-if="articleResults.list?.length">
+            <article-result-item 
+              v-for="item in articleResults.list" 
+              :key="'article-' + item.id" 
+              :article="item"
+            />
+          </div>
+          <van-empty v-else description="暂无文章搜索结果" />
+        </div>
+
+        <!-- 单词搜索结果 -->
+        <div v-if="!loading && searchExecuted && activeTab === 3">
+          <div v-if="wordResults.list?.length">
+            <word-result-item 
+              v-for="item in wordResults.list" 
+              :key="'word-' + item.id" 
+              :word="item"
+              @click="showWordDetail(item)" 
+              ref="wordResultRefs"
+            />
+          </div>
+          <van-empty v-else description="暂无单词搜索结果" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue';
+import { ref, watch, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import { mockRecommendations, mockSearchResults } from '../../api/mock.ts'; // 导入 mock 数据
+import { mockRecommendations } from '../../api/mock.ts'; // 仅保留推荐词
 import { useSearchStore } from '../../stores/searchStore.ts'; // 导入搜索历史存储
+import { showToast } from 'vant';
+import { PostControllerService } from '../../services/services/PostControllerService';
+import { DailyArticleControllerService } from '../../services/services/DailyArticleControllerService';
+import { DailyWordControllerService } from '../../services/services/DailyWordControllerService';
+
+// 懒加载结果项组件
+const PostResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.PostResultItem })));
+const ArticleResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.ArticleResultItem })));
+const WordResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.WordResultItem })));
 
 const router = useRouter();
 const searchStore = useSearchStore(); // 使用搜索历史存储
@@ -124,12 +227,57 @@ const emit = defineEmits<{
 
 // 接口数据及状态管理
 const searchValue = ref<string>(''); // 绑定搜索框的值
-const searchList = ref<string[]>([]); // 存储搜索结果
 const loading = ref(false); // 是否正在加载数据
-const searchResult = ref(false); // 是否显示"暂无搜索结果"
+const searchExecuted = ref(false); // 是否已执行搜索
 const placeholder = '请输入搜索内容';
-const iconColor = '#1989fa';
 const showRecommendations = true;
+const activeTab = ref(0); // 当前选中的分类标签
+
+// 搜索结果
+const postResults = ref<{
+  list: any[];
+  total: number;
+  pageSize: number;
+  current: number;
+}>({
+  list: [],
+  total: 0,
+  pageSize: 10,
+  current: 1,
+});
+
+const articleResults = ref<{
+  list: any[];
+  total: number;
+  pageSize: number;
+  current: number;
+}>({
+  list: [],
+  total: 0,
+  pageSize: 10,
+  current: 1,
+});
+
+const wordResults = ref<{
+  list: any[];
+  total: number;
+  pageSize: number;
+  current: number;
+}>({
+  list: [],
+  total: 0,
+  pageSize: 10,
+  current: 1,
+});
+
+// 计算总结果数
+const getTotalResults = computed(() => {
+  return (
+    (postResults.value.list?.length || 0) +
+    (articleResults.value.list?.length || 0) +
+    (wordResults.value.list?.length || 0)
+  );
+});
 
 // 随机选择8个热门搜索词
 const randomHotWords = ref<string[]>([]);
@@ -169,31 +317,75 @@ const processedHistory = computed(() => {
 });
 
 // 搜索功能处理
-const handleSearch = (): void => {
+const handleSearch = async (): Promise<void> => {
   const query = searchValue.value.trim();
   if (!query) return;
 
   // 清空先前的搜索结果
-  searchList.value = [];
-  searchResult.value = false;
+  postResults.value.list = [];
+  articleResults.value.list = [];
+  wordResults.value.list = [];
+  searchExecuted.value = true;
 
   // 添加到搜索历史
   searchStore.addSearchHistory(query);
 
-  // 发起搜索请求
+  // 显示加载提示
   loading.value = true;
-  setTimeout(() => {
-    searchList.value = mockSearchResults(query); // 使用 mockSearchResults 函数来模拟搜索结果
-    searchResult.value = searchList.value.length === 0;
+  
+  try {
+    // 同时发起三个搜索请求
+    const [postsResponse, articlesResponse, wordsResponse] = await Promise.all([
+      PostControllerService.searchPostVoByPageUsingGet(query),
+      DailyArticleControllerService.searchDailyArticleUsingGet(query),
+      DailyWordControllerService.searchDailyWordUsingGet(query)
+    ]);
+
+    // 处理帖子搜索结果
+    if (postsResponse.data) {
+      postResults.value = {
+        list: postsResponse.data.records || [],
+        total: postsResponse.data.total || 0,
+        pageSize: postsResponse.data.size || 10,
+        current: postsResponse.data.current || 1
+      };
+    }
+
+    // 处理文章搜索结果
+    if (articlesResponse.data) {
+      articleResults.value = {
+        list: articlesResponse.data.records || [],
+        total: articlesResponse.data.total || 0,
+        pageSize: articlesResponse.data.size || 10,
+        current: articlesResponse.data.current || 1
+      };
+    }
+
+    // 处理单词搜索结果
+    if (wordsResponse.data) {
+      wordResults.value = {
+        list: wordsResponse.data.records || [],
+        total: wordsResponse.data.total || 0,
+        pageSize: wordsResponse.data.size || 10,
+        current: wordsResponse.data.current || 1
+      };
+    }
+  } catch (error) {
+    console.error('搜索失败:', error);
+    showToast('搜索出错，请稍后重试');
+  } finally {
     loading.value = false;
-  }, 1000);
+  }
 };
 
 // 清空搜索框内容
 const handleClear = () => {
   searchValue.value = '';
-  searchList.value = []; // 清空搜索结果
-  searchResult.value = false; // 清除"暂无搜索结果"
+  searchExecuted.value = false;
+  postResults.value.list = [];
+  articleResults.value.list = [];
+  wordResults.value.list = [];
+  activeTab.value = 0;
 };
 
 // 重新搜索历史记录
@@ -226,14 +418,17 @@ const handleBack = () => {
 // 搜索框输入绑定
 watch(searchValue, (newVal) => {
   emit('update:modelValue', newVal);
-
-  searchResult.value = false;
 });
 
-// 处理搜索结果点击
-const handleSearchList = (item: string) => {
-  searchValue.value = item;
-  handleSearch();
+// 导航到帖子详情
+const navigateToPost = (id: number) => {
+  router.push(`/circle/post/${id}`);
+};
+
+// 显示单词详情
+const showWordDetail = (_word: any) => {
+  // 不再跳转到单词详情页，而是直接触发WordResultItem组件中的弹出层
+  // 通过refs访问子组件的方法较复杂，所以这里让WordResultItem组件自己处理展示详情
 };
 </script>
 
@@ -486,30 +681,66 @@ const handleSearchList = (item: string) => {
   margin-top: 8px;
 }
 
-/* 搜索结果列表 */
+/* 分类选择器 */
+.category-selector {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* 搜索结果区域 */
 .search-results {
   margin-top: 16px;
 }
 
-.search-results ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* 加载中样式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
 }
 
-.result-item {
-  padding: 12px 16px;
-  font-size: var(--font-size-md);
-  color: #323233;
-  border-bottom: 1px solid #ebedf0;
-  cursor: pointer;
-}
-
-.loading-item,
-.no-results {
-  padding: 16px;
-  text-align: center;
+.loading-text {
+  margin-top: 12px;
   font-size: var(--font-size-md);
   color: #969799;
+}
+
+/* 结果区块样式 */
+.result-section {
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ebedf0;
+}
+
+.section-header h3 {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin: 0;
+  color: #323233;
+}
+
+.view-more {
+  font-size: var(--font-size-sm);
+  color: #1989fa;
+}
+
+/* 空结果样式 */
+.empty-result {
+  margin-top: 40px;
 }
 </style>

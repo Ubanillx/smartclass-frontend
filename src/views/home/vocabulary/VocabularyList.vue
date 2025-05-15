@@ -5,62 +5,59 @@
 
     <!-- 主要内容区域 -->
     <div class="content-container">
-      <!-- 词汇分类标签页 -->
-      <van-tabs
-        v-model:active="activeCategory"
-        sticky
-        @change="handleCategoryChange"
-      >
-        <van-tab
-          v-for="category in categories"
-          :key="category.id"
-          :title="category.name"
-        >
-          <!-- 单词列表 -->
-          <div class="word-list">
-            <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-              <van-list
-                v-model:loading="loading"
-                :finished="finished"
-                finished-text="没有更多了"
-                @load="onLoad"
-              >
-                <div
-                  class="word-card"
-                  v-for="word in words"
-                  :key="word.id"
-                  @click="showWordDetail(word)"
-                >
-                  <div class="word-header">
-                    <span class="word-text">{{ word.text }}</span>
-                    <van-icon
-                      :name="word.isCollected ? 'star' : 'star-o'"
-                      :class="['collect-icon', { collected: word.isCollected }]"
-                      @click.stop="toggleCollect(word)"
-                    />
-                  </div>
-                  <div class="word-phonetic">/{{ word.phonetic }}/</div>
-                  <div class="word-translation">{{ word.translation }}</div>
-                  <div class="word-stats">
-                    <div class="stat-item">
-                      <van-icon name="eye-o" />
-                      <span>{{ word.viewCount }}</span>
-                    </div>
-                    <div class="stat-item">
-                      <van-icon name="star-o" />
-                      <span>{{ word.collectCount }}</span>
-                    </div>
-                    <div class="stat-item">
-                      <van-icon name="clock-o" />
-                      <span>{{ formatDate(word.lastViewTime) }}</span>
-                    </div>
-                  </div>
-                </div>
-              </van-list>
-            </van-pull-refresh>
+      <!-- 单词列表 -->
+      <div class="word-list">
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <div v-if="loading" class="loading-container">
+            <van-loading color="#1989fa" />
           </div>
-        </van-tab>
-      </van-tabs>
+          <div v-else-if="words.length === 0" class="empty-container">
+            <van-empty description="暂无词汇" />
+          </div>
+          <template v-else>
+            <div
+              class="word-card"
+              v-for="word in words"
+              :key="word.id"
+              @click="showWordDetail(word)"
+            >
+              <div class="word-header">
+                <span class="word-text">{{ word.word }}</span>
+                <div class="actions">
+                  <van-icon
+                    name="good-job-o"
+                    :class="['like-icon', { liked: word.isLiked }]"
+                    @click.stop="toggleLike(word)"
+                  />
+                  <van-icon
+                    :name="word.isCollected ? 'star' : 'star-o'"
+                    :class="['collect-icon', { collected: word.isCollected }]"
+                    @click.stop="toggleCollect(word)"
+                  />
+                </div>
+              </div>
+              <div class="word-phonetic">{{ word.pronunciation }}</div>
+              <div class="word-translation">{{ word.translation }}</div>
+              <div class="word-category">{{ word.category }}</div>
+              <div class="word-example" v-if="word.example">
+                <div class="example-text">{{ word.example }}</div>
+                <div class="example-translation">{{ word.exampleTranslation }}</div>
+              </div>
+            </div>
+          </template>
+        </van-pull-refresh>
+      </div>
+      
+      <!-- 分页组件 -->
+      <div class="pagination-wrapper" v-show="words.length > 0 && !loading">
+        <chat-pagination
+          :total-items="totalItems"
+          :page-size="pageSize"
+          :total-pages="totalPages"
+          :initial-page="currentPage"
+          @page-change="handlePageChange"
+        />
+      </div>
     </div>
 
     <!-- 单词详情弹出层 -->
@@ -68,7 +65,7 @@
       v-model:show="showWordPopup"
       round
       position="bottom"
-      :style="{ height: '60%' }"
+      :style="{ height: '70%' }"
     >
       <div class="word-detail">
         <div class="popup-header">
@@ -77,45 +74,56 @@
         </div>
         <div class="word-content" v-if="currentWord">
           <div class="word-main">
-            <span class="word-text">{{ currentWord.text }}</span>
-            <van-icon
-              :name="currentWord.isCollected ? 'star' : 'star-o'"
-              :class="['collect-icon', { collected: currentWord.isCollected }]"
-              @click="toggleCollect(currentWord)"
-            />
-          </div>
-          <div class="word-phonetic">/{{ currentWord.phonetic }}/</div>
-          <div class="word-meanings">
-            <div
-              class="meaning-item"
-              v-for="(meaning, index) in currentWord.meanings"
-              :key="index"
-            >
-              <div class="part-of-speech">{{ meaning.partOfSpeech }}</div>
-              <div class="definition">{{ meaning.definition }}</div>
-              <div class="example">{{ meaning.example }}</div>
+            <span class="word-text">{{ currentWord.word }}</span>
+            <div class="actions">
+              <van-icon
+                name="good-job-o"
+                :class="['like-icon', { liked: currentWord.isLiked }]"
+                @click="toggleLike(currentWord)"
+              />
+              <van-icon
+                :name="currentWord.isCollected ? 'star' : 'star-o'"
+                :class="['collect-icon', { collected: currentWord.isCollected }]"
+                @click="toggleCollect(currentWord)"
+              />
             </div>
           </div>
+          <div class="word-phonetic-row">
+            <div class="word-phonetic">{{ currentWord.pronunciation }}</div>
+            <van-icon name="volume" class="audio-icon" @click="playAudio(currentWord.audioUrl)" v-if="currentWord.audioUrl"/>
+          </div>
+          <div class="word-translation-detail">{{ currentWord.translation }}</div>
+          <div class="word-category-detail">分类：{{ currentWord.category }}</div>
+          
+          <div class="word-example-detail" v-if="currentWord.example">
+            <div class="example-title">例句：</div>
+            <div class="example-text">{{ currentWord.example }}</div>
+            <div class="example-translation">{{ currentWord.exampleTranslation }}</div>
+          </div>
+          
+          <div class="word-notes" v-if="currentWord.notes">
+            <div class="notes-title">笔记：</div>
+            <div class="notes-content">{{ currentWord.notes }}</div>
+          </div>
+          
           <div class="word-stats-detail">
             <div class="stat-title">单词数据</div>
             <div class="stats-grid">
               <div class="stat-grid-item">
-                <div class="stat-label">查看次数</div>
-                <div class="stat-value">{{ currentWord.viewCount }}</div>
+                <div class="stat-label">点赞数</div>
+                <div class="stat-value">{{ currentWord.likeCount || 0 }}</div>
               </div>
               <div class="stat-grid-item">
                 <div class="stat-label">收藏次数</div>
-                <div class="stat-value">{{ currentWord.collectCount }}</div>
-              </div>
-              <div class="stat-grid-item">
-                <div class="stat-label">最近查看</div>
-                <div class="stat-value">
-                  {{ formatDate(currentWord.lastViewTime) }}
-                </div>
+                <div class="stat-value">{{ currentWord.collectCount || 0 }}</div>
               </div>
               <div class="stat-grid-item">
                 <div class="stat-label">难度等级</div>
-                <div class="stat-value">{{ currentWord.difficulty }}</div>
+                <div class="stat-value">{{ currentWord.difficulty || 1 }}</div>
+              </div>
+              <div class="stat-grid-item">
+                <div class="stat-label">发布日期</div>
+                <div class="stat-value">{{ formatFullDate(currentWord.publishDate) }}</div>
               </div>
             </div>
           </div>
@@ -126,90 +134,122 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { showToast } from 'vant';
 import { BackButton } from '../../../components/Common';
-import {
-  vocabularyCategories,
-  generateMockWords,
-  Word,
-  VocabularyCategory,
-} from '../../../api/mock.ts';
+import { ChatPagination } from '../../../components/Dialogue';
+import { DailyWordControllerService } from '../../../services/services/DailyWordControllerService';
 
 // 状态变量
-const activeCategory = ref(0);
 const loading = ref(false);
-const finished = ref(false);
 const refreshing = ref(false);
 const showWordPopup = ref(false);
-const currentWord = ref<Word | null>(null);
+const currentWord = ref<any>(null);
 
-// 分类数据 - 从mock.ts中获取
-const categories = ref<VocabularyCategory[]>(vocabularyCategories);
+// 单词数据与分页
+const words = ref<any[]>([]);
+const currentPage = ref(1);
+const pageSize = 20;
+const totalItems = ref(0);
+const totalPages = computed(() => {
+  return Math.ceil(totalItems.value / pageSize);
+});
 
-// 单词数据
-const words = ref<Word[]>([]);
-
-// 处理分类切换
-const handleCategoryChange = (index: number) => {
-  // 重置状态
-  words.value = [];
-  loading.value = false;
-  finished.value = false;
-
-  // 加载新分类的数据
-  onLoad();
+// 播放音频
+const playAudio = (audioUrl: string) => {
+  if (!audioUrl) return;
+  
+  const audio = new Audio(audioUrl);
+  audio.play().catch(error => {
+    console.error('播放音频失败:', error);
+    showToast('音频播放失败');
+  });
 };
 
-// 模拟加载数据
-const onLoad = () => {
-  // 模拟异步加载
-  setTimeout(() => {
-    // 根据当前选中的分类加载对应的单词
-    const newWords = generateMockWords(10, activeCategory.value);
-    words.value = [...words.value, ...newWords];
+// 页码变化处理
+const handlePageChange = (page: number) => {
+  // 避免重复加载当前页
+  if (page === currentPage.value) return;
+  
+  currentPage.value = page;
+  loadData();
+};
 
-    // 加载状态结束
-    loading.value = false;
-
-    // 判断是否已加载完所有数据
-    if (words.value.length >= 30) {
-      finished.value = true;
+// 加载数据
+const loadData = async () => {
+  loading.value = true;
+  
+  try {
+    const response = await DailyWordControllerService.listDailyWordVoByPageUsingGet(
+      undefined, // adminId
+      undefined, // category
+      undefined, // createTime
+      currentPage.value, // current page
+      undefined, // difficulty
+      undefined, // id
+      pageSize, // pageSize - 设置为20
+      undefined, // publishDateEnd
+      undefined, // publishDateStart
+      undefined, // sortField
+      undefined, // sortOrder
+      undefined, // translation
+      undefined // word
+    );
+    
+    if (response.code === 0 && response.data && response.data.records) {
+      // 处理返回的数据
+      words.value = response.data.records.map((item: any) => ({
+        ...item,
+        isCollected: false, // 默认未收藏
+        isLiked: false, // 默认未点赞
+        viewCount: item.viewCount || 0,
+        collectCount: item.collectCount || 0,
+        lastViewTime: item.updateTime || new Date().toISOString()
+      }));
+      
+      // 更新总记录数，用于分页
+      if (response.data.total !== undefined) {
+        totalItems.value = response.data.total;
+      }
+    } else {
+      showToast('获取数据失败');
     }
-  }, 1000);
+  } catch (error) {
+    console.error('加载单词数据出错:', error);
+    showToast('加载失败，请稍后重试');
+  } finally {
+    loading.value = false;
+  }
 };
 
 // 下拉刷新
 const onRefresh = () => {
-  // 重置加载状态
-  finished.value = false;
-
-  // 清空列表数据
-  words.value = [];
-
+  // 重置页码
+  currentPage.value = 1;
+  
   // 重新加载数据
-  onLoad();
-
+  loadData();
+  
   // 结束刷新状态
   refreshing.value = false;
 };
 
 // 显示单词详情
-const showWordDetail = (word: Word) => {
+const showWordDetail = (word: any) => {
   currentWord.value = word;
   showWordPopup.value = true;
 
   // 增加查看次数
-  word.viewCount += 1;
+  word.viewCount = (word.viewCount || 0) + 1;
   word.lastViewTime = new Date().toISOString();
 };
 
 // 收藏/取消收藏单词
-const toggleCollect = (word: Word) => {
+const toggleCollect = (word: any) => {
   word.isCollected = !word.isCollected;
 
   if (word.isCollected) {
-    word.collectCount += 1;
+    word.collectCount = (word.collectCount || 0) + 1;
     showToast({
       message: '已添加到生词本',
       position: 'bottom',
@@ -220,31 +260,42 @@ const toggleCollect = (word: Word) => {
       position: 'bottom',
     });
   }
+  
+  // 这里可以添加后端API调用，将收藏状态同步到服务器
 };
 
-// 格式化日期
-const formatDate = (dateString: string) => {
-  if (!dateString) return '未查看';
+// 点赞/取消点赞单词
+const toggleLike = (word: any) => {
+  word.isLiked = !word.isLiked;
 
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) {
-    return '今天';
-  } else if (diffDays === 1) {
-    return '昨天';
-  } else if (diffDays < 7) {
-    return `${diffDays}天前`;
+  if (word.isLiked) {
+    word.likeCount = (word.likeCount || 0) + 1;
+    showToast({
+      message: '点赞成功',
+      position: 'bottom',
+    });
   } else {
-    return `${date.getMonth() + 1}月${date.getDate()}日`;
+    word.likeCount = Math.max((word.likeCount || 0) - 1, 0);
+    showToast({
+      message: '已取消点赞',
+      position: 'bottom',
+    });
   }
+  
+  // 这里可以添加后端API调用，将点赞状态同步到服务器
+};
+
+// 格式化完整日期
+const formatFullDate = (dateString: string) => {
+  if (!dateString) return '未发布';
+  
+  const date = new Date(dateString);
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
 };
 
 // 组件挂载时加载初始数据
 onMounted(() => {
-  onLoad();
+  loadData();
 });
 </script>
 
@@ -259,36 +310,23 @@ onMounted(() => {
 .content-container {
   flex: 1;
   margin-top: 8px; /* 为返回按钮留出空间 */
-}
-
-:deep(.van-tabs__wrap) {
-  position: sticky;
-  top: 46px;
-  z-index: 2;
-  background-color: #fff;
-}
-
-:deep(.van-tabs__content) {
   padding: 0 16px;
-}
-
-:deep(.van-tab) {
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  color: #323233;
-}
-
-:deep(.van-tab--active) {
-  font-weight: 700;
-  color: #1989fa;
-}
-
-:deep(.van-tabs__line) {
-  background-color: #1989fa;
 }
 
 .word-list {
   padding: 12px 0;
+  position: relative;
+  min-height: 200px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.empty-container {
+  padding: 40px 0;
 }
 
 .word-card {
@@ -312,6 +350,21 @@ onMounted(() => {
   color: #323233;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.like-icon {
+  font-size: var(--font-size-lg, 16px);
+  color: #969799;
+  margin-right: 12px;
+}
+
+.like-icon.liked {
+  color: #ee0a24;
+}
+
 .collect-icon {
   font-size: var(--font-size-lg, 16px);
   color: #969799;
@@ -330,27 +383,44 @@ onMounted(() => {
 .word-translation {
   font-size: var(--font-size-md, 14px);
   color: #323233;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-weight: 500;
 }
 
-.word-stats {
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #f2f3f5;
-  padding-top: 12px;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  color: #969799;
+.word-category {
   font-size: var(--font-size-sm, 12px);
+  color: #1989fa;
+  background-color: rgba(25, 137, 250, 0.1);
+  border-radius: 10px;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 8px;
 }
 
-.stat-item .van-icon {
-  margin-right: 4px;
-  font-size: 14px;
+.word-example {
+  background-color: #f7f8fa;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.example-text {
+  font-size: var(--font-size-sm, 12px);
+  color: #323233;
+  margin-bottom: 4px;
+}
+
+.example-translation {
+  font-size: var(--font-size-sm, 12px);
+  color: #969799;
+}
+
+.pagination-wrapper {
+  padding: 16px 0 24px;
+  margin-top: 8px;
+  background-color: rgba(242, 247, 253, 0.95);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 16px 16px 0 0;
 }
 
 .word-detail {
@@ -381,27 +451,63 @@ onMounted(() => {
   margin-bottom: 12px;
 }
 
-.meaning-item {
+.word-phonetic-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.audio-icon {
+  margin-left: 8px;
+  color: #1989fa;
+  font-size: 18px;
+}
+
+.word-translation-detail {
+  font-size: var(--font-size-lg, 16px);
+  color: #323233;
+  font-weight: 500;
   margin-bottom: 16px;
 }
 
-.part-of-speech {
-  font-size: var(--font-size-sm, 12px);
-  color: #969799;
-  margin-bottom: 4px;
-}
-
-.definition {
+.word-category-detail {
   font-size: var(--font-size-md, 14px);
   color: #323233;
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 16px;
 }
 
-.example {
-  font-size: 14px;
+.word-example-detail {
+  background-color: #f7f8fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.example-title {
+  font-size: var(--font-size-md, 14px);
+  font-weight: 500;
+  color: #323233;
+  margin-bottom: 8px;
+}
+
+.word-notes {
+  background-color: #fff7e6;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.notes-title {
+  font-size: var(--font-size-md, 14px);
+  font-weight: 500;
+  color: #323233;
+  margin-bottom: 8px;
+}
+
+.notes-content {
+  font-size: var(--font-size-md, 14px);
   color: #646566;
-  font-style: italic;
+  line-height: 1.5;
 }
 
 .word-stats-detail {
