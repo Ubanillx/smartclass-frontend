@@ -3,14 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AnnouncementAddRequest } from '../models/AnnouncementAddRequest';
-import type { AnnouncementQueryRequest } from '../models/AnnouncementQueryRequest';
 import type { AnnouncementUpdateRequest } from '../models/AnnouncementUpdateRequest';
 import type { BaseResponse_AnnouncementVO_ } from '../models/BaseResponse_AnnouncementVO_';
 import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_Announcement_ } from '../models/BaseResponse_Page_Announcement_';
 import type { BaseResponse_Page_AnnouncementVO_ } from '../models/BaseResponse_Page_AnnouncementVO_';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -27,7 +25,7 @@ export class AnnouncementControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/announcement/add',
+            url: '/api/announcements',
             body: announcementAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -37,19 +35,126 @@ export class AnnouncementControllerService {
         });
     }
     /**
-     * deleteAnnouncement
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * listAnnouncementByPage
+     * @param adminId
+     * @param content
+     * @param coverImage
+     * @param createTime
+     * @param current
+     * @param endTime
+     * @param id
+     * @param isValid
+     * @param pageSize
+     * @param priority
+     * @param sortField
+     * @param sortOrder
+     * @param startTime
+     * @param status
+     * @param title
+     * @returns BaseResponse_Page_Announcement_ OK
      * @throws ApiError
      */
-    public static deleteAnnouncementUsingPost(
-        deleteRequest: DeleteRequest_1,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
+    public static listAnnouncementByPageUsingGet(
+        adminId?: number,
+        content?: string,
+        coverImage?: string,
+        createTime?: string,
+        current?: number,
+        endTime?: string,
+        id?: number,
+        isValid?: boolean,
+        pageSize?: number,
+        priority?: number,
+        sortField?: string,
+        sortOrder?: string,
+        startTime?: string,
+        status?: number,
+        title?: string,
+    ): CancelablePromise<BaseResponse_Page_Announcement_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/announcement/delete',
-            body: deleteRequest,
+            method: 'GET',
+            url: '/api/announcements/admin/page',
+            query: {
+                'adminId': adminId,
+                'content': content,
+                'coverImage': coverImage,
+                'createTime': createTime,
+                'current': current,
+                'endTime': endTime,
+                'id': id,
+                'isValid': isValid,
+                'pageSize': pageSize,
+                'priority': priority,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'startTime': startTime,
+                'status': status,
+                'title': title,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * listAnnouncementVOByPage
+     * @param adminId
+     * @param content
+     * @param coverImage
+     * @param createTime
+     * @param current
+     * @param endTime
+     * @param id
+     * @param isValid
+     * @param pageSize
+     * @param priority
+     * @param sortField
+     * @param sortOrder
+     * @param startTime
+     * @param status
+     * @param title
+     * @returns BaseResponse_Page_AnnouncementVO_ OK
+     * @throws ApiError
+     */
+    public static listAnnouncementVoByPageUsingGet(
+        adminId?: number,
+        content?: string,
+        coverImage?: string,
+        createTime?: string,
+        current?: number,
+        endTime?: string,
+        id?: number,
+        isValid?: boolean,
+        pageSize?: number,
+        priority?: number,
+        sortField?: string,
+        sortOrder?: string,
+        startTime?: string,
+        status?: number,
+        title?: string,
+    ): CancelablePromise<BaseResponse_Page_AnnouncementVO_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/announcements/page',
+            query: {
+                'adminId': adminId,
+                'content': content,
+                'coverImage': coverImage,
+                'createTime': createTime,
+                'current': current,
+                'endTime': endTime,
+                'id': id,
+                'isValid': isValid,
+                'pageSize': pageSize,
+                'priority': priority,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'startTime': startTime,
+                'status': status,
+                'title': title,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -64,14 +169,61 @@ export class AnnouncementControllerService {
      * @throws ApiError
      */
     public static getAnnouncementVoByIdUsingGet(
-        id?: number,
+        id: number,
     ): CancelablePromise<BaseResponse_AnnouncementVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/announcement/get/vo',
-            query: {
+            url: '/api/announcements/{id}',
+            path: {
                 'id': id,
             },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * deleteAnnouncement
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static deleteAnnouncementUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/announcements/{id}',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+            },
+        });
+    }
+    /**
+     * updateAnnouncement
+     * @param announcementUpdateRequest announcementUpdateRequest
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static updateAnnouncementUsingPut(
+        announcementUpdateRequest: AnnouncementUpdateRequest,
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_ | any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/announcements/{id}/admin',
+            path: {
+                'id': id,
+            },
+            body: announcementUpdateRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -90,76 +242,9 @@ export class AnnouncementControllerService {
     ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/announcement/has-read/{id}',
+            url: '/api/announcements/{id}/has-read',
             path: {
                 'id': id,
-            },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listAnnouncementByPage
-     * @param announcementQueryRequest announcementQueryRequest
-     * @returns BaseResponse_Page_Announcement_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listAnnouncementByPageUsingPost(
-        announcementQueryRequest: AnnouncementQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_Announcement_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/announcement/list/page',
-            body: announcementQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listAnnouncementVOByPage
-     * @param announcementQueryRequest announcementQueryRequest
-     * @returns BaseResponse_Page_AnnouncementVO_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static listAnnouncementVoByPageUsingPost(
-        announcementQueryRequest: AnnouncementQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_AnnouncementVO_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/announcement/list/page/vo',
-            body: announcementQueryRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * listValidAnnouncements
-     * @param current current
-     * @param size size
-     * @returns BaseResponse_Page_AnnouncementVO_ OK
-     * @throws ApiError
-     */
-    public static listValidAnnouncementsUsingGet(
-        current: number = 1,
-        size: number = 10,
-    ): CancelablePromise<BaseResponse_Page_AnnouncementVO_> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/announcement/list/valid',
-            query: {
-                'current': current,
-                'size': size,
             },
             errors: {
                 401: `Unauthorized`,
@@ -180,31 +265,10 @@ export class AnnouncementControllerService {
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/announcement/read/{id}',
+            url: '/api/announcements/{id}/read',
             path: {
                 'id': id,
             },
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
-            },
-        });
-    }
-    /**
-     * updateAnnouncement
-     * @param announcementUpdateRequest announcementUpdateRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static updateAnnouncementUsingPost(
-        announcementUpdateRequest: AnnouncementUpdateRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/announcement/update',
-            body: announcementUpdateRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

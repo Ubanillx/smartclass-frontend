@@ -179,10 +179,8 @@ import { PostFavourControllerService } from '../../services/services/PostFavourC
 import { PostCommentControllerService } from '../../services/services/PostCommentControllerService';
 import { PostThumbControllerService } from '../../services/services/PostThumbControllerService';
 import type { PostVO } from '../../services/models/PostVO';
-import type { PostQueryRequest } from '../../services/models/PostQueryRequest';
 import type { PostFavourAddRequest } from '../../services/models/PostFavourAddRequest';
 import type { PostCommentAddRequest } from '../../services/models/PostCommentAddRequest';
-import type { PostCommentQueryRequest } from '../../services/models/PostCommentQueryRequest';
 import type { PostCommentVO } from '../../services/models/PostCommentVO';
 import type { PostThumbAddRequest } from '../../services/models/PostThumbAddRequest';
 import { getClientIPWithRetry } from '../../utils/ipUtils';
@@ -295,14 +293,22 @@ const fetchPosts = async (reset = false) => {
   
   loading.value = true;
   try {
-    const queryParams: PostQueryRequest = {
-      current: currentPage.value,
-      pageSize: pageSize.value,
-      sortField: 'createTime',
-      sortOrder: 'descend'
-    };
-    
-    const response = await PostControllerService.listPostVoByPageUsingPost(queryParams);
+    // 使用新的GET方法获取帖子列表
+    const response = await PostControllerService.listPostVoByPageUsingGet(
+      undefined, // content
+      currentPage.value, // current
+      undefined, // favourUserId
+      undefined, // id
+      undefined, // notId
+      undefined, // orTags
+      pageSize.value, // pageSize
+      undefined, // searchText
+      'createTime', // sortField
+      'descend', // sortOrder
+      undefined, // tags
+      undefined, // title
+      undefined  // userId
+    );
     
     if (response.code === 0 && response.data) {
       if (reset) {
@@ -366,7 +372,7 @@ const toggleLike = async (post: ExtendedPostVO) => {
     };
     
     // 发送点赞/取消点赞请求
-    const response = await PostThumbControllerService.doThumbUsingPost(thumbRequest);
+    const response = await PostThumbControllerService.addThumbUsingPost(thumbRequest);
     
     if (response.code === 0) {
       // 更新本地状态
@@ -402,7 +408,7 @@ const toggleFavour = async (post: ExtendedPostVO) => {
     };
     
     // 发送收藏/取消收藏请求
-    const response = await PostFavourControllerService.doFavourUsingPost(favourRequest);
+    const response = await PostFavourControllerService.addFavourUsingPost(favourRequest);
     
     if (response.code === 0) {
       // 更新本地状态
@@ -438,17 +444,16 @@ const showCommentPopup = async (post: ExtendedPostVO) => {
   if (!currentPostId.value) return;
   
   try {
-    // 查询评论参数
-    const queryRequest: PostCommentQueryRequest = {
-      postId: currentPostId.value,
-      current: 1,
-      pageSize: 10,
-      sortField: 'createTime',
-      sortOrder: 'desc'
-    };
-    
-    // 获取评论列表
-    const response = await PostCommentControllerService.listPostCommentByPageUsingPost(queryRequest);
+    // 使用新的GET方法获取评论列表
+    const response = await PostCommentControllerService.listPostCommentByPageUsingGet(
+      undefined, // content
+      1, // current
+      10, // pageSize
+      currentPostId.value, // postId
+      'createTime', // sortField
+      'desc', // sortOrder
+      undefined // userId
+    );
     
     if (response.code === 0 && response.data) {
       // 转换评论格式

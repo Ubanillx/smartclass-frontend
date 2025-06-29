@@ -102,10 +102,10 @@
 import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
-import { BackButton } from '../../components/Common';
-import { FriendRequestControllerService } from '../../services/services/FriendRequestControllerService';
-import { useUserStore } from '../../stores/userStore';
-import type { FriendRequestVO } from '../../services/models/FriendRequestVO';
+import { BackButton } from '../../../components/Common';
+import { FriendRequestControllerService } from '../../../services/services/FriendRequestControllerService';
+import { useUserStore } from '../../../stores/userStore';
+import type { FriendRequestVO } from '../../../services/models/FriendRequestVO';
 import type { ToastWrapperInstance } from 'vant/es/toast/types';
 
 // 扩展FriendRequestVO类型，添加loading属性
@@ -316,11 +316,8 @@ const handleCancel = async (id?: number) => {
   }) as ToastWrapperInstance;
   
   try {
-    const deleteRequest = {
-      id: id
-    };
-    
-    const response = await FriendRequestControllerService.deleteFriendRequestUsingPost(deleteRequest);
+    // 直接使用id参数调用deleteFriendRequestUsingDelete方法
+    const response = await FriendRequestControllerService.deleteFriendRequestUsingDelete(id);
     if (response.code === 0 && response.data) {
       // 从列表中移除该请求
       sentRequests.value = sentRequests.value.filter(req => req.id !== id);

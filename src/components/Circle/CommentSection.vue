@@ -60,8 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, computed, reactive, onMounted, onUnmounted } from 'vue';
-import { showToast } from 'vant';
+import { ref, defineProps, defineEmits, reactive, onMounted, onUnmounted } from 'vue';
 import CommentItem from './CommentItem.vue';
 
 interface Reply {

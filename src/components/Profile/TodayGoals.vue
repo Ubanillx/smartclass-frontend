@@ -77,7 +77,7 @@ interface Goal {
   completed: boolean;
 }
 
-const props = defineProps<{
+defineProps<{
   progress: number;
   goals: Goal[];
 }>();

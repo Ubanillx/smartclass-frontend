@@ -46,31 +46,36 @@
       <div class="tab-content">
         <!-- 历史对话内容 -->
         <div v-show="activeTab === 'history'" class="tab-pane">
-          <chat-history-content @select="handleChatSelect" />
+          <div class="content-container">
+            <chat-history-content @select="handleChatSelect" />
+          </div>
         </div>
         
         <!-- 好友内容 -->
         <div v-show="activeTab === 'friends'" class="tab-pane">
-          <div class="friend-list-container">
+          <div class="content-container">
             <div class="content-wrapper">
-              <van-loading v-if="friendsLoading" type="spinner" color="#1989fa" />
+              <div v-if="friendsLoading" class="loading-container">
+                <van-loading type="spinner" size="32" color="#1989fa" />
+                <p>正在加载好友列表...</p>
+              </div>
               <chat-list 
                 v-else-if="friends.length > 0" 
                 :chats="friends" 
                 :show-status="true" 
                 @select="handleFriendSelect" 
               />
-              <van-empty v-else description="暂无好友数据" />
+              <div v-else class="empty-container">
+                <van-empty description="暂无好友数据" />
+              </div>
             </div>
           </div>
         </div>
 
         <!-- 智慧体中心内容 -->
         <div v-show="activeTab === 'intelligence'" class="tab-pane">
-          <div class="intelligence-container">
-            <div class="content-wrapper">
-              <intelligence-center-content @select="handleAssistantSelect" />
-            </div>
+          <div class="content-container">
+            <intelligence-center-content @select="handleAssistantSelect" />
           </div>
         </div>
       </div>
@@ -125,6 +130,7 @@ import { ChatControllerService } from '../../services/services/ChatControllerSer
 import { FriendRelationshipVO } from '../../services/models/FriendRelationshipVO';
 import { PrivateMessageVO } from '../../services/models/PrivateMessageVO';
 import { formatTimeAgo } from '../../utils/timeUtils';
+import { FriendRequestControllerService } from '../../services/services/FriendRequestControllerService';
 
 const router = useRouter();
 const route = useRoute();
@@ -143,7 +149,7 @@ const friends = ref<any[]>([]);
 const fetchFriends = async () => {
   friendsLoading.value = true;
   try {
-    const response = await FriendRelationshipControllerService.listMyFriendsUsingGet();
+    const response = await FriendRelationshipControllerService.listUserFriendsUsingGet();
     
     if (response.code === 0 && response.data) {
       friendRelationships.value = response.data;
@@ -299,6 +305,18 @@ const handleAddIntelligence = () => {
   showToast('添加智慧体功能开发中');
 };
 
+// 获取好友请求数量
+const fetchFriendRequestCount = async () => {
+  try {
+    const response = await FriendRequestControllerService.getPendingRequestCountUsingGet();
+    if (response.code === 0 && response.data !== undefined) {
+      friendRequestCount.value = Number(response.data);
+    }
+  } catch (error) {
+    console.error('获取好友请求数量出错：', error);
+  }
+};
+
 // 检查URL参数，决定默认显示哪个标签页
 onMounted(() => {
   const tab = route.query.tab as string;
@@ -315,6 +333,9 @@ onMounted(() => {
       query: { ...route.query, tab: 'history' },
     });
   }
+  
+  // 获取好友请求数量
+  fetchFriendRequestCount();
 });
 
 // 切换标签页
@@ -494,14 +515,7 @@ const handleAssistantSelect = (assistantId: number) => {
   z-index: 99;
 }
 
-.friend-list-container {
-  width: 100%;
-  position: relative;
-  min-height: calc(100vh - 250px);
-  padding-bottom: 40px;
-}
-
-.intelligence-container {
+.content-container {
   width: 100%;
   position: relative;
   min-height: calc(100vh - 250px);
@@ -516,5 +530,30 @@ const handleAssistantSelect = (assistantId: number) => {
   margin: 0 auto;
   padding: 0 4px;
   box-sizing: border-box;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  margin-top: 20px;
+}
+
+.loading-container p {
+  margin-top: 12px;
+  color: #666;
+  font-size: var(--font-size-md);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.empty-container {
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 }
 </style>

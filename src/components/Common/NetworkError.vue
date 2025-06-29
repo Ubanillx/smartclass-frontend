@@ -1,18 +1,18 @@
 <template>
   <error-block
     title="网络连接失败"
-    message="加载聊天记录失败，请检查网络连接后重试"
+    :message="props.message"
     icon="wifi-off"
     icon-color="#ff4d4f"
     :show-retry="true"
     retry-text="重新连接"
-    :loading="loading"
+    :loading="props.loading"
     @retry="$emit('retry')"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { defineEmits } from 'vue';
 import { ErrorBlock } from './index';
 
 defineEmits(['retry']);

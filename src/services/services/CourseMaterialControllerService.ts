@@ -8,7 +8,7 @@ import type { BaseResponse_List_CourseMaterial_ } from '../models/BaseResponse_L
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_CourseMaterial_ } from '../models/BaseResponse_Page_CourseMaterial_';
 import type { CourseMaterial } from '../models/CourseMaterial';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -42,7 +42,7 @@ export class CourseMaterialControllerService {
      * @throws ApiError
      */
     public static deleteMaterialUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

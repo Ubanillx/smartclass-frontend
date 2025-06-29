@@ -8,7 +8,7 @@
 import { BackButton } from '../Common';
 
 // 定义props
-const props = defineProps<{
+defineProps<{
   title: string;
 }>();
 </script>

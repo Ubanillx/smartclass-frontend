@@ -14,9 +14,9 @@
       </van-cell>
 
       <div class="assistant-list">
-        <template v-if="assistants && assistants.length > 0">
+        <template v-if="displayAssistants && displayAssistants.length > 0">
           <div
-            v-for="assistant in assistants"
+            v-for="assistant in displayAssistants"
             :key="assistant.id"
             class="assistant-item"
             @click="$emit('chat', assistant)"
@@ -42,6 +42,9 @@
             </div>
             <van-icon name="chat-o" class="chat-icon" />
           </div>
+          <div v-if="showLoadMore && assistants.length > displayLimit" class="load-more">
+            <van-button size="small" type="default" @click="loadMore">查看更多</van-button>
+          </div>
         </template>
         <template v-else>
           <div class="empty-assistant">
@@ -54,7 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
+import { showToast } from 'vant';
+import { AiAvatarControllerService } from '../../services';
+import type { AiAvatarVO } from '../../services/models/AiAvatarVO';
 
 interface Assistant {
   id: number;
@@ -64,15 +70,96 @@ interface Assistant {
 }
 
 // 定义props
-const props = defineProps<{
+defineProps<{
   assistants: Assistant[];
+  showLoadMore?: boolean;
 }>();
 
 // 定义事件
-defineEmits<{
+const emit = defineEmits<{
   (e: 'chat', assistant: Assistant): void;
   (e: 'more'): void;
+  (e: 'loadMore'): void;
 }>();
+
+// 助手数据
+const assistants = ref<Assistant[]>([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
+
+// 默认显示条数
+const displayLimit = ref(3);
+// 是否显示全部
+const showAll = ref(false);
+
+// 计算需要显示的助手列表
+const displayAssistants = computed(() => {
+  if (showAll.value) {
+    return assistants.value;
+  } else {
+    return assistants.value.slice(0, displayLimit.value);
+  }
+});
+
+// 从API获取智慧体数据
+const fetchAiAssistants = async () => {
+  loading.value = true;
+  error.value = null;
+  
+  try {
+    // 使用普通用户接口获取AI分身列表，替换管理员接口
+    const response = await AiAvatarControllerService.listAiAvatarByPageUsingGet(
+      undefined, // abilities
+      undefined, // adminId
+      undefined, // avatarUrl
+      undefined, // category
+      undefined, // createTime
+      undefined, // creatorId
+      1, // current - 默认第一页
+      undefined, // description
+      undefined, // id
+      1, // isPublic - 只获取公开的智慧体
+      undefined, // modelType
+      undefined, // name
+      20, // pageSize - 默认每页20条
+      undefined, // personality
+      undefined, // rating
+      undefined, // sortField
+      undefined, // sortOrder
+      1, // status - 只获取正常状态的智慧体
+      undefined, // tags
+      undefined  // usageCount
+    );
+
+    if (response.code === 0 && response.data && response.data.records) {
+      // 将AI分身信息转换为智能助手格式
+      assistants.value = response.data.records.map((avatar: AiAvatarVO) => {
+        return {
+          id: avatar.id || 0,
+          name: avatar.name || '未命名智慧体',
+          description: avatar.description || '',
+          avatar: avatar.avatarImgUrl || '/default.jpg',
+        };
+      });
+    } else {
+      error.value = '获取智慧体列表失败';
+      showToast('获取智慧体列表失败');
+    }
+  } catch (err) {
+    error.value = '网络连接失败，请检查网络设置后重试';
+    showToast('加载智慧体信息失败');
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 加载更多
+const loadMore = () => {
+  showAll.value = true;
+  // 通知父组件可能需要加载更多数据
+  emit('loadMore');
+};
 
 // 定义展开状态，默认所有描述都是收起的
 const expanded = reactive<Record<number, boolean>>({});
@@ -86,6 +173,11 @@ const toggleExpand = (id: number) => {
 const shouldShowToggle = (description: string) => {
   return description && description.length > 60;
 };
+
+// 组件挂载时加载AI分身信息
+onMounted(() => {
+  fetchAiAssistants();
+});
 </script>
 
 <style scoped>
@@ -146,6 +238,7 @@ const shouldShowToggle = (description: string) => {
 .assistant-desc.truncated {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -165,6 +258,13 @@ const shouldShowToggle = (description: string) => {
   color: #1989fa;
   margin-top: 12px;
   margin-left: 6px;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 8px;
 }
 
 :deep(.van-cell) {

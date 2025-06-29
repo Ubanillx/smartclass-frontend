@@ -70,7 +70,7 @@ import { useUserStore } from '../../stores/userStore';
 import type { UserInfo, Message } from '../../components/Dialogue/ChatMessageHandler';
 import { ChatControllerService } from '../../services/services/ChatControllerService';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { OpenAPI } from '../../services/core/OpenAPI';
+import { OpenAPI } from '../../services/core/OpenAPI.ts';
 
 // 生成UUID函数
 function generateUUID(): string {

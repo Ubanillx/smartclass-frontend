@@ -105,7 +105,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { showToast } from 'vant';
 import { Course as CourseType } from '../../api/mock';
 
 interface CourseHighlight {
@@ -194,7 +193,7 @@ const switchChapter = (index: number) => {
   currentChapter.value = index;
   if (videoRef.value) {
     videoRef.value.load();
-    videoRef.value.play().catch((err) => {
+    videoRef.value.play().catch(() => {
       // 视频播放失败的静默处理
     });
   }

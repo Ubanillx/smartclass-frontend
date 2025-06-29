@@ -14,59 +14,32 @@
       </van-cell>
       <div class="notice-preview">
         <template v-if="notices && notices.length > 0">
-          <!-- 默认只显示第一条公告 -->
+          <!-- 只显示前三条公告 -->
           <div
+            v-for="notice in displayNotices"
+            :key="notice.id"
             class="notice-item"
-            @click="notices[0] && showNoticeDetail(notices[0])"
+            @click="showNoticeDetail(notice)"
           >
-            <h4>{{ notices[0]?.title }}</h4>
-            <p class="notice-brief">{{ notices[0]?.content }}</p>
+            <h4>{{ notice.title }}</h4>
+            <p class="notice-brief">{{ notice.content }}</p>
             <div class="notice-footer">
-              <span class="notice-date">{{ notices[0]?.date }}</span>
+              <span class="notice-date">{{ notice.date }}</span>
               <van-icon name="arrow" />
             </div>
           </div>
 
-          <!-- 展开更多按钮 -->
+          <!-- 加载更多按钮 -->
           <div
-            v-if="notices.length > 1 && !expanded"
+            v-if="notices.length > displayLimit && !showAll"
             class="expand-button"
-            @click="expanded = true"
+            @click="loadMore"
           >
             <div class="expand-button-content">
               <van-icon name="arrow-down" />
               <span>展开更多公告</span>
             </div>
           </div>
-
-          <!-- 展开后显示的额外公告 -->
-          <template v-if="expanded">
-            <div
-              v-for="notice in notices.slice(1, 3)"
-              :key="notice.id"
-              class="notice-item"
-              @click="showNoticeDetail(notice)"
-            >
-              <h4>{{ notice.title }}</h4>
-              <p class="notice-brief">{{ notice.content }}</p>
-              <div class="notice-footer">
-                <span class="notice-date">{{ notice.date }}</span>
-                <van-icon name="arrow" />
-              </div>
-            </div>
-
-            <!-- 收起按钮 -->
-            <div
-              v-if="notices.length > 1"
-              class="expand-button collapse"
-              @click="expanded = false"
-            >
-              <div class="expand-button-content">
-                <van-icon name="arrow-up" />
-                <span>收起</span>
-              </div>
-            </div>
-          </template>
         </template>
         <template v-else>
           <div class="empty-notice">
@@ -99,19 +72,113 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { Notice } from '../../api/mock';
+import { showToast } from 'vant';
+import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
+import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
 
-// 定义props
+// 定义Notice类型
+interface Notice {
+  id: number;
+  title: string;
+  date: string;
+  content: string;
+}
+
+// 定义props，可以接收外部传入的公告数据
 const props = defineProps<{
-  notices: Notice[];
+  notices?: Notice[];
+  showLoadMore?: boolean;
+}>();
+
+// 定义事件
+const emit = defineEmits<{
+  (e: 'loadMore'): void;
 }>();
 
 const router = useRouter();
 const showDetail = ref(false);
 const selectedNotice = ref<Notice | null>(null);
-const expanded = ref(false); // 控制是否展开显示更多公告
+const localNotices = ref<Notice[]>([]); // 本地存储公告数据
+
+// 默认显示条数
+const displayLimit = ref(1);
+// 是否显示全部
+const showAll = ref(false);
+
+// 计算最终使用的公告数据，优先使用props传入的数据，如果没有则使用本地数据
+const notices = computed(() => {
+  return props.notices || localNotices.value;
+});
+
+// 计算需要显示的公告列表
+const displayNotices = computed(() => {
+  if (showAll.value) {
+    return notices.value.slice(0, 3); // 展开时最多显示3条
+  } else {
+    return notices.value.slice(0, displayLimit.value);
+  }
+});
+
+// 加载更多
+const loadMore = () => {
+  showAll.value = true;
+  emit('loadMore');
+};
+
+// 将后端公告数据转换为组件使用的格式
+const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
+  return {
+    id: announcement.id || 0,
+    title: announcement.title || '未命名公告',
+    content: announcement.content || '',
+    date: announcement.createTime
+      ? new Date(announcement.createTime).toLocaleDateString()
+      : '',
+  };
+};
+
+// 获取公告数据
+const fetchNotices = async () => {
+  try {
+    // 调用list/page/vo接口，只传入必要的参数
+    const response =
+      await AnnouncementControllerService.listAnnouncementVoByPageUsingGet(
+        undefined, // adminId
+        undefined, // content
+        undefined, // coverImage
+        undefined, // createTime
+        1, // current
+        undefined, // endTime
+        undefined, // id
+        undefined, // isValid
+        3, // pageSize - 默认只请求3条数据
+        undefined, // priority
+        'createTime', // sortField
+        'desc', // sortOrder
+        undefined, // startTime
+        undefined, // status
+        undefined // title
+      );
+
+    if (
+      response.code === 0 &&
+      response.data &&
+      response.data.records &&
+      response.data.records.length > 0
+    ) {
+      // 直接使用返回的记录转换为Notice格式
+      localNotices.value = response.data.records.map(convertAnnouncementToNotice);
+    } else {
+      // 如果API请求失败，使用空数组
+      localNotices.value = [];
+    }
+  } catch (error) {
+    showToast('获取公告数据失败');
+    localNotices.value = [];
+  }
+};
 
 // 跳转到公告列表页面
 const goToNoticeList = (): void => {
@@ -122,7 +189,28 @@ const goToNoticeList = (): void => {
 const showNoticeDetail = (notice: Notice): void => {
   selectedNotice.value = notice;
   showDetail.value = true;
+
+  // 如果需要，可以在这里调用标记公告为已读的API
+  if (notice.id) {
+    markNoticeAsRead(notice.id);
+  }
 };
+
+// 标记公告为已读
+const markNoticeAsRead = async (id: number) => {
+  try {
+    await AnnouncementControllerService.readAnnouncementUsingPost(id);
+  } catch (error) {
+    // 忽略错误
+  }
+};
+
+// 组件挂载时，如果没有传入notices，则自动获取数据
+onMounted(() => {
+  if (!props.notices) {
+    fetchNotices();
+  }
+});
 </script>
 
 <style scoped>
@@ -165,6 +253,7 @@ const showNoticeDetail = (notice: Notice): void => {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2; /* 限制显示两行 */
+  line-clamp: 2; /* 添加标准属性以提高兼容性 */
 }
 
 .notice-footer {

@@ -17,7 +17,7 @@ export class Service {
     public static generatePostmanCollectionUsingGet(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/doc/postman-collection',
+            url: '/api/postman-collections',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -34,7 +34,7 @@ export class Service {
     public static generateDynamicPostmanCollectionUsingGet(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/doc/postman-collection-dynamic',
+            url: '/api/postman-collections/dynamic',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -51,7 +51,7 @@ export class Service {
     public static getServerInfoUsingGet(): CancelablePromise<BaseResponse_Map_string_string_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/doc/server-info',
+            url: '/api/postman-collections/server',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -65,10 +65,10 @@ export class Service {
      * @returns BaseResponse_List_Map_string_object_ OK
      * @throws ApiError
      */
-    public static getWebSocketEndpointsListUsingGet(): CancelablePromise<BaseResponse_List_Map_string_object_> {
+    public static listWebSocketEndpointsUsingGet(): CancelablePromise<BaseResponse_List_Map_string_object_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/doc/websocket-endpoints',
+            url: '/api/postman-collections/websocket-endpoints',
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

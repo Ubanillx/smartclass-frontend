@@ -150,12 +150,12 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
-import { BackButton } from '../../components/Common';
-import { UserControllerService } from '../../services/services/UserControllerService';
-import { FriendRequestControllerService } from '../../services/services/FriendRequestControllerService';
-import { FriendRelationshipControllerService } from '../../services/services/FriendRelationshipControllerService';
-import { useUserStore } from '../../stores/userStore';
-import type { UserVO } from '../../services/models/UserVO';
+import { BackButton } from '../../../components/Common';
+import { UserControllerService } from '../../../services/services/UserControllerService';
+import { FriendRequestControllerService } from '../../../services/services/FriendRequestControllerService';
+import { FriendRelationshipControllerService } from '../../../services/services/FriendRelationshipControllerService';
+import { useUserStore } from '../../../stores/userStore';
+import type { UserVO } from '../../../services/models/UserVO';
 import type { ToastWrapperInstance } from 'vant/es/toast/types';
 
 // 定义用户扩展接口，添加前端需要的状态字段
@@ -216,12 +216,12 @@ const fetchRecommendFriends = async () => {
         // 如果已登录，检查是否是好友
         if (userStore.userInfo?.id && user.id) {
           try {
-            const isFriendResponse = await FriendRelationshipControllerService.isFriendUsingGet(
-              userStore.userInfo.id,
+            const isFriendResponse = await FriendRelationshipControllerService.getFriendRelationshipUsingGet(
+              undefined,
               user.id
             );
             if (isFriendResponse.code === 0) {
-              extendedUser.isFriend = isFriendResponse.data || false;
+              extendedUser.isFriend = !!isFriendResponse.data;
             }
           } catch (error) {
             console.error('检查好友关系失败', error);
@@ -277,12 +277,12 @@ const handleSearch = async () => {
         // 检查是否是好友关系
         if (userStore.userInfo?.id && user.id) {
           try {
-            const isFriendResponse = await FriendRelationshipControllerService.isFriendUsingGet(
-              userStore.userInfo.id,
+            const isFriendResponse = await FriendRelationshipControllerService.getFriendRelationshipUsingGet(
+              undefined,
               user.id
             );
             if (isFriendResponse.code === 0) {
-              extendedUser.isFriend = isFriendResponse.data || false;
+              extendedUser.isFriend = !!isFriendResponse.data;
             }
             
             // 检查是否已发送好友请求

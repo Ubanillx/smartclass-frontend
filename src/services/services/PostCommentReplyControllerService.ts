@@ -6,9 +6,7 @@ import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_PostCommentReplyVO_ } from '../models/BaseResponse_Page_PostCommentReplyVO_';
 import type { BaseResponse_PostCommentReplyVO_ } from '../models/BaseResponse_PostCommentReplyVO_';
-import type { DeleteRequest } from '../models/DeleteRequest';
 import type { PostCommentReplyAddRequest } from '../models/PostCommentReplyAddRequest';
-import type { PostCommentReplyQueryRequest } from '../models/PostCommentReplyQueryRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -25,7 +23,7 @@ export class PostCommentReplyControllerService {
     ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/post_comment_reply/add',
+            url: '/api/post-comment-replies',
             body: postCommentReplyAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -35,40 +33,41 @@ export class PostCommentReplyControllerService {
         });
     }
     /**
-     * adminDeletePostCommentReply
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
+     * listPostCommentReplyByPage
+     * @param commentId
+     * @param content
+     * @param current
+     * @param pageSize
+     * @param postId
+     * @param sortField
+     * @param sortOrder
+     * @param userId
+     * @returns BaseResponse_Page_PostCommentReplyVO_ OK
      * @throws ApiError
      */
-    public static adminDeletePostCommentReplyUsingPost(
-        deleteRequest: DeleteRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
+    public static listPostCommentReplyByPageUsingGet(
+        commentId?: number,
+        content?: string,
+        current?: number,
+        pageSize?: number,
+        postId?: number,
+        sortField?: string,
+        sortOrder?: string,
+        userId?: number,
+    ): CancelablePromise<BaseResponse_Page_PostCommentReplyVO_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment_reply/admin/delete',
-            body: deleteRequest,
-            errors: {
-                401: `Unauthorized`,
-                403: `Forbidden`,
-                404: `Not Found`,
+            method: 'GET',
+            url: '/api/post-comment-replies/page',
+            query: {
+                'commentId': commentId,
+                'content': content,
+                'current': current,
+                'pageSize': pageSize,
+                'postId': postId,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+                'userId': userId,
             },
-        });
-    }
-    /**
-     * deletePostCommentReply
-     * @param deleteRequest deleteRequest
-     * @returns BaseResponse_boolean_ OK
-     * @returns any Created
-     * @throws ApiError
-     */
-    public static deletePostCommentReplyUsingPost(
-        deleteRequest: DeleteRequest,
-    ): CancelablePromise<BaseResponse_boolean_ | any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment_reply/delete',
-            body: deleteRequest,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
@@ -83,12 +82,12 @@ export class PostCommentReplyControllerService {
      * @throws ApiError
      */
     public static getPostCommentReplyByIdUsingGet(
-        id?: number,
+        id: number,
     ): CancelablePromise<BaseResponse_PostCommentReplyVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/post_comment_reply/get',
-            query: {
+            url: '/api/post-comment-replies/{id}',
+            path: {
                 'id': id,
             },
             errors: {
@@ -99,23 +98,44 @@ export class PostCommentReplyControllerService {
         });
     }
     /**
-     * listPostCommentReplyByPage
-     * @param postCommentReplyQueryRequest postCommentReplyQueryRequest
-     * @returns BaseResponse_Page_PostCommentReplyVO_ OK
-     * @returns any Created
+     * deletePostCommentReply
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
      * @throws ApiError
      */
-    public static listPostCommentReplyByPageUsingPost(
-        postCommentReplyQueryRequest: PostCommentReplyQueryRequest,
-    ): CancelablePromise<BaseResponse_Page_PostCommentReplyVO_ | any> {
+    public static deletePostCommentReplyUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/post_comment_reply/list/page',
-            body: postCommentReplyQueryRequest,
+            method: 'DELETE',
+            url: '/api/post-comment-replies/{id}',
+            path: {
+                'id': id,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,
-                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * adminDeletePostCommentReply
+     * @param id id
+     * @returns BaseResponse_boolean_ OK
+     * @throws ApiError
+     */
+    public static adminDeletePostCommentReplyUsingDelete(
+        id: number,
+    ): CancelablePromise<BaseResponse_boolean_> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/post-comment-replies/{id}/admin',
+            path: {
+                'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
             },
         });
     }

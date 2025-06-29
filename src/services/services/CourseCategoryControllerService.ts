@@ -7,7 +7,7 @@ import type { BaseResponse_CourseCategory_ } from '../models/BaseResponse_Course
 import type { BaseResponse_List_CourseCategory_ } from '../models/BaseResponse_List_CourseCategory_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { CourseCategory } from '../models/CourseCategory';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -41,7 +41,7 @@ export class CourseCategoryControllerService {
      * @throws ApiError
      */
     public static deleteCategoryUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

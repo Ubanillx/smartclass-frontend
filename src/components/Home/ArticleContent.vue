@@ -80,7 +80,7 @@ interface Article {
 }
 
 // 定义props
-const props = defineProps<{
+defineProps<{
   articles: Article[];
   loading?: boolean;
   finished?: boolean;
@@ -95,9 +95,9 @@ defineEmits<{
 }>();
 
 // 状态变量
-const loading = ref(props.loading || false);
-const finished = ref(props.finished || false);
-const refreshing = ref(props.refreshing || false);
+const loading = ref(false);
+const finished = ref(false);
+const refreshing = ref(false);
 
 // 根据文章类别返回不同的样式
 const getTagStyle = (category: string): Record<string, string> => {
@@ -210,6 +210,7 @@ const getDifficultyClass = (difficulty: string): string => {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -221,6 +222,7 @@ const getDifficultyClass = (difficulty: string): string => {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -264,4 +266,4 @@ const getDifficultyClass = (difficulty: string): string => {
 .empty-state {
   padding: 32px 0;
 }
-</style>
+</style> 

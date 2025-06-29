@@ -11,8 +11,7 @@ import Profile from '../views/myProfile/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
 import Circle from '../views/circle/Circle.vue';
-import { ChatDetail, ChatContainer } from '../views/chat';
-import UserChatDetail from '../views/userChat/UserChatDetail.vue';
+import { AIChatDetail, ChatContainer, UserChatDetail } from '../views/chat';
 import AvatarCropper from '../views/myProfile/settings/AvatarCropper.vue';
 import NoticeList from '../views/home/NoticeList.vue';
 import PostDetail from '../views/circle/PostDetail.vue';
@@ -81,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/chat/detail',
     name: 'chat-detail',
-    component: ChatDetail,
+    component: AIChatDetail,
     meta: {
       requiresAuth: true,
     },
@@ -89,7 +88,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/chat/detail/:assistantId',
     name: 'chat-detail-with-assistant',
-    component: ChatDetail,
+    component: AIChatDetail,
     meta: {
       requiresAuth: true,
     },
@@ -112,7 +111,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/friends/requests',
     name: 'friend-requests',
-    component: () => import('../views/friends/FriendRequests.vue'),
+    component: () => import('../views/chat/friends/FriendRequests.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -120,7 +119,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/friends/add',
     name: 'add-friend',
-    component: () => import('../views/friends/AddFriend.vue'),
+    component: () => import('../views/chat/friends/AddFriend.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -274,6 +273,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/articles',
     name: 'articles',
     component: () => import('../views/home/articles/ArticlesList.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/daily/article/:id',
+    name: 'article-detail',
+    component: () => import('../views/home/articles/ArticleDetailPage.vue'),
     meta: {
       requiresAuth: true,
     },

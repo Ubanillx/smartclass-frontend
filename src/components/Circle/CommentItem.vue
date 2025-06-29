@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import InlineReplyInput from './InlineReplyInput.vue';
 
 interface Reply {

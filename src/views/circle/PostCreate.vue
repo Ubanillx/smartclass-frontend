@@ -71,6 +71,16 @@
         </div>
       </div>
       
+      <!-- 帖子类型选择 -->
+      <div class="type-section">
+        <div class="section-title">帖子类型</div>
+        <van-radio-group v-model="postForm.type" direction="horizontal" class="type-radio-group">
+          <van-radio name="article">文章</van-radio>
+          <van-radio name="question">问题</van-radio>
+          <van-radio name="discussion">讨论</van-radio>
+        </van-radio-group>
+      </div>
+      
       <!-- 发布按钮 -->
       <div class="submit-section">
         <van-button 
@@ -123,7 +133,8 @@ const postForm = ref({
   title: '',
   content: '',
   images: [] as { url: string, file?: File, uploaded?: boolean, fileUrl?: string }[],
-  tags: [] as string[]
+  tags: [] as string[],
+  type: 'article' // 默认类型为文章
 });
 
 // 预览开关
@@ -204,11 +215,9 @@ const afterRead = async (file: any) => {
     file.url = URL.createObjectURL(file.file);
     file.uploaded = false;
     
-    // 调用后端API上传图片
+    // 调用后端API上传图片 - 使用更新后的接口，只传递文件参数
     const response = await FileControllerService.uploadFileUsingPost(
-      file.file,
-      '帖子图片',
-      file.file.name
+      file.file
     );
     
     if (response.code === 0 && response.data) {
@@ -235,7 +244,7 @@ const afterRead = async (file: any) => {
 };
 
 // 删除图片前确认
-const beforeDelete = () => {
+const beforeDelete = (): Promise<boolean> => {
   return new Promise((resolve) => {
     showDialog({
       title: '提示',
@@ -260,6 +269,10 @@ const onSubmit = async () => {
   }
   if (postForm.value.tags.length === 0) {
     showToast('请至少选择一个标签');
+    return;
+  }
+  if (!postForm.value.type) {
+    showToast('请选择帖子类型');
     return;
   }
 
@@ -297,7 +310,8 @@ const onSubmit = async () => {
       title: postForm.value.title.trim(),
       content: contentWithImages.trim(),
       tags: postForm.value.tags,
-      clientIp: clientIp // 添加IP地址
+      clientIp: clientIp, // 添加IP地址
+      type: postForm.value.type // 添加类型
     };
 
     const response = await PostControllerService.addPostUsingPost(postData);
@@ -327,10 +341,10 @@ const onSubmit = async () => {
 };
 
 // 渲染 Markdown 内容
-const renderedContent = computed(() => {
+const renderedContent = computed((): string => {
   try {
     // 简化的Markdown渲染
-    const rawHtml = marked(postForm.value.content);
+    const rawHtml = marked(postForm.value.content) as string;
     return DOMPurify.sanitize(rawHtml);
   } catch (error) {
     console.error('Markdown渲染错误:', error);
@@ -568,5 +582,18 @@ const renderedContent = computed(() => {
   padding: 12px 0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(25, 137, 250, 0.2);
+}
+
+.type-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.type-radio-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
 }
 </style> 

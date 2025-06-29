@@ -6,15 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { watch, onMounted } from 'vue';
 
 const props = defineProps<{
   messageId: number;
   isRead: boolean;
-}>();
-
-const emit = defineEmits<{
-  (e: 'update:isRead', value: boolean): void;
 }>();
 
 // 当isRead属性变化时触发事件

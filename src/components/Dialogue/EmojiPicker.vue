@@ -29,7 +29,7 @@
 import { ref } from 'vue';
 
 // 定义props
-const props = defineProps<{
+defineProps<{
   show: boolean;
 }>();
 

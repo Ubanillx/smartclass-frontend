@@ -3,7 +3,7 @@ import { showToast } from 'vant';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
-import { OpenAPI } from '../../services/core/OpenAPI';
+import { OpenAPI } from '../../services/core/OpenAPI.ts';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useUserStore } from '../../stores/userStore';
 import { useRouter } from 'vue-router';

@@ -5,5 +5,6 @@
 export type FriendRelationshipUpdateRequest = {
     id?: number;
     status?: string;
+    userId?: number;
 };
 

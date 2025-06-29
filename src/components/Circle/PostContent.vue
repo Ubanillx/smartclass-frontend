@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits } from 'vue';
+import { computed, defineProps, defineEmits } from 'vue';
 import { showImagePreview } from 'vant';
 import MarkdownIt from 'markdown-it';
 import markdownItKatex from 'markdown-it-katex';
@@ -64,7 +64,6 @@ md.renderer.rules.code_block = function(tokens, idx) {
 md.renderer.rules.fence = function(tokens, idx) {
   const token = tokens[idx];
   const code = token?.content || '';
-  const langName = token?.info || '';
   
   return `<pre class="simple-code-block"><code>${code}</code></pre>`;
 };

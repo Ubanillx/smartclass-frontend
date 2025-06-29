@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { FriendRelationship } from './FriendRelationship';
-export type BaseResponse_FriendRelationship_ = {
+export type BaseResponse_object_ = {
     code?: number;
-    data?: FriendRelationship;
+    data?: any;
     message?: string;
 };
 

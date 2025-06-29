@@ -32,7 +32,7 @@
 
               <div class="post-content" @click="viewPostDetails(post.id)">
                 <div v-if="post.title" class="post-title">{{ post.title }}</div>
-                <div class="post-text">{{ post.content }}</div>
+                <div class="post-text" v-html="parseMarkdown(post.content || '')"></div>
               </div>
 
               <div v-if="post.tagList && post.tagList.length > 0" class="post-tags">
@@ -78,9 +78,10 @@ import { ref, onMounted } from 'vue';
 import { showToast, showSuccessToast } from 'vant';
 import { PostControllerService, PostThumbControllerService, PostFavourControllerService } from '../../services';
 import type { PostVO } from '../../services/models/PostVO';
-import type { PostQueryRequest } from '../../services/models/PostQueryRequest';
 import { useUserStore } from '../../stores/userStore';
 import { useRouter } from 'vue-router';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -112,7 +113,7 @@ const fetchUserPosts = async (reset = false) => {
       return;
     }
 
-    const queryParams: PostQueryRequest = {
+    const queryParams = {
       userId: userStore.userInfo.id,
       current: current.value,
       pageSize: pageSize.value,
@@ -120,7 +121,21 @@ const fetchUserPosts = async (reset = false) => {
       sortOrder: 'descend',
     };
 
-    const result = await PostControllerService.listMyPostVoByPageUsingPost(queryParams);
+    const result = await PostControllerService.listMyPostVoByPageUsingGet(
+      undefined, // content
+      queryParams.current,
+      undefined, // favourUserId
+      undefined, // id
+      undefined, // notId
+      undefined, // orTags
+      queryParams.pageSize,
+      undefined, // searchText
+      queryParams.sortField,
+      queryParams.sortOrder,
+      undefined, // tags
+      undefined, // title
+      queryParams.userId
+    );
     
     if (result.code === 0 && result.data) {
       if (reset) {
@@ -178,7 +193,7 @@ const handleThumb = async (post: PostVO) => {
     }
 
     if (post.id) {
-      const result = await PostThumbControllerService.doThumbUsingPost({
+      const result = await PostThumbControllerService.addThumbUsingPost({
         postId: post.id
       });
 
@@ -211,7 +226,7 @@ const handleFavour = async (post: PostVO) => {
     }
 
     if (post.id) {
-      const result = await PostFavourControllerService.doFavourUsingPost({
+      const result = await PostFavourControllerService.addFavourUsingPost({
         postId: post.id
       });
 
@@ -264,6 +279,20 @@ const formatPostTime = (timeStr?: string) => {
     return `${diffDay}天前`;
   } else {
     return postTime.toLocaleDateString();
+  }
+};
+
+// 解析Markdown内容
+const parseMarkdown = (content: string): string => {
+  try {
+    // 配置marked使用同步模式
+    marked.setOptions({ async: false });
+    // 解析为HTML并使用DOMPurify过滤，防止XSS攻击
+    const html = marked.parse(content);
+    return typeof html === 'string' ? DOMPurify.sanitize(html) : content;
+  } catch (error) {
+    console.error('解析Markdown失败:', error);
+    return content;
   }
 };
 
@@ -366,9 +395,52 @@ onMounted(() => {
   /* 多行省略 */
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Markdown样式 */
+.post-text :deep(p) {
+  margin: 0.5em 0;
+}
+
+.post-text :deep(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-text :deep(a) {
+  color: #1989fa;
+  text-decoration: none;
+}
+
+.post-text :deep(code) {
+  background-color: #f5f7fa;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.post-text :deep(pre) {
+  background-color: #f5f7fa;
+  padding: 0.5em;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.post-text :deep(blockquote) {
+  margin: 0.5em 0;
+  padding-left: 1em;
+  border-left: 4px solid #ebedf0;
+  color: #646566;
+}
+
+.post-text :deep(ul), .post-text :deep(ol) {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
 }
 
 .post-tags {

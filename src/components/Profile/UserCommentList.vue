@@ -55,13 +55,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast, showLoadingToast } from 'vant';
-import { PostCommentControllerService } from '../../services/services/PostCommentControllerService';
-import { PostControllerService } from '../../services/services/PostControllerService';
-import type { PostCommentQueryRequest } from '../../services/models/PostCommentQueryRequest';
-import type { DeleteRequest } from '../../services/models/DeleteRequest';
+import { PostCommentControllerService } from '../../services';
+import { PostControllerService } from '../../services';
 import type { PostCommentVO } from '../../services/models/PostCommentVO';
 import { useUserStore } from '../../stores/userStore';
 
@@ -111,15 +109,15 @@ const fetchUserComments = async (reset = false) => {
   loading.value = true;
 
   try {
-    const queryParams: PostCommentQueryRequest = {
-      userId: userStore.userInfo.id,
-      current: current.value,
-      pageSize: pageSize.value,
-      sortField: 'createTime',
-      sortOrder: 'desc'
-    };
-
-    const result = await PostCommentControllerService.listPostCommentByPageUsingPost(queryParams);
+    const result = await PostCommentControllerService.listPostCommentByPageUsingGet(
+      undefined, // content
+      current.value,
+      pageSize.value,
+      undefined, // postId
+      'createTime',
+      'desc',
+      userStore.userInfo.id
+    );
     
     if (result.code === 0 && result.data) {
       const newComments = result.data.records || [];
@@ -228,11 +226,7 @@ const deleteComment = async () => {
   });
 
   try {
-    const deleteRequest: DeleteRequest = {
-      id: currentComment.value.id
-    };
-
-    const result = await PostCommentControllerService.deletePostCommentUsingPost(deleteRequest);
+    const result = await PostCommentControllerService.deletePostCommentUsingDelete(currentComment.value.id);
     
     if (result.code === 0 && result.data) {
       showToast('删除成功');

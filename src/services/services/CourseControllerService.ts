@@ -11,7 +11,7 @@ import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_CourseVO_ } from '../models/BaseResponse_Page_CourseVO_';
 import type { CourseAddRequest } from '../models/CourseAddRequest';
 import type { CourseUpdateRequest } from '../models/CourseUpdateRequest';
-import type { DeleteRequest_1 } from '../models/DeleteRequest_1';
+import type { DeleteRequest } from '../models/DeleteRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -45,7 +45,7 @@ export class CourseControllerService {
      * @throws ApiError
      */
     public static deleteCourseUsingPost(
-        deleteRequest: DeleteRequest_1,
+        deleteRequest: DeleteRequest,
     ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',

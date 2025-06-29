@@ -4,7 +4,6 @@
 /* eslint-disable */
 export type FriendRelationshipAddRequest = {
     status?: string;
-    userId1?: number;
     userId2?: number;
 };
 

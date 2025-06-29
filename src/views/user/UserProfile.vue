@@ -309,7 +309,7 @@ const fetchUserData = async () => {
     }
 
     // 获取用户信息
-    const response = await UserControllerService.getUserVoByIdUsingGet(
+    const response = await UserControllerService.getUserByIdUsingGet(
       Number(userId.value),
     );
 

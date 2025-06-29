@@ -28,11 +28,9 @@
 
       <!-- 每日单词模块 -->
       <daily-word-card
-        :word="dailyWord"
-        :categories="wordCategories"
+        :word="dailyWord as any"
         @update:word="dailyWord = $event"
-        @more="router.push('/vocabulary')"
-        @category-click="router.push($event.path)"
+        @more="router.push('/vocabulary/collected')"
       />
 
       <!-- 精美文章模块 -->
@@ -69,24 +67,19 @@ import {
 } from '../../components/Home';
 import {
   mockPopularCourses,
-  vocabularyCategories,
   type Course,
-  type Word,
   type Notice,
   type Article,
 } from '../../api/mock.ts';
-import { useCollectedWordsStore } from '../../stores/collectedWordsStore.ts';
+import { useUserStore } from '../../stores/userStore.ts';
 import {
   AiAvatarControllerService,
   DailyWordControllerService,
-  DailyWordFavourControllerService,
   DailyArticleControllerService,
   UserWordBookControllerService,
 } from '../../services';
 import { AnnouncementControllerService } from '../../services/services/AnnouncementControllerService.ts';
 import { AnnouncementVO } from '../../services/models/AnnouncementVO.ts';
-import { AnnouncementQueryRequest } from '../../services/models/AnnouncementQueryRequest.ts';
-import { useUserStore } from '../../stores/userStore.ts';
 
 // 定义类型
 interface Assistant {
@@ -102,6 +95,36 @@ interface Action {
   color: string;
 }
 
+// 定义WordMeaning类型
+interface WordMeaning {
+  partOfSpeech: string;
+  definition: string;
+  example: string;
+}
+
+// 定义Word类型来匹配DailyWordCard组件期望的类型
+interface Word {
+  id: number;
+  text: string;
+  phonetic: string;
+  translation: string;
+  example: string;
+  isCollected: boolean;
+  isThumbUp: boolean;
+  thumbCount: number;
+  likeCount: number;
+  meanings: WordMeaning[];
+  viewCount: number;
+  collectCount: number;
+  lastViewTime: string;
+  difficulty: string;
+  category: string;
+  audioUrl?: string;
+  exampleTranslation?: string;
+  notes?: string;
+  isStudied?: boolean;
+}
+
 // 使用markRaw包装组件，防止被转换为响应式对象
 const PopularCoursesRaw = markRaw(PopularCourses);
 
@@ -109,7 +132,6 @@ const router = useRouter();
 const searchText = ref('');
 const showActionSheet = ref(false);
 const refreshing = ref(false);
-const collectedWordsStore = useCollectedWordsStore();
 const userStore = useUserStore();
 
 // 设置公告数据
@@ -130,18 +152,24 @@ const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
 // 获取公告数据
 const fetchNotices = async () => {
   try {
-    // 创建请求参数，按创建时间倒序排列
-    const queryRequest: AnnouncementQueryRequest = {
-      current: 1,
-      pageSize: 3, // 只获取3条
-      sortField: 'createTime',
-      sortOrder: 'desc', // 按时间倒序，最新的在前面
-    };
-
-    // 调用list/page/vo接口
+    // 调用list/page/vo接口，只传入必要的参数
     const response =
-      await AnnouncementControllerService.listAnnouncementVoByPageUsingPost(
-        queryRequest,
+      await AnnouncementControllerService.listAnnouncementVoByPageUsingGet(
+        undefined, // adminId
+        undefined, // content
+        undefined, // coverImage
+        undefined, // createTime
+        1, // current
+        undefined, // endTime
+        undefined, // id
+        undefined, // isValid
+        3, // pageSize
+        undefined, // priority
+        'createTime', // sortField
+        'desc', // sortOrder
+        undefined, // startTime
+        undefined, // status
+        undefined // title
       );
 
     if (
@@ -166,7 +194,7 @@ const fetchNotices = async () => {
 const popularCourses = ref<Course[]>(mockPopularCourses);
 
 // 筛选热门课程（选取每个学科中最热门的课程）
-const filteredPopularCourses = computed(() => {
+const filteredPopularCourses = computed<Course[]>(() => {
   // 获取不同的学科
   const subjects = [
     ...new Set(
@@ -183,14 +211,14 @@ const filteredPopularCourses = computed(() => {
 
       return subjectCourses[0]; // 返回该学科中最热门的课程
     })
-    .filter(Boolean)
+    .filter((course): course is Course => Boolean(course))
     .slice(0, 3); // 最多展示3个
 
   return topCourses;
 });
 
 // 构建一个空的单词对象作为初始值
-const emptyWord = {
+const emptyWord: Word = {
   id: 0,
   text: '',
   phonetic: '',
@@ -208,7 +236,7 @@ const emptyWord = {
   category: '日常用语'
 };
 
-const dailyWord = ref(emptyWord);
+const dailyWord = ref(emptyWord as any);
 
 // 从后端获取今日单词
 const fetchDailyWord = async () => {
@@ -238,7 +266,8 @@ const fetchDailyWord = async () => {
               example: todayWord.example || '',
             },
           ],
-          viewCount: todayWord.viewCount || 0,
+          // DailyWordVO没有viewCount属性，使用默认值0
+          viewCount: 0,
           collectCount: 0,
           lastViewTime: new Date().toISOString(),
           difficulty: convertDifficultyToText(todayWord.difficulty),
@@ -248,7 +277,8 @@ const fetchDailyWord = async () => {
           notes: todayWord.notes,
         };
 
-        dailyWord.value = word;
+        // 使用类型断言来解决类型问题
+        dailyWord.value = word as any;
         checkCollectedStatus();
       } else {
         console.error('后端返回的今日单词数据为空');
@@ -328,7 +358,8 @@ const fetchTodayArticles = async () => {
               'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
         category: article.category || '文化',
         readTime: article.readTime || 5,
-        difficulty: article.difficulty,
+        // 将数字难度转换为字符串
+        difficulty: article.difficulty ? String(article.difficulty) : '中级',
         content: article.content || '暂无内容',
         publishDate: article.publishDate || '',
         viewCount: article.viewCount || 0,
@@ -338,8 +369,8 @@ const fetchTodayArticles = async () => {
         source: article.source || '',
       };
 
-      // 放入数组中以便组件渲染
-      articles.value = [formattedArticle];
+      // 放入数组中以便组件渲染并使用类型断言
+      articles.value = [formattedArticle as Article];
     } else {
       console.error('获取今日美文数据失败', response);
       articles.value = [];
@@ -352,36 +383,39 @@ const fetchTodayArticles = async () => {
   }
 };
 
-// 获取单词分类数据（使用mock.ts中的数据）
-const wordCategories = ref(vocabularyCategories);
-
-// 添加生词本分类（如果不存在）
-const ensureCollectedCategory = () => {
-  const collectedCategory = wordCategories.value.find(
-    (category) => category.path === '/vocabulary/collected',
-  );
-
-  if (!collectedCategory) {
-    wordCategories.value.push({
-      id: wordCategories.value.length,
-      name: '生词本',
-      icon: 'bookmark-o',
-      path: '/vocabulary/collected',
-    });
-  }
-};
-
 // AI助手数据
 const aiAssistants = ref<Assistant[]>([]);
 
 // 从后端获取智慧体数据
 const fetchAiAssistants = async () => {
   try {
-    const response = await AiAvatarControllerService.listAiAvatarUsingGet();
+    // 使用普通用户接口获取AI分身列表，替换管理员接口
+    const response = await AiAvatarControllerService.listAiAvatarByPageUsingGet(
+      undefined, // abilities
+      undefined, // adminId
+      undefined, // avatarUrl
+      undefined, // category
+      undefined, // createTime
+      undefined, // creatorId
+      1, // current - 默认第一页
+      undefined, // description
+      undefined, // id
+      1, // isPublic - 只获取公开的智慧体
+      undefined, // modelType
+      undefined, // name
+      10, // pageSize - 默认获取10条
+      undefined, // personality
+      undefined, // rating
+      undefined, // sortField
+      undefined, // sortOrder
+      1, // status - 只获取正常状态的智慧体
+      undefined, // tags
+      undefined  // usageCount
+    );
 
-    if (response.code === 0 && response.data) {
+    if (response.code === 0 && response.data && response.data.records) {
       // 将后端数据转换为前端需要的格式
-      aiAssistants.value = response.data.map((avatar) => ({
+      aiAssistants.value = response.data.records.map((avatar) => ({
         id: avatar.id || 0,
         name: avatar.name || '未命名智慧体',
         description: avatar.description || '',
@@ -432,6 +466,7 @@ const actions = ref<Action[]>([
 // 搜索处理
 const onSearch = (text: string) => {
   // 这里添加实际的搜索逻辑
+  console.log('搜索:', text);
 };
 
 // 开始对话
@@ -485,7 +520,6 @@ const onRefresh = async () => {
 // 页面加载时获取数据
 onMounted(() => {
   checkCollectedStatus();
-  ensureCollectedCategory();
   fetchAiAssistants();
   fetchNotices(); // 获取公告数据
   fetchDailyWord(); // 获取今日单词数据
