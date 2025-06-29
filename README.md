@@ -20,6 +20,7 @@
 ## 相关项目
 
 - **后端仓库**: [smartclass-backend](https://github.com/Ubanillx/smartclass-backend) - 基于Spring Boot的后端服务
+- **管理端仓库** [smartclass-man-backend](https://github.com/Ubanillx/smartclass-manage-frontend)
 
 ## 功能特点
 
