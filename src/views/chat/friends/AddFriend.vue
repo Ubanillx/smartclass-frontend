@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { showToast, showSuccessToast, showLoadingToast } from 'vant';
 import { BackButton } from '../../../components/Common';
 import { UserControllerService } from '../../../services/services/UserControllerService';
@@ -167,6 +167,7 @@ interface ExtendedUserVO extends UserVO {
 }
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const searchText = ref('');
 const searchActive = ref(false);
@@ -414,12 +415,12 @@ const handleSendRequest = async () => {
 
 // 处理扫描二维码
 const handleScanQRCode = () => {
-  showToast('正在开发中');
+  router.push('/qr/scan');
 };
 
 // 处理显示我的二维码
 const handleShowMyQRCode = () => {
-  showToast('正在开发中');
+  router.push('/qr/display');
 };
 
 // 处理对话框关闭
@@ -440,6 +441,21 @@ const handleDialogCancel = () => {
 // 页面加载时获取推荐好友
 onMounted(() => {
   fetchRecommendFriends();
+  
+  // 检查是否从QR码扫描页面跳转过来
+  if (route.query.fromQR === 'true' && route.query.userId) {
+    const userId = route.query.userId;
+    const userName = route.query.userName;
+    
+    // 如果有用户名，直接用用户名搜索
+    if (userName) {
+      searchText.value = userName as string;
+      handleSearch();
+    } else {
+      // 否则显示从QR码获取的用户ID
+      showToast(`从二维码获取到用户ID: ${userId}`);
+    }
+  }
 });
 </script>
 
