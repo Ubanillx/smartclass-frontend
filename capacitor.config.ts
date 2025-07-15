@@ -26,6 +26,9 @@ const config: CapacitorConfig = {
       splashImmersive: true,
       splashFullScreen: true,
     },
+    Camera: {
+      permissions: ['camera', 'photos'],
+    },
     Keyboard: {
       resize: 'body',
       style: 'dark',
