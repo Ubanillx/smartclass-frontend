@@ -29,5 +29,7 @@ export default defineConfig({
   },
   server: {
     // 代理配置已移除，前端直接请求后端地址
+    port: 8080,
+    host: 'localhost'
   },
 });

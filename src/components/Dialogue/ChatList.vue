@@ -68,15 +68,10 @@ interface Chat {
 }
 
 // 定义props并设置默认值
-const { chats, showStatus = true } = withDefaults(
-  defineProps<{
-    chats: Chat[];
-    showStatus?: boolean;
-  }>(),
-  {
-    showStatus: true,
-  },
-);
+const { chats, showStatus = true } = defineProps<{
+  chats: Chat[];
+  showStatus?: boolean;
+}>();
 
 // 定义事件
 const emit = defineEmits<{
@@ -256,14 +251,4 @@ const cancelTouch = () => {
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-:deep(.van-cell-group) {
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
-
-:deep(.van-cell-group__title) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
-}
 </style>

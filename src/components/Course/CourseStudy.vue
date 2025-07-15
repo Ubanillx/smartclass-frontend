@@ -133,7 +133,7 @@ interface Exercise {
   type: string;
 }
 
-const props = defineProps<{
+const { course } = defineProps<{
   course: EnhancedCourse | null;
   courseId?: number;
 }>();
@@ -248,18 +248,6 @@ const startExercise = (exercise: Exercise) => {
   padding: 2px 6px;
   border-radius: 4px;
   color: #fff;
-}
-
-.difficulty.初级 {
-  background: #07c160;
-}
-
-.difficulty.中级 {
-  background: #1989fa;
-}
-
-.difficulty.高级 {
-  background: #ff976a;
 }
 
 .grade {

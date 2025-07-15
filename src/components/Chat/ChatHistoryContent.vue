@@ -75,8 +75,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { ChatList, ChatPagination } from '../Dialogue';
 import { NetworkError } from '../Common';
-import { AiAvatarChatControllerService } from '../../services/services/AiAvatarChatControllerService.ts';
-import type { ChatMessageVO } from '../../services/models/ChatMessageVO.ts';
+import { AiAvatarChatControllerService } from '../../services';
+import type { ChatMessageVO } from '../../services';
 import { showToast, showSuccessToast } from 'vant';
 
 // 定义聊天项类型
@@ -300,7 +300,7 @@ const confirmDelete = async () => {
   error.value = '';
   try {
     // 确保sessionId是字符串类型，并且不为undefined
-    let sessionId = '';
+    let sessionId: string;
     if (typeof chatToDelete.value.sessionId === 'string') {
       sessionId = chatToDelete.value.sessionId;
     } else if (chatToDelete.value.sessionId) {
@@ -315,7 +315,7 @@ const confirmDelete = async () => {
     if (response.code === 0 && response.data) {
       showSuccessToast('删除成功');
       // 刷新列表
-      loadChatHistory();
+      await loadChatHistory();
     } else {
       error.value = '删除失败，请稍后再试';
       showToast('删除失败: ' + (response.message || '未知错误'));

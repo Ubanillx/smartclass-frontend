@@ -1,52 +1,7 @@
-// 确保数组不为空的辅助函数
-function ensureNonEmpty<T>(arr: T[], defaultItem?: T): T[] {
-  if (arr.length === 0 && defaultItem) {
-    return [defaultItem];
-  }
-  return arr;
-}
 
 // 模拟的推荐搜索词
 export const mockRecommendations: string[] = [
   '英语口语',
-  '数学思维',
-  '语文阅读',
-  '物理实验',
-  '化学基础',
-  '历史人物',
-  '地理知识',
-  '生物科学',
-  '编程入门',
-  '美术技巧',
-  '音乐欣赏',
-  '体育锻炼',
-  '作文技巧',
-  '阅读理解',
-  '课外知识',
-  '学习方法',
-  '记忆技巧',
-  '考试技巧',
-  '思维导图',
-  '课程表',
-  '古诗词',
-  '文言文',
-  '数学竞赛',
-  '英语听力',
-  '口语练习',
-  '物理定律',
-  '化学方程式',
-  '生物结构',
-  '地理地图',
-  '历史事件',
-  '政治理论',
-  '奥数题',
-  '科学实验',
-  '阅读笔记',
-  '课堂互动',
-  '书法练习',
-  '演讲技巧',
-  '写作素材',
-  '语法知识',
   '单词记忆',
 ];
 
@@ -60,14 +15,8 @@ export const mockSearchResults = (query: string): string[] => {
   if (!matchedRecommendation) {
     return [];
   }
-
   // 返回相关的搜索结果
-  return [
-    `${matchedRecommendation}课程`,
-    `${matchedRecommendation}学习方法`,
-    `${matchedRecommendation}练习题`,
-    `${matchedRecommendation}经典案例`,
-  ];
+  return [];
 };
 
 // 公告接口
@@ -443,21 +392,6 @@ export const fetchMockPopularCourses = (): Promise<Course[]> => {
   });
 };
 
-// 模拟获取课程详情
-export const fetchCourseDetail = (id: number): Promise<Course> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const course = mockPopularCourses.find((c) => c.id === id);
-      // 如果找不到课程，返回第一个作为默认值
-      if (course) {
-        resolve(course);
-      } else {
-        resolve(mockPopularCourses[0]);
-      }
-    }, 800);
-  });
-};
-
 // 模拟获取课程分类
 export const fetchCourseCategories = (): Promise<CourseCategory[]> => {
   return new Promise((resolve) => {
@@ -661,214 +595,6 @@ export const getWeekSchedule = (): ScheduleCourse[] => {
   return mockSchedule;
 };
 
-// 任务计划相关接口
-export interface TaskPlan {
-  id: number; // 任务ID
-  title: string; // 任务标题
-  subject: string; // 相关学科
-  description: string; // 任务描述
-  deadline: string; // 截止日期
-  priority: 'high' | 'medium' | 'low'; // 优先级
-  status: 'todo' | 'in-progress' | 'completed'; // 任务状态
-  completedAt?: string; // 完成时间
-  tags: string[]; // 任务标签
-  createdAt: string; // 创建时间
-  color: string; // 任务颜色
-}
-
-// 模拟任务计划数据
-export const mockTasks: TaskPlan[] = [
-  {
-    id: 1,
-    title: '物理力学期中复习',
-    subject: '物理',
-    description: '完成力学章节的所有练习题，重点复习牛顿定律和动量守恒',
-    deadline: '2023-12-15T23:59:59',
-    priority: 'high',
-    status: 'in-progress',
-    tags: ['期中考试', '复习'],
-    createdAt: '2023-12-01T10:30:00',
-    color: '#1989fa',
-  },
-  {
-    id: 2,
-    title: '英语单词背诵',
-    subject: '英语',
-    description: '背诵课本第三单元的单词，至少30个',
-    deadline: '2023-12-10T18:00:00',
-    priority: 'medium',
-    status: 'todo',
-    tags: ['单词', '背诵'],
-    createdAt: '2023-12-05T09:15:00',
-    color: '#7232dd',
-  },
-  {
-    id: 3,
-    title: '数学作业完成',
-    subject: '数学',
-    description: '完成老师布置的函数与导数章节习题',
-    deadline: '2023-12-08T20:00:00',
-    priority: 'high',
-    status: 'todo',
-    tags: ['作业', '必交'],
-    createdAt: '2023-12-04T14:20:00',
-    color: '#07c160',
-  },
-  {
-    id: 4,
-    title: '语文作文修改',
-    subject: '语文',
-    description: '根据老师的反馈修改上次的作文，注意修改论点论据的逻辑性',
-    deadline: '2023-12-12T16:30:00',
-    priority: 'medium',
-    status: 'todo',
-    tags: ['作文', '修改'],
-    createdAt: '2023-12-06T11:00:00',
-    color: '#ff976a',
-  },
-  {
-    id: 5,
-    title: '化学实验报告',
-    subject: '化学',
-    description: '完成上周实验课的实验报告，包括实验目的、步骤、结果和分析',
-    deadline: '2023-12-09T23:59:59',
-    priority: 'high',
-    status: 'completed',
-    completedAt: '2023-12-08T15:30:00',
-    tags: ['实验', '报告'],
-    createdAt: '2023-12-03T16:45:00',
-    color: '#ee0a24',
-  },
-  {
-    id: 6,
-    title: '生物知识点整理',
-    subject: '生物',
-    description: '整理细胞结构与功能相关的知识点，制作思维导图',
-    deadline: '2023-12-18T22:00:00',
-    priority: 'low',
-    status: 'todo',
-    tags: ['整理', '思维导图'],
-    createdAt: '2023-12-07T13:10:00',
-    color: '#2196f3',
-  },
-  {
-    id: 7,
-    title: '历史论文撰写',
-    subject: '历史',
-    description: '完成关于近代中国社会变革的论文，字数不少于1500字',
-    deadline: '2023-12-20T23:59:59',
-    priority: 'medium',
-    status: 'in-progress',
-    tags: ['论文', '研究'],
-    createdAt: '2023-12-02T09:00:00',
-    color: '#ff9800',
-  },
-  {
-    id: 8,
-    title: '地理地图标记',
-    subject: '地理',
-    description: '完成世界主要国家和地形的地图标记练习',
-    deadline: '2023-12-14T17:00:00',
-    priority: 'low',
-    status: 'completed',
-    completedAt: '2023-12-13T14:20:00',
-    tags: ['地图', '练习'],
-    createdAt: '2023-12-09T10:30:00',
-    color: '#795548',
-  },
-];
-
-// 获取所有任务
-export const getAllTasks = (): Promise<TaskPlan[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([...mockTasks]);
-    }, 800);
-  });
-};
-
-// 根据状态获取任务
-export const getTasksByStatus = (
-  status: 'todo' | 'in-progress' | 'completed',
-): Promise<TaskPlan[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const filteredTasks = mockTasks.filter((task) => task.status === status);
-      resolve(filteredTasks);
-    }, 600);
-  });
-};
-
-// 根据优先级获取任务
-export const getTasksByPriority = (
-  priority: 'high' | 'medium' | 'low',
-): Promise<TaskPlan[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const filteredTasks = mockTasks.filter(
-        (task) => task.priority === priority,
-      );
-      resolve(filteredTasks);
-    }, 600);
-  });
-};
-
-// 根据学科获取任务
-export const getTasksBySubject = (subject: string): Promise<TaskPlan[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const filteredTasks = mockTasks.filter(
-        (task) => task.subject === subject,
-      );
-      resolve(filteredTasks);
-    }, 600);
-  });
-};
-
-// 创建新任务（模拟）
-export const createTask = (
-  task: Omit<TaskPlan, 'id' | 'createdAt'>,
-): Promise<TaskPlan> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newTask: TaskPlan = {
-        ...task,
-        id: mockTasks.length + 1,
-        createdAt: new Date().toISOString(),
-      };
-      mockTasks.push(newTask);
-      resolve(newTask);
-    }, 800);
-  });
-};
-
-// 更新任务状态
-export const updateTaskStatus = (
-  taskId: number,
-  status: 'todo' | 'in-progress' | 'completed',
-): Promise<TaskPlan> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const taskIndex = mockTasks.findIndex((task) => task.id === taskId);
-      if (taskIndex === -1) {
-        reject(new Error('Task not found'));
-        return;
-      }
-
-      const task = mockTasks[taskIndex];
-      const updatedTask: TaskPlan = {
-        ...task,
-        status,
-        completedAt:
-          status === 'completed' ? new Date().toISOString() : undefined,
-      };
-
-      mockTasks[taskIndex] = updatedTask;
-      resolve(updatedTask);
-    }, 600);
-  });
-};
-
 // 课程任务计划接口
 export interface TaskPlan {
   id: number; // 任务ID
@@ -885,124 +611,75 @@ export interface TaskPlan {
 }
 
 // 模拟任务计划数据
-export const mockTaskPlans: TaskPlan[] = [
+const mockTaskPlans: TaskPlan[] = [
   {
     id: 1,
-    title: '高中物理力学作业',
-    description: '完成牛顿定律相关习题，预习动量定理',
-    courseId: 101,
-    courseName: '高中物理力学',
-    startDate: '2023-12-05',
-    endDate: '2023-12-10',
+    title: '完成数学作业第三章',
+    description: '完成高等数学第三章习题，包括导数和微分的计算',
+    courseId: 6,
+    courseName: '高中数学核心知识点解析',
+    startDate: '2024-01-15',
+    endDate: '2024-01-20',
     completed: false,
-    progress: 30,
+    progress: 65,
     priority: 'high',
-    color: '#1989fa',
+    color: '#07c160',
   },
   {
     id: 2,
-    title: '高考作文素材积累',
-    description: '搜集整理近期热点社会话题，准备素材卡片',
-    courseId: 102,
-    courseName: '高考作文指导',
-    startDate: '2023-12-06',
-    endDate: '2023-12-15',
+    title: '英语口语练习',
+    description: '练习商务英语对话，提升口语表达能力',
+    courseId: 4,
+    courseName: '商务英语口语进阶',
+    startDate: '2024-01-16',
+    endDate: '2024-01-25',
     completed: false,
-    progress: 45,
-    priority: 'medium',
-    color: '#ff976a',
-  },
-  {
-    id: 3,
-    title: '概率统计课后练习',
-    description: '完成课本P78-P80的习题，整理错题笔记',
-    courseId: 103,
-    courseName: '概率统计',
-    startDate: '2023-12-01',
-    endDate: '2023-12-08',
-    completed: true,
-    progress: 100,
-    priority: 'medium',
-    color: '#07c160',
-  },
-  {
-    id: 4,
-    title: '有机化学实验报告',
-    description: '撰写乙醇氧化实验报告，包含实验数据分析和误差分析',
-    courseId: 104,
-    courseName: '有机化学',
-    startDate: '2023-12-03',
-    endDate: '2023-12-12',
-    completed: false,
-    progress: 60,
-    priority: 'high',
-    color: '#ee0a24',
-  },
-  {
-    id: 5,
-    title: '英语听力训练',
-    description: '完成30分钟英语听力训练，整理生词和短语',
-    courseId: 105,
-    courseName: '英语听力训练',
-    startDate: '2023-12-07',
-    endDate: '2023-12-09',
-    completed: false,
-    progress: 0,
-    priority: 'low',
-    color: '#7232dd',
-  },
-  {
-    id: 6,
-    title: '函数与导数期中复习',
-    description: '复习导数的应用、极值和函数单调性',
-    courseId: 106,
-    courseName: '函数与导数',
-    startDate: '2023-12-02',
-    endDate: '2023-12-11',
-    completed: false,
-    progress: 75,
-    priority: 'high',
-    color: '#07c160',
-  },
-  {
-    id: 7,
-    title: '电磁学基础知识点整理',
-    description: '整理法拉第电磁感应定律和安培定则的应用',
-    courseId: 107,
-    courseName: '电磁学基础',
-    startDate: '2023-12-08',
-    endDate: '2023-12-18',
-    completed: false,
-    progress: 10,
+    progress: 30,
     priority: 'medium',
     color: '#1989fa',
   },
   {
-    id: 8,
-    title: '古代文学赏析读书笔记',
-    description: '阅读《论语》并完成读书笔记',
-    courseId: 108,
-    courseName: '古代文学赏析',
-    startDate: '2023-12-04',
-    endDate: '2023-12-14',
+    id: 3,
+    title: '物理实验报告',
+    description: '完成力学实验的数据分析和实验报告撰写',
+    courseId: 12,
+    courseName: '高中物理力学题型解析',
+    startDate: '2024-01-10',
+    endDate: '2024-01-18',
+    completed: true,
+    progress: 100,
+    priority: 'high',
+    color: '#1989fa',
+  },
+  {
+    id: 4,
+    title: '化学方程式练习',
+    description: '掌握有机化学反应方程式的书写和配平',
+    courseId: 15,
+    courseName: '高中有机化学系统讲解',
+    startDate: '2024-01-20',
+    endDate: '2024-01-28',
     completed: false,
-    progress: 50,
+    progress: 0,
     priority: 'medium',
     color: '#ff976a',
+  },
+  {
+    id: 5,
+    title: '语文作文练习',
+    description: '练习议论文写作，提升写作技巧和表达能力',
+    courseId: 9,
+    courseName: '高考作文写作技巧与范例',
+    startDate: '2024-01-22',
+    endDate: '2024-01-30',
+    completed: false,
+    progress: 15,
+    priority: 'low',
+    color: '#ee0a24',
   },
 ];
 
 // 获取所有任务计划
 export const getAllTaskPlans = (): TaskPlan[] => {
-  return mockTaskPlans;
-};
-
-// 获取特定课程的任务计划
-export const getTaskPlansByCourseId = (courseId: number): TaskPlan[] => {
-  return mockTaskPlans.filter((task) => task.courseId === courseId);
-};
-
-// 获取特定任务计划
-export const getTaskPlanById = (taskId: number): TaskPlan | undefined => {
-  return mockTaskPlans.find((task) => task.id === taskId);
+  return [...mockTaskPlans];
 };

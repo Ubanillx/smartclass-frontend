@@ -320,21 +320,6 @@ const emit = defineEmits(['click']);
   font-size: var(--font-size-sm);
 }
 
-.difficulty.easy {
-  background-color: #07c160;
-  color: #fff;
-}
-
-.difficulty.medium {
-  background-color: #ff976a;
-  color: #fff;
-}
-
-.difficulty.hard {
-  background-color: #ee0a24;
-  color: #fff;
-}
-
 .publish-date {
   font-size: var(--font-size-sm);
   color: #969799;
@@ -404,10 +389,6 @@ const emit = defineEmits(['click']);
 
 .volume-icon:active {
   color: #1989fa;
-}
-
-.collect-icon.collected {
-  color: #ff976a;
 }
 
 .word-phonetic {

@@ -137,7 +137,7 @@ export const useCollectedWordsStore = defineStore('collectedWords', () => {
     sortOption = 'time-desc',
   ) => {
     // 先筛选
-    let result = collectedWords.value.filter((word) => {
+    const result = collectedWords.value.filter((word) => {
       // 搜索文本筛选
       const matchesSearch =
         searchText === '' ||

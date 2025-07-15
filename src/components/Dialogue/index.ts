@@ -1,29 +1,13 @@
-import ChatList from './ChatList.vue';
-import AssistantTypeSelector from './AssistantTypeSelector.vue';
-import MessageList from './MessageList.vue';
-import ChatInput from './ChatInput.vue';
-import ChatPagination from './ChatPagination.vue';
-import ChatHeader from './ChatHeader.vue';
-import EmojiPicker from './EmojiPicker.vue';
-import FullscreenInput from './FullscreenInput.vue';
-import StopResponseButton from './StopResponseButton.vue';
-import ChatInputArea from './ChatInputArea.vue';
-import FriendMessageList from './FriendMessageList.vue';
-import MessageReadStatus from './MessageReadStatus.vue';
-import { useChatMessages } from './ChatMessageHandler';
-
-export {
-  ChatList,
-  AssistantTypeSelector,
-  MessageList,
-  ChatInput,
-  ChatPagination,
-  ChatHeader,
-  EmojiPicker,
-  FullscreenInput,
-  StopResponseButton,
-  ChatInputArea,
-  FriendMessageList,
-  MessageReadStatus,
-  useChatMessages,
-};
+export { default as ChatList } from './ChatList.vue';
+export { default as AssistantTypeSelector } from './AssistantTypeSelector.vue';
+export { default as MessageList } from './MessageList.vue';
+export { default as ChatInput } from './ChatInput.vue';
+export { default as ChatPagination } from './ChatPagination.vue';
+export { default as ChatHeader } from './ChatHeader.vue';
+export { default as EmojiPicker } from './EmojiPicker.vue';
+export { default as FullscreenInput } from './FullscreenInput.vue';
+export { default as StopResponseButton } from './StopResponseButton.vue';
+export { default as ChatInputArea } from './ChatInputArea.vue';
+export { default as FriendMessageList } from './FriendMessageList.vue';
+export { default as MessageReadStatus } from './MessageReadStatus.vue';
+export { useChatMessages } from './ChatMessageHandler';

@@ -159,6 +159,7 @@
               ref="wordResultRefs"
             />
           </div>
+
         </div>
 
         <!-- 帖子搜索结果 -->
@@ -198,6 +199,7 @@
             />
           </div>
           <van-empty v-else description="暂无单词搜索结果" />
+
         </div>
       </div>
     </div>
@@ -205,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, defineAsyncComponent } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { mockRecommendations } from '../../api/mock.ts'; // 仅保留推荐词
 import { useSearchStore } from '../../stores/searchStore.ts'; // 导入搜索历史存储
@@ -214,10 +216,8 @@ import { PostControllerService } from '../../services/services/PostControllerSer
 import { DailyArticleControllerService } from '../../services/services/DailyArticleControllerService';
 import { DailyWordControllerService } from '../../services/services/DailyWordControllerService';
 
-// 懒加载结果项组件
-const PostResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.PostResultItem })));
-const ArticleResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.ArticleResultItem })));
-const WordResultItem = defineAsyncComponent(() => import('../../components/Search').then(m => ({ default: m.WordResultItem })));
+// 直接导入结果项组件
+import { PostResultItem, ArticleResultItem, WordResultItem } from '../../components/Search';
 
 const router = useRouter();
 const searchStore = useSearchStore(); // 使用搜索历史存储
@@ -345,9 +345,9 @@ const handleSearch = async (): Promise<void> => {
     if (postsResponse.data) {
       postResults.value = {
         list: postsResponse.data.records || [],
-        total: postsResponse.data.total || 0,
-        pageSize: postsResponse.data.size || 10,
-        current: postsResponse.data.current || 1
+        total: parseInt(String(postsResponse.data.total)) || 0,
+        pageSize: parseInt(String(postsResponse.data.size)) || 10,
+        current: parseInt(String(postsResponse.data.current)) || 1
       };
     }
 
@@ -355,9 +355,9 @@ const handleSearch = async (): Promise<void> => {
     if (articlesResponse.data) {
       articleResults.value = {
         list: articlesResponse.data.records || [],
-        total: articlesResponse.data.total || 0,
-        pageSize: articlesResponse.data.size || 10,
-        current: articlesResponse.data.current || 1
+        total: parseInt(String(articlesResponse.data.total)) || 0,
+        pageSize: parseInt(String(articlesResponse.data.size)) || 10,
+        current: parseInt(String(articlesResponse.data.current)) || 1
       };
     }
 
@@ -365,9 +365,9 @@ const handleSearch = async (): Promise<void> => {
     if (wordsResponse.data) {
       wordResults.value = {
         list: wordsResponse.data.records || [],
-        total: wordsResponse.data.total || 0,
-        pageSize: wordsResponse.data.size || 10,
-        current: wordsResponse.data.current || 1
+        total: parseInt(String(wordsResponse.data.total)) || 0,
+        pageSize: parseInt(String(wordsResponse.data.size)) || 10,
+        current: parseInt(String(wordsResponse.data.current)) || 1
       };
     }
   } catch (error) {

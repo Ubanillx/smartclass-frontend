@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { UserControllerService } from '../services/services/UserControllerService';
-import type { LoginUserVO } from '../services/models/LoginUserVO';
+import { UserControllerService } from '../services';
+import type { LoginUserVO } from '../services';
 
 // 默认用户头像路径
 export const DEFAULT_USER_AVATAR = '/default.jpg';

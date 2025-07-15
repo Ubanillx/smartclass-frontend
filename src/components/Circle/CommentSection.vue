@@ -239,11 +239,6 @@ const handleLoadMoreReplies = (commentId: string) => {
   cursor: pointer;
 }
 
-.sort-option.active {
-  color: #323233;
-  font-weight: 500;
-}
-
 .comment-list {
   padding: 0 20px 12px;
 }
@@ -269,13 +264,6 @@ const handleLoadMoreReplies = (commentId: string) => {
   display: flex;
   justify-content: center;
   padding: 20px 0 10px;
-}
-
-.load-more .van-button {
-  border-radius: 20px;
-  font-size: 14px;
-  height: 36px;
-  padding: 0 24px;
 }
 
 .load-finished {

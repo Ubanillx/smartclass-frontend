@@ -8,33 +8,74 @@
         @search="onSearch"
       />
 
-      <!-- 公告卡片 -->
-      <notice-card :notices="notices" />
+      <!-- 轮播图 - 立即加载 -->
+      <banner-carousel />
 
-      <!-- AI助手列表 -->
-      <ai-assistant-list
-        :assistants="aiAssistants"
-        @chat="startChat"
-        @more="router.push('/chat?tab=intelligence')"
-      />
+      <!-- 功能栅格 - 立即加载 -->
+      <function-grid />
 
-      <!-- 热门课程模块 -->
-      <component
-        :is="PopularCoursesRaw"
-        :courses="filteredPopularCourses"
-        @select="viewCourseDetail"
-        @more="router.push('/courses/popular')"
-      />
+      <!-- 公告卡片 - 懒加载 -->
+      <div ref="noticeCardRef" class="lazy-load-container">
+        <notice-card 
+          v-if="showNoticeCard" 
+          :notices="notices" 
+        />
+        <div v-else class="lazy-load-placeholder">
+          <van-skeleton title :row="2" />
+        </div>
+      </div>
 
-      <!-- 每日单词模块 -->
-      <daily-word-card
-        :word="dailyWord as any"
-        @update:word="dailyWord = $event"
-        @more="router.push('/vocabulary/collected')"
-      />
+      <!-- AI助手列表 - 懒加载 -->
+      <div ref="aiAssistantRef" class="lazy-load-container">
+        <ai-assistant-list
+          v-if="showAiAssistant"
+          :assistants="aiAssistants"
+          @chat="startChat"
+          @more="router.push('/chat?tab=intelligence')"
+        />
+        <div v-else class="lazy-load-placeholder">
+          <van-skeleton title :row="3" />
+        </div>
+      </div>
 
-      <!-- 精美文章模块 -->
-      <article-list :articles="articles" @more="router.push('/articles')" />
+      <!-- 热门课程模块 - 懒加载 -->
+      <div ref="popularCoursesRef" class="lazy-load-container">
+        <component
+          v-if="showPopularCourses"
+          :is="PopularCoursesRaw"
+          :courses="filteredPopularCourses"
+          @select="viewCourseDetail"
+          @more="router.push('/courses/popular')"
+        />
+        <div v-else class="lazy-load-placeholder">
+          <van-skeleton title :row="2" />
+        </div>
+      </div>
+
+      <!-- 每日单词模块 - 懒加载 -->
+      <div ref="dailyWordRef" class="lazy-load-container">
+        <daily-word-card
+          v-if="showDailyWord"
+          :word="dailyWord as any"
+          @update:word="dailyWord = $event"
+          @more="router.push('/vocabulary/collected')"
+        />
+        <div v-else class="lazy-load-placeholder">
+          <van-skeleton title :row="1" />
+        </div>
+      </div>
+
+      <!-- 精美文章模块 - 懒加载 -->
+      <div ref="articleListRef" class="lazy-load-container">
+        <article-list 
+          v-if="showArticleList" 
+          :articles="articles" 
+          @more="router.push('/articles')" 
+        />
+        <div v-else class="lazy-load-placeholder">
+          <van-skeleton title :row="2" />
+        </div>
+      </div>
     </van-pull-refresh>
 
     <!-- 浮动加号按钮 -->
@@ -54,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, markRaw, onMounted, computed } from 'vue';
+import { ref, markRaw, onMounted, computed, onUnmounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import SearchBar from '../../components/Common/SearchBar.vue';
@@ -64,6 +105,8 @@ import {
   PopularCourses,
   DailyWordCard,
   ArticleList,
+  FunctionGrid,
+  BannerCarousel,
 } from '../../components/Home';
 import {
   mockPopularCourses,
@@ -134,6 +177,23 @@ const showActionSheet = ref(false);
 const refreshing = ref(false);
 const userStore = useUserStore();
 
+// 懒加载状态变量
+const showNoticeCard = ref(false);
+const showAiAssistant = ref(false);
+const showPopularCourses = ref(false);
+const showDailyWord = ref(false);
+const showArticleList = ref(false);
+
+// 懒加载容器引用
+const noticeCardRef = ref<HTMLElement | null>(null);
+const aiAssistantRef = ref<HTMLElement | null>(null);
+const popularCoursesRef = ref<HTMLElement | null>(null);
+const dailyWordRef = ref<HTMLElement | null>(null);
+const articleListRef = ref<HTMLElement | null>(null);
+
+// Intersection Observer实例
+let observer: IntersectionObserver | null = null;
+
 // 设置公告数据
 const notices = ref<Notice[]>([]);
 
@@ -141,7 +201,7 @@ const notices = ref<Notice[]>([]);
 const convertAnnouncementToNotice = (announcement: AnnouncementVO): Notice => {
   return {
     id: announcement.id || 0,
-    title: announcement.title || '未命名公告',
+    title: announcement.title || '',
     content: announcement.content || '',
     date: announcement.createTime
       ? new Date(announcement.createTime).toLocaleDateString()
@@ -232,8 +292,8 @@ const emptyWord: Word = {
   viewCount: 0,
   collectCount: 0,
   lastViewTime: new Date().toISOString(),
-  difficulty: '中级',
-  category: '日常用语'
+  difficulty: '',
+  category: ''
 };
 
 const dailyWord = ref(emptyWord as any);
@@ -270,8 +330,8 @@ const fetchDailyWord = async () => {
           viewCount: 0,
           collectCount: 0,
           lastViewTime: new Date().toISOString(),
-          difficulty: convertDifficultyToText(todayWord.difficulty),
-          category: todayWord.category || '日常用语',
+                  difficulty: convertDifficultyToText(todayWord.difficulty),
+        category: todayWord.category || '',
           audioUrl: todayWord.audioUrl,
           exampleTranslation: todayWord.exampleTranslation || '',
           notes: todayWord.notes,
@@ -298,7 +358,7 @@ const fetchDailyWord = async () => {
 
 // 将数字难度转换为文本描述
 const convertDifficultyToText = (difficulty?: number): string => {
-  if (!difficulty) return '中级';
+  if (!difficulty) return '';
 
   switch (difficulty) {
     case 1:
@@ -308,7 +368,7 @@ const convertDifficultyToText = (difficulty?: number): string => {
     case 3:
       return '高级';
     default:
-      return '中级';
+      return '';
   }
 };
 
@@ -352,15 +412,14 @@ const fetchTodayArticles = async () => {
 
       const formattedArticle = {
         id: article.id || 0,
-        title: article.title || '未命名文章',
-        brief: article.summary || '暂无简介',
-        cover: article.coverImage ||
-              'https://smart-class-1329220530.cos.ap-nanjing.myqcloud.com/user_avatar/a5c6d7e8f9b0a1c2d3e4f5a6b7c8d9e0.png',
-        category: article.category || '文化',
-        readTime: article.readTime || 5,
+        title: article.title || '',
+        brief: article.summary || '',
+        cover: article.coverImage || '',
+        category: article.category || '',
+        readTime: article.readTime || 0,
         // 将数字难度转换为字符串
-        difficulty: article.difficulty ? String(article.difficulty) : '中级',
-        content: article.content || '暂无内容',
+        difficulty: article.difficulty ? String(article.difficulty) : '',
+        content: article.content || '',
         publishDate: article.publishDate || '',
         viewCount: article.viewCount || 0,
         likeCount: article.likeCount || 0,
@@ -417,7 +476,7 @@ const fetchAiAssistants = async () => {
       // 将后端数据转换为前端需要的格式
       aiAssistants.value = response.data.records.map((avatar) => ({
         id: avatar.id || 0,
-        name: avatar.name || '未命名智慧体',
+        name: avatar.name || '',
         description: avatar.description || '',
         avatar: avatar.avatarImgUrl || userStore.DEFAULT_USER_AVATAR,
       }));
@@ -433,26 +492,8 @@ const fetchAiAssistants = async () => {
 
 // 设置默认的智慧体数据（当API请求失败时使用）
 const setDefaultAiAssistants = () => {
-  aiAssistants.value = [
-    {
-      id: 1,
-      name: '英语教师 Emma',
-      description: '专业英语教学，语法讲解，口语指导',
-      avatar: userStore.DEFAULT_USER_AVATAR,
-    },
-    {
-      id: 2,
-      name: '口语伙伴 Mike',
-      description: '日常英语对话，地道表达，场景练习',
-      avatar: userStore.DEFAULT_USER_AVATAR,
-    },
-    {
-      id: 3,
-      name: '写作助手 Sarah',
-      description: '作文指导，文章润色，写作技巧',
-      avatar: userStore.DEFAULT_USER_AVATAR,
-    },
-  ];
+  // 清空默认数据，只保留空数组
+  aiAssistants.value = [];
 };
 
 // 快捷操作列表
@@ -460,13 +501,13 @@ const actions = ref<Action[]>([
   { name: '添加生词', icon: 'edit', color: '#1989fa' },
   { name: '上传笔记', icon: 'notes-o', color: '#07c160' },
   { name: '发起对话', icon: 'chat-o', color: '#ff976a' },
-  { name: '分享内容', icon: 'share-o', color: '#ee0a24' },
+  { name: '发布帖子', icon: 'share-o', color: '#ee0a24' },
 ]);
 
 // 搜索处理
 const onSearch = (text: string) => {
   // 这里添加实际的搜索逻辑
-  console.log('搜索:', text);
+  // TODO: 实现搜索功能
 };
 
 // 开始对话
@@ -494,8 +535,8 @@ const onActionSelect = (action: Action) => {
     case '发起对话':
       router.push('/chat?tab=intelligence');
       break;
-    case '分享内容':
-      showToast('分享功能开发中');
+    case '发布帖子':
+      router.push('/circle/post/create');
       break;
   }
 };
@@ -509,6 +550,17 @@ const onRefresh = async () => {
     await fetchDailyWord(); // 刷新今日单词数据
     await fetchTodayArticles(); // 刷新今日美文数据
 
+    // 重置懒加载状态，让组件重新懒加载
+    showNoticeCard.value = false;
+    showAiAssistant.value = false;
+    showPopularCourses.value = false;
+    showDailyWord.value = false;
+    showArticleList.value = false;
+
+    // 重新初始化懒加载
+    await nextTick();
+    initLazyLoading();
+
     showToast('刷新成功');
   } catch (error) {
     showToast('刷新失败');
@@ -517,13 +569,81 @@ const onRefresh = async () => {
   }
 };
 
+// 初始化懒加载
+const initLazyLoading = () => {
+  // 创建Intersection Observer
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          
+          // 根据目标元素显示对应的组件
+          if (target === noticeCardRef.value) {
+            showNoticeCard.value = true;
+          } else if (target === aiAssistantRef.value) {
+            showAiAssistant.value = true;
+          } else if (target === popularCoursesRef.value) {
+            showPopularCourses.value = true;
+          } else if (target === dailyWordRef.value) {
+            showDailyWord.value = true;
+          } else if (target === articleListRef.value) {
+            showArticleList.value = true;
+          }
+          
+          // 一旦显示就不再观察
+          observer?.unobserve(target);
+        }
+      });
+    },
+    {
+      rootMargin: '50px', // 提前50px开始加载
+      threshold: 0.1, // 10%可见时触发
+    }
+  );
+
+  // 延迟观察，确保DOM元素已经渲染
+  setTimeout(() => {
+    const containers = [
+      noticeCardRef.value,
+      aiAssistantRef.value,
+      popularCoursesRef.value,
+      dailyWordRef.value,
+      articleListRef.value,
+    ];
+
+    containers.forEach((container) => {
+      if (container) {
+        observer?.observe(container);
+      }
+    });
+  }, 100);
+};
+
+// 清理懒加载观察器
+const cleanupLazyLoading = () => {
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
+};
+
 // 页面加载时获取数据
-onMounted(() => {
+onMounted(async () => {
   checkCollectedStatus();
   fetchAiAssistants();
   fetchNotices(); // 获取公告数据
   fetchDailyWord(); // 获取今日单词数据
   fetchTodayArticles(); // 获取今日美文数据
+  
+  // 等待DOM渲染完成后初始化懒加载
+  await nextTick();
+  initLazyLoading();
+});
+
+// 组件卸载时清理
+onUnmounted(() => {
+  cleanupLazyLoading();
 });
 </script>
 
@@ -580,5 +700,29 @@ onMounted(() => {
 :deep(.van-cell-group:hover) {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(100, 101, 102, 0.12);
+}
+
+/* 懒加载容器样式 */
+.lazy-load-container {
+  margin-bottom: 16px;
+  min-height: 100px;
+}
+
+.lazy-load-placeholder {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 懒加载动画效果 */
+.lazy-load-container {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.lazy-load-container:not(.loaded) {
+  opacity: 0.8;
 }
 </style>

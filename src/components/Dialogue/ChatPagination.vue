@@ -81,47 +81,6 @@ const handlePageChange = (page: number) => {
   margin: 0;
 }
 
-:deep(.custom-pagination .van-pagination__item) {
-  border-radius: 8px;
-  background-color: #e0f1fe;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.custom-pagination .van-pagination__item--active) {
-  background-color: #1989fa;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(25, 137, 250, 0.3);
-}
-
-:deep(.custom-pagination .van-pagination__prev),
-:deep(.custom-pagination .van-pagination__next) {
-  background-color: #e0f1fe;
-  color: #666;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.custom-pagination .van-pagination__prev:disabled),
-:deep(.custom-pagination .van-pagination__next:disabled) {
-  opacity: 0.5;
-  background-color: #f5f5f5;
-}
-
-:deep(.custom-pagination .van-pagination__prev:active),
-:deep(.custom-pagination .van-pagination__next:active),
-:deep(.custom-pagination .van-pagination__item:active) {
-  transform: scale(0.95);
-  opacity: 0.8;
-}
-
-:deep(.custom-pagination .van-pagination__page-desc) {
-  color: #666;
-  font-size: 12px;
-  margin: 0 6px;
-}
-
 .page-desc-text {
   font-family: 'Noto Sans SC', sans-serif;
   color: #666;

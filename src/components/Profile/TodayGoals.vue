@@ -158,17 +158,6 @@ const toggleGoalStatus = (goal: Goal) => {
   line-height: 24px;
 }
 
-.goal-item .van-icon {
-  font-size: 20px;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-}
-
 .goal-item span {
   flex: 1;
   padding-top: 1px;
@@ -176,12 +165,6 @@ const toggleGoalStatus = (goal: Goal) => {
 
 .goal-item.completed {
   color: #1989fa;
-}
-
-.goal-item.completed .van-icon {
-  color: #1989fa;
-  background-color: rgba(25, 137, 250, 0.1);
-  border-radius: 50%;
 }
 
 .add-goal-button {
@@ -212,37 +195,6 @@ const toggleGoalStatus = (goal: Goal) => {
 .add-icon {
   width: 22px;
   height: 22px;
-}
-
-:deep(.van-cell__title) {
-  font-weight: 600;
-  font-size: var(--font-size-md);
-  color: #323233;
-}
-
-:deep(.van-progress) {
-  margin-top: 6px;
-}
-
-:deep(.van-progress__pivot) {
-  background-color: #1989fa;
-  color: #ffffff;
-  font-weight: 500;
-}
-
-:deep(.van-cell) {
-  padding: 10px 0 !important;
-  border-radius: 0 !important;
-  background-color: transparent !important;
-  margin: 0 !important;
-}
-
-:deep(.van-cell:hover) {
-  background-color: transparent !important;
-}
-
-:deep(.van-cell::after) {
-  display: none !important;
 }
 
 /* 弹出层样式 */

@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed, defineEmits, defineProps } from 'vue';
 import { showImagePreview } from 'vant';
 import MarkdownIt from 'markdown-it';
 import markdownItKatex from 'markdown-it-katex';
@@ -37,7 +37,7 @@ interface PostContentProps {
 const props = withDefaults(defineProps<PostContentProps>(), {
   title: '',
   content: '',
-  images: () => []
+  images: () => [],
 });
 
 const emit = defineEmits<{
@@ -46,25 +46,25 @@ const emit = defineEmits<{
 
 // 初始化 markdown-it 实例
 const md = new MarkdownIt({
-  html: true,        // 允许HTML标签
-  breaks: true,      // 转换段落里的 '\n' 到 <br>
-  linkify: true,     // 自动将URL文本转换为链接
-  typographer: true  // 启用一些语言中立的替换 + 引号美化
+  html: true, // 允许HTML标签
+  breaks: true, // 转换段落里的 '\n' 到 <br>
+  linkify: true, // 自动将URL文本转换为链接
+  typographer: true, // 启用一些语言中立的替换 + 引号美化
 });
 
 // 使用markdown-it-katex插件渲染LaTeX公式
 md.use(markdownItKatex);
 
 // 自定义代码块渲染规则
-md.renderer.rules.code_block = function(tokens, idx) {
+md.renderer.rules.code_block = function (tokens, idx) {
   const code = tokens[idx]?.content || '';
   return `<pre class="simple-code-block"><code>${code}</code></pre>`;
 };
 
-md.renderer.rules.fence = function(tokens, idx) {
+md.renderer.rules.fence = function (tokens, idx) {
   const token = tokens[idx];
   const code = token?.content || '';
-  
+
   return `<pre class="simple-code-block"><code>${code}</code></pre>`;
 };
 
@@ -73,22 +73,16 @@ const renderedContent = computed(() => {
   try {
     // 确保content存在且是字符串
     const content = props.content || '';
-    if (typeof content !== 'string') {
-      console.error('Post content is not a string:', content);
-      return String(content);
-    }
-    
+
     // 使用markdown-it和markdown-it-katex解析Markdown和LaTeX公式
-    const rawHtml = md.render(content);
-    
     // 确保rawHtml是字符串
-    const htmlContent = typeof rawHtml === 'string' ? rawHtml : String(rawHtml);
-    
+    const htmlContent = md.render(content);
+
     // 使用DOMPurify清理HTML，但允许数学公式需要的标签通过
     return DOMPurify.sanitize(htmlContent, {
       ADD_ATTR: ['target', 'class', 'style'],
       ADD_TAGS: ['svg', 'path', 'use'],
-      USE_PROFILES: { html: true, svg: true, mathMl: true }
+      USE_PROFILES: { html: true, svg: true, mathMl: true },
     });
   } catch (error) {
     console.error('Markdown渲染错误:', error);
@@ -101,7 +95,7 @@ const handleImageClick = (index: number) => {
   if (props.images && props.images.length > 0) {
     showImagePreview({
       images: props.images,
-      startPosition: index
+      startPosition: index,
     });
     emit('image-preview', index);
   }
@@ -112,7 +106,7 @@ const handleImageClick = (index: number) => {
 .post-card-detail {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   margin: 16px 16px 0 16px;
   padding: 0;
   overflow: hidden;
@@ -160,11 +154,11 @@ const handleImageClick = (index: number) => {
   font-size: 15px;
 }
 
-:deep(.markdown-body h1), 
-:deep(.markdown-body h2), 
-:deep(.markdown-body h3), 
-:deep(.markdown-body h4), 
-:deep(.markdown-body h5), 
+:deep(.markdown-body h1),
+:deep(.markdown-body h2),
+:deep(.markdown-body h3),
+:deep(.markdown-body h4),
+:deep(.markdown-body h5),
 :deep(.markdown-body h6) {
   margin-top: 24px;
   margin-bottom: 16px;
@@ -193,7 +187,8 @@ const handleImageClick = (index: number) => {
   font-size: 1em;
 }
 
-:deep(.markdown-body h5), :deep(.markdown-body h6) {
+:deep(.markdown-body h5),
+:deep(.markdown-body h6) {
   font-size: 0.875em;
 }
 
@@ -214,7 +209,8 @@ const handleImageClick = (index: number) => {
   border-bottom-color: #1989fa;
 }
 
-:deep(.markdown-body ul), :deep(.markdown-body ol) {
+:deep(.markdown-body ul),
+:deep(.markdown-body ol) {
   padding-left: 2em;
   margin-top: 0;
   margin-bottom: 16px;
@@ -249,9 +245,9 @@ const handleImageClick = (index: number) => {
   padding: 0.2em 0.4em;
   margin: 0;
   font-size: 85%;
-  background-color: rgba(27,31,35,0.05);
+  background-color: rgba(27, 31, 35, 0.05);
   border-radius: 3px;
-  font-family: "SFMono-Regular", "Cascadia Mono", "Consolas", monospace;
+  font-family: 'SFMono-Regular', 'Cascadia Mono', 'Consolas', monospace;
   color: #d63031;
 }
 
@@ -328,32 +324,6 @@ const handleImageClick = (index: number) => {
   color: #718096;
 }
 
-/* KaTeX公式样式 */
-:deep(.katex-display) {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0.8em;
-  background: #f9fafb;
-  border-radius: 6px;
-  margin: 1.2em 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.katex-block) {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 1.2em;
-  background: #f9fafb;
-  border-radius: 6px;
-  margin: 1.2em 0;
-  text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.katex) {
-  font-size: 1.15em;
-}
-
 /* 简化的代码块样式 */
 :deep(.simple-code-block) {
   margin: 16px 0;
@@ -361,7 +331,7 @@ const handleImageClick = (index: number) => {
   background-color: #f6f8fa;
   border-radius: 6px;
   overflow-x: auto;
-  font-family: "SFMono-Regular", "Cascadia Mono", "Consolas", monospace;
+  font-family: 'SFMono-Regular', 'Cascadia Mono', 'Consolas', monospace;
 }
 
 :deep(.simple-code-block code) {
@@ -373,4 +343,4 @@ const handleImageClick = (index: number) => {
   padding: 0;
   border: 0;
 }
-</style> 
+</style>

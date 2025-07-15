@@ -107,11 +107,6 @@ const emit = defineEmits<{
   margin-bottom: 16px;
 }
 
-.image-container :deep(.van-image) {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
 .detail-content h2 {
   margin: 0 0 8px;
   font-size: 18px;
@@ -132,18 +127,6 @@ const emit = defineEmits<{
   padding: 2px 6px;
   border-radius: 4px;
   color: #fff;
-}
-
-.difficulty.初级 {
-  background: #07c160;
-}
-
-.difficulty.中级 {
-  background: #1989fa;
-}
-
-.difficulty.高级 {
-  background: #ff976a;
 }
 
 .grade {
@@ -174,9 +157,4 @@ const emit = defineEmits<{
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-:deep(.van-button__text) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
-}
 </style>

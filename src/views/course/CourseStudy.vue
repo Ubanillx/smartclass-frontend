@@ -13,7 +13,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { showToast } from 'vant';
 import { CourseStudy } from '../../components/Course';
 import { BackButton } from '../../components/Common';
-import { fetchCourseDetail, Course as CourseType } from '../../api/mock.ts';
+import { Course as CourseType } from '../../api/mock.ts';
+import { fetchCourseDetail } from "../../api/fetchCourseDetail.ts";
 
 interface CourseHighlight {
   icon: string;

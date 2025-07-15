@@ -138,15 +138,6 @@ const formatPhone = (phone: string): string => {
   display: inline-block;
 }
 
-:deep(.van-tag) {
-  font-size: var(--font-size-sm);
-  padding: 0 6px;
-  height: 18px;
-  line-height: 18px;
-  font-weight: 500;
-  border-radius: 4px;
-}
-
 .exp-text {
   font-size: var(--font-size-sm);
   color: #969799;
@@ -167,9 +158,4 @@ const formatPhone = (phone: string): string => {
   background-color: #f7f8fa;
 }
 
-:deep(.van-image__img) {
-  object-fit: cover;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 </style>

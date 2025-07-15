@@ -60,7 +60,7 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { showToast } from 'vant';
 import { AiAvatarControllerService } from '../../services';
-import type { AiAvatarVO } from '../../services/models/AiAvatarVO';
+import type { AiAvatarVO } from '../../services';
 
 interface Assistant {
   id: number;
@@ -265,23 +265,6 @@ onMounted(() => {
   justify-content: center;
   margin-top: 12px;
   margin-bottom: 8px;
-}
-
-:deep(.van-cell) {
-  position: relative;
-  padding: 12px 16px !important;
-  transition: all 0.3s ease;
-  border-radius: 0 !important;
-  background-color: transparent !important;
-  margin: 0 !important;
-}
-
-:deep(.van-cell:hover) {
-  background-color: transparent !important;
-}
-
-:deep(.van-cell::after) {
-  display: none !important;
 }
 
 .svg-icon {

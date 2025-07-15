@@ -77,7 +77,7 @@
 import { ref, onMounted } from 'vue';
 import { showToast, showSuccessToast } from 'vant';
 import { PostControllerService, PostThumbControllerService, PostFavourControllerService } from '../../services';
-import type { PostVO } from '../../services/models/PostVO';
+import type { PostVO } from '../../services';
 import { useUserStore } from '../../stores/userStore';
 import { useRouter } from 'vue-router';
 import { marked } from 'marked';
@@ -282,19 +282,20 @@ const formatPostTime = (timeStr?: string) => {
   }
 };
 
-// 解析Markdown内容
+// 修改 parseMarkdown 函数如下：
 const parseMarkdown = (content: string): string => {
   try {
-    // 配置marked使用同步模式
+    // 强制 marked 使用同步解析
     marked.setOptions({ async: false });
     // 解析为HTML并使用DOMPurify过滤，防止XSS攻击
-    const html = marked.parse(content);
-    return typeof html === 'string' ? DOMPurify.sanitize(html) : content;
+    const html = marked.parse(content) as string; // 明确类型为 string
+    return DOMPurify.sanitize(html);
   } catch (error) {
     console.error('解析Markdown失败:', error);
     return content;
   }
 };
+
 
 // 组件挂载时获取数据
 onMounted(() => {
@@ -357,15 +358,15 @@ onMounted(() => {
 }
 
 .post-author {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-md, 14px);
   font-weight: 500;
-  color: var(--text-color-primary);
+  color: var(#323233);
   line-height: 1.2;
 }
 
 .post-time {
   font-size: 12px;
-  color: var(--text-color-secondary);
+  color: var(#969799);
   margin-top: 2px;
 }
 
@@ -381,14 +382,14 @@ onMounted(() => {
 .post-title {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-color-primary);
+  color: var(#323233);
   margin-bottom: 6px;
   line-height: 1.4;
 }
 
 .post-text {
-  font-size: var(--font-size-md);
-  color: var(--text-color-regular);
+  font-size: var(--font-size-md, 14px);
+  color: var(#646566);
   line-height: 1.5;
   word-break: break-word;
   margin-bottom: 8px;
@@ -465,7 +466,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-right: 16px;
-  color: var(--text-color-secondary);
+  color: var(#969799);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 16px;
@@ -485,7 +486,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-left: auto;
-  color: var(--text-color-secondary);
+  color: var(#969799);
   font-size: 12px;
 }
 

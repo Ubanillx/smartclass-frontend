@@ -122,11 +122,6 @@ const submitComment = () => {
   border-radius: 20px;
 }
 
-.comment-input :deep(.van-field__control) {
-  height: 36px;
-  min-height: 36px;
-}
-
 .input-actions {
   display: flex;
   align-items: center;
@@ -145,11 +140,6 @@ const submitComment = () => {
   background-color: #f2f3f5;
   color: #c8c9cc;
   border: none;
-}
-
-.send-btn-active {
-  background-color: #1989fa;
-  color: white;
 }
 
 .emoji-picker {

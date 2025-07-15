@@ -1,25 +1,4 @@
-import CourseCategories from './CourseCategories.vue';
-import CourseList from './CourseList.vue';
-import CourseItem from './CourseItem.vue';
-import CourseDetail from './CourseDetail.vue';
-import CourseStudy from './CourseStudy.vue';
-
-class CourseSchedule {}
-
-export {
-  CourseCategories,
-  CourseList,
-  CourseItem,
-  CourseDetail,
-  CourseStudy,
-  CourseSchedule,
-};
-
-export default {
-  CourseCategories,
-  CourseItem,
-  CourseList,
-  CourseDetail,
-  CourseStudy,
-  CourseSchedule,
-};
+export { default as CourseCategories } from './CourseCategories.vue';
+export { default as CourseList } from './CourseList.vue';
+export { default as CourseDetail } from './CourseDetail.vue';
+export { default as CourseStudy } from './CourseStudy.vue';

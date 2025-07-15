@@ -3,7 +3,7 @@ import { showToast } from 'vant';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
-import { OpenAPI } from '../../services/core/OpenAPI.ts';
+import { OpenAPI } from '../../services';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useUserStore } from '../../stores/userStore';
 import { useRouter } from 'vue-router';
@@ -37,7 +37,7 @@ export function useChatMessages(assistant: Assistant) {
   const isAITyping = ref<boolean>(false);
   const currentAIMessageId = ref<number | null>(null);
   const sessionId = ref<string | undefined>(undefined);
-  
+
   // 控制请求的变量
   let currentEventSource: EventSource | null = null;
   let currentStreamController: AbortController | null = null;
@@ -78,7 +78,7 @@ export function useChatMessages(assistant: Assistant) {
       );
 
       // 处理行内公式 $...$，但排除可能的货币符号 ($10, 10$等)
-      const inlineFormulaRegex = /\$([^\$\n]+?)\$/g;
+      const inlineFormulaRegex = /\$([^$\n]+?)\$/g;
       processedContent = processedContent.replace(
         inlineFormulaRegex,
         (match, formula) => {
@@ -167,15 +167,18 @@ export function useChatMessages(assistant: Assistant) {
     const messageIndex = messages.value.findIndex(
       (msg) => msg && msg.id === currentAIMessageId.value,
     );
-    if (messageIndex !== -1 && messages.value[messageIndex]) {
-      messages.value[messageIndex].content = content;
+    if (messageIndex !== -1) {
+      const message = messages.value[messageIndex];
+      if (message) {
+        message.content = content;
 
-      // 自动滚动到底部
-      const messagesContainer = document.querySelector('.message-list');
-      if (messagesContainer instanceof HTMLElement) {
-        setTimeout(() => {
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }, 0);
+        // 自动滚动到底部
+        const messagesContainer = document.querySelector('.message-list');
+        if (messagesContainer instanceof HTMLElement) {
+          setTimeout(() => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          }, 0);
+        }
       }
     }
   };
@@ -234,7 +237,13 @@ export function useChatMessages(assistant: Assistant) {
 
     try {
       // 准备消息请求
-      const messageRequest: any = {
+      const messageRequest: {
+        aiAvatarId: number;
+        content: string;
+        sessionId: string;
+        messageType: string;
+        regenerate?: boolean;
+      } = {
         aiAvatarId: assistant.id,
         content: text,
         sessionId: sessionId.value ? sessionId.value : '',
@@ -279,10 +288,10 @@ export function useChatMessages(assistant: Assistant) {
             showToast('登录已过期，请重新登录');
 
             // 清除本地登录状态
-            userStore.logout();
+            await userStore.logout();
 
             // 重定向到登录页面，可以保存当前路径用于登录后返回
-            router.push({
+            await router.push({
               path: '/login',
               query: { redirect: router.currentRoute.value.fullPath },
             });
@@ -301,7 +310,7 @@ export function useChatMessages(assistant: Assistant) {
         },
 
         // 处理消息事件
-        onmessage(event) {
+        onmessage: function (event) {
           try {
             // 检查数据是否为空
             if (!event.data || event.data.trim() === '') {
@@ -366,29 +375,10 @@ export function useChatMessages(assistant: Assistant) {
                 updateAIMessage(content);
               }
             }
-          } catch (err: any) {
+          } catch (err: unknown) {
             // 处理错误，可能是JSON解析错误或其他异常
+            console.error('消息处理错误:', err);
             showToast('处理消息时发生错误');
-          }
-        },
-
-        // 处理错误事件
-        onerror(err: Error) {
-          // 处理连接错误
-          showToast('连接服务器失败，请重试');
-
-          // 尝试恢复UI状态
-          isAITyping.value = false;
-
-          // 添加错误消息
-          if (currentAIMessageId.value && messages.value.length > 0) {
-            const lastMessage = messages.value.find(
-              (m) => m.id === currentAIMessageId.value,
-            );
-            if (lastMessage) {
-              lastMessage.content = '抱歉，我遇到了一些问题，请重试。';
-            }
-            currentAIMessageId.value = null;
           }
         },
 
@@ -401,8 +391,9 @@ export function useChatMessages(assistant: Assistant) {
           currentStreamController = null;
         },
       });
-    } catch (error) {
+    } catch (error: unknown) {
       // 处理发送过程中的错误
+      console.error('发送消息错误:', error);
       isAITyping.value = false;
       showToast('发送消息失败，请重试');
 
@@ -432,7 +423,7 @@ export function useChatMessages(assistant: Assistant) {
       showToast('无法找到相关消息');
       return;
     }
-    
+
     // 查找AI消息之前的最近一条用户消息
     let userMessageIndex = -1;
     for (let i = aiMessageIndex - 1; i >= 0; i--) {
@@ -453,10 +444,10 @@ export function useChatMessages(assistant: Assistant) {
       showToast('无法找到相关问题');
       return;
     }
-    
+
     // 移除AI回复消息
     messages.value.splice(aiMessageIndex, 1);
-    
+
     // 以重新生成模式发送消息
     await sendMessage(userMessage.content, true);
   };
@@ -471,4 +462,4 @@ export function useChatMessages(assistant: Assistant) {
     regenerateResponse,
     formatMessage
   };
-} 
+}

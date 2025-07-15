@@ -112,37 +112,4 @@ const onViewAll = (): void => {
   border-radius: 4px;
   background-color: rgba(25, 137, 250, 0.1);
 }
-
-/* 成就背景颜色 */
-.bg-blue {
-  background-color: rgba(25, 137, 250, 0.1);
-}
-
-.bg-orange {
-  background-color: rgba(255, 151, 106, 0.1);
-}
-
-.bg-green {
-  background-color: rgba(7, 193, 96, 0.1);
-}
-
-.bg-purple {
-  background-color: rgba(114, 50, 221, 0.1);
-}
-
-.bg-red {
-  background-color: rgba(238, 10, 36, 0.1);
-}
-
-.bg-yellow {
-  background-color: rgba(255, 205, 50, 0.1);
-}
-
-.bg-cyan {
-  background-color: rgba(0, 206, 209, 0.1);
-}
-
-.bg-pink {
-  background-color: rgba(255, 105, 180, 0.1);
-}
 </style>

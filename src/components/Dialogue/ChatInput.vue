@@ -91,10 +91,7 @@ const sendMessage = (): void => {
 
 <style scoped>
 .input-area {
-  padding-top: 12px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 12px 16px 8px;
   background-color: #fff;
   border-top: 1px solid #ebedf0;
 }
@@ -120,14 +117,6 @@ const sendMessage = (): void => {
   font-size: 14px;
 }
 
-:deep(.van-field__control) {
-  min-height: 24px !important;
-  max-height: 100px !important;
-  overflow-y: auto;
-  padding: 4px 0;
-  line-height: 1.5;
-}
-
 /* 添加灰色输入框样式 */
 .grey-input {
   background-color: #f5f5f5;
@@ -135,11 +124,4 @@ const sendMessage = (): void => {
   padding: 0 12px;
 }
 
-:deep(.grey-input .van-field__control) {
-  background-color: #f5f5f5;
-}
-
-:deep(.van-icon) {
-  cursor: pointer;
-}
 </style>

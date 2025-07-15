@@ -7,12 +7,12 @@ import {
 } from 'vue-router';
 import Home from '../views/home/Home.vue';
 import Courses from '../views/course/Courses.vue';
-import Profile from '../views/myProfile/Profile.vue';
+import Profile from '../views/my-profile/Profile.vue';
 import Login from '../views/user/Login.vue';
 import Register from '../views/user/Register.vue';
 import Circle from '../views/circle/Circle.vue';
 import { AIChatDetail, ChatContainer, UserChatDetail } from '../views/chat';
-import AvatarCropper from '../views/myProfile/settings/AvatarCropper.vue';
+import AvatarCropper from '../views/my-profile/settings/AvatarCropper.vue';
 import NoticeList from '../views/home/NoticeList.vue';
 import PostDetail from '../views/circle/PostDetail.vue';
 import UserProfile from '../views/user/UserProfile.vue';
@@ -124,6 +124,22 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
   },
+  {
+    path: '/qr/scan',
+    name: 'qr-scan',
+    component: () => import('../views/chat/QRCodeScanPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/qr/display',
+    name: 'qr-display',
+    component: () => import('../views/chat/QRCodeDisplayPage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
   
   // 课程相关路由
   {
@@ -187,7 +203,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/achievements',
     name: 'achievements',
-    component: () => import('../views/myProfile/achievements/AchievementsPage.vue'),
+    component: () => import('../views/my-profile/achievements/AchievementsPage.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -195,7 +211,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings',
     name: 'settings',
-    component: () => import('../views/myProfile/settings/Settings.vue'),
+    component: () => import('../views/my-profile/settings/Settings.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -203,7 +219,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings/info',
     name: 'settings-profile',
-    component: () => import('../views/myProfile/settings/SettingsProfile.vue'),
+    component: () => import('../views/my-profile/settings/SettingsProfile.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -211,7 +227,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings/about',
     name: 'settings-about',
-    component: () => import('../views/myProfile/settings/SettingsAbout.vue'),
+    component: () => import('../views/my-profile/settings/SettingsAbout.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -219,7 +235,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings/terms',
     name: 'settings-terms',
-    component: () => import('../views/myProfile/settings/SettingsTerms.vue'),
+    component: () => import('../views/my-profile/settings/SettingsTerms.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -227,7 +243,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings/privacy',
     name: 'settings-privacy',
-    component: () => import('../views/myProfile/settings/SettingsPrivacy.vue'),
+    component: () => import('../views/my-profile/settings/SettingsPrivacy.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -235,7 +251,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile/settings/feedback',
     name: 'settings-feedback',
-    component: () => import('../views/myProfile/settings/SettingsFeedback.vue'),
+    component: () => import('../views/my-profile/settings/SettingsFeedback.vue'),
     meta: {
       requiresAuth: true,
     },

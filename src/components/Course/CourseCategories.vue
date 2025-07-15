@@ -59,10 +59,9 @@ const getIconName = (iconName: string) => {
 
 .course-categories {
   display: flex;
-  padding: 0 16px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-right: 40px;
+  padding: 0 40px 0 16px;
 }
 
 .course-categories::-webkit-scrollbar {
@@ -83,13 +82,6 @@ const getIconName = (iconName: string) => {
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s;
-}
-
-.category-item.active {
-  color: #fff;
-  background-color: #308fff;
-  transform: scale(1.05);
-  box-shadow: 0 2px 6px rgba(100, 177, 255, 0.2);
 }
 
 .category-item.active .category-icon {

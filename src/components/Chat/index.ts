@@ -1,7 +1,2 @@
-import ChatHistoryContent from './ChatHistoryContent.vue';
-import IntelligenceCenterContent from './IntelligenceCenterContent.vue';
-
-export {
-  ChatHistoryContent,
-  IntelligenceCenterContent,
-}; 
+export { default as ChatHistoryContent } from './ChatHistoryContent.vue';
+export { default as IntelligenceCenterContent } from './IntelligenceCenterContent.vue';

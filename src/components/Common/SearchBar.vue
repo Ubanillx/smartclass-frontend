@@ -4,7 +4,6 @@
       v-model="searchValue"
       :placeholder="placeholder"
       shape="round"
-      background="transparent"
       :clearable="true"
       input-align="center"
       @search="onSearch"
@@ -62,66 +61,6 @@ const goToSearchPage = (): void => {
   margin: -10px 0 16px 0;
 }
 
-:deep(.van-search) {
-  padding: 4px 0;
-  background: transparent;
-}
-
-:deep(.van-search__content) {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  padding: 0 6px;
-  height: 40px;
-  box-shadow: none;
-  transition: all 0.3s ease;
-  border: none;
-  display: flex;
-  align-items: center;
-}
-
-:deep(.van-search__content:hover) {
-  box-shadow: none;
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-:deep(.van-cell) {
-  background-color: transparent !important;
-  padding: 8px 8px !important;
-  line-height: 24px;
-}
-
-:deep(.van-field__left-icon) {
-  margin-right: 6px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-:deep(.van-field__right-icon) {
-  margin-right: 6px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-:deep(.van-field__control) {
-  color: #323233;
-  font-size: var(--font-size-md);
-  font-family: 'Noto Sans SC', sans-serif;
-}
-
-:deep(.van-field__control::placeholder) {
-  color: #969799;
-  font-size: var(--font-size-md);
-  text-align: center;
-}
-
-:deep(.van-search--focus .van-search__content) {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: none;
-  border: none;
-}
 
 :deep(.search-icon) {
   color: #1989fa;
@@ -133,16 +72,4 @@ const goToSearchPage = (): void => {
   transform: scale(1.1);
 }
 
-:deep(.van-field) {
-  padding: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-:deep(.van-field__body) {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
 </style>

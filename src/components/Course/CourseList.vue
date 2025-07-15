@@ -67,25 +67,4 @@ const emit = defineEmits<{
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-:deep(.van-cell__title) {
-  font-weight: 700 !important;
-  font-family: 'Noto Sans SC', sans-serif !important;
-  font-size: var(--font-size-md, 16px) !important;
-}
-
-:deep(.van-cell) {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  border-radius: 0 !important;
-  background-color: transparent !important;
-  margin: 0 !important;
-}
-
-:deep(.van-cell:hover) {
-  background-color: transparent !important;
-}
-
-:deep(.van-cell::after) {
-  display: none !important;
-}
 </style>

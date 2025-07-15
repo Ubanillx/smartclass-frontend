@@ -72,19 +72,6 @@ const handleClick = (): void => {
   cursor: pointer;
 }
 
-.back-button .van-icon {
-  color: #323233;
-  padding: 6px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
-}
-
-.icon-wrapper:active .van-icon {
-  background-color: rgba(0, 0, 0, 0.08);
-  transform: scale(0.95);
-}
-
 .page-title {
   font-size: var(--font-size-md, 16px);
   font-weight: 700;

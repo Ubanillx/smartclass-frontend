@@ -174,20 +174,6 @@ const navigateToDetail = () => {
   font-size: var(--font-size-sm);
 }
 
-.difficulty.easy {
-  background-color: #07c160;
-  color: #fff;
-}
-
-.difficulty.medium {
-  background-color: #ff976a;
-  color: #fff;
-}
-
-.difficulty.hard {
-  background-color: #ee0a24;
-  color: #fff;
-}
 
 .read-time, .publish-date {
   font-size: var(--font-size-sm);

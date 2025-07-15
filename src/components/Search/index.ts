@@ -1,9 +1,3 @@
-import ArticleResultItem from './ArticleResultItem.vue';
-import WordResultItem from './WordResultItem.vue';
-import PostResultItem from './PostResultItem.vue';
-
-export {
-  ArticleResultItem,
-  WordResultItem,
-  PostResultItem
-}; 
+export { default as ArticleResultItem } from './ArticleResultItem.vue';
+export { default as WordResultItem } from './WordResultItem.vue';
+export { default as PostResultItem } from './PostResultItem.vue';

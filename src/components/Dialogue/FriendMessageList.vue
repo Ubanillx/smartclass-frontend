@@ -150,8 +150,7 @@ const updateMessageReadStatus = (messageId: number, isRead: number) => {
 <style scoped>
 .message-list {
   flex: 1;
-  padding: 16px 10px;
-  padding-bottom: 60px;
+  padding: 16px 10px 60px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -166,14 +165,6 @@ const updateMessageReadStatus = (messageId: number, isRead: number) => {
   flex-direction: row;
   width: 100%;
   align-items: flex-start;
-}
-
-.message-item.user {
-  justify-content: flex-end;
-}
-
-.message-item.ai {
-  justify-content: flex-start;
 }
 
 .avatar {
@@ -213,15 +204,6 @@ const updateMessageReadStatus = (messageId: number, isRead: number) => {
   width: calc(100% + 28px); /* 包含padding的宽度 */
 }
 
-.message-time.user {
-  text-align: right;
-  right: -14px; /* 对齐右侧padding */
-}
-
-.message-time.ai {
-  text-align: left;
-  left: -14px; /* 对齐左侧padding */
-}
 
 .message-item.user .message-content {
   background-color: #1989fa;
@@ -246,11 +228,6 @@ const updateMessageReadStatus = (messageId: number, isRead: number) => {
   transition: all 0.3s ease;
 }
 
-/* 更新已读/未读状态样式 */
-:deep(.read-text) {
-  animation: fadeIn 0.5s ease;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -260,11 +237,6 @@ const updateMessageReadStatus = (messageId: number, isRead: number) => {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* 移除旧的消息状态样式 */
-.message-status {
-  display: none;
 }
 
 /* Loading 样式 */

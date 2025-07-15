@@ -73,7 +73,7 @@ const switchTab = (index: number) => {
   activeTabIndex.value = index;
   // 这里可以加载对应标签的数据
   if (index > 1 && tabs && tabs[index]) {
-    showToast(`${tabs[index].name}功能开发中`);
+    showToast(`${tabs[index]?.name}功能开发中`);
   }
 };
 </script>
@@ -128,11 +128,6 @@ const switchTab = (index: number) => {
   color: #646566;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.profile-tab.active {
-  color: #1989fa;
-  font-weight: 700;
 }
 
 .tab-indicator {

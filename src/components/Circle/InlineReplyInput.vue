@@ -128,17 +128,6 @@ const cancelReply = () => {
   background-color: transparent;
 }
 
-.reply-field :deep(.van-field__control) {
-  height: 36px;
-  min-height: 36px;
-}
-
-.reply-field :deep(.van-field__value) {
-  border-radius: 18px;
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 0 6px;
-}
-
 .reply-actions {
   display: flex;
   align-items: center;

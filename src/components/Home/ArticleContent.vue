@@ -1,9 +1,9 @@
 <template>
   <div class="article-content-container">
-    <van-pull-refresh v-model="refreshing" @refresh="$emit('refresh')">
+    <van-pull-refresh v-model="refreshingState" @refresh="$emit('refresh')">
       <van-list
-        v-model:loading="loading"
-        :finished="finished"
+        v-model:loading="loadingState"
+        :finished="finishedState"
         finished-text="没有更多了"
         @load="$emit('load')"
       >
@@ -47,7 +47,11 @@
               </div>
               <div
                 class="meta-item difficulty-tag"
-                :class="getDifficultyClass(convertDifficultyToText(article.difficulty))"
+                :class="
+                  getDifficultyClass(
+                    convertDifficultyToText(article.difficulty),
+                  )
+                "
               >
                 {{ convertDifficultyToText(article.difficulty) }}
               </div>
@@ -60,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 
 interface Article {
   id: number;
@@ -80,7 +84,7 @@ interface Article {
 }
 
 // 定义props
-defineProps<{
+const props = defineProps<{
   articles: Article[];
   loading?: boolean;
   finished?: boolean;
@@ -88,16 +92,30 @@ defineProps<{
 }>();
 
 // 定义事件
-defineEmits<{
+const emit = defineEmits<{
   (e: 'article-click', article: Article): void;
   (e: 'load'): void;
   (e: 'refresh'): void;
+  (e: 'update:loading', value: boolean): void;
+  (e: 'update:finished', value: boolean): void;
+  (e: 'update:refreshing', value: boolean): void;
 }>();
 
-// 状态变量
-const loading = ref(false);
-const finished = ref(false);
-const refreshing = ref(false);
+// 计算属性处理双向绑定
+const loadingState = computed({
+  get: () => props.loading ?? false,
+  set: (value: boolean) => emit('update:loading', value)
+});
+
+const finishedState = computed({
+  get: () => props.finished ?? false,
+  set: (value: boolean) => emit('update:finished', value)
+});
+
+const refreshingState = computed({
+  get: () => props.refreshing ?? false,
+  set: (value: boolean) => emit('update:refreshing', value)
+});
 
 // 根据文章类别返回不同的样式
 const getTagStyle = (category: string): Record<string, string> => {
@@ -127,14 +145,20 @@ const getTagStyle = (category: string): Record<string, string> => {
 };
 
 // 将数字难度转换为文本
-const convertDifficultyToText = (difficulty: number | string | undefined): string => {
+const convertDifficultyToText = (
+  difficulty: number | string | undefined,
+): string => {
   if (typeof difficulty === 'string') return difficulty;
-  
+
   switch (difficulty) {
-    case 1: return '初级';
-    case 2: return '中级';
-    case 3: return '高级';
-    default: return '未知';
+    case 1:
+      return '初级';
+    case 2:
+      return '中级';
+    case 3:
+      return '高级';
+    default:
+      return '未知';
   }
 };
 
@@ -166,7 +190,9 @@ const getDifficultyClass = (difficulty: string): string => {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .article-item:hover {
@@ -239,11 +265,6 @@ const getDifficultyClass = (difficulty: string): string => {
   align-items: center;
 }
 
-.meta-item .van-icon {
-  font-size: 14px;
-  margin-right: 4px;
-}
-
 .difficulty-tag {
   padding: 2px 6px;
   border-radius: 4px;
@@ -251,19 +272,7 @@ const getDifficultyClass = (difficulty: string): string => {
   font-weight: 500;
 }
 
-.difficulty-tag.easy {
-  background-color: #07c160;
-}
-
-.difficulty-tag.medium {
-  background-color: #1989fa;
-}
-
-.difficulty-tag.hard {
-  background-color: #ee0a24;
-}
-
 .empty-state {
   padding: 32px 0;
 }
-</style> 
+</style>

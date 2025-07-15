@@ -68,20 +68,6 @@ const emit = defineEmits<{
   box-sizing: border-box;
 }
 
-.course-cover :deep(.van-image) {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 0;
-}
-
-.course-cover :deep(.van-image__img) {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
 .course-info {
   padding: 16px;
 }
@@ -125,18 +111,6 @@ const emit = defineEmits<{
   border-radius: 4px;
   color: #fff;
   font-weight: 500;
-}
-
-.difficulty.初级 {
-  background: #07c160;
-}
-
-.difficulty.中级 {
-  background: #1989fa;
-}
-
-.difficulty.高级 {
-  background: #ff976a;
 }
 
 .grade {

@@ -23,7 +23,7 @@ interface AssistantType {
 }
 
 // 定义props
-const props = defineProps<{
+const { modelValue, types } = defineProps<{
   types: AssistantType[];
   modelValue: number;
 }>();
@@ -45,10 +45,10 @@ defineEmits<{
 
 .assistant-types {
   display: flex;
-  padding: 0 16px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-right: 40px; /* 为右侧提示图标留出空间 */
+  /* 为右侧提示图标留出空间 */
+  padding: 0 40px 0 16px;
 }
 
 .assistant-types::-webkit-scrollbar {
@@ -67,11 +67,6 @@ defineEmits<{
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s;
-}
-
-.type-item.active {
-  color: #fff;
-  background-color: #1989fa;
 }
 
 .swipe-hint {

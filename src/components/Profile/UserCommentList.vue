@@ -60,7 +60,7 @@ import { useRouter } from 'vue-router';
 import { showToast, showLoadingToast } from 'vant';
 import { PostCommentControllerService } from '../../services';
 import { PostControllerService } from '../../services';
-import type { PostCommentVO } from '../../services/models/PostCommentVO';
+import type { PostCommentVO } from '../../services';
 import { useUserStore } from '../../stores/userStore';
 
 const router = useRouter();

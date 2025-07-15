@@ -143,11 +143,6 @@ const formatTime = computed(() => {
   align-items: center;
 }
 
-.likes :deep(.van-icon), .comments :deep(.van-icon) {
-  font-size: 14px;
-  margin-right: 2px;
-}
-
 .post-cover {
   width: 80px;
   height: 80px;
